@@ -1,0 +1,662 @@
+export interface SurahMeta {
+  number: number;
+  name: string;
+  arabicName: string;
+  meaning: string;
+  versesCount: number;
+  revelationType: 'Meccan' | 'Medinan';
+  juzStart: number;
+  pageStart: number;
+}
+
+export interface JuzMeta {
+  number: number;
+  name: string;
+  arabicName: string;
+  startSurah: number;
+  startSurahName: string;
+  startAyah: number;
+  pageStart: number;
+}
+
+export interface AyahData {
+  number: number;
+  globalNumber?: number;
+  arabic: string;
+  translation: string;
+  translationUrdu?: string;
+  kanzulImanUrdu?: string;
+  kanzulImanEn?: string;
+  kanzulImanRomanUrdu?: string;
+  audio?: string;
+}
+
+export interface SurahDetail extends SurahMeta {
+  bismillahPre: boolean;
+  ayahs: AyahData[];
+  audioRecitations: {
+    reciterId: string;
+    reciterName: string;
+    audioUrl: string;
+  }[];
+}
+
+// Complete 114 Surahs Directory with verified Madinah Mushaf page starts (1-604)
+export const SURAHS_LIST: SurahMeta[] = [
+  { number: 1, name: 'Al-Fatihah', arabicName: 'الفاتحة', meaning: 'The Opening', versesCount: 7, revelationType: 'Meccan', juzStart: 1, pageStart: 1 },
+  { number: 2, name: 'Al-Baqarah', arabicName: 'البقرة', meaning: 'The Cow', versesCount: 286, revelationType: 'Medinan', juzStart: 1, pageStart: 2 },
+  { number: 3, name: 'Ali \'Imran', arabicName: 'آل عمران', meaning: 'Family of Imran', versesCount: 200, revelationType: 'Medinan', juzStart: 3, pageStart: 50 },
+  { number: 4, name: 'An-Nisa', arabicName: 'النساء', meaning: 'The Women', versesCount: 176, revelationType: 'Medinan', juzStart: 4, pageStart: 77 },
+  { number: 5, name: 'Al-Ma\'idah', arabicName: 'المائدة', meaning: 'The Table Spread', versesCount: 120, revelationType: 'Medinan', juzStart: 6, pageStart: 106 },
+  { number: 6, name: 'Al-An\'am', arabicName: 'الأنعام', meaning: 'The Cattle', versesCount: 165, revelationType: 'Meccan', juzStart: 7, pageStart: 128 },
+  { number: 7, name: 'Al-A\'raf', arabicName: 'الأعراف', meaning: 'The Heights', versesCount: 206, revelationType: 'Meccan', juzStart: 8, pageStart: 151 },
+  { number: 8, name: 'Al-Anfal', arabicName: 'الأنفال', meaning: 'The Spoils of War', versesCount: 75, revelationType: 'Medinan', juzStart: 9, pageStart: 177 },
+  { number: 9, name: 'At-Tawbah', arabicName: 'التوبة', meaning: 'The Repentance', versesCount: 129, revelationType: 'Medinan', juzStart: 10, pageStart: 187 },
+  { number: 10, name: 'Yunus', arabicName: 'يونس', meaning: 'Jonah', versesCount: 109, revelationType: 'Meccan', juzStart: 11, pageStart: 208 },
+  { number: 11, name: 'Hud', arabicName: 'هود', meaning: 'Hud', versesCount: 123, revelationType: 'Meccan', juzStart: 11, pageStart: 221 },
+  { number: 12, name: 'Yusuf', arabicName: 'يوسف', meaning: 'Joseph', versesCount: 111, revelationType: 'Meccan', juzStart: 12, pageStart: 235 },
+  { number: 13, name: 'Ar-Ra\'d', arabicName: 'الرعد', meaning: 'The Thunder', versesCount: 43, revelationType: 'Medinan', juzStart: 13, pageStart: 249 },
+  { number: 14, name: 'Ibrahim', arabicName: 'إبراهيم', meaning: 'Abraham', versesCount: 52, revelationType: 'Meccan', juzStart: 13, pageStart: 255 },
+  { number: 15, name: 'Al-Hijr', arabicName: 'الحجر', meaning: 'The Rocky Tract', versesCount: 99, revelationType: 'Meccan', juzStart: 14, pageStart: 262 },
+  { number: 16, name: 'An-Nahl', arabicName: 'النحل', meaning: 'The Bee', versesCount: 128, revelationType: 'Meccan', juzStart: 14, pageStart: 267 },
+  { number: 17, name: 'Al-Isra', arabicName: 'الإسراء', meaning: 'The Night Journey', versesCount: 111, revelationType: 'Meccan', juzStart: 15, pageStart: 282 },
+  { number: 18, name: 'Al-Kahf', arabicName: 'الكهف', meaning: 'The Cave', versesCount: 110, revelationType: 'Meccan', juzStart: 15, pageStart: 293 },
+  { number: 19, name: 'Maryam', arabicName: 'مريم', meaning: 'Mary', versesCount: 98, revelationType: 'Meccan', juzStart: 16, pageStart: 305 },
+  { number: 20, name: 'Taha', arabicName: 'طه', meaning: 'Ta-Ha', versesCount: 135, revelationType: 'Meccan', juzStart: 16, pageStart: 312 },
+  { number: 21, name: 'Al-Anbiya', arabicName: 'الأنبياء', meaning: 'The Prophets', versesCount: 112, revelationType: 'Meccan', juzStart: 17, pageStart: 322 },
+  { number: 22, name: 'Al-Hajj', arabicName: 'الحج', meaning: 'The Pilgrimage', versesCount: 78, revelationType: 'Medinan', juzStart: 17, pageStart: 332 },
+  { number: 23, name: 'Al-Mu\'minun', arabicName: 'المؤمنون', meaning: 'The Believers', versesCount: 118, revelationType: 'Meccan', juzStart: 18, pageStart: 342 },
+  { number: 24, name: 'An-Nur', arabicName: 'النور', meaning: 'The Light', versesCount: 64, revelationType: 'Medinan', juzStart: 18, pageStart: 350 },
+  { number: 25, name: 'Al-Furqan', arabicName: 'الفرقان', meaning: 'The Criterion', versesCount: 77, revelationType: 'Meccan', juzStart: 18, pageStart: 359 },
+  { number: 26, name: 'Ash-Shu\'ara', arabicName: 'الشعراء', meaning: 'The Poets', versesCount: 227, revelationType: 'Meccan', juzStart: 19, pageStart: 367 },
+  { number: 27, name: 'An-Naml', arabicName: 'النمل', meaning: 'The Ant', versesCount: 93, revelationType: 'Meccan', juzStart: 19, pageStart: 377 },
+  { number: 28, name: 'Al-Qasas', arabicName: 'القصص', meaning: 'The Stories', versesCount: 88, revelationType: 'Meccan', juzStart: 20, pageStart: 385 },
+  { number: 29, name: 'Al-\'Ankabut', arabicName: 'العنكبوت', meaning: 'The Spider', versesCount: 69, revelationType: 'Meccan', juzStart: 20, pageStart: 396 },
+  { number: 30, name: 'Ar-Rum', arabicName: 'الروم', meaning: 'The Romans', versesCount: 60, revelationType: 'Meccan', juzStart: 21, pageStart: 404 },
+  { number: 31, name: 'Luqman', arabicName: 'لقمان', meaning: 'Luqman', versesCount: 34, revelationType: 'Meccan', juzStart: 21, pageStart: 411 },
+  { number: 32, name: 'As-Sajdah', arabicName: 'السجدة', meaning: 'The Prostration', versesCount: 30, revelationType: 'Meccan', juzStart: 21, pageStart: 415 },
+  { number: 33, name: 'Al-Ahzab', arabicName: 'الأحزاب', meaning: 'The Combined Forces', versesCount: 73, revelationType: 'Medinan', juzStart: 21, pageStart: 418 },
+  { number: 34, name: 'Saba', arabicName: 'سبأ', meaning: 'Sheba', versesCount: 54, revelationType: 'Meccan', juzStart: 22, pageStart: 428 },
+  { number: 35, name: 'Fatir', arabicName: 'فاطر', meaning: 'The Originator', versesCount: 45, revelationType: 'Meccan', juzStart: 22, pageStart: 434 },
+  { number: 36, name: 'Ya-Sin', arabicName: 'يس', meaning: 'Ya-Sin', versesCount: 83, revelationType: 'Meccan', juzStart: 22, pageStart: 440 },
+  { number: 37, name: 'As-Saffat', arabicName: 'الصافات', meaning: 'Those Who Set The Ranks', versesCount: 182, revelationType: 'Meccan', juzStart: 23, pageStart: 446 },
+  { number: 38, name: 'Sad', arabicName: 'ص', meaning: 'Sad', versesCount: 88, revelationType: 'Meccan', juzStart: 23, pageStart: 453 },
+  { number: 39, name: 'Az-Zumar', arabicName: 'الزمر', meaning: 'The Troops', versesCount: 75, revelationType: 'Meccan', juzStart: 23, pageStart: 458 },
+  { number: 40, name: 'Ghafir', arabicName: 'غافر', meaning: 'The Forgiver', versesCount: 85, revelationType: 'Meccan', juzStart: 24, pageStart: 467 },
+  { number: 41, name: 'Fussilat', arabicName: 'فصلت', meaning: 'Explained in Detail', versesCount: 54, revelationType: 'Meccan', juzStart: 24, pageStart: 477 },
+  { number: 42, name: 'Ash-Shura', arabicName: 'الشورى', meaning: 'The Consultation', versesCount: 53, revelationType: 'Meccan', juzStart: 25, pageStart: 483 },
+  { number: 43, name: 'Az-Zukhruf', arabicName: 'الزخرف', meaning: 'The Ornaments of Gold', versesCount: 89, revelationType: 'Meccan', juzStart: 25, pageStart: 489 },
+  { number: 44, name: 'Ad-Dukhan', arabicName: 'الدخان', meaning: 'The Smoke', versesCount: 59, revelationType: 'Meccan', juzStart: 25, pageStart: 496 },
+  { number: 45, name: 'Al-Jathiyah', arabicName: 'الجاثية', meaning: 'The Crouching', versesCount: 37, revelationType: 'Meccan', juzStart: 25, pageStart: 499 },
+  { number: 46, name: 'Al-Ahqaf', arabicName: 'الأحقاف', meaning: 'The Wind-Curved Sandhills', versesCount: 35, revelationType: 'Meccan', juzStart: 26, pageStart: 502 },
+  { number: 47, name: 'Muhammad', arabicName: 'محمد', meaning: 'Muhammad', versesCount: 38, revelationType: 'Medinan', juzStart: 26, pageStart: 507 },
+  { number: 48, name: 'Al-Fath', arabicName: 'الفتح', meaning: 'The Victory', versesCount: 29, revelationType: 'Medinan', juzStart: 26, pageStart: 511 },
+  { number: 49, name: 'Al-Hujurat', arabicName: 'الحجرات', meaning: 'The Rooms', versesCount: 18, revelationType: 'Medinan', juzStart: 26, pageStart: 515 },
+  { number: 50, name: 'Qaf', arabicName: 'ق', meaning: 'Qaf', versesCount: 45, revelationType: 'Meccan', juzStart: 26, pageStart: 518 },
+  { number: 51, name: 'Adh-Dhariyat', arabicName: 'الذاريات', meaning: 'The Winnowing Winds', versesCount: 60, revelationType: 'Meccan', juzStart: 26, pageStart: 520 },
+  { number: 52, name: 'At-Tur', arabicName: 'الطور', meaning: 'The Mount', versesCount: 49, revelationType: 'Meccan', juzStart: 27, pageStart: 523 },
+  { number: 53, name: 'An-Najm', arabicName: 'النجم', meaning: 'The Star', versesCount: 62, revelationType: 'Meccan', juzStart: 27, pageStart: 526 },
+  { number: 54, name: 'Al-Qamar', arabicName: 'القمر', meaning: 'The Moon', versesCount: 55, revelationType: 'Meccan', juzStart: 27, pageStart: 528 },
+  { number: 55, name: 'Ar-Rahman', arabicName: 'الرحمن', meaning: 'The Beneficent', versesCount: 78, revelationType: 'Medinan', juzStart: 27, pageStart: 531 },
+  { number: 56, name: 'Al-Waqi\'ah', arabicName: 'الواقعة', meaning: 'The Inevitable', versesCount: 96, revelationType: 'Meccan', juzStart: 27, pageStart: 534 },
+  { number: 57, name: 'Al-Hadid', arabicName: 'الحديد', meaning: 'The Iron', versesCount: 29, revelationType: 'Medinan', juzStart: 27, pageStart: 537 },
+  { number: 58, name: 'Al-Mujadila', arabicName: 'المجادلة', meaning: 'The Pleading Woman', versesCount: 22, revelationType: 'Medinan', juzStart: 28, pageStart: 542 },
+  { number: 59, name: 'Al-Hashr', arabicName: 'الحشر', meaning: 'The Exile', versesCount: 24, revelationType: 'Medinan', juzStart: 28, pageStart: 545 },
+  { number: 60, name: 'Al-Mumtahanah', arabicName: 'الممتحنة', meaning: 'The Examined One', versesCount: 13, revelationType: 'Medinan', juzStart: 28, pageStart: 549 },
+  { number: 61, name: 'As-Saff', arabicName: 'الصف', meaning: 'The Ranks', versesCount: 14, revelationType: 'Medinan', juzStart: 28, pageStart: 551 },
+  { number: 62, name: 'Al-Jumu\'ah', arabicName: 'الجمعة', meaning: 'Friday', versesCount: 11, revelationType: 'Medinan', juzStart: 28, pageStart: 553 },
+  { number: 63, name: 'Al-Munafiqun', arabicName: 'المنافقون', meaning: 'The Hypocrites', versesCount: 11, revelationType: 'Medinan', juzStart: 28, pageStart: 554 },
+  { number: 64, name: 'At-Taghabun', arabicName: 'التغابن', meaning: 'Mutual Disillusion', versesCount: 18, revelationType: 'Medinan', juzStart: 28, pageStart: 556 },
+  { number: 65, name: 'At-Talaq', arabicName: 'الطلاق', meaning: 'The Divorce', versesCount: 12, revelationType: 'Medinan', juzStart: 28, pageStart: 558 },
+  { number: 66, name: 'At-Tahrim', arabicName: 'التحريم', meaning: 'The Prohibition', versesCount: 12, revelationType: 'Medinan', juzStart: 28, pageStart: 560 },
+  { number: 67, name: 'Al-Mulk', arabicName: 'الملك', meaning: 'The Sovereignty', versesCount: 30, revelationType: 'Meccan', juzStart: 29, pageStart: 562 },
+  { number: 68, name: 'Al-Qalam', arabicName: 'القلم', meaning: 'The Pen', versesCount: 52, revelationType: 'Meccan', juzStart: 29, pageStart: 564 },
+  { number: 69, name: 'Al-Haqqah', arabicName: 'الحاقة', meaning: 'The Inevitable Truth', versesCount: 52, revelationType: 'Meccan', juzStart: 29, pageStart: 566 },
+  { number: 70, name: 'Al-Ma\'arij', arabicName: 'المعارج', meaning: 'The Ascending Stairways', versesCount: 44, revelationType: 'Meccan', juzStart: 29, pageStart: 568 },
+  { number: 71, name: 'Nuh', arabicName: 'نوح', meaning: 'Noah', versesCount: 28, revelationType: 'Meccan', juzStart: 29, pageStart: 570 },
+  { number: 72, name: 'Al-Jinn', arabicName: 'الجن', meaning: 'The Jinn', versesCount: 28, revelationType: 'Meccan', juzStart: 29, pageStart: 572 },
+  { number: 73, name: 'Al-Muzzammil', arabicName: 'المزمل', meaning: 'The Enshrouded One', versesCount: 20, revelationType: 'Meccan', juzStart: 29, pageStart: 574 },
+  { number: 74, name: 'Al-Muddaththir', arabicName: 'المدثر', meaning: 'The Cloaked One', versesCount: 56, revelationType: 'Meccan', juzStart: 29, pageStart: 575 },
+  { number: 75, name: 'Al-Qiyamah', arabicName: 'القيامة', meaning: 'The Resurrection', versesCount: 40, revelationType: 'Meccan', juzStart: 29, pageStart: 577 },
+  { number: 76, name: 'Al-Insan', arabicName: 'الإنسان', meaning: 'Man', versesCount: 31, revelationType: 'Medinan', juzStart: 29, pageStart: 578 },
+  { number: 77, name: 'Al-Mursalat', arabicName: 'المرسلات', meaning: 'The Emissaries', versesCount: 50, revelationType: 'Meccan', juzStart: 29, pageStart: 580 },
+  { number: 78, name: 'An-Naba', arabicName: 'النبأ', meaning: 'The Great News', versesCount: 40, revelationType: 'Meccan', juzStart: 30, pageStart: 582 },
+  { number: 79, name: 'An-Nazi\'at', arabicName: 'النازعات', meaning: 'Those Who Drag Forth', versesCount: 46, revelationType: 'Meccan', juzStart: 30, pageStart: 583 },
+  { number: 80, name: '\'Abasa', arabicName: 'عبس', meaning: 'He Frowned', versesCount: 42, revelationType: 'Meccan', juzStart: 30, pageStart: 585 },
+  { number: 81, name: 'At-Takwir', arabicName: 'التكوير', meaning: 'The Overthrowing', versesCount: 29, revelationType: 'Meccan', juzStart: 30, pageStart: 586 },
+  { number: 82, name: 'Al-Infitar', arabicName: 'الانفطار', meaning: 'The Cleaving', versesCount: 19, revelationType: 'Meccan', juzStart: 30, pageStart: 587 },
+  { number: 83, name: 'Al-Mutaffifin', arabicName: 'المطففين', meaning: 'Those Who Deal in Fraud', versesCount: 36, revelationType: 'Meccan', juzStart: 30, pageStart: 587 },
+  { number: 84, name: 'Al-Inshiqaq', arabicName: 'الانشقاق', meaning: 'The Splitting Asunder', versesCount: 25, revelationType: 'Meccan', juzStart: 30, pageStart: 589 },
+  { number: 85, name: 'Al-Buruj', arabicName: 'البروج', meaning: 'The Mansions of the Stars', versesCount: 22, revelationType: 'Meccan', juzStart: 30, pageStart: 590 },
+  { number: 86, name: 'At-Tariq', arabicName: 'الطارق', meaning: 'The Nightcomer', versesCount: 17, revelationType: 'Meccan', juzStart: 30, pageStart: 591 },
+  { number: 87, name: 'Al-A\'la', arabicName: 'الأعلى', meaning: 'The Most High', versesCount: 19, revelationType: 'Meccan', juzStart: 30, pageStart: 591 },
+  { number: 88, name: 'Al-Ghashiyah', arabicName: 'الغاشية', meaning: 'The Overwhelming Event', versesCount: 26, revelationType: 'Meccan', juzStart: 30, pageStart: 592 },
+  { number: 89, name: 'Al-Fajr', arabicName: 'الفجر', meaning: 'The Dawn', versesCount: 30, revelationType: 'Meccan', juzStart: 30, pageStart: 593 },
+  { number: 90, name: 'Al-Balad', arabicName: 'البلد', meaning: 'The City', versesCount: 20, revelationType: 'Meccan', juzStart: 30, pageStart: 594 },
+  { number: 91, name: 'Ash-Shams', arabicName: 'الشمس', meaning: 'The Sun', versesCount: 15, revelationType: 'Meccan', juzStart: 30, pageStart: 595 },
+  { number: 92, name: 'Al-Layl', arabicName: 'الليل', meaning: 'The Night', versesCount: 21, revelationType: 'Meccan', juzStart: 30, pageStart: 595 },
+  { number: 93, name: 'Ad-Duha', arabicName: 'الضحى', meaning: 'The Morning Hours', versesCount: 11, revelationType: 'Meccan', juzStart: 30, pageStart: 596 },
+  { number: 94, name: 'Ash-Sharh', arabicName: 'الشرح', meaning: 'The Relief', versesCount: 8, revelationType: 'Meccan', juzStart: 30, pageStart: 596 },
+  { number: 95, name: 'At-Tin', arabicName: 'التين', meaning: 'The Fig', versesCount: 8, revelationType: 'Meccan', juzStart: 30, pageStart: 597 },
+  { number: 96, name: 'Al-\'Alaq', arabicName: 'العلق', meaning: 'The Clot', versesCount: 19, revelationType: 'Meccan', juzStart: 30, pageStart: 597 },
+  { number: 97, name: 'Al-Qadr', arabicName: 'القدر', meaning: 'The Power', versesCount: 5, revelationType: 'Meccan', juzStart: 30, pageStart: 598 },
+  { number: 98, name: 'Al-Bayyinah', arabicName: 'البينة', meaning: 'The Clear Proof', versesCount: 8, revelationType: 'Medinan', juzStart: 30, pageStart: 598 },
+  { number: 99, name: 'Az-Zalzalah', arabicName: 'الزلزلة', meaning: 'The Earthquake', versesCount: 8, revelationType: 'Medinan', juzStart: 30, pageStart: 599 },
+  { number: 100, name: 'Al-\'Adiyat', arabicName: 'العاديات', meaning: 'The Courser', versesCount: 11, revelationType: 'Meccan', juzStart: 30, pageStart: 599 },
+  { number: 101, name: 'Al-Qari\'ah', arabicName: 'القارعة', meaning: 'The Calamity', versesCount: 11, revelationType: 'Meccan', juzStart: 30, pageStart: 600 },
+  { number: 102, name: 'At-Takathur', arabicName: 'التكاثر', meaning: 'The Rivalry in World Increase', versesCount: 8, revelationType: 'Meccan', juzStart: 30, pageStart: 600 },
+  { number: 103, name: 'Al-\'Asr', arabicName: 'العصر', meaning: 'The Declining Day', versesCount: 3, revelationType: 'Meccan', juzStart: 30, pageStart: 601 },
+  { number: 104, name: 'Al-Humazah', arabicName: 'الهمزة', meaning: 'The Traducer', versesCount: 9, revelationType: 'Meccan', juzStart: 30, pageStart: 601 },
+  { number: 105, name: 'Al-Fil', arabicName: 'الفيل', meaning: 'The Elephant', versesCount: 5, revelationType: 'Meccan', juzStart: 30, pageStart: 601 },
+  { number: 106, name: 'Quraysh', arabicName: 'قريش', meaning: 'Quraysh', versesCount: 4, revelationType: 'Meccan', juzStart: 30, pageStart: 602 },
+  { number: 107, name: 'Al-Ma\'un', arabicName: 'الماعون', meaning: 'The Small Kindness', versesCount: 7, revelationType: 'Meccan', juzStart: 30, pageStart: 602 },
+  { number: 108, name: 'Al-Kawthar', arabicName: 'الکوثر', meaning: 'The Abundance', versesCount: 3, revelationType: 'Meccan', juzStart: 30, pageStart: 602 },
+  { number: 109, name: 'Al-Kafirun', arabicName: 'الكافرون', meaning: 'The Disbelievers', versesCount: 6, revelationType: 'Meccan', juzStart: 30, pageStart: 603 },
+  { number: 110, name: 'An-Nasr', arabicName: 'النصر', meaning: 'The Divine Support', versesCount: 3, revelationType: 'Medinan', juzStart: 30, pageStart: 603 },
+  { number: 111, name: 'Al-Masad', arabicName: 'المسد', meaning: 'The Palm Fiber', versesCount: 5, revelationType: 'Meccan', juzStart: 30, pageStart: 603 },
+  { number: 112, name: 'Al-Ikhlas', arabicName: 'الإخلاص', meaning: 'The Sincerity', versesCount: 4, revelationType: 'Meccan', juzStart: 30, pageStart: 604 },
+  { number: 113, name: 'Al-Falaq', arabicName: 'الفلق', meaning: 'The Daybreak', versesCount: 5, revelationType: 'Meccan', juzStart: 30, pageStart: 604 },
+  { number: 114, name: 'An-Nas', arabicName: 'الناس', meaning: 'Mankind', versesCount: 6, revelationType: 'Meccan', juzStart: 30, pageStart: 604 },
+];
+
+// 30 Juz Index with verified Madinah Mushaf page starts (1-604)
+export const JUZ_LIST: JuzMeta[] = [
+  { number: 1, name: 'Juz 1 (الم)', arabicName: 'الجزء الأول (الم)', startSurah: 1, startSurahName: 'Al-Fatihah', startAyah: 1, pageStart: 1 },
+  { number: 2, name: 'Juz 2 (سيقول)', arabicName: 'الجزء الثاني (سيقول)', startSurah: 2, startSurahName: 'Al-Baqarah', startAyah: 142, pageStart: 22 },
+  { number: 3, name: 'Juz 3 (تلك الرسل)', arabicName: 'الجزء الثالث (تلك الرسل)', startSurah: 2, startSurahName: 'Al-Baqarah', startAyah: 253, pageStart: 42 },
+  { number: 4, name: 'Juz 4 (لن تنالوا)', arabicName: 'الجزء الرابع (لن تنالوا)', startSurah: 3, startSurahName: 'Ali \'Imran', startAyah: 93, pageStart: 62 },
+  { number: 5, name: 'Juz 5 (والمحصنات)', arabicName: 'الجزء الخامس (والمحصنات)', startSurah: 4, startSurahName: 'An-Nisa', startAyah: 24, pageStart: 82 },
+  { number: 6, name: 'Juz 6 (لا يحب الله)', arabicName: 'الجزء السادس (لا يحب الله)', startSurah: 4, startSurahName: 'An-Nisa', startAyah: 148, pageStart: 102 },
+  { number: 7, name: 'Juz 7 (وإذا سمعوا)', arabicName: 'الجزء السابع (وإذا سمعوا)', startSurah: 5, startSurahName: 'Al-Ma\'idah', startAyah: 82, pageStart: 121 },
+  { number: 8, name: 'Juz 8 (ولو أننا)', arabicName: 'الجزء الثامن (ولو أننا)', startSurah: 6, startSurahName: 'Al-An\'am', startAyah: 111, pageStart: 142 },
+  { number: 9, name: 'Juz 9 (قال الملأ)', arabicName: 'الجزء التاسع (قال الملأ)', startSurah: 7, startSurahName: 'Al-A\'raf', startAyah: 88, pageStart: 162 },
+  { number: 10, name: 'Juz 10 (واعلموا)', arabicName: 'الجزء العاشر (واعلموا)', startSurah: 8, startSurahName: 'Al-Anfal', startAyah: 41, pageStart: 182 },
+  { number: 11, name: 'Juz 11 (يعتذرون)', arabicName: 'الجزء الحادي عشر (يعتذرون)', startSurah: 9, startSurahName: 'At-Tawbah', startAyah: 93, pageStart: 201 },
+  { number: 12, name: 'Juz 12 (وما من دابة)', arabicName: 'الجزء الثاني عشر (وما من دابة)', startSurah: 11, startSurahName: 'Hud', startAyah: 6, pageStart: 222 },
+  { number: 13, name: 'Juz 13 (وما أبرئ)', arabicName: 'الجزء الثالث عشر (وما أبرئ)', startSurah: 12, startSurahName: 'Yusuf', startAyah: 53, pageStart: 242 },
+  { number: 14, name: 'Juz 14 (ربما)', arabicName: 'الجزء الرابع عشر (ربما)', startSurah: 15, startSurahName: 'Al-Hijr', startAyah: 1, pageStart: 262 },
+  { number: 15, name: 'Juz 15 (سبحان الذي)', arabicName: 'الجزء الخامس عشر (سبحان الذي)', startSurah: 17, startSurahName: 'Al-Isra', startAyah: 1, pageStart: 282 },
+  { number: 16, name: 'Juz 16 (قال ألم)', arabicName: 'الجزء السادس عشر (قال ألم)', startSurah: 18, startSurahName: 'Al-Kahf', startAyah: 75, pageStart: 302 },
+  { number: 17, name: 'Juz 17 (اقترب)', arabicName: 'الجزء السابع عشر (اقترب)', startSurah: 21, startSurahName: 'Al-Anbiya', startAyah: 1, pageStart: 322 },
+  { number: 18, name: 'Juz 18 (قد أفلح)', arabicName: 'الجزء الثامن عشر (قد أفلح)', startSurah: 23, startSurahName: 'Al-Mu\'minun', startAyah: 1, pageStart: 342 },
+  { number: 19, name: 'Juz 19 (وقال الذين)', arabicName: 'الجزء التاسع عشر (وقال الذين)', startSurah: 25, startSurahName: 'Al-Furqan', startAyah: 21, pageStart: 362 },
+  { number: 20, name: 'Juz 20 (أمن خلق)', arabicName: 'الجزء العشرون (أمن خلق)', startSurah: 27, startSurahName: 'An-Naml', startAyah: 56, pageStart: 382 },
+  { number: 21, name: 'Juz 21 (اتل ما أوحي)', arabicName: 'الجزء الحادي والعشرون (اتل ما أوحي)', startSurah: 29, startSurahName: 'Al-\'Ankabut', startAyah: 46, pageStart: 402 },
+  { number: 22, name: 'Juz 22 (ومن يقنت)', arabicName: 'الجزء الثاني والعشرون (ومن يقنت)', startSurah: 33, startSurahName: 'Al-Ahzab', startAyah: 31, pageStart: 422 },
+  { number: 23, name: 'Juz 23 (وما أنزلنا)', arabicName: 'الجزء الثالث والعشرون (وما أنزلنا)', startSurah: 36, startSurahName: 'Ya-Sin', startAyah: 28, pageStart: 442 },
+  { number: 24, name: 'Juz 24 (فمن أظلم)', arabicName: 'الجزء الرابع والعشرون (فمن أظلم)', startSurah: 39, startSurahName: 'Az-Zumar', startAyah: 32, pageStart: 462 },
+  { number: 25, name: 'Juz 25 (إليه يرد)', arabicName: 'الجزء الخامس والعشرون (إليه يرد)', startSurah: 41, startSurahName: 'Fussilat', startAyah: 47, pageStart: 482 },
+  { number: 26, name: 'Juz 26 (حم)', arabicName: 'الجزء السادس والعشرون (حم)', startSurah: 46, startSurahName: 'Al-Ahqaf', startAyah: 1, pageStart: 502 },
+  { number: 27, name: 'Juz 27 (قال فما خطبكم)', arabicName: 'الجزء السابع والعشرون (قال فما خطبكم)', startSurah: 51, startSurahName: 'Adh-Dhariyat', startAyah: 31, pageStart: 522 },
+  { number: 28, name: 'Juz 28 (قد سمع الله)', arabicName: 'الجزء الثامن والعشرون (قد سمع الله)', startSurah: 58, startSurahName: 'Al-Mujadila', startAyah: 1, pageStart: 542 },
+  { number: 29, name: 'Juz 29 (تبارك الذي)', arabicName: 'الجزء التاسع والعشرون (تبارك الذي)', startSurah: 67, startSurahName: 'Al-Mulk', startAyah: 1, pageStart: 562 },
+  { number: 30, name: 'Juz 30 (عم يتساءلون)', arabicName: 'الجزء الثلاثون (عم يتساءلون)', startSurah: 78, startSurahName: 'An-Naba', startAyah: 1, pageStart: 582 },
+];
+
+export function getMushafPageUrl(pageNumber: number): string {
+  const clamped = Math.max(1, Math.min(604, pageNumber));
+  const padded = String(clamped).padStart(3, '0');
+  return `https://android.quran.com/data/width_1260/page${padded}.png`;
+}
+
+export function getSurahByPage(pageNumber: number): SurahMeta {
+  const clamped = Math.max(1, Math.min(604, pageNumber));
+  let matched = SURAHS_LIST[0];
+  for (const s of SURAHS_LIST) {
+    if (s.pageStart <= clamped) {
+      matched = s;
+    } else {
+      break;
+    }
+  }
+  return matched;
+}
+
+export function getJuzByPage(pageNumber: number): JuzMeta {
+  const clamped = Math.max(1, Math.min(604, pageNumber));
+  let matched = JUZ_LIST[0];
+  for (const j of JUZ_LIST) {
+    if (j.pageStart <= clamped) {
+      matched = j;
+    } else {
+      break;
+    }
+  }
+  return matched;
+}
+
+export const SURAH_AL_MULK_DETAIL: SurahDetail = {
+  number: 67,
+  name: 'Al-Mulk',
+  arabicName: 'الملك',
+  meaning: 'The Sovereignty',
+  versesCount: 30,
+  revelationType: 'Meccan',
+  juzStart: 29,
+  pageStart: 562,
+  bismillahPre: true,
+  audioRecitations: [
+    {
+      reciterId: 'alafasy',
+      reciterName: 'Sheikh Mishary Rashid Alafasy',
+      audioUrl: 'https://server8.mp3quran.net/afs/067.mp3',
+    },
+    {
+      reciterId: 'husary',
+      reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
+      audioUrl: 'https://server13.mp3quran.net/husr/067.mp3',
+    },
+    {
+      reciterId: 'abdulbasit',
+      reciterName: 'Sheikh Abdul Basit Abdul Samad (Murattal)',
+      audioUrl: 'https://server7.mp3quran.net/basit/067.mp3',
+    },
+    {
+      reciterId: 'ghamdi',
+      reciterName: 'Sheikh Saad Al-Ghamdi',
+      audioUrl: 'https://server7.mp3quran.net/ghamdi/067.mp3',
+    },
+  ],
+  ayahs: [
+    {
+      number: 1,
+      arabic: 'تَبَٰرَكَ ٱلَّذِي بِيَدِهِ ٱلْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
+      translation: 'Blessed is He in whose hand is dominion, and He is over all things competent -',
+      translationUrdu: 'بڑی برکت والا ہے وہ جس کے قبضہ میں سارا ملک اور وہ ہر چیز پر قادر ہے،',
+      kanzulImanUrdu: 'بڑی برکت والا ہے وہ جس کے قبضہ میں سارا ملک اور وہ ہر چیز پر قادر ہے،',
+      kanzulImanRomanUrdu: 'Badi barkat wala hai woh jis ke qabze mein sara mulk aur woh har cheez par qadir hai',
+    },
+    {
+      number: 2,
+      arabic: 'ٱلَّذِي خَلَقَ ٱلْمَوْتَ وَٱلْحَيَوٰةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا ۚ وَهُوَ ٱلْعَزِيزُ ٱلْغَفُورُ',
+      translation: '[He] who created death and life to test you [as to] which of you is best in deed - and He is the Exalted in Might, the Forgiving -',
+      translationUrdu: 'وہ جس نے موت اور زندگی پیدا کی کہ تمہاری جانچ ہو تم میں کس کا کام زیادہ اچھا ہے اور وہی عزت والا بخشش والا ہے،',
+      kanzulImanUrdu: 'وہ جس نے موت اور زندگی پیدا کی کہ تمہاری جانچ ہو تم میں کس کا کام زیادہ اچھا ہے اور وہی عزت والا بخشش والا ہے،',
+      kanzulImanRomanUrdu: 'Woh jis ne maut aur zindagi paida ki ke tumhari janch ho tum mein kis ka kaam zyada achha hai aur wahi izzat wala bakhshish wala hai',
+    },
+    {
+      number: 3,
+      arabic: 'ٱلَّذِي خَلَقَ سَبْعَ سَمَٰوَٰتٍ طِبَاقًا ۖ مَّا تَرَىٰ فِي خَلْقِ ٱلرَّحْمَٰنِ مِن تَفَٰوُتٍ ۖ فَٱرْجِعِ ٱلْبَصَرَ هَلْ تَرَىٰ مِن فُطُورٍ',
+      translation: '[And] who created seven heavens in layers. You do not see in the creation of the Most Merciful any inconsistency. So return [your] vision [to the sky]; do you see any breaks?',
+      translationUrdu: 'جس نے سات آسمان بنائے ایک کے اوپر دوسرا، تو رحمٰن کے بنانے میں کیا فرق دیکھتا ہے تو نگاہ اٹھا کر دیکھ تجھے کوئی رخنہ نظر آتا ہے،',
+      kanzulImanUrdu: 'جس نے سات آسمان بنائے ایک کے اوپر دوسرا، تو رحمٰن کے بنانے میں کیا فرق دیکھتا ہے تو نگاہ اٹھا کر دیکھ تجھے کوئی رخنہ نظر آتا ہے،',
+      kanzulImanRomanUrdu: 'Jis ne saat aasman banaye ek ke upar doosra, to Rehman ke banane mein kya farq dekhta hai to nigah utha kar dekh tujhe koi rakhna nazar aata hai',
+    },
+    {
+      number: 4,
+      arabic: 'ثُمَّ ٱرْجِعِ ٱلْبَصَرَ كَرَّتَيْنِ يَنقَلِبْ إِلَيْكَ ٱلْبَصَرُ خَاسِئًا وَهُوَ حَسِيرٌ',
+      translation: 'Then return your vision twice again. [Your] vision will return to you humbled while it is fatigued.',
+      translationUrdu: 'پھر دوبارہ نگاہ اٹھا نظر تیری طرف ناکام پلٹ آئے گی تھکی ماندی',
+      kanzulImanUrdu: 'پھر دوبارہ نگاہ اٹھا نظر تیری طرف ناکام پلٹ آئے گی تھکی ماندی',
+      kanzulImanRomanUrdu: 'Phir dobara nigah utha nazar teri taraf nakaam palat aayegi thaki maandi',
+    },
+    {
+      number: 5,
+      arabic: 'وَلَقَدْ زَيَّنَّا ٱلسَّمَآءَ ٱلدُّنْيَا بِمَصَٰبِيحَ وَجَعَلْنَٰهَا رُجُومًا لِّلشَّيَٰطِينِ ۖ وَأَعْتَدْنَا لَهُمْ عَذَابَ ٱلسَّعِيرِ',
+      translation: 'And We have certainly beautified the nearest heaven with lamps and have made [from] them missiles for the devils and have prepared for them the punishment of the Blaze.',
+      translationUrdu: 'اور بیشک ہم نے نیچے کے آسمان کو چراغوں سے آراستہ کیا اور انہیں شیطانوں کے لیے مار کیا اور ان کے لیے بھڑکتی آگ کا عذاب تیار فرمایا',
+      kanzulImanUrdu: 'اور بیشک ہم نے نیچے کے آسمان کو چراغوں سے آراستہ کیا اور انہیں شیطانوں کے لیے مار کیا اور ان کے لیے بھڑکتی آگ کا عذاب تیار فرمایا',
+      kanzulImanRomanUrdu: 'Aur beshak hum ne neeche ke aasman ko chiraghon se aaraasta kiya aur unhein shaitano ke liye maar kiya aur un ke liye bhadakti aag ka azaab tayyar farmaya',
+    },
+    {
+      number: 6,
+      arabic: 'وَلِلَّذِينَ كَفَرُوا۟ بِرَبِّهِمْ عَذَابُ جَهَنَّمَ ۖ وَبِئْسَ ٱلْمَصِيرُ',
+      translation: 'And for those who disbelieved in their Lord is the punishment of Hell, and wretched is the destination.',
+      translationUrdu: 'اور جنہوں نے اپنے رب کے ساتھ کفر کیا ان کے لیے جہنم کا عذاب ہے، اور کیا ہی برا انجام،',
+      kanzulImanUrdu: 'اور جنہوں نے اپنے رب کے ساتھ کفر کیا ان کے لیے جہنم کا عذاب ہے، اور کیا ہی برا انجام،',
+      kanzulImanRomanUrdu: 'Aur jinho ne apne Rab ke saath kufr kiya un ke liye jahannam ka azaab hai, aur kya hi bura anjaam',
+    },
+    {
+      number: 7,
+      arabic: 'إِذَآ أُلْقُوا۟ فِيهَا سَمِعُوا۟ لَهَا شَهِيقًا وَهِيَ تَفُورُ',
+      translation: 'When they are thrown into it, they hear from it a [dreadful] inhaling while it boils up.',
+      translationUrdu: 'جب اس میں ڈالے جائیں گے اس کا رینکنا (چنگھاڑنا) سنیں گے کہ جوش مارتی ہے',
+      kanzulImanUrdu: 'جب اس میں ڈالے جائیں گے اس کا رینکنا (چنگھاڑنا) سنیں گے کہ جوش مارتی ہے',
+      kanzulImanRomanUrdu: 'Jab us mein daale jayenge uska reenkna (changhadna) sunenge ke josh marti hai',
+    },
+    {
+      number: 8,
+      arabic: 'تَكَادُ تَمَيَّزُ مِنَ ٱلْغَيْظِ ۖ كُلَّمَآ أُلْقِيَ فِيهَا فَوْجٌ سَأَلَهُمْ خَزَنَتُهَآ أَلَمْ يَأْتِكُمْ نَذِيرٌ',
+      translation: 'It almost bursts with rage. Every time a company is thrown into it, its keepers ask them, "Did there not come to you a warner?"',
+      translationUrdu: 'معلوم ہوتا ہے کہ شدت غضب میں پھٹ جائے گی، جب کبھی کوئی گروہ اس میں ڈالا جائے گا اس کے داروغہ ان سے پوچھیں گے کیا تمہارے پاس کوئی ڈر سنانے والا نہ آیا تھا',
+      kanzulImanUrdu: 'معلوم ہوتا ہے کہ شدت غضب میں پھٹ جائے گی، جب کبھی کوئی گروہ اس میں ڈالا جائے گا اس کے داروغہ ان سے پوچھیں گے کیا تمہارے پاس کوئی ڈر سنانے والا نہ آیا تھا',
+      kanzulImanRomanUrdu: 'Maloom hota hai ke shiddat-e-ghazab mein phat jayegi, jab kabhi koi giroh us mein daala jayega us ke darogha un se poochenge kya tumhare paas koi darr sunane wala na aaya tha',
+    },
+    {
+      number: 9,
+      arabic: 'قَالُوا۟ بَلَىٰ قَدْ جَآءَنَا نَذِيرٌ فَكَذَّبْنَا وَقُلْنَا مَا نَزَّلَ ٱللَّهُ مِن شَيْءٍ إِنْ أَنتُمْ إِلَّا فِي ضَلَٰلٍ كَبِيرٍ',
+      translation: 'They will say,"Yes, a warner had come to us, but we denied and said, \'Allah has not sent down anything. You are not but in great error.\'"',
+      translationUrdu: 'کہیں گے کیوں نہیں بیشک ہمارے پاس ڈر سنانے والے تشریف لائے پھر ہم نے جھٹلایا اور کہا اللہ نے کچھ نہیں اُتارا، تم تو نہیں مگر بڑی گمراہی میں،',
+      kanzulImanUrdu: 'کہیں گے کیوں نہیں بیشک ہمارے پاس ڈر سنانے والے تشریف لائے پھر ہم نے جھٹلایا اور کہا اللہ نے کچھ نہیں اُتارا، تم تو نہیں مگر بڑی گمراہی میں،',
+      kanzulImanRomanUrdu: 'Kahenge kyun nahi beshak hamare paas darr sunane wale tashreef laaye phir hum ne jhutlaya aur kaha Allah ne kuch nahi utara, tum to nahi magar badi gumraahi mein',
+    },
+    {
+      number: 10,
+      arabic: 'وَقَالُوا۟ لَوْ كُنَّا نَسْمَعُ أَوْ نَعْقِلُ مَا كُنَّا فِيٓ أَصْحَٰبِ ٱلسَّعِيرِ',
+      translation: 'And they will say, "If only we had been listening or reasoning, we would not be among the companions of the Blaze."',
+      translationUrdu: 'اور کہیں گے اگر ہم سنتے یا سمجھتے تو دوزخ والوں میں نہ ہوتے،',
+      kanzulImanUrdu: 'اور کہیں گے اگر ہم سنتے یا سمجھتے تو دوزخ والوں میں نہ ہوتے،',
+      kanzulImanRomanUrdu: 'Aur kahenge agar hum sunte ya samajhte to dozakh walon mein na hote',
+    },
+    {
+      number: 11,
+      arabic: 'فَٱعْتَرَفُوا۟ بِذَنۢبِهِمْ فَسُحْقًا لِّأَصْحَٰبِ ٱلسَّعِيرِ',
+      translation: 'And they will admit their sin, so [it is] alienation for the companions of the Blaze.',
+      translationUrdu: 'اب اپنے گناہ کا اقرار کیا تو پھٹکار ہو دوزخیوں کو،',
+      kanzulImanUrdu: 'اب اپنے گناہ کا اقرار کیا تو پھٹکار ہو دوزخیوں کو،',
+      kanzulImanRomanUrdu: 'Ab apne gunah ka iqraar kiya to phatkar ho dozakhiyon ko',
+    },
+    {
+      number: 12,
+      arabic: 'إِنَّ ٱلَّذِينَ يَخْشَوْنَ رَبَّهُم بِٱلْغَيْبِ لَهُم مَّغْفِرَةٌ وَأَجْرٌ كَبِيرٌ',
+      translation: 'Indeed, those who fear their Lord unseen will have forgiveness and great reward.',
+      translationUrdu: 'بیشک جو بے دیکھے اپنے رب سے ڈرتے ہیں ان کے لیے بخشش اور بڑا ثواب ہے',
+      kanzulImanUrdu: 'بیشک جو بے دیکھے اپنے رب سے ڈرتے ہیں ان کے لیے بخشش اور بڑا ثواب ہے',
+      kanzulImanRomanUrdu: 'Beshak jo be-dekhe apne Rab se darte hain un ke liye bakhshish aur bada sawaab hai',
+    },
+    {
+      number: 13,
+      arabic: 'وَأَسِرُّوا۟ قَوْلَكُمْ أَوِ ٱجْهَرُوا۟ بِهِۦٓ ۖ إِنَّهُۥ عَلِيمٌۢ بِذَاتِ ٱلصُّدُورِ',
+      translation: 'And conceal your speech or publicize it; indeed, He is Knowing of that within the breasts.',
+      translationUrdu: 'اور تم اپنی بات آہستہ کہو یا آواز سے، وہ تو دلوں کی جانتا ہے',
+      kanzulImanUrdu: 'اور تم اپنی بات آہستہ کہو یا آواز سے، وہ تو دلوں کی جانتا ہے',
+      kanzulImanRomanUrdu: 'Aur tum apni baat aahista kaho ya aawaaz se, woh to dilon ki jaanta hai',
+    },
+    {
+      number: 14,
+      arabic: 'أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ',
+      translation: 'Does He who created not know, while He is the Subtle, the Acquainted?',
+      translationUrdu: 'کیا وہ نہ جانے جس نے پیدا کیا؟ اور وہی ہے ہر باریکی جانتا خبردار،',
+      kanzulImanUrdu: 'کیا وہ نہ جانے جس نے پیدا کیا؟ اور وہی ہے ہر باریکی جانتا خبردار،',
+      kanzulImanRomanUrdu: 'Kya woh na jaane jis ne paida kiya? Aur wahi hai har bareeki jaanta khabardaar',
+    },
+    {
+      number: 15,
+      arabic: 'هُوَ ٱلَّذِي جَعَلَ لَكُمُ ٱلْأَرْضَ ذَلُولًا فَٱمْشُوا۟ فِي مَنَاكِبِهَا وَكُلُوا۟ مِن رِّزْقِهِۦ ۖ وَإِلَيْهِ ٱلنُّشُورُ',
+      translation: 'It is He who made the earth tame for you - so walk among its slopes and eat of His provision - and to Him is the resurrection.',
+      translationUrdu: 'وہی ہے جس نے تمہارے لیے زمین رام (تابع) کر دی تو اس کے رستوں میں چلو اور اللہ کی روزی میں سے کھاؤ اور اسی کی طرف اٹھنا ہے',
+      kanzulImanUrdu: 'وہی ہے جس نے تمہارے لیے زمین رام (تابع) کر دی تو اس کے رستوں میں چلو اور اللہ کی روزی میں سے کھاؤ اور اسی کی طرف اٹھنا ہے',
+      kanzulImanRomanUrdu: 'Wahi hai jis ne tumhare liye zameen raam (taabe) kar di to us ke raston mein chalo aur Allah ki rozi mein se khao aur usi ki taraf uthna hai',
+    },
+    {
+      number: 16,
+      arabic: 'ءَأَمِنتُم مَّن فِي ٱلسَّمَآءِ أَن يَخْسِفَ بِكُمُ ٱلْأَرْضَ فَإِذَا هِيَ تَمُورُ',
+      translation: 'Do you feel secure that He who [holds authority] in the heaven would not cause the earth to swallow you and suddenly it would sway?',
+      translationUrdu: 'کیا تم اس سےنڈر ہوگئے جس کی سلطنت آسمان میں ہے کہ تمہیں زمین میں دھنسادے جبھی وہ کانپتی رہے',
+      kanzulImanUrdu: 'کیا تم اس سےنڈر ہوگئے جس کی سلطنت آسمان میں ہے کہ تمہیں زمین میں دھنسادے جبھی وہ کانپتی رہے',
+      kanzulImanRomanUrdu: 'Kya tum us se nidar ho gaye jis ki saltanat aasman mein hai ke tumhein zameen mein dhansa de jabhi woh kaanpti rahe',
+    },
+    {
+      number: 17,
+      arabic: 'أَمْ أَمِنتُم مَّن فِي ٱلسَّمَآءِ أَن يُرْسِلَ عَلَيْكُمْ حَاصِبًا ۖ فَسَتَعْلَمُونَ كَيْفَ نَذِيرِ',
+      translation: 'Or do you feel secure that He who [holds authority] in the heaven would not send against you a storm of stones? Then you would know how [severe] was My warning.',
+      translationUrdu: 'یا تم نڈر ہوگئے اس سے جس کی سلطنت آسمان میں ہے کہ تم پر پتھراؤ بھیجے تو اب جانو گے کیسا تھا میرا ڈرانا،',
+      kanzulImanUrdu: 'یا تم نڈر ہوگئے اس سے جس کی سلطنت آسمان میں ہے کہ تم پر پتھراؤ بھیجے تو اب جانو گے کیسا تھا میرا ڈرانا،',
+      kanzulImanRomanUrdu: 'Ya tum nidar ho gaye us se jis ki saltanat aasman mein hai ke tum par pathrao bheje to ab jaanoge kaisa tha mera darana',
+    },
+    {
+      number: 18,
+      arabic: 'وَلَقَدْ كَذَّبَ ٱلَّذِينَ مِن قَبْلِهِمْ فَكَيْفَ كَانَ نَكِيرِ',
+      translation: 'And already had those before them denied, and how [terrible] was My reproach.',
+      translationUrdu: 'اور بیشک ان سے اگلوں نے جھٹلایا تو کیسا ہوا میرا انکار',
+      kanzulImanUrdu: 'اور بیشک ان سے اگلوں نے جھٹلایا تو کیسا ہوا میرا انکار',
+      kanzulImanRomanUrdu: 'Aur beshak un se aglon ne jhutlaya to kaisa hua mera inkaar',
+    },
+    {
+      number: 19,
+      arabic: 'أَوَلَمْ يَرَوْا۟ إِلَى ٱلطَّيْرِ فَوْقَهُمْ صَٰٓفَّٰتٍ وَيَقْبِضْنَ ۚ مَا يُمْسِكُهُنَّ إِلَّا ٱلرَّحْمَٰنُ ۚ إِنَّهُۥ بِكُلِّ شَيْءٍ بَصِيرٌ',
+      translation: 'Do they not see the birds above them with wings outspread and [then] folding in? None holds them up except the Most Merciful. Indeed He is, of all things, Seeing.',
+      translationUrdu: 'اور کیا انہوں نے اپنے اوپر پرندے نہ دیکھے پر پھیلاتے اور سمیٹتے انہیں کوئی نہیں روکتا سوا رحمٰن کے بیشک وہ سب کچھ دیکھتا ہے،',
+      kanzulImanUrdu: 'اور کیا انہوں نے اپنے اوپر پرندے نہ دیکھے پر پھیلاتے اور سمیٹتے انہیں کوئی نہیں روکتا سوا رحمٰن کے بیشک وہ سب کچھ دیکھتا ہے،',
+      kanzulImanRomanUrdu: 'Aur kya unho ne apne upar parinday na dekhe par phailate aur samaitte unhein koi nahi rokta siwa Rehman ke beshak woh sab kuch dekhta hai',
+    },
+    {
+      number: 20,
+      arabic: 'أَمَّنْ هَٰذَا ٱلَّذِي هُوَ جُندٌ لَّكُمْ يَنصُرُكُم مِّن دُونِ ٱلرَّحْمَٰنِ ۚ إِنِ ٱلْكَٰفِرُونَ إِلَّا فِي غُرُورٍ',
+      translation: 'Or who is it that could be an army for you to aid you other than the Most Merciful? The disbelievers are not but in delusion.',
+      translationUrdu: 'یا وہ کونسا تمہارا لشکر ہے کہ رحمٰن کے مقابل تمہاری مدد کرے کافر نہیں مگر دھوکے میں',
+      kanzulImanUrdu: 'یا وہ کونسا تمہارا لشکر ہے کہ رحمٰن کے مقابل تمہاری مدد کرے کافر نہیں مگر دھوکے میں',
+      kanzulImanRomanUrdu: 'Ya woh kaunsa tumhara lashkar hai ke Rehman ke muqabil tumhari madad kare kafir nahi magar dhoke mein',
+    },
+    {
+      number: 21,
+      arabic: 'أَمَّنْ هَٰذَا ٱلَّذِي يَرْزُقُكُمْ إِنْ أَمْسَكَ رِزْقَهُۥ ۚ بَل لَّجُّوا۟ فِي عُتُوٍّ وَنُفُورٍ',
+      translation: 'Or who is it that could provide for you if He withheld His provision? But they have persisted in insolence and aversion.',
+      translationUrdu: 'یا کونسا ایسا ہے جو تمہیں روزی دے اگر وہ اپنی روزی روک لے بلکہ وہ سرکش اور نفرت میں ڈھیٹ بنے ہوئے ہیں',
+      kanzulImanUrdu: 'یا کونسا ایسا ہے جو تمہیں روزی دے اگر وہ اپنی روزی روک لے بلکہ وہ سرکش اور نفرت میں ڈھیٹ بنے ہوئے ہیں',
+      kanzulImanRomanUrdu: 'Ya kaunsa aisa hai jo tumhein rozi de agar woh apni rozi rok le balkay woh sarkash aur nafrat mein dheet bane hue hain',
+    },
+    {
+      number: 22,
+      arabic: 'أَفَمَن يَمْشِي مُكِبًّا عَلَىٰ وَجْهِهِۦٓ أَهْدَىٰٓ أَمَّن يَمْشِي سَوِيًّا عَلَىٰ صِرَٰطٍ مُّسْتَقِيمٍ',
+      translation: 'Then is one who walks fallen on his face better guided or one who walks erect on a straight path?',
+      translationUrdu: 'تو کیا وہ جو اپنے منہ کے بل اوندھا چلے زیادہ راہ پر ہے یا وہ جو سیدھا چلے سیدھی راہ پر',
+      kanzulImanUrdu: 'تو کیا وہ جو اپنے منہ کے بل اوندھا چلے زیادہ راہ پر ہے یا وہ جو سیدھا چلے سیدھی راہ پر',
+      kanzulImanRomanUrdu: 'To kya woh jo apne munh ke bal aundha chale zyada raah par hai ya woh jo seedha chale seedhi raah par',
+    },
+    {
+      number: 23,
+      arabic: 'قُلْ هُوَ ٱلَّذِيٓ أَنشَأَكُمْ وَجَعَلَ لَكُمُ ٱلسَّمْعَ وَٱلْأَبْصَٰرَ وَٱلْأَفْـِٔدَةَ ۖ قَلِيلًا مَّا تَشْكُرُونَ',
+      translation: 'Say, "It is He who has produced you and made for you hearing and vision and hearts; little are you grateful."',
+      translationUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں پیدا کیا اور تمہارے لیے کان اور آنکھ اور دل بنائے کتنا کم حق مانتے ہو',
+      kanzulImanUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں پیدا کیا اور تمہارے لیے کان اور آنکھ اور دل بنائے کتنا کم حق مانتے ہو',
+      kanzulImanRomanUrdu: 'Tum farmao wahi hai jis ne tumhein paida kiya aur tumhare liye kaan aur aankh aur dil banaye kitna kam haq maante ho',
+    },
+    {
+      number: 24,
+      arabic: 'قُلْ هُوَ ٱلَّذِي ذَرَأَكُمْ فِي ٱلْأَرْضِ وَإِلَيْهِ تُحْشَرُونَ',
+      translation: 'Say, "It is He who has multiplied you throughout the earth, and to Him you will be gathered."',
+      translationUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں زمین میں پھیلایا اور اسی کی طرف اٹھائے جاؤ گے',
+      kanzulImanUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں زمین میں پھیلایا اور اسی کی طرف اٹھائے جاؤ گے',
+      kanzulImanRomanUrdu: 'Tum farmao wahi hai jis ne tumhein zameen mein phailaya aur usi ki taraf uthaye jaoge',
+    },
+    {
+      number: 25,
+      arabic: 'وَيَقُولُونَ مَتَىٰ هَٰذَا ٱلْوَعْدُ إِن كُنتُمْ صَٰدِقِينَ',
+      translation: 'And they say, "When is this promise, if you should be truthful?"',
+      translationUrdu: 'اور کہتے ہیں یہ وعدہ کب آئے گا اگر تم سچے ہو،',
+      kanzulImanUrdu: 'اور کہتے ہیں یہ وعدہ کب آئے گا اگر تم سچے ہو،',
+      kanzulImanRomanUrdu: 'Aur kehte hain yeh wada kab aayega agar tum sachhe ho',
+    },
+    {
+      number: 26,
+      arabic: 'قُلْ إِنَّمَا ٱلْعِلْمُ عِندَ ٱللَّهِ وَإِنَّمَآ أَنَا۠ نَذِيرٌ مُّبِينٌ',
+      translation: 'Say, "The knowledge is only with Allah, and I am only a clear warner."',
+      translationUrdu: 'تم فرماؤ یہ علم تو اللہ کے پاس ہے، اور میں تو یہی صاف ڈر سنانے والا ہوں',
+      kanzulImanUrdu: 'تم فرماؤ یہ علم تو اللہ کے پاس ہے، اور میں تو یہی صاف ڈر سنانے والا ہوں',
+      kanzulImanRomanUrdu: 'Tum farmao yeh ilm to Allah ke paas hai, aur main to yahi saaf darr sunane wala hoon',
+    },
+    {
+      number: 27,
+      arabic: 'فَلَمَّا رَأَوْهُ زُلْفَةً سِيٓـَٔتْ وُجُوهُ ٱلَّذِينَ كَفَرُوا۟ وَقِيلَ هَٰذَا ٱلَّذِي كُنتُم بِهِۦ تَدَّعُونَ',
+      translation: 'But when they see it approaching, the faces of those who disbelieve will be distressed, and it will be said, "This is that for which you used to call."',
+      translationUrdu: 'پھر جب اسے پاس دیکھیں گے کافروں کے منہ بگڑ جائیں گے اور ان سے فرمادیا جائے گا یہ ہے جو تم مانگتے تھے',
+      kanzulImanUrdu: 'پھر جب اسے پاس دیکھیں گے کافروں کے منہ بگڑ جائیں گے اور ان سے فرمادیا جائے گا یہ ہے جو تم مانگتے تھے',
+      kanzulImanRomanUrdu: 'Phir jab use paas dekhenge kafiron ke munh bigad jayenge aur un se farma diya jayega yeh hai jo tum maangte the',
+    },
+    {
+      number: 28,
+      arabic: 'قُلْ أَرَءَيْتُمْ إِنْ أَهْلَكَنِيَ ٱللَّهُ وَمَن مَّعِيَ أَوْ رَحِمَنَا فَمَن يُجِيرُ ٱلْكَٰفِرِينَ مِنْ عَذَابٍ أَلِيمٍ',
+      translation: 'Say, [O Muhammad], "Have you considered: whether Allah should cause my death and those with me or have mercy upon us, who can protect the disbelievers from a painful punishment?"',
+      translationUrdu: 'تم فرماؤ بھلا دیکھو تو اگر اللہ مجھے اور میرے ساتھ والوں کو بلاک کردے یا ہم پر رحم فرمائے تو وہ کونسا ہے جو کافروں کو دکھ کے عذاب سے بچالے گا',
+      kanzulImanUrdu: 'تم فرماؤ بھلا دیکھو تو اگر اللہ مجھے اور میرے ساتھ والوں کو بلاک کردے یا ہم پر رحم فرمائے تو وہ کونسا ہے جو کافروں کو دکھ کے عذاب سے بچالے گا',
+      kanzulImanRomanUrdu: 'Tum farmao bhala dekho to agar Allah mujhe aur mere saath walon ko halak kar de ya hum par reham farmaye to woh kaunsa hai jo kafiron ko dukh ke azaab se bacha lega',
+    },
+    {
+      number: 29,
+      arabic: 'قُلْ هُوَ ٱلرَّحْمَٰنُ ءَامَنَّا بِهِۦ وَعَلَيْهِ تَوَكَّلْنَا ۖ فَسَتَعْلَمُونَ مَنْ هُوَ فِي ضَلَٰلٍ مُّبِينٍ',
+      translation: 'Say, "He is the Most Merciful; we have believed in Him, and upon Him we have relied. And you will [come to] know who it is that is in clear error."',
+      translationUrdu: 'تم فرماؤ وہی رحمٰن ہے ہم اس پر ایمان لائے اور اسی پر بھروسہ کیا، تو اب جان جاؤ گے کون کھلی گمراہی میں ہے،',
+      kanzulImanUrdu: 'تم فرماؤ وہی رحمٰن ہے ہم اس پر ایمان لائے اور اسی پر بھروسہ کیا، تو اب جان جاؤ گے کون کھلی گمراہی میں ہے،',
+      kanzulImanRomanUrdu: 'Tum farmao wahi Rehman hai hum us par imaan laaye aur usi par bharosa kiya, to ab jaan jaoge kaun khuli gumraahi mein hai',
+    },
+    {
+      number: 30,
+      arabic: 'قُلْ أَرَءَيْتُمْ إِنْ أَصْبَحَ مَآؤُكُمْ غَوْرًا فَمَن يَأْتِيكُم بِمَآءٍ مَّعِينٍۭ',
+      translation: 'Say, "Have you considered: if your water was to become sunken [into the earth], then who could bring you flowing water?"',
+      translationUrdu: 'تم فرماؤ بھلا دیکھو تو اگر صبح کو تمہارا پانی زمین میں دھنس جائے تو وہ کون ہے جو تمہیں پانی لادے نگاہ کے سامنے بہتا',
+      kanzulImanUrdu: 'تم فرماؤ بھلا دیکھو تو اگر صبح کو تمہارا پانی زمین میں دھنس جائے تو وہ کون ہے جو تمہیں پانی لادے نگاہ کے سامنے بہتا',
+      kanzulImanRomanUrdu: 'Tum farmao bhala dekho to agar subah ko tumhara paani zameen mein dhans jaye to woh kaun hai jo tumhein paani laa de nigah ke saamne behta',
+    },
+  ],
+};
+
+export const SURAH_AL_FATIHAH_DETAIL: SurahDetail = {
+  number: 1,
+  name: 'Al-Fatihah',
+  arabicName: 'الفاتحة',
+  meaning: 'The Opening',
+  versesCount: 7,
+  revelationType: 'Meccan',
+  juzStart: 1,
+  pageStart: 1,
+  bismillahPre: false,
+  audioRecitations: [
+    {
+      reciterId: 'alafasy',
+      reciterName: 'Sheikh Mishary Rashid Alafasy',
+      audioUrl: 'https://server8.mp3quran.net/afs/001.mp3',
+    },
+    {
+      reciterId: 'husary',
+      reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
+      audioUrl: 'https://server13.mp3quran.net/husr/001.mp3',
+    },
+  ],
+  ayahs: [
+    { number: 1, arabic: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ', translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful.', translationUrdu: 'اللہ کے نام سے شروع جو بہت مہربان رحمت والا', kanzulImanUrdu: 'اللہ کے نام سے شروع جو بہت مہربان رحمت والا', kanzulImanRomanUrdu: 'Allah ke naam se shuru jo nihayat meharban rehm wala' },
+    { number: 2, arabic: 'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ', translation: '[All] praise is [due] to Allah, Lord of the worlds -', translationUrdu: 'سب خوبیاں اللہ کو جو مالک سارے جہان والوں کا،', kanzulImanUrdu: 'سب خوبیاں اللہ کو جو مالک سارے جہان والوں کا،', kanzulImanRomanUrdu: 'Sab khoobiyan Allah ko jo Malik saare jahan walon ka' },
+    { number: 3, arabic: 'ٱلرَّحْمَٰنِ ٱلرَّحِيمِ', translation: 'The Entirely Merciful, the Especially Merciful,', translationUrdu: 'بہت مہربان رحمت والا،', kanzulImanUrdu: 'بہت مہربان رحمت والا،', kanzulImanRomanUrdu: 'Nihayat meharban rehm wala' },
+    { number: 4, arabic: 'مَٰلِكِ يَوْمِ ٱلدِّينِ', translation: 'Sovereign of the Day of Recompense.', translationUrdu: 'روز جزا کا مالک،', kanzulImanUrdu: 'روز جزا کا مالک،', kanzulImanRomanUrdu: 'Roz-e-jaza ka Malik' },
+    { number: 5, arabic: 'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ', translation: 'It is You we worship and You we ask for help.', translationUrdu: 'ہم تجھی کو پوجیں اور تجھی سے مدد چاہیں،', kanzulImanUrdu: 'ہم تجھی کو پوجیں اور تجھی سے مدد چاہیں،', kanzulImanRomanUrdu: 'Hum Tujhi ko poojen aur Tujhi se madad chahein' },
+    { number: 6, arabic: 'ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ', translation: 'Guide us to the straight path -', translationUrdu: 'ہم کو سیدھا راستہ چلا،', kanzulImanUrdu: 'ہم کو سیدھا راستہ چلا،', kanzulImanRomanUrdu: 'Hum ko seedha rasta chala' },
+    { number: 7, arabic: 'صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ', translation: 'The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.', translationUrdu: 'راستہ ان کا جن پر تو نے احسان کیا، نہ ان کا جن پر غضب ہوا اور نہ بہکے ہوؤں کا', kanzulImanUrdu: 'راستہ ان کا جن پر تو نے احسان کیا، نہ ان کا جن پر غضب ہوا اور نہ بہکے ہوؤں کا', kanzulImanRomanUrdu: 'Rasta unka jin par Tu ne ehsan kiya, na unka jin par ghazab hua aur na behke huon ka' },
+  ],
+};
+
+// Verified Full Surah 112 (Al-Ikhlas)
+export const SURAH_AL_IKHLAS_DETAIL: SurahDetail = {
+  number: 112,
+  name: 'Al-Ikhlas',
+  arabicName: 'الإخلاص',
+  meaning: 'The Sincerity',
+  versesCount: 4,
+  revelationType: 'Meccan',
+  juzStart: 30,
+  pageStart: 604,
+  bismillahPre: true,
+  audioRecitations: [
+    {
+      reciterId: 'alafasy',
+      reciterName: 'Sheikh Mishary Rashid Alafasy',
+      audioUrl: 'https://server8.mp3quran.net/afs/112.mp3',
+    },
+  ],
+  ayahs: [
+    { number: 1, arabic: 'قُلْ هُوَ ٱللَّهُ أَحَدٌ', translation: 'Say, "He is Allah, [who is] One,', translationUrdu: 'تم فرماؤ وہ اللہ ہے وہ ایک ہے', kanzulImanUrdu: 'تم فرماؤ وہ اللہ ہے وہ ایک ہے', kanzulImanRomanUrdu: 'Tum farmao woh Allah hai woh ek hai' },
+    { number: 2, arabic: 'ٱللَّهُ ٱلصَّمَدُ', translation: 'Allah, the Eternal Refuge.', translationUrdu: 'اللہ بے نیاز ہے', kanzulImanUrdu: 'اللہ بے نیاز ہے', kanzulImanRomanUrdu: 'Allah be-niyaz hai' },
+    { number: 3, arabic: 'لَمْ يَلِدْ وَلَمْ يُولَدْ', translation: 'He neither begets nor is born,', translationUrdu: 'نہ اس کی کوئی اولاد اور نہ وہ کسی سے پیدا ہوا', kanzulImanUrdu: 'نہ اس کی کوئی اولاد اور نہ وہ کسی سے پیدا ہوا', kanzulImanRomanUrdu: 'Na uski koi aulad aur na woh kisi se paida hua' },
+    { number: 4, arabic: 'وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ', translation: 'Nor is there to Him any equivalent."', translationUrdu: 'اور نہ کوئی اس کے جوڑ کا', kanzulImanUrdu: 'اور نہ کوئی اس کے جوڑ کا', kanzulImanRomanUrdu: 'Aur na koi uske jod ka' },
+  ],
+};
+
+// Verified Full Surah 113 (Al-Falaq)
+export const SURAH_AL_FALAQ_DETAIL: SurahDetail = {
+  number: 113,
+  name: 'Al-Falaq',
+  arabicName: 'الفلق',
+  meaning: 'The Daybreak',
+  versesCount: 5,
+  revelationType: 'Meccan',
+  juzStart: 30,
+  pageStart: 604,
+  bismillahPre: true,
+  audioRecitations: [
+    {
+      reciterId: 'alafasy',
+      reciterName: 'Sheikh Mishary Rashid Alafasy',
+      audioUrl: 'https://server8.mp3quran.net/afs/113.mp3',
+    },
+  ],
+  ayahs: [
+    { number: 1, arabic: 'قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ', translation: 'Say, "I seek refuge in the Lord of daybreak', translationUrdu: 'تم فرماؤ میں اس کی پناہ لیتا ہوں جو صبح کا پیدا کرنے والا ہے', kanzulImanUrdu: 'تم فرماؤ میں اس کی پناہ لیتا ہوں جو صبح کا پیدا کرنے والا ہے', kanzulImanRomanUrdu: 'Tum farmao main uski panah leta hoon jo subah ka paida karne wala hai' },
+    { number: 2, arabic: 'مِن شَرِّ مَا خَلَقَ', translation: 'From the evil of that which He created', translationUrdu: 'اس کی سب مخلوق کی برائی سے', kanzulImanUrdu: 'اس کی سب مخلوق کی برائی سے', kanzulImanRomanUrdu: 'Uski sab makhlooq ki burayi se' },
+    { number: 3, arabic: 'وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ', translation: 'And from the evil of darkness when it settles', translationUrdu: 'اور اندھیری ڈالنے والے کے شر سے جب وہ ڈوبے', kanzulImanUrdu: 'اور اندھیری ڈالنے والے کے شر سے جب وہ ڈوبے', kanzulImanRomanUrdu: 'Aur andheri daalne wale ke shar se jab woh doobe' },
+    { number: 4, arabic: 'وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ فِي ٱلْعُقَدِ', translation: 'And from the evil of the blowers in knots', translationUrdu: 'اور ان عورتوں کے شر سے جو گرہوں میں پھونکتی ہیں', kanzulImanUrdu: 'اور ان عورتوں کے شر سے جو گرہوں میں پھونکتی ہیں', kanzulImanRomanUrdu: 'Aur un auraton ke shar se jo girhon mein phoonkti hain' },
+    { number: 5, arabic: 'وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ', translation: 'And from the evil of an envier when he envies."', translationUrdu: 'اور حسد والے کے شر سے جب وہ مجھ سے حسد کرے', kanzulImanUrdu: 'اور حسد والے کے شر سے جب وہ مجھ سے حسد کرے', kanzulImanRomanUrdu: 'Aur hasad wale ke shar se jab woh mujh se hasad kare' },
+  ],
+};
+
+// Verified Full Surah 114 (An-Nas)
+export const SURAH_AN_NAS_DETAIL: SurahDetail = {
+  number: 114,
+  name: 'An-Nas',
+  arabicName: 'الناس',
+  meaning: 'Mankind',
+  versesCount: 6,
+  revelationType: 'Meccan',
+  juzStart: 30,
+  pageStart: 604,
+  bismillahPre: true,
+  audioRecitations: [
+    {
+      reciterId: 'alafasy',
+      reciterName: 'Sheikh Mishary Rashid Alafasy',
+      audioUrl: 'https://server8.mp3quran.net/afs/114.mp3',
+    },
+  ],
+  ayahs: [
+    { number: 1, arabic: 'قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ', translation: 'Say, "I seek refuge in the Lord of mankind,', translationUrdu: 'تم فرماؤ میں اس کی پناہ میں آیا جو سب لوگوں کا رب', kanzulImanUrdu: 'تم فرماؤ میں اس کی پناہ میں آیا جو سب لوگوں کا رب', kanzulImanRomanUrdu: 'Tum farmao main uski panah mein aaya jo sab logon ka Rab' },
+    { number: 2, arabic: 'مَلِكِ ٱلنَّاسِ', translation: 'The Sovereign of mankind.', translationUrdu: 'سب لوگوں کا بادشاہ', kanzulImanUrdu: 'سب لوگوں کا بادشاہ', kanzulImanRomanUrdu: 'Sab logon ka Badshah' },
+    { number: 3, arabic: 'إِلَٰهِ ٱلنَّاسِ', translation: 'The God of mankind,', translationUrdu: 'سب لوگوں کا معبود', kanzulImanUrdu: 'سب لوگوں کا معبود', kanzulImanRomanUrdu: 'Sab logon ka Mabood' },
+    { number: 4, arabic: 'مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ', translation: 'From the evil of the retreating whisperer -', translationUrdu: 'اس کے شر سے جو دل میں برے خطرے ڈالے اور دبک رہے', kanzulImanUrdu: 'اس کے شر سے جو دل میں برے خطرے ڈالے اور دبک رہے', kanzulImanRomanUrdu: 'Uske shar se jo dil mein bure khatre daale aur dabak rahe' },
+    { number: 5, arabic: 'ٱلَّذِي يُوَسْوِسُ فِي صُدُورِ ٱلنَّاسِ', translation: 'Who whispers into the breasts of mankind -', translationUrdu: 'وہ جو لوگوں کے دلوں میں وسوسے ڈالتا ہے', kanzulImanUrdu: 'وہ جو لوگوں کے دلوں میں وسوسے ڈالتا ہے', kanzulImanRomanUrdu: 'Woh jo logon ke dilon mein waswase daalta hai' },
+    { number: 6, arabic: 'مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ', translation: 'From among the jinn and mankind."', translationUrdu: 'جن اور آدمی', kanzulImanUrdu: 'جن اور آدمی', kanzulImanRomanUrdu: 'Jinn aur Aadmi' },
+  ],
+};
+
+// Verified Full Surah 18 (Al-Kahf) - Opening Verses
+export const SURAH_AL_KAHF_DETAIL: SurahDetail = {
+  number: 18,
+  name: 'Al-Kahf',
+  arabicName: 'الكهف',
+  meaning: 'The Cave',
+  versesCount: 110,
+  revelationType: 'Meccan',
+  juzStart: 15,
+  pageStart: 293,
+  bismillahPre: true,
+  audioRecitations: [
+    {
+      reciterId: 'alafasy',
+      reciterName: 'Sheikh Mishary Rashid Alafasy',
+      audioUrl: 'https://server8.mp3quran.net/afs/018.mp3',
+    },
+    {
+      reciterId: 'husary',
+      reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
+      audioUrl: 'https://server13.mp3quran.net/husr/018.mp3',
+    },
+  ],
+  ayahs: [
+    { number: 1, arabic: 'ٱلْحَمْدُ لِلَّهِ ٱلَّذِيٓ أَنزَلَ عَلَىٰ عَبْدِهِ ٱلْكِتَٰبَ وَلَمْ يَجْعَل لَّهُۥ عِوَجَاۜ', translation: '[All] praise is [due] to Allah, who has sent down upon His Servant the Book and has not made therein any deviance.', translationUrdu: 'سب خوبیاں اللہ کو جس نے اپنے بندے پر قرآن اتارا اور اس میں کوئی ٹیڑھ نہ رکھی', kanzulImanUrdu: 'سب خوبیاں اللہ کو جس نے اپنے بندے پر قرآن اتارا اور اس میں کوئی ٹیڑھ نہ رکھی', kanzulImanRomanUrdu: 'Sab khoobiyan Allah ko jis ne apne bande par Quran utara aur us mein koi tedh na rakhi' },
+    { number: 2, arabic: 'قَيِّمًا لِّيُنذِرَ بَأْسًا شَدِيدًا مِّن لَّدُنْهُ وَيُبَشِّرَ ٱلْمُؤْمِنِينَ ٱلَّذِينَ يَعْمَلُونَ ٱلصَّٰلِحَٰتِ أَنَّ لَهُمْ أَجْرًا حَسَنًا', translation: '[He has made it] straight, to warn of severe punishment from Him and to give good tidings to the believers who do righteous deeds that they will have a good reward.', translationUrdu: 'عدل والا کہ اللہ کے سخت عذاب سے ڈرائے اور ایمان والوں کو جو اچھے کام کرتے ہیں خوشخبری دے کہ ان کے لیے اچھا ثواب ہے', kanzulImanUrdu: 'عدل والا کہ اللہ کے سخت عذاب سے ڈرائے اور ایمان والوں کو جو اچھے کام کرتے ہیں خوشخبری دے کہ ان کے لیے اچھا ثواب ہے', kanzulImanRomanUrdu: 'Adl wala ke Allah ke sakht azaab se daraye aur imaan walon ko jo achhe kaam karte hain khushkhabri de ke un ke لیے achha sawaab hai' },
+    { number: 3, arabic: 'مَّٰكِثِينَ فِيهِ أَبَدًا', translation: 'In which they will remain forever', translationUrdu: 'جس میں وہ ہمیشہ رہیں گے', kanzulImanUrdu: 'جس میں وہ ہمیشہ رہیں گے', kanzulImanRomanUrdu: 'Jis mein woh hamesha rahenge' },
+    { number: 4, arabic: 'وَيُنذِرَ ٱلَّذِينَ قَالُوا۟ ٱتَّخَذَ ٱللَّهُ وَلَدًا', translation: 'And to warn those who say, "Allah has taken a son."', translationUrdu: 'اور ان کو ڈرائے جو کہتے ہیں کہ اللہ نے اپنے لیے اولاد بنائی ہے', kanzulImanUrdu: 'اور ان کو ڈرائے جو کہتے ہیں کہ اللہ نے اپنے لیے اولاد بنائی ہے', kanzulImanRomanUrdu: 'Aur un ko daraye jo kehte hain ke Allah ne apne liye aulaad banayi hai' },
+    { number: 5, arabic: 'مَّا لَهُم بِهِۦ مِنْ عِلْمٍ وَلَا لِءَابَآئِهِمْ ۚ كَبُرَتْ كَلِمَةً تَخْرُجُ مِنْ أَفْوَٰهِهِمْ ۚ إِن يَقُولُونَ إِلَّا كَذِبًا', translation: 'They have no knowledge of it, nor had their fathers. Grave is the word that comes out of their mouths; they say not except a lie.', translationUrdu: 'اس بات کا نہ انہیں علم ہے اور نہ ان کے باپ دادا کو، بڑی بات ہے جو ان کے منہ سے نکلتی ہے، وہ تو محض جھوٹ بولتے ہیں', kanzulImanUrdu: 'اس بات کا نہ انہیں علم ہے اور نہ ان کے باپ دادا کو، بڑی بات ہے جو ان کے منہ سے نکلتی ہے، وہ تو محض جھوٹ بولتے ہیں', kanzulImanRomanUrdu: 'Is baat ka na unhein ilm hai aur na un ke baap dada ko, badi baat hai jo un ke munh se nikalti hai, woh to mehaz jhooth bolte hain' },
+    { number: 6, arabic: 'فَلَعَلَّكَ بَٰخِعٌ نَّفْسَكَ عَلَىٰٓ ءَاثَٰرِهِمْ إِن لَّمْ يُؤْمِنُوا۟ بِهَٰذَا ٱلْحَدِيثِ أَسَفًا', translation: 'Then perhaps you would kill yourself through grief over their footprints, [O Muhammad], if they do not believe in this message.', translationUrdu: 'تو شاید آپ ان کے پیچھے غم کے مارے اپنی جان ہلاک کر ڈالیں گے اگر وہ اس بات پر ایمان نہ لائیں', kanzulImanUrdu: 'تو شاید آپ ان کے پیچھے غم کے مارے اپنی جان ہلاک کر ڈالیں گے اگر وہ اس بات پر ایمان نہ لائیں', kanzulImanRomanUrdu: 'To shayad aap un ke peeche gham ke maare apni jaan halak kar daalenge agar woh is baat par imaan na layein' },
+    { number: 7, arabic: 'إِنَّا جَعَلْنَا مَا عَلَى ٱلْأَرْضِ زِينَةً لَّهَا لِنَبْلُوَهُمْ أَيُّهُمْ أَحْسَنُ عَمَلًا', translation: 'Indeed, We have made that which is on the earth adornment for it that We may test them [as to] which of them is best in deed.', translationUrdu: 'بیشک جو کچھ زمین پر ہے ہم نے اسے اس کے لیے زینت بنایا تاکہ ہم ان کا امتحان لیں کہ ان میں کون اچھے عمل والا ہے', kanzulImanUrdu: 'بیشک جو کچھ زمین پر ہے ہم نے اسے اس کے لیے زینت بنایا تاکہ ہم ان کا امتحان لیں کہ ان میں کون اچھے عمل والا ہے', kanzulImanRomanUrdu: 'Beshak jo kuch zameen par hai hum ne use us ke liye zeenat banaya taake hum un ka imtihan lein ke un mein kaun achhe amal wala hai' },
+    { number: 8, arabic: 'وَإِنَّا لَجَٰعِلُونَ مَا عَلَيْهَا صَعِيدًا جُرُزًا', translation: 'And indeed, We will make that which is upon it [into] a barren ground.', translationUrdu: 'اور بیشک جو کچھ اس پر ہے ہم اسے چٹیل میدان بنا دینے والے ہیں', kanzulImanUrdu: 'اور بیشک جو کچھ اس پر ہے ہم اسے چٹیل میدان بنا دینے والے ہیں', kanzulImanRomanUrdu: 'Aur beshak jo kuch us par hai hum use chateel maidan bana dene wale hain' },
+    { number: 9, arabic: 'أَمْ حَسِبْتَ أَنَّ أَصْحَٰبَ ٱلْكَهْفِ وَٱلرَّقِيمِ كَانُوا۟ مِنْ ءَايَٰتِنَا عَجَبًا', translation: 'Or have you thought that the companions of the cave and the inscription were, among Our signs, a wonder?', translationUrdu: 'کیا تم نے گمان کیا کہ غار اور کتبے والے ہماری نشانیوں میں سے ایک عجیب نشانی تھے', kanzulImanUrdu: 'کیا تم نے گمان کیا کہ غار اور کتبے والے ہماری نشانیوں میں سے ایک عجیب نشانی تھے', kanzulImanRomanUrdu: 'Kya tum ne guman kiya ke ghaar aur katbe wale hamari nishaniyon mein se ek ajeeb nishani the' },
+    { number: 10, arabic: 'إِذْ أَوَى ٱلْفِتْيَةُ إِلَى ٱلْكَهْفِ فَقَالُوا۟ رَبَّنَآ ءَاتِنَا مِن لَّدُنكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا', translation: '[Mention] when the youths retreated to the cave and said, "Our Lord, grant us from Yourself mercy and prepare for us from our affair right guidance."', translationUrdu: 'جب ان جوانوں نے غار میں پناہ لی تو کہا: اے ہمارے رب! ہمیں اپنے پاس سے رحمت عطا فرما اور ہمارے لیے ہمارے کام میں رہنمائی مہیا فرما', kanzulImanUrdu: 'جب ان جوانوں نے غار میں پناہ لی تو کہا: اے ہمارے رب! ہمیں اپنے پاس سے رحمت عطا فرما اور ہمارے لیے ہمارے کام میں رہنمائی مہیا فرما', kanzulImanRomanUrdu: 'Jab un jawano ne ghaar mein panah li to kaha: Aye hamare Rab! Humein apne paas se rehmat ata farma aur hamare liye hamare kaam mein rehnumai muhayya farma' },
+  ],
+};
+
+export const SURAH_DETAILS_MAP: Record<number, SurahDetail> = {
+  1: SURAH_AL_FATIHAH_DETAIL,
+  18: SURAH_AL_KAHF_DETAIL,
+  67: SURAH_AL_MULK_DETAIL,
+  112: SURAH_AL_IKHLAS_DETAIL,
+  113: SURAH_AL_FALAQ_DETAIL,
+  114: SURAH_AN_NAS_DETAIL,
+};

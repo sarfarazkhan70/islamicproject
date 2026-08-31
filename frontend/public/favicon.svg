@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Badge -->
+  <rect width="100" height="100" rx="24" fill="#0A1F1A" />
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="none" stroke="url(#emeraldGrad)" stroke-width="2" opacity="0.4" />
+  
+  <!-- Elegant Crescent Moon -->
+  <path d="M 58 24 C 40 24 26 38 26 56 C 26 74 40 88 58 88 C 66 88 73 85 79 80 C 65 80 54 68 54 54 C 54 40 65 28 79 28 C 73 25 66 24 58 24 Z" fill="url(#emeraldGrad)" />
+  
+  <!-- 8-Pointed Islamic Star -->
+  <path d="M 68 38 L 71 44 L 77 44 L 72 48 L 74 54 L 68 50 L 62 54 L 64 48 L 59 44 L 65 44 Z" fill="url(#goldGrad)" />
+</svg>

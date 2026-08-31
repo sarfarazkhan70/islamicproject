@@ -1,0 +1,28 @@
+import { Router } from 'express';
+import { RamadanController } from '../controllers/ramadan.controller.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validation.middleware.js';
+import {
+  updateFastingRecordSchema,
+  updateKhatamProgressSchema,
+} from '../validators/ramadan.validators.js';
+
+const router = Router();
+
+router.get('/fasting', requireAuth, RamadanController.getFastingRecords);
+router.post(
+  '/fasting',
+  requireAuth,
+  validate(updateFastingRecordSchema),
+  RamadanController.updateFastingRecord
+);
+
+router.get('/khatam', requireAuth, RamadanController.getKhatamProgress);
+router.post(
+  '/khatam',
+  requireAuth,
+  validate(updateKhatamProgressSchema),
+  RamadanController.updateKhatamProgress
+);
+
+export const ramadanRoutes = router;

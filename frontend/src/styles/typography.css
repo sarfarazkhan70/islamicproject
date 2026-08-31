@@ -1,0 +1,144 @@
+/* ==========================================================================
+   ISLAMIC PRAYER — TYPOGRAPHY SYSTEM
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6,
+.font-heading {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.heading-display {
+  font-size: clamp(2rem, 5vw, var(--text-5xl));
+  font-weight: var(--weight-extrabold);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.heading-1 {
+  font-size: clamp(1.5rem, 3vw, var(--text-3xl));
+  font-weight: var(--weight-bold);
+}
+
+.heading-2 {
+  font-size: clamp(1.25rem, 2.5vw, var(--text-2xl));
+  font-weight: var(--weight-semibold);
+}
+
+.heading-3 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+.heading-4 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+}
+
+/* Arabic Quranic & Islamic Text Typography */
+.font-arabic {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  text-align: right;
+  line-height: 2.3;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mushaf-text,
+.quran-text {
+  font-family: var(--font-mushaf);
+  font-size: 1.85rem;
+  line-height: 2.4;
+  direction: rtl;
+  text-align: right;
+  color: var(--text-primary);
+  word-spacing: 0.12em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.quran-text-lg {
+  font-family: var(--font-mushaf);
+  font-size: 2.35rem;
+  line-height: 2.6;
+  direction: rtl;
+  text-align: right;
+  word-spacing: 0.14em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dua-text {
+  font-family: var(--font-arabic);
+  font-size: 1.4rem;
+  line-height: 2.2;
+  direction: rtl;
+  text-align: right;
+}
+
+.translation-text {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.urdu-translation-text {
+  font-family: var(--font-urdu);
+  font-size: 1.15rem;
+  line-height: 2.2;
+  direction: rtl;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.english-translation-text {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.roman-urdu-text {
+  font-family: var(--font-roman-urdu);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.reference-text {
+  font-size: var(--text-xs);
+  color: var(--brand-primary);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Text Utility Classes */
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+.text-primary { color: var(--text-primary); }
+.text-accent { color: var(--brand-primary); }
+.text-gold { color: var(--text-gold); }
+
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+.text-3xl { font-size: var(--text-3xl); }
+
+.font-normal { font-weight: var(--weight-normal); }
+.font-medium { font-weight: var(--weight-medium); }
+.font-semibold { font-weight: var(--weight-semibold); }
+.font-bold { font-weight: var(--weight-bold); }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,25 +1,46 @@
 /**
  * REACTIVE PRAYER TIMES HOOK
  * ==============================================================================
- * Connects the pure Prayer Calculation Engine with UI state, live location detection,
- * real-time next-prayer countdown ticks, and date navigation.
+ * Connects the pure Prayer Calculation Engine with UI state, centralized location
+ * store, real-time next-prayer countdown ticks, and date navigation.
  * ==============================================================================
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSettingsStore } from '../stores/useSettingsStore.js';
+import { useLocationStore } from '../stores/useLocationStore.js';
 import { calculatePrayerTimes, calculateMonthlyPrayerTimes } from '../core/prayerEngine/prayerEngine.js';
 import { DailyPrayerTimesResult, LocationInfo } from '../core/prayerEngine/types.js';
-import { requestCurrentLocation } from '../utils/geolocation.js';
 
 export function usePrayerTimes(initialDate: Date = new Date()) {
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
-  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
-  const [locationError, setLocationError] = useState<string | null>(null);
   const [now, setNow] = useState<Date>(new Date());
 
-  const { madhhab, calculationMethod, highLatitudeRule, timeFormat, location, setLocation } =
-    useSettingsStore();
+  const { madhhab, calculationMethod, highLatitudeRule, timeFormat } = useSettingsStore();
+  const {
+    latitude,
+    longitude,
+    timezone,
+    city,
+    country,
+    displayName,
+    isAutoDetected,
+    status: locationStatus,
+    errorMessage: locationError,
+    detectLocation: centralDetectLocation,
+    setManualLocation,
+  } = useLocationStore();
+
+  const isDetectingLocation = locationStatus === 'detecting';
+
+  const locationInfo: LocationInfo = useMemo(() => ({
+    city,
+    country,
+    latitude,
+    longitude,
+    timezone,
+    isAutoDetected,
+  }), [city, country, latitude, longitude, timezone, isAutoDetected]);
 
   // Tick timer every second for real-time countdown
   useEffect(() => {
@@ -33,9 +54,9 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
   const timetable = useMemo<DailyPrayerTimesResult>(() => {
     return calculatePrayerTimes({
       date: selectedDate,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      timezone: location.timezone,
+      latitude,
+      longitude,
+      timezone,
       options: {
         madhhab,
         calculationMethod,
@@ -45,9 +66,9 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     });
   }, [
     selectedDate,
-    location.latitude,
-    location.longitude,
-    location.timezone,
+    latitude,
+    longitude,
+    timezone,
     madhhab,
     calculationMethod,
     highLatitudeRule,
@@ -89,30 +110,17 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     };
   }, [timetable, now]);
 
-  // Request browser geolocation
+  // Request browser geolocation via central store
   const detectLocation = useCallback(async () => {
-    setIsDetectingLocation(true);
-    setLocationError(null);
-
-    const result = await requestCurrentLocation();
-    setIsDetectingLocation(false);
-
-    if (result.success && result.location) {
-      setLocation(result.location);
-      return true;
-    } else {
-      setLocationError(result.errorMessage || 'Unable to detect location.');
-      return false;
-    }
-  }, [setLocation]);
+    return centralDetectLocation({ force: true });
+  }, [centralDetectLocation]);
 
   // Manually select a city from the global database
   const selectCity = useCallback(
-    (city: LocationInfo) => {
-      setLocation(city);
-      setLocationError(null);
+    (cityObj: LocationInfo) => {
+      setManualLocation(cityObj);
     },
-    [setLocation]
+    [setManualLocation]
   );
 
   // Helper to fetch monthly grid
@@ -121,9 +129,9 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
       return calculateMonthlyPrayerTimes({
         year,
         month,
-        latitude: location.latitude,
-        longitude: location.longitude,
-        timezone: location.timezone,
+        latitude,
+        longitude,
+        timezone,
         options: {
           madhhab,
           calculationMethod,
@@ -132,7 +140,7 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
         },
       });
     },
-    [location, madhhab, calculationMethod, highLatitudeRule, timeFormat]
+    [latitude, longitude, timezone, madhhab, calculationMethod, highLatitudeRule, timeFormat]
   );
 
   return {
@@ -140,12 +148,13 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     setSelectedDate,
     timetable: {
       ...timetable,
-      location,
+      location: locationInfo,
       currentPrayer: liveCountdown.currentPrayer,
       nextPrayer: liveCountdown.nextPrayer,
       timeToNextPrayerFormatted: liveCountdown.timeToNextPrayerFormatted,
       timeToNextPrayerSeconds: liveCountdown.timeToNextPrayerSeconds,
     },
+    displayName,
     isDetectingLocation,
     locationError,
     detectLocation,
@@ -153,3 +162,4 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     getMonthlyTimetable,
   };
 }
+

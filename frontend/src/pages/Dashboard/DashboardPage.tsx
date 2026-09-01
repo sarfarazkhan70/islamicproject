@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextPrayerHero } from '../../components/prayer/NextPrayerHero';
+import { LocationPermissionBanner } from '../../components/common/LocationPermissionBanner.js';
+import { LocationPickerModal } from '../../components/common/LocationPickerModal.js';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes.js';
 import { useTrackerStore } from '../../stores/useTrackerStore';
+
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
 import { ProgressBar } from '../../components/common/ProgressBar';
@@ -18,8 +21,9 @@ import {
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
-  const { timetable } = usePrayerTimes();
+  const { timetable, displayName } = usePrayerTimes();
   const { getPrayerStatus, setPrayerStatus, qazaSummary } = useTrackerStore();
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
   const localDateStr = new Date().toISOString().split('T')[0];
 
@@ -43,8 +47,15 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+      {/* Auto Location Permission Banner */}
+      <LocationPermissionBanner onOpenManualPicker={() => setIsLocationModalOpen(true)} />
+
       {/* Dynamic Hero Countdown Card */}
-      <NextPrayerHero timetable={timetable} />
+      <NextPrayerHero
+        timetable={timetable}
+        locationName={displayName || `${timetable.location.city}, ${timetable.location.country}`}
+        onOpenLocationPicker={() => setIsLocationModalOpen(true)}
+      />
 
       {/* Today's Prayer Quick Tracker Strip */}
       <Card>
@@ -250,6 +261,13 @@ export const DashboardPage: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {/* Global Location Picker Modal */}
+      <LocationPickerModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
+      />
     </div>
   );
 };
+

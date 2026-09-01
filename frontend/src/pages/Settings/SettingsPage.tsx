@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
+import { Badge } from '../../components/common/Badge';
 import { useSettingsStore } from '../../stores/useSettingsStore.js';
+import { useLocationStore } from '../../stores/useLocationStore.js';
 import { useThemeStore } from '../../stores/useThemeStore.js';
 import { MadhhabSelector } from '../../components/prayer/MadhhabSelector';
-import { MapPin, Globe, Moon, Sun, Clock, Download, Trash2, Shield, Check } from 'lucide-react';
+import { LocationPickerModal } from '../../components/common/LocationPickerModal.js';
+import { MapPin, Moon, Sun, Clock, Download, Trash2, Shield, Check, RefreshCw, Search } from 'lucide-react';
 import { CalculationMethod, HighLatitudeRule, SunniMadhhab } from '../../core/prayerEngine/types.js';
-import { requestCurrentLocation } from '../../utils/geolocation.js';
+
 
 export const SettingsPage: React.FC = () => {
   const {
-    location,
-    setLocation,
     madhhab,
     setMadhhab,
     calculationMethod,
@@ -23,16 +24,32 @@ export const SettingsPage: React.FC = () => {
     setTimeFormat,
   } = useSettingsStore();
 
-  const { theme, setTheme } = useThemeStore();
-  const [isLocating, setIsLocating] = useState(false);
-  const [saveToast, setSaveToast] = useState(false);
+  const {
+    city,
+    country,
+    state,
+    latitude,
+    longitude,
+    displayName,
+    timezone,
+    accuracy,
+    isLowAccuracy,
+    isAutoDetected,
+    status: locationStatus,
+    refreshLocation,
+    setManualLocation,
+  } = useLocationStore();
 
-  const handleAutoLocate = async () => {
-    setIsLocating(true);
-    const res = await requestCurrentLocation();
-    setIsLocating(false);
-    if (res.success && res.location) {
-      setLocation(res.location);
+
+  const { theme, setTheme } = useThemeStore();
+  const [saveToast, setSaveToast] = useState(false);
+  const [isCityModalOpen, setIsCityModalOpen] = useState(false);
+
+  const isLocating = locationStatus === 'detecting';
+
+  const handleRefreshLocation = async () => {
+    const ok = await refreshLocation();
+    if (ok) {
       triggerSaveToast();
     }
   };
@@ -62,6 +79,7 @@ export const SettingsPage: React.FC = () => {
             gap: 'var(--space-2)',
             fontSize: 'var(--text-sm)',
             fontWeight: 'var(--weight-semibold)',
+            animation: 'fadeIn 0.2s ease',
           }}
         >
           <Check size={18} /> Settings saved & prayer timetable recalculated!
@@ -70,33 +88,140 @@ export const SettingsPage: React.FC = () => {
 
       {/* 1. Location Settings */}
       <Card>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
-          <MapPin size={20} style={{ color: 'var(--brand-primary)' }} />
-          <h3 className="heading-3">Location & Coordinates</h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+            <MapPin size={20} style={{ color: 'var(--brand-primary)' }} />
+            <h3 className="heading-3" style={{ margin: 0 }}>Location & Coordinates</h3>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+            {isAutoDetected ? (
+              <Badge variant="emerald">Auto GPS</Badge>
+            ) : (
+              <Badge variant="gray">Manual</Badge>
+            )}
+            {accuracy !== null && (
+              <Badge variant={isLowAccuracy ? 'gold' : 'emerald'}>
+                Accuracy: ±{accuracy}m
+              </Badge>
+            )}
+          </div>
         </div>
+
+        {/* Display name highlight */}
+        <div
+          style={{
+            padding: 'var(--space-3) var(--space-4)',
+            backgroundColor: 'var(--bg-surface-elevated)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-subtle)',
+            marginBottom: 'var(--space-4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 'var(--space-2)',
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+              Active Location Display
+            </div>
+            <div style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-base)', color: 'var(--text-primary)' }}>
+              {displayName || `${city}, ${country}`}
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: 2 }}>
+              Coordinates: {latitude?.toFixed(4)}° N, {longitude?.toFixed(4)}° E • Timezone: <strong>{timezone}</strong>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+            <Button
+              variant="primary"
+              size="sm"
+              isLoading={isLocating}
+              icon={<RefreshCw size={14} className={isLocating ? 'animate-spin' : ''} />}
+              onClick={handleRefreshLocation}
+            >
+              {isLocating ? 'Detecting...' : 'Refresh My Location'}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Search size={14} />}
+              onClick={() => setIsCityModalOpen(true)}
+            >
+              Choose City
+            </Button>
+          </div>
+        </div>
+
+        {isLowAccuracy && (
+          <div
+            style={{
+              padding: 'var(--space-3)',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              borderRadius: 'var(--radius-md)',
+              color: 'var(--brand-gold)',
+              fontSize: 'var(--text-xs)',
+              marginBottom: 'var(--space-4)',
+            }}
+          >
+            ⚠️ Your location accuracy is low (±{accuracy}m). Prayer timings and Qibla direction may be less accurate. Try refreshing with a clearer view of the sky.
+          </div>
+        )}
 
         <div className="grid-2">
           <div className="input-group">
-            <label className="label">Current City</label>
+            <label className="label">City / Locality</label>
             <input
               type="text"
               className="input"
-              value={location.city}
+              value={city}
               onChange={(e) => {
-                setLocation({ city: e.target.value });
+                setManualLocation({ city: e.target.value });
                 triggerSaveToast();
               }}
             />
           </div>
 
           <div className="input-group">
+            <label className="label">State / Region</label>
+            <input
+              type="text"
+              className="input"
+              value={state || ''}
+              onChange={(e) => {
+                setManualLocation({ state: e.target.value });
+                triggerSaveToast();
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="grid-2" style={{ marginTop: 'var(--space-4)' }}>
+          <div className="input-group">
             <label className="label">Country</label>
             <input
               type="text"
               className="input"
-              value={location.country}
+              value={country}
               onChange={(e) => {
-                setLocation({ country: e.target.value });
+                setManualLocation({ country: e.target.value });
+                triggerSaveToast();
+              }}
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="label">Timezone (IANA)</label>
+            <input
+              type="text"
+              className="input"
+              value={timezone}
+              onChange={(e) => {
+                setManualLocation({ timezone: e.target.value });
                 triggerSaveToast();
               }}
             />
@@ -110,11 +235,11 @@ export const SettingsPage: React.FC = () => {
               type="number"
               step="any"
               className="input"
-              value={location.latitude}
+              value={latitude}
               onChange={(e) => {
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val)) {
-                  setLocation({ latitude: val });
+                  setManualLocation({ latitude: val });
                   triggerSaveToast();
                 }
               }}
@@ -127,33 +252,19 @@ export const SettingsPage: React.FC = () => {
               type="number"
               step="any"
               className="input"
-              value={location.longitude}
+              value={longitude}
               onChange={(e) => {
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val)) {
-                  setLocation({ longitude: val });
+                  setManualLocation({ longitude: val });
                   triggerSaveToast();
                 }
               }}
             />
           </div>
         </div>
-
-        <div style={{ display: 'flex', gap: 'var(--space-4)', marginTop: 'var(--space-4)', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Button
-            variant="secondary"
-            size="sm"
-            isLoading={isLocating}
-            icon={<Globe size={14} />}
-            onClick={handleAutoLocate}
-          >
-            Auto-Detect via GPS
-          </Button>
-          <span className="text-xs text-muted">
-            Timezone: <strong>{location.timezone}</strong>
-          </span>
-        </div>
       </Card>
+
 
       {/* 2. Madhhab & Prayer Calculation Conventions */}
       <Card>
@@ -301,6 +412,13 @@ export const SettingsPage: React.FC = () => {
           </Button>
         </div>
       </Card>
+
+      {/* Global Location Picker Modal */}
+      <LocationPickerModal
+        isOpen={isCityModalOpen}
+        onClose={() => setIsCityModalOpen(false)}
+      />
     </div>
   );
 };
+

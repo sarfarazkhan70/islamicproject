@@ -1,52 +1,68 @@
 /**
  * BROWSER GEOLOCATION UTILITY
  * ==============================================================================
- * Privacy-preserving, one-time geolocation lookup with graceful error handling
- * and offline closest city matching.
+ * Privacy-preserving, high-accuracy geolocation lookup with reverse geocoding,
+ * permission querying, accuracy reporting, and graceful error handling.
  * ==============================================================================
  */
 
 import { LocationInfo } from '../core/prayerEngine/types.js';
-import { GLOBAL_CITIES } from '../core/prayerEngine/cities.js';
+import { reverseGeocodeCoordinates, findNearestKnownCity } from './reverseGeocoding.js';
 import { getSystemTimezone } from './timezone.js';
+
+export interface CentralLocationData extends LocationInfo {
+  accuracy: number | null;
+  locality?: string;
+  district?: string;
+  state?: string;
+  displayName: string;
+  timestamp: number;
+  isLowAccuracy: boolean;
+}
 
 export interface GeolocationResult {
   success: boolean;
   location?: LocationInfo;
+  data?: CentralLocationData;
+  accuracyMeters?: number;
+  isLowAccuracy?: boolean;
   errorCode?: 'PERMISSION_DENIED' | 'POSITION_UNAVAILABLE' | 'TIMEOUT' | 'UNSUPPORTED';
   errorMessage?: string;
 }
 
 /**
- * Finds the nearest known city in our offline database to the given coordinates
+ * Checks browser permission state for geolocation
  */
-export function findNearestKnownCity(lat: number, lng: number): LocationInfo {
-  let nearestCity = GLOBAL_CITIES[0];
-  let minDistance = Infinity;
-
-  for (const city of GLOBAL_CITIES) {
-    const dLat = city.latitude - lat;
-    const dLng = city.longitude - lng;
-    const distSq = dLat * dLat + dLng * dLng;
-    if (distSq < minDistance) {
-      minDistance = distSq;
-      nearestCity = city;
-    }
+export async function checkGeolocationPermission(): Promise<
+  'prompt' | 'granted' | 'denied' | 'unsupported'
+> {
+  if (
+    typeof navigator === 'undefined' ||
+    !navigator.permissions ||
+    !navigator.permissions.query
+  ) {
+    return typeof navigator !== 'undefined' && 'geolocation' in navigator
+      ? 'prompt'
+      : 'unsupported';
   }
 
-  return {
-    ...nearestCity,
-    latitude: lat,
-    longitude: lng,
-    isAutoDetected: true,
-  };
+  try {
+    const result = await navigator.permissions.query({ name: 'geolocation' });
+    return result.state as 'prompt' | 'granted' | 'denied';
+  } catch {
+    return 'prompt';
+  }
 }
 
 /**
- * Requests the user's current GPS position via navigator.geolocation
+ * Requests fresh, high-accuracy GPS position with reverse geocoded human name
  */
-export async function requestCurrentLocation(): Promise<GeolocationResult> {
-  if (!navigator.geolocation) {
+export async function requestCurrentAutoLocation(options?: {
+  enableHighAccuracy?: boolean;
+  timeout?: number;
+  maximumAge?: number;
+}): Promise<GeolocationResult> {
+  if (typeof navigator === 'undefined' || !navigator.geolocation) {
     return {
       success: false,
       errorCode: 'UNSUPPORTED',
@@ -54,26 +70,53 @@ export async function requestCurrentLocation(): Promise<GeolocationResult> {
     };
   }
 
+  const highAccuracy = options?.enableHighAccuracy ?? true;
+  const timeout = options?.timeout ?? 12000;
+  const maxAge = options?.maximumAge ?? 0;
+
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        const tz = getSystemTimezone();
+        const accuracy = position.coords.accuracy
+          ? Math.round(position.coords.accuracy)
+          : null;
+        const isLow = accuracy !== null && accuracy > 200;
 
-        // Match with nearest known city for friendly label and timezone
-        const nearest = findNearestKnownCity(lat, lng);
+        // Perform multi-tier reverse geocoding
+        const geocode = await reverseGeocodeCoordinates(lat, lng);
+        const tz = geocode.timezone || getSystemTimezone() || 'UTC';
+
+        const centralData: CentralLocationData = {
+          city: geocode.city,
+          country: geocode.country,
+          locality: geocode.locality,
+          district: geocode.district,
+          state: geocode.state,
+          displayName: geocode.displayName,
+          latitude: lat,
+          longitude: lng,
+          accuracy,
+          timezone: tz,
+          timestamp: Date.now(),
+          isAutoDetected: true,
+          isLowAccuracy: isLow,
+        };
 
         resolve({
           success: true,
+          data: centralData,
           location: {
-            city: nearest.city,
-            country: nearest.country,
+            city: geocode.city,
+            country: geocode.country,
             latitude: lat,
             longitude: lng,
-            timezone: tz || nearest.timezone,
+            timezone: tz,
             isAutoDetected: true,
           },
+          accuracyMeters: accuracy || undefined,
+          isLowAccuracy: isLow,
         });
       },
       (error) => {
@@ -102,10 +145,33 @@ export async function requestCurrentLocation(): Promise<GeolocationResult> {
         });
       },
       {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 600000, // 10 minutes cache
+        enableHighAccuracy: highAccuracy,
+        timeout,
+        maximumAge: maxAge,
       }
     );
   });
 }
+
+/**
+ * Backward compatibility wrapper
+ */
+export async function requestCurrentLocation(options?: {
+  enableHighAccuracy?: boolean;
+  timeout?: number;
+  maximumAge?: number;
+}): Promise<GeolocationResult> {
+  return requestCurrentAutoLocation(options);
+}
+
+export async function requestHighAccuracyLocation(): Promise<GeolocationResult> {
+  return requestCurrentAutoLocation({
+    enableHighAccuracy: true,
+    timeout: 15000,
+    maximumAge: 0,
+  });
+}
+
+export { findNearestKnownCity };
+
+

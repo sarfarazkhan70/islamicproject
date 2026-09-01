@@ -2,13 +2,14 @@
  * QIBLA GREAT-CIRCLE BEARING & DISTANCE ENGINE
  * ==============================================================================
  * Accurate spherical trigonometry calculations for Kaaba direction & distance.
- * Kaaba Coordinates: Latitude 21.42250° N, Longitude 39.82620° E
+ * Exact Kaaba Coordinates: Latitude 21.422487° N, Longitude 39.826206° E
+ * Bearing measured clockwise from TRUE NORTH (0° = N, 90° = E, 180° = S, 270° = W).
  * ==============================================================================
  */
 
 export const KAABA_COORDINATES = {
-  latitude: 21.4225,
-  longitude: 39.8262,
+  latitude: 21.422487,
+  longitude: 39.826206,
 };
 
 export interface QiblaResult {
@@ -27,8 +28,8 @@ export interface QiblaResult {
   };
 }
 
-const toRadians = (deg: number) => (deg * Math.PI) / 180;
-const toDegrees = (rad: number) => (rad * 180) / Math.PI;
+export const toRadians = (deg: number): number => (deg * Math.PI) / 180;
+export const toDegrees = (rad: number): number => (rad * 180) / Math.PI;
 
 /**
  * Calculates the forward Great-Circle bearing from user coordinates to the Kaaba.
@@ -36,6 +37,12 @@ const toDegrees = (rad: number) => (rad * 180) / Math.PI;
  * θ = atan2(sin(Δλ) * cos(φ2), cos(φ1) * sin(φ2) − sin(φ1) * cos(φ2) * cos(Δλ))
  */
 export function calculateQiblaBearing(latitude: number, longitude: number): number {
+  const latDiff = Math.abs(latitude - KAABA_COORDINATES.latitude);
+  const lngDiff = Math.abs(longitude - KAABA_COORDINATES.longitude);
+  if (latDiff < 1e-6 && lngDiff < 1e-6) {
+    return 0;
+  }
+
   const phi1 = toRadians(latitude);
   const phi2 = toRadians(KAABA_COORDINATES.latitude);
   const deltaLambda = toRadians(KAABA_COORDINATES.longitude - longitude);
@@ -91,8 +98,29 @@ export function getCompassCardinal(bearing: number): string {
     'NW',
     'NNW',
   ];
-  const index = Math.round(bearing / 22.5) % 16;
+  const normalized = ((bearing % 360) + 360) % 360;
+  const index = Math.round(normalized / 22.5) % 16;
   return points[index];
+}
+
+/**
+ * Calculates relative Qibla angle on device screen
+ */
+export function getRelativeQiblaAngle(qiblaBearing: number, deviceHeading: number): number {
+  const rel = ((qiblaBearing - deviceHeading) % 360 + 360) % 360;
+  return Math.round(rel * 10) / 10;
+}
+
+/**
+ * Determines whether device heading is aligned with Qibla bearing within threshold (default ±3°)
+ */
+export function isAlignedWithQibla(
+  qiblaBearing: number,
+  deviceHeading: number,
+  thresholdDeg = 3
+): boolean {
+  const diff = Math.abs(((qiblaBearing - deviceHeading + 540) % 360) - 180);
+  return diff <= thresholdDeg;
 }
 
 /**
@@ -114,3 +142,4 @@ export function getQiblaInfo(latitude: number, longitude: number): QiblaResult {
     kaabaCoordinates: KAABA_COORDINATES,
   };
 }
+

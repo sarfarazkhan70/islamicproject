@@ -5,17 +5,17 @@ import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { MadhhabSelector } from '../../components/prayer/MadhhabSelector';
 import { NextPrayerHero } from '../../components/prayer/NextPrayerHero';
+import { LocationPermissionBanner } from '../../components/common/LocationPermissionBanner.js';
+import { LocationPickerModal } from '../../components/common/LocationPickerModal.js';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes.js';
 import { useSettingsStore } from '../../stores/useSettingsStore.js';
-import { GLOBAL_CITIES } from '../../core/prayerEngine/cities.js';
-import { CalculationMethod, SunniMadhhab, LocationInfo } from '../../core/prayerEngine/types.js';
+import { useLocationStore } from '../../stores/useLocationStore.js';
+import { CalculationMethod, SunniMadhhab } from '../../core/prayerEngine/types.js';
 import {
   MapPin,
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
-  Clock,
-  CheckCircle,
   AlertCircle,
   Compass,
   Search,
@@ -26,12 +26,18 @@ export const PrayerTimesPage: React.FC = () => {
     selectedDate,
     setSelectedDate,
     timetable,
+    displayName,
     isDetectingLocation,
     locationError,
     detectLocation,
-    selectCity,
     getMonthlyTimetable,
   } = usePrayerTimes();
+
+  const {
+    accuracy,
+    isLowAccuracy,
+  } = useLocationStore();
+
 
   const {
     madhhab,
@@ -44,7 +50,6 @@ export const PrayerTimesPage: React.FC = () => {
 
   const [viewMode, setViewMode] = useState<'daily' | 'monthly'>('daily');
   const [showCityModal, setShowCityModal] = useState(false);
-  const [citySearchQuery, setCitySearchQuery] = useState('');
 
   // Date Navigation Helpers
   const handlePrevDay = () => {
@@ -62,13 +67,6 @@ export const PrayerTimesPage: React.FC = () => {
   const handleToday = () => {
     setSelectedDate(new Date());
   };
-
-  // Filter cities for modal
-  const filteredCities = GLOBAL_CITIES.filter(
-    (c) =>
-      c.city.toLowerCase().includes(citySearchQuery.toLowerCase()) ||
-      c.country.toLowerCase().includes(citySearchQuery.toLowerCase())
-  );
 
   // Monthly timetable calculation for monthly view
   const currentYear = selectedDate.getFullYear();
@@ -102,6 +100,9 @@ export const PrayerTimesPage: React.FC = () => {
         }
       />
 
+      {/* Permission Banner for auto location */}
+      <LocationPermissionBanner onOpenManualPicker={() => setShowCityModal(true)} />
+
       {/* Location & Timezone Bar */}
       <Card>
         <div
@@ -121,17 +122,22 @@ export const PrayerTimesPage: React.FC = () => {
               <MapPin size={20} />
             </div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
                 <h3 style={{ fontSize: 'var(--text-base)', margin: 0, fontWeight: 'var(--weight-bold)' }}>
-                  {timetable.location.city}, {timetable.location.country}
+                  {displayName || `${timetable.location.city}, ${timetable.location.country}`}
                 </h3>
                 {timetable.location.isAutoDetected ? (
                   <Badge variant="emerald">GPS Detected</Badge>
                 ) : (
                   <Badge variant="gray">Manual Location</Badge>
                 )}
+                {accuracy !== null && (
+                  <Badge variant={isLowAccuracy ? 'gold' : 'emerald'}>
+                    ±{accuracy}m
+                  </Badge>
+                )}
               </div>
-              <p className="text-xs text-muted" style={{ margin: 0 }}>
+              <p className="text-xs text-muted" style={{ margin: '3px 0 0 0' }}>
                 {timetable.location.latitude.toFixed(4)}° N, {timetable.location.longitude.toFixed(4)}° E • Timezone:{' '}
                 {timetable.location.timezone}
               </p>
@@ -152,7 +158,7 @@ export const PrayerTimesPage: React.FC = () => {
               isLoading={isDetectingLocation}
               onClick={detectLocation}
             >
-              <Compass size={14} /> GPS Locate
+              <Compass size={14} /> {isDetectingLocation ? 'Locating...' : 'GPS Locate'}
             </Button>
           </div>
         </div>
@@ -257,12 +263,15 @@ export const PrayerTimesPage: React.FC = () => {
         <MadhhabSelector
           selected={madhhab}
           onChange={(m: SunniMadhhab) => setMadhhab(m)}
-          showExplanation={true}
         />
       </Card>
 
       {/* Hero Countdown for Active/Next Prayer */}
-      <NextPrayerHero timetable={timetable} />
+      <NextPrayerHero
+        timetable={timetable}
+        locationName={displayName || `${timetable.location.city}, ${timetable.location.country}`}
+        onOpenLocationPicker={() => setShowCityModal(true)}
+      />
 
       {/* Daily Timetable Display */}
       {viewMode === 'daily' ? (
@@ -290,85 +299,57 @@ export const PrayerTimesPage: React.FC = () => {
                         width: 38,
                         height: 38,
                         borderRadius: 'var(--radius-lg)',
+                        backgroundColor: isCurrent
+                          ? 'var(--brand-primary)'
+                          : isProhibited
+                          ? 'rgba(239, 68, 68, 0.15)'
+                          : 'var(--bg-surface-elevated)',
+                        color: isCurrent
+                          ? '#fff'
+                          : isProhibited
+                          ? 'var(--brand-danger)'
+                          : 'var(--text-secondary)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: isCurrent
-                          ? 'var(--brand-primary)'
-                          : isNext
-                          ? 'var(--status-pending-bg)'
-                          : isProhibited
-                          ? 'var(--status-missed-bg)'
-                          : 'var(--bg-surface-elevated)',
-                        color: isCurrent
-                          ? '#ffffff'
-                          : isNext
-                          ? 'var(--brand-gold)'
-                          : isProhibited
-                          ? 'var(--status-missed)'
-                          : 'var(--text-secondary)',
+                        fontSize: 'var(--text-xs)',
+                        fontWeight: 'var(--weight-bold)',
                       }}
                     >
-                      {isProhibited ? (
-                        <AlertCircle size={18} />
-                      ) : isCurrent ? (
-                        <CheckCircle size={18} />
-                      ) : (
-                        <Clock size={18} />
-                      )}
+                      {prayer.key.slice(0, 3).toUpperCase()}
                     </div>
-
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                        <span
-                          style={{
-                            fontWeight: isCurrent || isNext ? 'var(--weight-bold)' : 'var(--weight-medium)',
-                            color: isCurrent ? 'var(--brand-primary)' : 'var(--text-primary)',
-                          }}
-                        >
+                        <span style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)' }}>
                           {prayer.name}
                         </span>
-                        <span className="font-arabic text-muted" style={{ fontSize: '1rem' }}>
-                          {prayer.arabicName}
-                        </span>
-                        {prayer.key === 'asr' && (
-                          <span
-                            className="badge badge-emerald"
-                            style={{ fontSize: '0.65rem', padding: '1px 6px' }}
-                          >
-                            {madhhab.toUpperCase()} {madhhab === 'hanafi' ? '2×' : '1×'}
-                          </span>
-                        )}
+                        {isNext && <Badge variant="gold">NEXT</Badge>}
+                        {isCurrent && <Badge variant="emerald">CURRENT</Badge>}
+                        {isProhibited && <Badge variant="red">PROHIBITED</Badge>}
                       </div>
-                      <span className="text-xs text-muted" style={{ display: 'block' }}>
-                        {prayer.description}
-                      </span>
+                      <span className="text-xs text-muted font-arabic">{prayer.arabicName}</span>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                    <span
+                  <div style={{ textAlign: 'right' }}>
+                    <div
                       style={{
+                        fontSize: 'var(--text-base)',
+                        fontWeight: 'var(--weight-extrabold)',
                         fontFamily: 'var(--font-sans)',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: isCurrent || isNext ? 'var(--weight-bold)' : 'var(--weight-semibold)',
                         color: isCurrent
                           ? 'var(--brand-primary)'
-                          : isNext
-                          ? 'var(--text-gold)'
                           : isProhibited
-                          ? 'var(--text-muted)'
+                          ? 'var(--brand-danger)'
                           : 'var(--text-primary)',
                       }}
                     >
-                      {timeFormat === '24h' ? prayer.time24Formatted : prayer.timeFormatted}
-                    </span>
-
-                    {isCurrent && <Badge variant="emerald">Active</Badge>}
-                    {isNext && <Badge variant="gold">Upcoming</Badge>}
-                    {isProhibited && <Badge variant="red">Prohibited</Badge>}
-                    {prayer.isVoluntary && !isCurrent && !isNext && (
-                      <Badge variant="purple">Sunnah / Nafl</Badge>
+                      {prayer.timeFormatted}
+                    </div>
+                    {prayer.windowEnd && (
+                      <span className="text-xs text-muted">
+                        until {prayer.windowEnd.timeFormatted}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -377,61 +358,59 @@ export const PrayerTimesPage: React.FC = () => {
           </div>
         </Card>
       ) : (
-        /* Monthly Timetable Grid View */
+        /* Monthly Timetable View */
         <Card>
           <div style={{ marginBottom: 'var(--space-4)' }}>
             <h3 className="heading-3" style={{ margin: 0 }}>
-              Monthly Prayer Calendar — {new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(selectedDate)}
+              Monthly Prayer Timetable — {new Date(currentYear, currentMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
             </h3>
             <p className="text-secondary text-xs" style={{ margin: 0 }}>
-              {timetable.location.city} • Method: {calculationMethod} • Madhhab: {madhhab.toUpperCase()}
+              Full 30-day astronomical schedule for {displayName || `${timetable.location.city}, ${timetable.location.country}`}
             </p>
           </div>
+
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+            <table className="table" style={{ width: '100%', fontSize: 'var(--text-xs)' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--border-default)', textAlign: 'left' }}>
-                  <th style={{ padding: 'var(--space-3)' }}>Date</th>
-                  <th style={{ padding: 'var(--space-3)' }}>Fajr</th>
-                  <th style={{ padding: 'var(--space-3)' }}>Sunrise</th>
-                  <th style={{ padding: 'var(--space-3)' }}>Zuhr</th>
-                  <th style={{ padding: 'var(--space-3)' }}>Asr ({madhhab.toUpperCase()})</th>
-                  <th style={{ padding: 'var(--space-3)' }}>Maghrib</th>
-                  <th style={{ padding: 'var(--space-3)' }}>Isha</th>
+                <tr>
+                  <th>Date</th>
+                  <th>Fajr</th>
+                  <th>Sunrise</th>
+                  <th>Ishraq</th>
+                  <th>Zuhr</th>
+                  <th>Asr ({madhhab.toUpperCase()})</th>
+                  <th>Maghrib</th>
+                  <th>Isha</th>
+                  <th>Tahajjud</th>
                 </tr>
               </thead>
               <tbody>
-                {monthlyData.map((dayResult, idx) => {
-                  const isToday =
-                    dayResult.date.getDate() === new Date().getDate() &&
-                    dayResult.date.getMonth() === new Date().getMonth();
-
-                  const fajr = dayResult.prayers.find((p) => p.key === 'fajr')?.timeFormatted;
-                  const sunrise = dayResult.prayers.find((p) => p.key === 'sunrise')?.timeFormatted;
-                  const zuhr = dayResult.prayers.find((p) => p.key === 'zuhr')?.timeFormatted;
-                  const asr = dayResult.prayers.find((p) => p.key === 'asr')?.timeFormatted;
-                  const maghrib = dayResult.prayers.find((p) => p.key === 'maghrib')?.timeFormatted;
-                  const isha = dayResult.prayers.find((p) => p.key === 'isha')?.timeFormatted;
+                {monthlyData.map((day, idx) => {
+                  const isCurrentDay = day.date.toDateString() === new Date().toDateString();
+                  const getSlot = (key: string) => day.prayers.find((p) => p.key === key)?.timeFormatted || '--:--';
 
                   return (
                     <tr
                       key={idx}
                       style={{
-                        borderBottom: '1px solid var(--border-subtle)',
-                        backgroundColor: isToday ? 'var(--brand-primary-light)' : 'transparent',
-                        fontWeight: isToday ? 'var(--weight-bold)' : 'normal',
+                        backgroundColor: isCurrentDay ? 'rgba(16, 185, 129, 0.08)' : undefined,
+                        fontWeight: isCurrentDay ? 'var(--weight-bold)' : undefined,
                       }}
                     >
-                      <td style={{ padding: 'var(--space-3)' }}>
-                        {dayResult.date.getDate()} {new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(dayResult.date)}
-                        {isToday && <span style={{ color: 'var(--brand-primary)', marginLeft: 6 }}>● Today</span>}
+                      <td>
+                        {day.date.toLocaleDateString(undefined, {
+                          day: '2-digit',
+                          weekday: 'short',
+                        })}
                       </td>
-                      <td style={{ padding: 'var(--space-3)' }}>{fajr}</td>
-                      <td style={{ padding: 'var(--space-3)' }}>{sunrise}</td>
-                      <td style={{ padding: 'var(--space-3)' }}>{zuhr}</td>
-                      <td style={{ padding: 'var(--space-3)', color: 'var(--brand-primary)' }}>{asr}</td>
-                      <td style={{ padding: 'var(--space-3)' }}>{maghrib}</td>
-                      <td style={{ padding: 'var(--space-3)' }}>{isha}</td>
+                      <td>{getSlot('fajr')}</td>
+                      <td>{getSlot('sunrise')}</td>
+                      <td>{getSlot('ishraq')}</td>
+                      <td>{getSlot('zuhr')}</td>
+                      <td style={{ color: 'var(--brand-primary)' }}>{getSlot('asr')}</td>
+                      <td>{getSlot('maghrib')}</td>
+                      <td>{getSlot('isha')}</td>
+                      <td style={{ color: 'var(--brand-gold)' }}>{getSlot('tahajjud')}</td>
                     </tr>
                   );
                 })}
@@ -441,71 +420,11 @@ export const PrayerTimesPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Modal for Selecting Global City */}
-      {showCityModal && (
-        <div
-          className="drawer-backdrop open"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
-        >
-          <Card
-            style={{
-              maxWidth: 500,
-              width: '90%',
-              maxHeight: '80vh',
-              overflowY: 'auto',
-              position: 'relative',
-            }}
-          >
-            <div className="flex-between" style={{ marginBottom: 'var(--space-4)' }}>
-              <h3 style={{ margin: 0 }}>Select City</h3>
-              <button
-                className="btn btn-ghost btn-sm"
-                onClick={() => setShowCityModal(false)}
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            <div style={{ marginBottom: 'var(--space-4)' }}>
-              <input
-                type="text"
-                className="input"
-                placeholder="Search city or country..."
-                value={citySearchQuery}
-                onChange={(e) => setCitySearchQuery(e.target.value)}
-                autoFocus
-              />
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
-              {filteredCities.map((city: LocationInfo, i: number) => (
-                <button
-                  key={i}
-                  className="btn btn-ghost"
-                  style={{
-                    justifyContent: 'space-between',
-                    textAlign: 'left',
-                    padding: 'var(--space-3)',
-                    borderRadius: 'var(--radius-md)',
-                  }}
-                  onClick={() => {
-                    selectCity(city);
-                    setShowCityModal(false);
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: 'var(--weight-semibold)' }}>{city.city}</div>
-                    <div className="text-xs text-muted">{city.country} • {city.timezone}</div>
-                  </div>
-                  <span className="text-xs" style={{ color: 'var(--brand-primary)' }}>
-                    {city.latitude.toFixed(2)}°, {city.longitude.toFixed(2)}°
-                  </span>
-                </button>
-              ))}
-            </div>
-          </Card>
-        </div>
-      )}
+      {/* Global Location Picker Modal */}
+      <LocationPickerModal
+        isOpen={showCityModal}
+        onClose={() => setShowCityModal(false)}
+      />
     </div>
   );
 };

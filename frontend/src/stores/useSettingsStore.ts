@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { SunniMadhhab, CalculationMethod, HighLatitudeRule, LocationInfo } from '../core/prayerEngine/types.js';
+import { useLocationStore } from './useLocationStore.js';
 
 interface SettingsState {
   madhhab: SunniMadhhab;
@@ -15,15 +16,6 @@ interface SettingsState {
 }
 
 const STORAGE_KEY = 'islamic_prayer_settings_v1';
-
-const DEFAULT_LOCATION: LocationInfo = {
-  city: 'Makkah',
-  country: 'Saudi Arabia',
-  latitude: 21.4225,
-  longitude: 39.8262,
-  timezone: 'Asia/Riyadh',
-  isAutoDetected: false,
-};
 
 function loadStoredSettings(): Partial<SettingsState> {
   try {
@@ -42,7 +34,6 @@ function saveStoredSettings(state: SettingsState) {
       calculationMethod: state.calculationMethod,
       highLatitudeRule: state.highLatitudeRule,
       timeFormat: state.timeFormat,
-      location: state.location,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
   } catch {
@@ -51,13 +42,21 @@ function saveStoredSettings(state: SettingsState) {
 }
 
 const initial = loadStoredSettings();
+const centralLocationInitial = useLocationStore.getState();
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   madhhab: initial.madhhab || 'hanafi',
   calculationMethod: initial.calculationMethod || 'Karachi',
   highLatitudeRule: initial.highLatitudeRule || 'TwilightAngle',
   timeFormat: initial.timeFormat || '12h',
-  location: initial.location || DEFAULT_LOCATION,
+  location: {
+    city: centralLocationInitial.city,
+    country: centralLocationInitial.country,
+    latitude: centralLocationInitial.latitude,
+    longitude: centralLocationInitial.longitude,
+    timezone: centralLocationInitial.timezone,
+    isAutoDetected: centralLocationInitial.isAutoDetected,
+  },
 
   setMadhhab: (madhhab) => {
     set({ madhhab });
@@ -76,9 +75,24 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     saveStoredSettings(get());
   },
   setLocation: (loc) => {
+    useLocationStore.getState().setManualLocation(loc);
     set((state) => ({
       location: { ...state.location, ...loc },
     }));
-    saveStoredSettings(get());
   },
 }));
+
+// Sync changes from central useLocationStore into useSettingsStore
+useLocationStore.subscribe((state) => {
+  useSettingsStore.setState({
+    location: {
+      city: state.city,
+      country: state.country,
+      latitude: state.latitude,
+      longitude: state.longitude,
+      timezone: state.timezone,
+      isAutoDetected: state.isAutoDetected,
+    },
+  });
+});
+

@@ -67,15 +67,19 @@ export function formatTime24(input) {
     return `${padHours}:${padMinutes}`;
 }
 /**
- * Formats full Gregorian date (e.g. "Monday, August 31, 2026")
+ * Formats full Gregorian date (e.g. "Tuesday, September 1, 2026")
  */
-export function formatGregorianDate(date) {
-    return new Intl.DateTimeFormat('en-US', {
+export function formatGregorianDate(date, timezone) {
+    const options = {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
         year: 'numeric',
-    }).format(date);
+    };
+    if (timezone) {
+        options.timeZone = timezone;
+    }
+    return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 /**
  * Formats countdown seconds into "HH:MM:SS"

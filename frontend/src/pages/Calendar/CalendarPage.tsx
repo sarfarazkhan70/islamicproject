@@ -4,6 +4,7 @@ import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { useCalendarStore } from '../../stores/useCalendarStore.js';
+import { HIJRI_MONTHS } from '../../utils/hijriCalendar.js';
 import {
   ChevronLeft,
   ChevronRight,
@@ -18,15 +19,20 @@ export const CalendarPage: React.FC = () => {
     moonAdjustment,
     calendarGrid,
     events,
+    todayDate,
     converterResultHijri,
     converterResultGregorian,
-    setMonth,
     nextMonth,
     prevMonth,
+    resetToToday,
     setMoonAdjustment,
     convertGregorian,
     convertHijri,
   } = useCalendarStore();
+
+
+
+
 
   const [gregInput, setGregInput] = useState(new Date().toISOString().slice(0, 10));
   const [hijriYearInput, setHijriYearInput] = useState(1448);
@@ -46,9 +52,13 @@ export const CalendarPage: React.FC = () => {
     convertHijri(hijriYearInput, hijriMonthInput, hijriDayInput);
   };
 
-  // Determine current Hijri month name on display
-  const primaryHijriMonth = calendarGrid.days[15]?.monthName || 'Safar';
-  const primaryHijriYear = calendarGrid.days[15]?.year || 1448;
+  // Determine accurate Hijri month(s) covered by this calendar view
+  const firstMonth = calendarGrid.days[0]?.monthName;
+  const lastMonth = calendarGrid.days[calendarGrid.days.length - 1]?.monthName;
+  const primaryHijriYear = calendarGrid.days[Math.floor(calendarGrid.days.length / 2)]?.year || 1448;
+  const hijriMonthLabel = firstMonth && lastMonth
+    ? (firstMonth === lastMonth ? `${firstMonth} ${primaryHijriYear} AH` : `${firstMonth} – ${lastMonth} ${primaryHijriYear} AH`)
+    : `${primaryHijriYear} AH`;
 
   const todayStr = new Date().toISOString().slice(0, 10);
 
@@ -59,20 +69,25 @@ export const CalendarPage: React.FC = () => {
         arabicTitle="التقويم الهجري"
         subtitle="Hijri and Gregorian synchronized calendar with sacred Islamic events."
         actions={
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <span className="text-xs text-muted">Moon Sighting Adjustment:</span>
-            <select
-              className="select text-xs"
-              style={{ width: 'auto', padding: '4px 8px', height: 'auto', fontWeight: 'bold' }}
-              value={moonAdjustment}
-              onChange={(e) => setMoonAdjustment(Number(e.target.value))}
-            >
-              <option value={-2}>-2 Days (Sighted early)</option>
-              <option value={-1}>-1 Day (Sighted)</option>
-              <option value={0}>0 Days (Umm al-Qura baseline)</option>
-              <option value={1}>+1 Day (30 days completed)</option>
-              <option value={2}>+2 Days (Delayed)</option>
-            </select>
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+            <Badge variant="gold">
+              <Sparkles size={12} /> Today: {todayDate.day} {todayDate.monthName} {todayDate.year} AH
+            </Badge>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <span className="text-xs text-muted">Moon Sighting:</span>
+              <select
+                className="select text-xs"
+                style={{ width: 'auto', padding: '4px 8px', height: 'auto', fontWeight: 'bold' }}
+                value={moonAdjustment}
+                onChange={(e) => setMoonAdjustment(Number(e.target.value))}
+              >
+                <option value={-2}>-2 Days (Sighted early)</option>
+                <option value={-1}>-1 Day (Sighted)</option>
+                <option value={0}>0 Days (Umm al-Qura baseline)</option>
+                <option value={1}>+1 Day (30 days completed)</option>
+                <option value={2}>+2 Days (Delayed)</option>
+              </select>
+            </div>
           </div>
         }
       />
@@ -83,12 +98,13 @@ export const CalendarPage: React.FC = () => {
         <div className="flex-between" style={{ marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
           <div>
             <span className="label" style={{ color: 'var(--brand-primary)' }}>
-              {primaryHijriMonth} {primaryHijriYear} AH
+              {hijriMonthLabel}
             </span>
             <h3 className="heading-2" style={{ margin: 0 }}>
               {monthNames[currentMonth - 1]} {currentYear}
             </h3>
           </div>
+
 
           <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
             <Button variant="outline" size="sm" onClick={prevMonth} icon={<ChevronLeft size={14} />}>
@@ -97,10 +113,7 @@ export const CalendarPage: React.FC = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                const now = new Date();
-                setMonth(now.getFullYear(), now.getMonth() + 1);
-              }}
+              onClick={resetToToday}
             >
               Today
             </Button>
@@ -259,13 +272,9 @@ export const CalendarPage: React.FC = () => {
                 value={hijriMonthInput}
                 onChange={(e) => setHijriMonthInput(Number(e.target.value))}
               >
-                {[
-                  '1. Muharram', '2. Safar', '3. Rabi I', '4. Rabi II',
-                  '5. Jumada I', '6. Jumada II', '7. Rajab', '8. Sha\'ban',
-                  '9. Ramadan', '10. Shawwal', '11. Dhul Qi\'dah', '12. Dhul Hijjah',
-                ].map((m, idx) => (
-                  <option key={idx} value={idx + 1}>
-                    {m}
+                {HIJRI_MONTHS.map((m) => (
+                  <option key={m.number} value={m.number}>
+                    {m.number}. {m.name} ({m.arabicName})
                   </option>
                 ))}
               </select>
@@ -296,49 +305,50 @@ export const CalendarPage: React.FC = () => {
           Major Islamic Sacred Dates & Observances
         </h3>
         <div className="grid-2">
-          {events.map((evt, idx) => (
-            <Card key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
-              <div
-                style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: 'var(--radius-lg)',
-                  backgroundColor:
-                    evt.category === 'major'
-                      ? 'rgba(16, 185, 129, 0.12)'
-                      : 'rgba(245, 158, 11, 0.12)',
-                  color:
-                    evt.category === 'major'
-                      ? 'var(--brand-primary)'
-                      : 'var(--brand-gold)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <Sparkles size={20} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div className="flex-between">
-                  <h4 className="heading-3" style={{ fontSize: 'var(--text-sm)', margin: 0 }}>
-                    {evt.title}
-                  </h4>
-                  <Badge variant={evt.category === 'major' ? 'emerald' : 'gold'}>
-                    {evt.hijriDay} {monthNames[evt.hijriMonth - 1] ? evt.hijriMonth : ''}
-                  </Badge>
+          {events.map((evt, idx) => {
+            const mObj = HIJRI_MONTHS[evt.hijriMonth - 1];
+            return (
+              <Card key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
+                <div
+                  style={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor:
+                      evt.category === 'major'
+                        ? 'rgba(16, 185, 129, 0.12)'
+                        : 'rgba(245, 158, 11, 0.12)',
+                    color:
+                      evt.category === 'major'
+                        ? 'var(--brand-primary)'
+                        : 'var(--brand-gold)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Sparkles size={20} />
                 </div>
-                <p className="text-xs text-secondary" style={{ margin: '4px 0 0' }}>
-                  {evt.description}
-                </p>
-                <span className="font-arabic text-xs text-muted" style={{ display: 'block', marginTop: 2 }}>
-                  {evt.arabicTitle}
-                </span>
-              </div>
-            </Card>
-          ))}
+                <div style={{ flex: 1 }}>
+                  <div className="flex-between">
+                    <h4 className="heading-3" style={{ fontSize: 'var(--text-sm)', margin: 0 }}>
+                      {evt.title}
+                    </h4>
+                    <Badge variant={evt.category === 'major' ? 'emerald' : 'gold'}>
+                      {evt.hijriDay} {mObj?.name || ''}
+                    </Badge>
+                  </div>
+                  <span className="font-arabic text-xs text-muted" style={{ display: 'block', marginTop: 2 }}>
+                    {evt.arabicTitle}
+                  </span>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 };
+

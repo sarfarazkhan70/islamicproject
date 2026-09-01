@@ -104,6 +104,8 @@ export interface CalculatedPrayerSlot {
 export interface DailyPrayerTimesResult {
   date: Date;
   dateFormatted: string;
+  dateHijri: string;
+  hijri?: any;
   location: LocationInfo;
   madhhab: SunniMadhhab;
   calculationMethod: CalculationMethod;
@@ -125,3 +127,4 @@ export interface DailyPrayerTimesResult {
   timeToNextPrayerFormatted?: string;
   timeToNextPrayerSeconds?: number;
 }
+

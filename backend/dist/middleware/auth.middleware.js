@@ -30,6 +30,8 @@ export async function requireAuth(req, res, next) {
             id: user._id.toString(),
             _id: user._id,
             email: user.email,
+            phone: user.phone,
+            name: user.name,
             isAnonymous: user.isAnonymous,
             isActive: user.isActive,
         };

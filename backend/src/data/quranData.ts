@@ -202,7 +202,9 @@ export const SURAH_AL_MULK_DETAIL: SurahDetail = {
   versesCount: 30,
   revelationType: 'Meccan',
   juzStart: 29,
+  pageStart: 562,
   bismillahPre: true,
+
   audioRecitations: [
     {
       reciterId: 'alafasy',
@@ -333,6 +335,7 @@ export const SURAH_AL_FALAQ_DETAIL: SurahDetail = {
   versesCount: 5,
   revelationType: 'Meccan',
   juzStart: 30,
+  pageStart: 604,
   bismillahPre: true,
   audioRecitations: [
     {
@@ -359,6 +362,7 @@ export const SURAH_AN_NAS_DETAIL: SurahDetail = {
   versesCount: 6,
   revelationType: 'Meccan',
   juzStart: 30,
+  pageStart: 604,
   bismillahPre: true,
   audioRecitations: [
     {
@@ -386,7 +390,9 @@ export const SURAH_AL_KAHF_DETAIL: SurahDetail = {
   versesCount: 110,
   revelationType: 'Meccan',
   juzStart: 15,
+  pageStart: 293,
   bismillahPre: true,
+
   audioRecitations: [
     {
       reciterId: 'alafasy',

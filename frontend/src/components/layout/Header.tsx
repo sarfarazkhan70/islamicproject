@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Sun, Moon, Bell, MapPin, Compass, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sun, Moon, Bell, MapPin, Compass, RefreshCw, Calendar } from 'lucide-react';
 import { useThemeStore } from '../../stores/useThemeStore';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { useLocationStore } from '../../stores/useLocationStore';
+import { getCurrentHijriDate } from '../../utils/hijriCalendar.js';
 import { LocationPickerModal } from '../common/LocationPickerModal';
 import { Link } from 'react-router-dom';
 
@@ -17,6 +18,14 @@ export const Header: React.FC = () => {
   } = useLocationStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hijriDateStr, setHijriDateStr] = useState(getCurrentHijriDate().formatted);
+
+  // Keep live Hijri date updated
+  useEffect(() => {
+    const updateDate = () => setHijriDateStr(getCurrentHijriDate().formatted);
+    const interval = setInterval(updateDate, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const isDetecting = status === 'detecting';
   const isUnavailable = permissionStatus === 'denied' && !city;
@@ -26,6 +35,7 @@ export const Header: React.FC = () => {
     : isUnavailable
     ? 'Location unavailable'
     : displayName || city || 'Select Location';
+
 
   return (
     <>
@@ -42,8 +52,33 @@ export const Header: React.FC = () => {
         </div>
 
         <div className="header-right">
+          {/* Central Live Hijri Date Pill */}
+          <Link
+            to="/calendar"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--space-2)',
+              padding: '5px 12px',
+              backgroundColor: 'var(--bg-surface-elevated)',
+              borderRadius: 'var(--radius-full)',
+              border: '1px solid var(--border-subtle)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--text-primary)',
+              textDecoration: 'none',
+              transition: 'all 0.15s ease',
+            }}
+            title="View Islamic Calendar"
+          >
+            <Calendar size={12} style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
+            <span style={{ fontWeight: 'var(--weight-semibold)', color: 'var(--text-gold)', whiteSpace: 'nowrap' }}>
+              {hijriDateStr}
+            </span>
+          </Link>
+
           {/* Location & Madhhab Pill */}
           <button
+
             onClick={() => setIsModalOpen(true)}
             style={{
               display: 'flex',

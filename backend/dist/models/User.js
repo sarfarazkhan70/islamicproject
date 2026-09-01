@@ -2,11 +2,22 @@ import mongoose, { Schema } from 'mongoose';
 const userSchema = new Schema({
     email: {
         type: String,
-        required: true,
+        sparse: true,
         unique: true,
         lowercase: true,
         trim: true,
         index: true,
+    },
+    phone: {
+        type: String,
+        sparse: true,
+        unique: true,
+        trim: true,
+        index: true,
+    },
+    name: {
+        type: String,
+        trim: true,
     },
     passwordHash: {
         type: String,

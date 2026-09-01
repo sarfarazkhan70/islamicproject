@@ -89,8 +89,9 @@ export class QuranService {
       clearTimeout(timeout);
 
       if (res.ok) {
-        const json = await res.json();
+        const json: any = await res.json();
         if (json?.code === 200 && Array.isArray(json.data) && json.data.length > 0) {
+
           const arData = json.data.find((d: any) => d.edition.identifier === 'quran-uthmani') || json.data[0];
           const urData = json.data.find((d: any) => d.edition.identifier === 'ur.kanzuliman');
           const enData = json.data.find((d: any) => d.edition.identifier === 'en.ahmedraza');

@@ -6,15 +6,19 @@
  * ==============================================================================
  */
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useSettingsStore } from '../stores/useSettingsStore.js';
 import { useLocationStore } from '../stores/useLocationStore.js';
 import { calculatePrayerTimes, calculateMonthlyPrayerTimes } from '../core/prayerEngine/prayerEngine.js';
 import { DailyPrayerTimesResult, LocationInfo } from '../core/prayerEngine/types.js';
+import { getMidnightRolloverDelay } from '../utils/hijriCalendar.js';
 
 export function usePrayerTimes(initialDate: Date = new Date()) {
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const [now, setNow] = useState<Date>(new Date());
+  const lastDateKeyRef = useRef<string>(
+    `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`
+  );
 
   const { madhhab, calculationMethod, highLatitudeRule, timeFormat } = useSettingsStore();
   const {
@@ -42,13 +46,43 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     isAutoDetected,
   }), [city, country, latitude, longitude, timezone, isAutoDetected]);
 
-  // Tick timer every second for real-time countdown
+  // Tick timer every second for real-time countdown & check date rollover
   useEffect(() => {
     const timer = setInterval(() => {
-      setNow(new Date());
+      const current = new Date();
+      setNow(current);
+
+      const currentDateKey = `${current.getFullYear()}-${current.getMonth()}-${current.getDate()}`;
+      if (currentDateKey !== lastDateKeyRef.current) {
+        lastDateKeyRef.current = currentDateKey;
+        setSelectedDate((prev) => {
+          const prevKey = `${prev.getFullYear()}-${prev.getMonth()}-${prev.getDate()}`;
+          return prevKey !== currentDateKey ? current : prev;
+        });
+      }
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Dedicated midnight rollover timer
+  useEffect(() => {
+    let timeoutId: any;
+    const scheduleMidnightUpdate = () => {
+      const delay = getMidnightRolloverDelay();
+      timeoutId = setTimeout(() => {
+        const freshNow = new Date();
+        setNow(freshNow);
+        setSelectedDate(freshNow);
+        scheduleMidnightUpdate();
+      }, delay);
+    };
+
+    scheduleMidnightUpdate();
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
+
 
   // Recalculate daily prayer times whenever date, location, or options change
   const timetable = useMemo<DailyPrayerTimesResult>(() => {

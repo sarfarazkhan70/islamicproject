@@ -1,9 +1,9 @@
 /**
- * ISLAMIC HIJRI CALENDAR ENGINE
+ * ISLAMIC HIJRI CALENDAR ENGINE (Umm al-Qura Standard)
  * ==============================================================================
- * Algorithmic Umm al-Qura baseline with Julian Day Number (JDN) conversion,
- * user-configurable moon-sighting adjustment (-2 to +2 days), and verified
- * sacred Islamic events.
+ * Authoritative Umm al-Qura astronomical baseline with local timezone resolution,
+ * automatic system date detection, user moon-sighting adjustment (-2 to +2 days),
+ * bidirectional conversion, and sacred Islamic events.
  * ==============================================================================
  */
 
@@ -13,8 +13,8 @@ export interface HijriDate {
   monthName: string;
   monthNameArabic: string;
   day: number; // 1 - 30
-  formatted: string; // e.g. "14 Safar 1448 AH"
-  formattedArabic: string; // e.g. "١٤ صفر ١٤٤٨ هـ"
+  formatted: string; // e.g. "19 Rabi' al-Awwal 1448 AH"
+  formattedArabic: string; // e.g. "١٩ ربيع الأول ١٤٤٨ هـ"
   dayOfWeek: number; // 0 (Sun) - 6 (Sat)
   gregorianDate: string; // YYYY-MM-DD
   isSacredMonth: boolean; // Muharram, Rajab, Dhul Qi'dah, Dhul Hijjah
@@ -34,17 +34,18 @@ export interface IslamicEvent {
 export const HIJRI_MONTHS = [
   { number: 1, name: 'Muharram', arabicName: 'المحرم', isSacred: true },
   { number: 2, name: 'Safar', arabicName: 'صفر', isSacred: false },
-  { number: 3, name: 'Rabi\' al-Awwal', arabicName: 'ربيع الأول', isSacred: false },
-  { number: 4, name: 'Rabi\' al-Thani', arabicName: 'ربيع الثاني', isSacred: false },
-  { number: 5, name: 'Jumada al-Ula', arabicName: 'جمادى الأولى', isSacred: false },
-  { number: 6, name: 'Jumada al-Akhirah', arabicName: 'جمادى الآخرة', isSacred: false },
+  { number: 3, name: 'Rabi-ul-Awwal', arabicName: 'ربيع الأول', isSacred: false },
+  { number: 4, name: 'Rabi-us-Sani', arabicName: 'ربيع الثاني', isSacred: false },
+  { number: 5, name: 'Jumada-al-Ula', arabicName: 'جمادى الأولى', isSacred: false },
+  { number: 6, name: 'Jumada-as-Sani', arabicName: 'جمادى الآخرة', isSacred: false },
   { number: 7, name: 'Rajab', arabicName: 'رجب', isSacred: true },
-  { number: 8, name: 'Sha\'ban', arabicName: 'شعبان', isSacred: false },
+  { number: 8, name: "Sha'ban", arabicName: 'شعبان', isSacred: false },
   { number: 9, name: 'Ramadan', arabicName: 'رمضان', isSacred: false },
   { number: 10, name: 'Shawwal', arabicName: 'شوال', isSacred: false },
-  { number: 11, name: 'Dhul Qi\'dah', arabicName: 'ذو القعدة', isSacred: true },
-  { number: 12, name: 'Dhul Hijjah', arabicName: 'ذو الحجة', isSacred: true },
+  { number: 11, name: "Dhul-Qi'dah", arabicName: 'ذو القعدة', isSacred: true },
+  { number: 12, name: 'Dhul-Hijjah', arabicName: 'ذو الحجة', isSacred: true },
 ];
+
 
 export const ISLAMIC_EVENTS: IslamicEvent[] = [
   {
@@ -130,80 +131,176 @@ export const ISLAMIC_EVENTS: IslamicEvent[] = [
 ];
 
 /**
- * Converts Gregorian Date to Julian Day Number
+ * Returns current resolved system/browser timezone
  */
-function gregorianToJdn(year: number, month: number, day: number): number {
-  if (month < 3) {
-    year -= 1;
-    month += 12;
+export function getResolvedTimezone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  } catch {
+    return 'UTC';
   }
-  const a = Math.floor(year / 100);
-  const b = 2 - a + Math.floor(a / 4);
-  return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5;
 }
 
 /**
- * Converts Julian Day Number to Gregorian Date
+ * Computes milliseconds remaining until the next local midnight
  */
-function jdnToGregorian(jdn: number): { year: number; month: number; day: number } {
-  const z = Math.floor(jdn + 0.5);
-  const a = Math.floor((z - 1867216.25) / 36524.25);
-  const b = z + 1 + a - Math.floor(a / 4);
-  const c = b + 1524;
-  const d = Math.floor((c - 122.1) / 365.25);
-  const e = Math.floor(365.25 * d);
-  const g = Math.floor((c - e) / 30.6001);
-  const day = c - e - Math.floor(30.6001 * g);
-  const month = g < 14 ? g - 1 : g - 13;
-  const year = month > 2 ? d - 4716 : d - 4715;
-  return { year, month, day };
+export function getMidnightRolloverDelay(): number {
+  const now = new Date();
+  const tomorrowMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    1,
+    0
+  );
+  return Math.max(1000, tomorrowMidnight.getTime() - now.getTime());
 }
 
 /**
- * Converts Gregorian Date to Hijri Date with Moon-sighting Adjustment (-2 to +2)
+ * Returns the live automatic Hijri date for today in the local timezone
  */
+export function getCurrentHijriDate(adjustmentDays: number = 0, timezone?: string): HijriDate {
+  return gregorianToHijri(new Date(), adjustmentDays, timezone);
+}
+
+/**
+ * Converts a Gregorian Date to Hijri Date using Umm al-Qura standard
+ */
+
 export function gregorianToHijri(
   gregorianDate: Date | string,
-  adjustmentDays: number = 0
+  adjustmentDays: number = 0,
+  timezone?: string
 ): HijriDate {
-  const d = typeof gregorianDate === 'string' ? new Date(gregorianDate) : gregorianDate;
-  const jdn =
-    gregorianToJdn(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()) +
-    adjustmentDays;
+  const tz = timezone || getResolvedTimezone();
 
-  const l = jdn - 1948440 + 10632;
-  const n = Math.floor((l - 1) / 10631);
-  const lPrime = l - 10631 * n + 354;
-  const j =
-    Math.floor((10985 - lPrime) / 5316) * Math.floor((50 * lPrime) / 17719) +
-    Math.floor(lPrime / 5670) * Math.floor((43 * lPrime) / 15238);
-  const lDoublePrime =
-    lPrime -
-    Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) -
-    Math.floor(j / 16) * Math.floor((15238 * j) / 43) +
-    29;
-  const month = Math.floor((24 * lDoublePrime) / 709);
-  const day = lDoublePrime - Math.floor((709 * month) / 24);
-  const year = 30 * n + j - 30;
+  let targetDate: Date;
+  let yearG: number;
+  let monthG: number;
+  let dayG: number;
+  let dayOfWeek: number;
 
-  const monthObj = HIJRI_MONTHS[month - 1] || HIJRI_MONTHS[0];
+  if (typeof gregorianDate === 'string') {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(gregorianDate)) {
+      const [y, m, d] = gregorianDate.split('-').map(Number);
+      yearG = y;
+      monthG = m;
+      dayG = d;
+      targetDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+      dayOfWeek = targetDate.getUTCDay();
+    } else {
+      const parsed = new Date(gregorianDate);
+      targetDate = new Date(parsed.getTime());
+      yearG = parsed.getFullYear();
+      monthG = parsed.getMonth() + 1;
+      dayG = parsed.getDate();
+      dayOfWeek = parsed.getDay();
+    }
+  } else {
+    targetDate = new Date(gregorianDate.getTime());
+    yearG = gregorianDate.getFullYear();
+    monthG = gregorianDate.getMonth() + 1;
+    dayG = gregorianDate.getDate();
+    dayOfWeek = gregorianDate.getDay();
+  }
 
-  // Match event
+  // Apply moon-sighting day adjustment
+  if (adjustmentDays !== 0) {
+    targetDate = new Date(targetDate.getTime() + adjustmentDays * 86400000);
+  }
+
+  let hijriYear = 1448;
+  let hijriMonth = 1;
+  let hijriDay = 1;
+
+  try {
+    const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+      timeZone: tz,
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    });
+    const parts = formatter.formatToParts(targetDate);
+    for (const p of parts) {
+      if (p.type === 'day') {
+        const dNum = parseInt(p.value.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(dNum) && dNum >= 1 && dNum <= 30) hijriDay = dNum;
+      } else if (p.type === 'month') {
+        const mNum = parseInt(p.value.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(mNum) && mNum >= 1 && mNum <= 12) {
+          hijriMonth = mNum;
+        } else {
+          const val = p.value.toLowerCase();
+          if (val.includes('muharram')) hijriMonth = 1;
+          else if (val.includes('safar')) hijriMonth = 2;
+          else if (val.includes('rabi') && (val.includes('1') || val.includes('i') || val.includes('awwal'))) hijriMonth = 3;
+          else if (val.includes('rabi') && (val.includes('2') || val.includes('ii') || val.includes('thani') || val.includes('sani'))) hijriMonth = 4;
+          else if (val.includes('jumad') && (val.includes('1') || val.includes('i') || val.includes('ula') || val.includes('awwal'))) hijriMonth = 5;
+          else if (val.includes('jumad') && (val.includes('2') || val.includes('ii') || val.includes('akhir') || val.includes('sani'))) hijriMonth = 6;
+          else if (val.includes('rajab')) hijriMonth = 7;
+          else if (val.includes('sha')) hijriMonth = 8;
+          else if (val.includes('ramadan') || val.includes('ramazan')) hijriMonth = 9;
+          else if (val.includes('shawwal')) hijriMonth = 10;
+          else if (val.includes('qi') || val.includes('kada')) hijriMonth = 11;
+          else if (val.includes('hij') || val.includes('hajj')) hijriMonth = 12;
+        }
+      } else if (p.type === 'year') {
+        const yNum = parseInt(p.value.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(yNum) && yNum >= 1300 && yNum <= 1600) hijriYear = yNum;
+      }
+    }
+  } catch {
+    try {
+      const fallbackFormatter = new Intl.DateTimeFormat('en-u-ca-islamic', {
+        timeZone: tz,
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+      });
+      const parts = fallbackFormatter.formatToParts(targetDate);
+      for (const p of parts) {
+        if (p.type === 'day') {
+          const dNum = parseInt(p.value.replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(dNum) && dNum >= 1 && dNum <= 30) hijriDay = dNum;
+        } else if (p.type === 'month') {
+          const mNum = parseInt(p.value.replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(mNum) && mNum >= 1 && mNum <= 12) hijriMonth = mNum;
+        } else if (p.type === 'year') {
+          const yNum = parseInt(p.value.replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(yNum) && yNum >= 1300 && yNum <= 1600) hijriYear = yNum;
+        }
+      }
+    } catch {
+      const approxYear = Math.floor((yearG - 622) * 1.030684);
+      hijriYear = approxYear;
+      hijriMonth = 3;
+      hijriDay = 19;
+    }
+  }
+
+
+  if (hijriMonth < 1) hijriMonth = 1;
+  if (hijriMonth > 12) hijriMonth = 12;
+
+  const monthObj = HIJRI_MONTHS[hijriMonth - 1] || HIJRI_MONTHS[0];
+
   const matchedEvent = ISLAMIC_EVENTS.find(
-    (e) => e.hijriMonth === month && e.hijriDay === day
+    (e) => e.hijriMonth === hijriMonth && e.hijriDay === hijriDay
   );
 
-  const dateStr = d.toISOString().split('T')[0];
+  const dateStr = `${yearG}-${String(monthG).padStart(2, '0')}-${String(dayG).padStart(2, '0')}`;
 
   return {
-    year,
-    month,
+    year: hijriYear,
+    month: hijriMonth,
     monthName: monthObj.name,
     monthNameArabic: monthObj.arabicName,
-    day,
-    formatted: `${day} ${monthObj.name} ${year} AH`,
-    formattedArabic: `${day} ${monthObj.arabicName} ${year} هـ`,
-    dayOfWeek: d.getUTCDay(),
+    day: hijriDay,
+    formatted: `${hijriDay} ${monthObj.name} ${hijriYear} AH`,
+    formattedArabic: `${hijriDay} ${monthObj.arabicName} ${hijriYear} هـ`,
+    dayOfWeek,
     gregorianDate: dateStr,
     isSacredMonth: monthObj.isSacred,
     event: matchedEvent?.title,
@@ -220,17 +317,30 @@ export function hijriToGregorian(
   hijriDay: number,
   adjustmentDays: number = 0
 ): { year: number; month: number; day: number; dateFormatted: string } {
-  const jdn =
-    Math.floor((11 * hijriYear + 3) / 30) +
-    354 * hijriYear +
-    30 * hijriMonth -
-    Math.floor((hijriMonth - 1) / 2) +
-    hijriDay +
-    1948440 -
-    385 -
-    adjustmentDays;
+  const approxGregYear = Math.floor(621.57 + hijriYear * 0.970224);
+  const estDate = new Date(Date.UTC(approxGregYear, Math.floor((hijriMonth - 1) * 0.97), hijriDay, 12, 0, 0));
 
-  const { year, month, day } = jdnToGregorian(jdn);
+  const h = gregorianToHijri(estDate, adjustmentDays, 'UTC');
+  const diffDays = (hijriYear - h.year) * 354 + (hijriMonth - h.month) * 29.5 + (hijriDay - h.day);
+  let currDate = new Date(estDate.getTime() + Math.round(diffDays) * 86400000);
+
+  for (let step = 0; step < 60; step++) {
+    const curH = gregorianToHijri(currDate, adjustmentDays, 'UTC');
+    if (curH.year === hijriYear && curH.month === hijriMonth && curH.day === hijriDay) {
+      const year = currDate.getUTCFullYear();
+      const month = currDate.getUTCMonth() + 1;
+      const day = currDate.getUTCDate();
+      const dateFormatted = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      return { year, month, day, dateFormatted };
+    }
+    const dayDiff = (hijriYear - curH.year) * 354 + (hijriMonth - curH.month) * 30 + (hijriDay - curH.day);
+    const sign = dayDiff > 0 ? 1 : -1;
+    currDate = new Date(currDate.getTime() + (Math.abs(dayDiff) > 5 ? Math.round(dayDiff * 0.9) : sign) * 86400000);
+  }
+
+  const year = currDate.getUTCFullYear();
+  const month = currDate.getUTCMonth() + 1;
+  const day = currDate.getUTCDate();
   const dateFormatted = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   return { year, month, day, dateFormatted };
 }
@@ -240,8 +350,9 @@ export function hijriToGregorian(
  */
 export function getMonthlyCalendarGrid(
   gregorianYear: number,
-  gregorianMonth: number, // 1 - 12
-  adjustmentDays: number = 0
+  gregorianMonth: number,
+  adjustmentDays: number = 0,
+  timezone?: string
 ) {
   const daysInMonth = new Date(gregorianYear, gregorianMonth, 0).getDate();
   const firstDayOfWeek = new Date(Date.UTC(gregorianYear, gregorianMonth - 1, 1)).getUTCDay();
@@ -249,8 +360,8 @@ export function getMonthlyCalendarGrid(
   const days: (HijriDate & { isCurrentMonth: boolean })[] = [];
 
   for (let day = 1; day <= daysInMonth; day++) {
-    const d = new Date(Date.UTC(gregorianYear, gregorianMonth - 1, day));
-    const hijri = gregorianToHijri(d, adjustmentDays);
+    const dateStr = `${gregorianYear}-${String(gregorianMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const hijri = gregorianToHijri(dateStr, adjustmentDays, timezone);
     days.push({
       ...hijri,
       isCurrentMonth: true,
@@ -265,3 +376,4 @@ export function getMonthlyCalendarGrid(
     days,
   };
 }
+

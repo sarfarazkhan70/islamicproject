@@ -32,8 +32,9 @@ export function createApp() {
     app.use(cookieParser());
     // Global Rate Limiting
     app.use('/api', generalLimiter);
-    // API v1 Routing
+    // API v1 Routing (supports both /api/v1 and /api)
     app.use('/api/v1', v1Router);
+    app.use('/api', v1Router);
     // 404 Route Handler
     app.use(notFoundHandler);
     // Centralized Error Handler

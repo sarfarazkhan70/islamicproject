@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { gregorianToHijri } from '../utils/hijriCalendar.js';
+import { getCurrentHijriDate } from '../utils/hijriCalendar.js';
+
 
 export type FastingStatus = 'FASTED' | 'MISSED' | 'EXCUSED' | 'QAZA' | 'NONE';
 
@@ -11,6 +12,7 @@ interface RamadanState {
   completedJuz: number[];
 
   // Actions
+  refreshDate: () => void;
   logFast: (localDate: string, status: FastingStatus, ramadanDay: number) => Promise<void>;
   toggleJuz: (juzNumber: number) => Promise<void>;
   getFastingStatus: (localDate: string) => FastingStatus;
@@ -31,13 +33,13 @@ function getStoredFasting(): Record<string, FastingStatus> {
 function getStoredKhatam(): number[] {
   try {
     const raw = localStorage.getItem(LOCAL_KHATAM_KEY);
-    return raw ? JSON.parse(raw) : [1, 2, 3];
+    return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 }
 
-const todayHijri = gregorianToHijri(new Date(), 0);
+const todayHijri = getCurrentHijriDate(0);
 const isCurrentlyRamadan = todayHijri.month === 9;
 
 export const useRamadanStore = create<RamadanState>((set, get) => ({
@@ -46,6 +48,17 @@ export const useRamadanStore = create<RamadanState>((set, get) => ({
   currentRamadanDay: isCurrentlyRamadan ? todayHijri.day : 1,
   fastingRecords: getStoredFasting(),
   completedJuz: getStoredKhatam(),
+
+  refreshDate: () => {
+    const freshToday = getCurrentHijriDate(0);
+    const inRamadan = freshToday.month === 9;
+    set({
+      isRamadan: inRamadan,
+      currentHijriYear: freshToday.year,
+      currentRamadanDay: inRamadan ? freshToday.day : 1,
+    });
+  },
+
 
   getFastingStatus: (localDate: string) => {
     return get().fastingRecords[localDate] || 'NONE';

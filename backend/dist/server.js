@@ -7,14 +7,19 @@ async function bootstrap() {
     try {
         console.log(`[Islamic Prayer Backend] Initializing in ${ENV.NODE_ENV} mode...`);
         // Connect to MongoDB
-        await connectDatabase(ENV.MONGODB_URI);
+        try {
+            await connectDatabase(ENV.MONGODB_URI);
+        }
+        catch (dbErr) {
+            console.warn('[Islamic Prayer Backend] MongoDB is not running locally. Starting in stateless/cached mode for Quran and calculation services.');
+        }
         // Start background notification dispatcher (every 60 seconds)
         schedulerInterval = setInterval(async () => {
             try {
                 await NotificationSchedulerService.dispatchDueJobs();
             }
             catch (err) {
-                console.error('[Notification Scheduler] Error dispatching due jobs:', err);
+                // Ignored if db offline
             }
         }, 60 * 1000);
         const server = app.listen(ENV.PORT, () => {

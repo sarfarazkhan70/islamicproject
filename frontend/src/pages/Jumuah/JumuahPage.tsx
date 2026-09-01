@@ -5,10 +5,12 @@ import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { Link } from 'react-router-dom';
 import { useNotificationStore } from '../../stores/useNotificationStore.js';
-import { Users, BookOpen, Check, Clock, Bell } from 'lucide-react';
+import { getCurrentHijriDate } from '../../utils/hijriCalendar.js';
+import { Users, BookOpen, Check, Clock, Bell, Sparkles } from 'lucide-react';
 
 export const JumuahPage: React.FC = () => {
   const { preferences, setJumuahTime } = useNotificationStore();
+  const todayHijri = getCurrentHijriDate();
   const [kahfRead, setKahfRead] = useState(false);
   const [duroodCount, setDuroodCount] = useState(42);
   const [sunnahs, setSunnahs] = useState({
@@ -31,8 +33,14 @@ export const JumuahPage: React.FC = () => {
         title="Jumu'ah Portal"
         arabicTitle="يوم الجمعة المبارك"
         subtitle="Weekly congregational guide, Surah Al-Kahf checklist, and Sunnahs of Friday."
-        actions={<Badge variant="emerald"><Users size={12} /> Best Day of the Week</Badge>}
+        actions={
+          <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+            <Badge variant="gold"><Sparkles size={12} /> {todayHijri.formatted}</Badge>
+            <Badge variant="emerald"><Users size={12} /> Best Day of the Week</Badge>
+          </div>
+        }
       />
+
 
       {/* Jumu'ah Local Timing Configuration Card */}
       <Card highlighted style={{ borderLeft: '4px solid var(--brand-primary)' }}>

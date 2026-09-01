@@ -106,6 +106,7 @@ export class AuthService {
         const payload = {
             userId: user._id.toString(),
             email: user.email,
+            phone: user.phone,
             isAnonymous: user.isAnonymous,
         };
         const accessToken = generateAccessToken(payload);

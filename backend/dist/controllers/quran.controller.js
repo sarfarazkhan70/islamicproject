@@ -19,18 +19,18 @@ export class QuranController {
             next(err);
         }
     }
-    static getSurahDetail(req, res, next) {
+    static async getSurahDetail(req, res, next) {
         try {
             const surahNumber = parseInt(String(req.params.number), 10);
             if (isNaN(surahNumber) || surahNumber < 1 || surahNumber > 114) {
                 res.status(400).json(sendError('INVALID_SURAH_NUMBER', 'Surah number must be between 1 and 114.'));
                 return;
             }
-            const detail = QuranService.getSurahDetail(surahNumber);
+            const detail = await QuranService.getSurahDetail(surahNumber);
             res.status(200).json(sendSuccess({ surah: detail }));
         }
         catch (err) {
-            if (err.message.includes('not found')) {
+            if (err.message && err.message.includes('not found')) {
                 res.status(404).json(sendError('SURAH_NOT_FOUND', err.message));
                 return;
             }

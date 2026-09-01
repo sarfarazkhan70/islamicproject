@@ -34,6 +34,8 @@ import {
   formatGregorianDate,
   formatCountdown,
 } from '../../utils/dateUtils.js';
+import { gregorianToHijri } from '../../utils/hijriCalendar.js';
+
 
 export function calculatePrayerTimes(params: PrayerCalculationParams): DailyPrayerTimesResult {
   const { date, latitude, longitude } = params;
@@ -370,9 +372,14 @@ export function calculatePrayerTimes(params: PrayerCalculationParams): DailyPray
     timeToNextPrayerFormatted = formatCountdown(timeToNextPrayerSeconds);
   }
 
+  // Calculate live Hijri date for the prayer day
+  const hijri = gregorianToHijri(date, 0, timezone);
+
   return {
     date,
     dateFormatted: formatGregorianDate(date),
+    dateHijri: hijri.formatted,
+    hijri,
     location: {
       city: 'Unknown City',
       country: '',
@@ -401,6 +408,7 @@ export function calculatePrayerTimes(params: PrayerCalculationParams): DailyPray
     timeToNextPrayerSeconds,
   };
 }
+
 
 /**
  * Calculates prayer times for an entire month for calendar grids

@@ -18,6 +18,8 @@ export class AuthController {
                 user: {
                     id: user._id.toString(),
                     email: user.email,
+                    phone: user.phone,
+                    name: user.name,
                     isAnonymous: user.isAnonymous,
                     createdAt: user.createdAt,
                 },
@@ -38,6 +40,8 @@ export class AuthController {
                 user: {
                     id: user._id.toString(),
                     email: user.email,
+                    phone: user.phone,
+                    name: user.name,
                     isAnonymous: user.isAnonymous,
                     createdAt: user.createdAt,
                 },
@@ -103,6 +107,8 @@ export class AuthController {
                 user: {
                     id: user._id.toString(),
                     email: user.email,
+                    phone: user.phone,
+                    name: user.name,
                     isAnonymous: user.isAnonymous,
                     createdAt: user.createdAt,
                 },

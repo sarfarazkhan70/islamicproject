@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import {
   getMonthlyCalendarGrid,
   gregorianToHijri,
+  getCurrentHijriDate,
   hijriToGregorian,
   ISLAMIC_EVENTS,
   HijriDate,
@@ -15,6 +16,7 @@ interface CalendarState {
   calendarGrid: ReturnType<typeof getMonthlyCalendarGrid>;
   events: IslamicEvent[];
   selectedDate: HijriDate;
+  todayDate: HijriDate;
   converterResultHijri: HijriDate | null;
   converterResultGregorian: string | null;
 
@@ -22,16 +24,25 @@ interface CalendarState {
   setMonth: (year: number, month: number) => void;
   nextMonth: () => void;
   prevMonth: () => void;
+  resetToToday: () => void;
   setMoonAdjustment: (adjustment: number) => void;
   setSelectedDate: (date: HijriDate) => void;
   convertGregorian: (dateStr: string) => void;
   convertHijri: (year: number, month: number, day: number) => void;
 }
 
-const now = new Date();
-const initialYear = now.getFullYear();
-const initialMonth = now.getMonth() + 1;
-const initialAdjustment = Number(localStorage.getItem('islamic_prayer_moon_adj') || 0);
+const getStoredMoonAdj = (): number => {
+  try {
+    return Number(localStorage.getItem('islamic_prayer_moon_adj') || 0);
+  } catch {
+    return 0;
+  }
+};
+
+const initialNow = new Date();
+const initialYear = initialNow.getFullYear();
+const initialMonth = initialNow.getMonth() + 1;
+const initialAdjustment = getStoredMoonAdj();
 
 export const useCalendarStore = create<CalendarState>((set, get) => ({
   currentYear: initialYear,
@@ -39,7 +50,8 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
   moonAdjustment: initialAdjustment,
   calendarGrid: getMonthlyCalendarGrid(initialYear, initialMonth, initialAdjustment),
   events: ISLAMIC_EVENTS,
-  selectedDate: gregorianToHijri(now, initialAdjustment),
+  selectedDate: getCurrentHijriDate(initialAdjustment),
+  todayDate: getCurrentHijriDate(initialAdjustment),
   converterResultHijri: null,
   converterResultGregorian: null,
 
@@ -74,14 +86,32 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     });
   },
 
-  setMoonAdjustment: (adjustment: number) => {
-    localStorage.setItem('islamic_prayer_moon_adj', String(adjustment));
-    const { currentYear, currentMonth } = get();
+  resetToToday: () => {
+    const { moonAdjustment } = get();
     const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth() + 1;
+    const today = getCurrentHijriDate(moonAdjustment);
+    set({
+      currentYear: y,
+      currentMonth: m,
+      selectedDate: today,
+      todayDate: today,
+      calendarGrid: getMonthlyCalendarGrid(y, m, moonAdjustment),
+    });
+  },
+
+  setMoonAdjustment: (adjustment: number) => {
+    try {
+      localStorage.setItem('islamic_prayer_moon_adj', String(adjustment));
+    } catch {}
+    const { currentYear, currentMonth } = get();
+    const today = getCurrentHijriDate(adjustment);
     set({
       moonAdjustment: adjustment,
       calendarGrid: getMonthlyCalendarGrid(currentYear, currentMonth, adjustment),
-      selectedDate: gregorianToHijri(now, adjustment),
+      selectedDate: today,
+      todayDate: today,
     });
   },
 
@@ -109,3 +139,4 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     }
   },
 }));
+

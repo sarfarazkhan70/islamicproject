@@ -12,6 +12,8 @@
  */
 
 import { DailyTimetable, PrayerTimeItem } from '../types/prayer.types';
+import { getCurrentHijriDate } from '../utils/hijriCalendar.js';
+
 
 export const mockPrayersList: PrayerTimeItem[] = [
   {
@@ -121,9 +123,11 @@ export const mockPrayersList: PrayerTimeItem[] = [
 ];
 
 export const mockDailyTimetable: DailyTimetable = {
-  dateGregorian: 'Monday, August 31, 2026',
-  dateHijri: '18 Safar 1448 AH (UI Placeholder)',
+  dateGregorian: 'Tuesday, September 1, 2026',
+  dateHijri: getCurrentHijriDate().formatted,
   location: {
+
+
     city: 'Makkah',
     country: 'Saudi Arabia',
     latitude: 21.4225,

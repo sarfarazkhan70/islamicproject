@@ -4,6 +4,8 @@ import { DailyTimetable } from '../../types/prayer.types';
 import { DailyPrayerTimesResult } from '../../core/prayerEngine/types';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
+import { getCurrentHijriDate } from '../../utils/hijriCalendar.js';
+
 
 export interface NextPrayerHeroProps {
   timetable?: DailyTimetable | DailyPrayerTimesResult;
@@ -79,7 +81,10 @@ export const NextPrayerHero: React.FC<NextPrayerHeroProps> = ({
 
   const hijri =
     hijriDate ||
-    (timetable && 'dateHijri' in timetable ? timetable.dateHijri : '18 Safar 1448 AH');
+    (timetable && 'dateHijri' in timetable && timetable.dateHijri
+      ? timetable.dateHijri
+      : getCurrentHijriDate().formatted);
+
 
   const active =
     activePrayerName ||

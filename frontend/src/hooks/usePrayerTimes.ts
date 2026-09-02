@@ -11,7 +11,10 @@ import { useSettingsStore } from '../stores/useSettingsStore.js';
 import { useLocationStore } from '../stores/useLocationStore.js';
 import { calculatePrayerTimes, calculateMonthlyPrayerTimes } from '../core/prayerEngine/prayerEngine.js';
 import { DailyPrayerTimesResult, LocationInfo } from '../core/prayerEngine/types.js';
-import { getMidnightRolloverDelay } from '../utils/hijriCalendar.js';
+import {
+  getMidnightRolloverDelay,
+  getMaghribRolloverDelay,
+} from '../utils/hijriCalendar.js';
 
 export function usePrayerTimes(initialDate: Date = new Date()) {
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
@@ -64,12 +67,23 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     return () => clearInterval(timer);
   }, []);
 
-  // Dedicated midnight rollover timer
+  // Dedicated Maghrib sunset & midnight rollover timers
   useEffect(() => {
-    let timeoutId: any;
+    let maghribTimeoutId: any;
+    let midnightTimeoutId: any;
+
+    const scheduleMaghribUpdate = () => {
+      const delay = getMaghribRolloverDelay({ latitude, longitude }, timezone);
+      maghribTimeoutId = setTimeout(() => {
+        const freshNow = new Date();
+        setNow(freshNow);
+        scheduleMaghribUpdate();
+      }, delay);
+    };
+
     const scheduleMidnightUpdate = () => {
       const delay = getMidnightRolloverDelay();
-      timeoutId = setTimeout(() => {
+      midnightTimeoutId = setTimeout(() => {
         const freshNow = new Date();
         setNow(freshNow);
         setSelectedDate(freshNow);
@@ -77,17 +91,23 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
       }, delay);
     };
 
+    scheduleMaghribUpdate();
     scheduleMidnightUpdate();
+
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (maghribTimeoutId) clearTimeout(maghribTimeoutId);
+      if (midnightTimeoutId) clearTimeout(midnightTimeoutId);
     };
-  }, []);
+  }, [latitude, longitude, timezone]);
 
 
   // Recalculate daily prayer times whenever date, location, or options change
   const timetable = useMemo<DailyPrayerTimesResult>(() => {
+    const isSelectedToday = selectedDate.toDateString() === now.toDateString();
+    const calculationDate = isSelectedToday ? now : selectedDate;
+
     return calculatePrayerTimes({
-      date: selectedDate,
+      date: calculationDate,
       latitude,
       longitude,
       timezone,
@@ -100,6 +120,7 @@ export function usePrayerTimes(initialDate: Date = new Date()) {
     });
   }, [
     selectedDate,
+    now,
     latitude,
     longitude,
     timezone,

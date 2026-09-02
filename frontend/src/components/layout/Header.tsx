@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Sun, Moon, Bell, MapPin, Compass, RefreshCw, Calendar } from 'lucide-react';
 import { useThemeStore } from '../../stores/useThemeStore';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { useLocationStore } from '../../stores/useLocationStore';
-import { getCurrentHijriDate } from '../../utils/hijriCalendar.js';
+import { useCentralHijriDate } from '../../hooks/useCentralHijriDate.js';
 import { LocationPickerModal } from '../common/LocationPickerModal';
 import { Link } from 'react-router-dom';
 
@@ -18,14 +18,8 @@ export const Header: React.FC = () => {
   } = useLocationStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hijriDateStr, setHijriDateStr] = useState(getCurrentHijriDate().formatted);
-
-  // Keep live Hijri date updated
-  useEffect(() => {
-    const updateDate = () => setHijriDateStr(getCurrentHijriDate().formatted);
-    const interval = setInterval(updateDate, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  const centralHijri = useCentralHijriDate();
+  const hijriDateStr = centralHijri.formatted;
 
   const isDetecting = status === 'detecting';
   const isUnavailable = permissionStatus === 'denied' && !city;
@@ -41,12 +35,13 @@ export const Header: React.FC = () => {
     <>
       <header className="top-header">
         <div className="header-left">
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div className="brand-logo" style={{ width: 32, height: 32 }}>
-              <img src="/favicon.svg" alt="Logo" width={22} height={22} />
+          <Link to="/" className="header-brand-link">
+            <div className="brand-logo header-brand-logo">
+              <img src="/favicon.svg" alt="Islamic Project Logo" width={28} height={28} />
             </div>
-            <span className="brand-title" style={{ fontSize: 'var(--text-base)' }}>
-              Islamic Prayer
+            <span className="brand-title header-brand-title">
+              <span className="brand-text-islamic">Islamic</span>
+              <span className="brand-text-project">Project</span>
             </span>
           </Link>
         </div>

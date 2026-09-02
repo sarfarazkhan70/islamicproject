@@ -47,95 +47,10 @@ export class QuranService {
       return cached;
     }
 
-    // If static detail exists, return it
+    // Return verified static detail from authoritative Tanzil Uthmani dataset
     const staticDetail = SURAH_DETAILS_MAP[surahNumber];
     if (staticDetail && staticDetail.ayahs.length >= meta.versesCount) {
       surahCache.set(surahNumber, staticDetail);
-      return staticDetail;
-    }
-
-    const padded = String(surahNumber).padStart(3, '0');
-    const audioRecitations = [
-      {
-        reciterId: 'alafasy',
-        reciterName: 'Sheikh Mishary Rashid Alafasy',
-        audioUrl: `https://server8.mp3quran.net/afs/${padded}.mp3`,
-      },
-      {
-        reciterId: 'husary',
-        reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-        audioUrl: `https://server13.mp3quran.net/husr/${padded}.mp3`,
-      },
-      {
-        reciterId: 'abdulbasit',
-        reciterName: 'Sheikh Abdul Basit Abdul Samad (Murattal)',
-        audioUrl: `https://server7.mp3quran.net/basit/${padded}.mp3`,
-      },
-      {
-        reciterId: 'ghamdi',
-        reciterName: 'Sheikh Saad Al-Ghamdi',
-        audioUrl: `https://server7.mp3quran.net/ghamdi/${padded}.mp3`,
-      },
-    ];
-
-    try {
-      // Fetch verified Uthmani Arabic + Authentic Kanzul Iman Urdu (ur.kanzuliman) + English rendition (en.ahmedraza)
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 6000);
-      const res = await fetch(
-        `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,ur.kanzuliman,en.ahmedraza`,
-        { signal: controller.signal }
-      );
-      clearTimeout(timeout);
-
-      if (res.ok) {
-        const json: any = await res.json();
-        if (json?.code === 200 && Array.isArray(json.data) && json.data.length > 0) {
-
-          const arData = json.data.find((d: any) => d.edition.identifier === 'quran-uthmani') || json.data[0];
-          const urData = json.data.find((d: any) => d.edition.identifier === 'ur.kanzuliman');
-          const enData = json.data.find((d: any) => d.edition.identifier === 'en.ahmedraza');
-
-          const ayahs = arData.ayahs.map((ayahItem: any, index: number) => {
-            const urAyah = urData?.ayahs?.[index];
-            const enAyah = enData?.ayahs?.[index];
-            let arabicText = ayahItem.text;
-
-            // Strip leading Bismillah in Uthmani text for surahs 2-114 where it's prepended in ayah 1
-            if (surahNumber !== 1 && surahNumber !== 9 && ayahItem.numberInSurah === 1) {
-              const bismillahPrefix = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ';
-              if (arabicText.startsWith(bismillahPrefix)) {
-                arabicText = arabicText.slice(bismillahPrefix.length);
-              }
-            }
-
-            return {
-              number: ayahItem.numberInSurah,
-              globalNumber: ayahItem.number,
-              arabic: arabicText,
-              translation: enAyah?.text || urAyah?.text || `Surah ${meta.name} - Verse ${ayahItem.numberInSurah}`,
-              translationUrdu: urAyah?.text || '',
-              kanzulImanUrdu: urAyah?.text || '',
-              kanzulImanEn: enAyah?.text || '',
-            };
-          });
-
-          const completeDetail: SurahDetail = {
-            ...meta,
-            bismillahPre: surahNumber !== 1 && surahNumber !== 9,
-            ayahs,
-            audioRecitations,
-          };
-
-          surahCache.set(surahNumber, completeDetail);
-          return completeDetail;
-        }
-      }
-    } catch {
-      // Fall through to cached or basic template if fetch fails
-    }
-
-    if (staticDetail) {
       return staticDetail;
     }
 

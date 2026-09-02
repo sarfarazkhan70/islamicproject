@@ -34,9 +34,9 @@ const LOCAL_TASBEEH_COUNT_KEY = 'islamic_prayer_tasbeeh_count';
 function getStoredFavorites(): string[] {
   try {
     const raw = localStorage.getItem(LOCAL_AZKAR_FAVORITES_KEY);
-    return raw ? JSON.parse(raw) : ['azkar-m-1', 'azkar-m-4', 'azkar-s-2'];
+    return raw ? JSON.parse(raw) : ['dua-namaz-baad-1', 'qurani-dua-1'];
   } catch {
-    return ['azkar-m-1'];
+    return ['dua-namaz-baad-1'];
   }
 }
 
@@ -52,7 +52,7 @@ function getStoredCounters(): Record<string, number> {
 export const useAzkarStore = create<AzkarState>((set, get) => ({
   categories: AZKAR_CATEGORIES,
   items: AZKAR_ITEMS,
-  selectedCategory: 'morning',
+  selectedCategory: 'all',
   favorites: getStoredFavorites(),
   counters: getStoredCounters(),
   digitalTasbeehCount: Number(localStorage.getItem(LOCAL_TASBEEH_COUNT_KEY) || 0),

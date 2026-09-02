@@ -1,3 +1,5 @@
+import quranDatasetRaw from './quranDataset.json';
+
 export interface SurahMeta {
   number: number;
   name: string;
@@ -23,11 +25,18 @@ export interface AyahData {
   number: number;
   globalNumber?: number;
   arabic: string;
+  arabicWithBismillah?: string;
   translation: string;
   translationUrdu?: string;
   kanzulImanUrdu?: string;
   kanzulImanEn?: string;
   kanzulImanRomanUrdu?: string;
+  juz?: number;
+  page?: number;
+  manzil?: number;
+  ruku?: number;
+  hizbQuarter?: number;
+  sajda?: boolean | any;
   audio?: string;
 }
 
@@ -199,6 +208,12 @@ export function getMushafPageUrl(pageNumber: number): string {
   return `https://android.quran.com/data/width_1260/page${padded}.png`;
 }
 
+export function getMushafPageFallbackUrl(pageNumber: number): string {
+  const clamped = Math.max(1, Math.min(604, pageNumber));
+  const padded = String(clamped).padStart(3, '0');
+  return `https://raw.githubusercontent.com/thetruerevival/quran-images/master/images/page${padded}.png`;
+}
+
 export function getSurahByPage(pageNumber: number): SurahMeta {
   const clamped = Math.max(1, Math.min(604, pageNumber));
   let matched = SURAHS_LIST[0];
@@ -225,438 +240,57 @@ export function getJuzByPage(pageNumber: number): JuzMeta {
   return matched;
 }
 
-export const SURAH_AL_MULK_DETAIL: SurahDetail = {
-  number: 67,
-  name: 'Al-Mulk',
-  arabicName: 'الملك',
-  meaning: 'The Sovereignty',
-  versesCount: 30,
-  revelationType: 'Meccan',
-  juzStart: 29,
-  pageStart: 562,
-  bismillahPre: true,
-  audioRecitations: [
+function buildSurahDetail(surahNumber: number): SurahDetail {
+  const data = (quranDatasetRaw as Record<string, any>)[String(surahNumber)];
+  const padded = String(surahNumber).padStart(3, '0');
+  const audioRecitations = [
     {
       reciterId: 'alafasy',
       reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: 'https://server8.mp3quran.net/afs/067.mp3',
+      audioUrl: `https://server8.mp3quran.net/afs/${padded}.mp3`,
     },
     {
       reciterId: 'husary',
       reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-      audioUrl: 'https://server13.mp3quran.net/husr/067.mp3',
+      audioUrl: `https://server13.mp3quran.net/husr/${padded}.mp3`,
     },
     {
       reciterId: 'abdulbasit',
       reciterName: 'Sheikh Abdul Basit Abdul Samad (Murattal)',
-      audioUrl: 'https://server7.mp3quran.net/basit/067.mp3',
+      audioUrl: `https://server7.mp3quran.net/basit/${padded}.mp3`,
     },
     {
       reciterId: 'ghamdi',
       reciterName: 'Sheikh Saad Al-Ghamdi',
-      audioUrl: 'https://server7.mp3quran.net/ghamdi/067.mp3',
+      audioUrl: `https://server7.mp3quran.net/ghamdi/${padded}.mp3`,
     },
-  ],
-  ayahs: [
-    {
-      number: 1,
-      arabic: 'تَبَٰرَكَ ٱلَّذِي بِيَدِهِ ٱلْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
-      translation: 'Blessed is He in whose hand is dominion, and He is over all things competent -',
-      translationUrdu: 'بڑی برکت والا ہے وہ جس کے قبضہ میں سارا ملک اور وہ ہر چیز پر قادر ہے،',
-      kanzulImanUrdu: 'بڑی برکت والا ہے وہ جس کے قبضہ میں سارا ملک اور وہ ہر چیز پر قادر ہے،',
-      kanzulImanRomanUrdu: 'Badi barkat wala hai woh jis ke qabze mein sara mulk aur woh har cheez par qadir hai',
-    },
-    {
-      number: 2,
-      arabic: 'ٱلَّذِي خَلَقَ ٱلْمَوْتَ وَٱلْحَيَوٰةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا ۚ وَهُوَ ٱلْعَزِيزُ ٱلْغَفُورُ',
-      translation: '[He] who created death and life to test you [as to] which of you is best in deed - and He is the Exalted in Might, the Forgiving -',
-      translationUrdu: 'وہ جس نے موت اور زندگی پیدا کی کہ تمہاری جانچ ہو تم میں کس کا کام زیادہ اچھا ہے اور وہی عزت والا بخشش والا ہے،',
-      kanzulImanUrdu: 'وہ جس نے موت اور زندگی پیدا کی کہ تمہاری جانچ ہو تم میں کس کا کام زیادہ اچھا ہے اور وہی عزت والا بخشش والا ہے،',
-      kanzulImanRomanUrdu: 'Woh jis ne maut aur zindagi paida ki ke tumhari janch ho tum mein kis ka kaam zyada achha hai aur wahi izzat wala bakhshish wala hai',
-    },
-    {
-      number: 3,
-      arabic: 'ٱلَّذِي خَلَقَ سَبْعَ سَمَٰوَٰتٍ طِبَاقًا ۖ مَّا تَرَىٰ فِي خَلْقِ ٱلرَّحْمَٰنِ مِن تَفَٰوُتٍ ۖ فَٱرْجِعِ ٱلْبَصَرَ هَلْ تَرَىٰ مِن فُطُورٍ',
-      translation: '[And] who created seven heavens in layers. You do not see in the creation of the Most Merciful any inconsistency. So return [your] vision [to the sky]; do you see any breaks?',
-      translationUrdu: 'جس نے سات آسمان بنائے ایک کے اوپر دوسرا، تو رحمٰن کے بنانے میں کیا فرق دیکھتا ہے تو نگاہ اٹھا کر دیکھ تجھے کوئی رخنہ نظر آتا ہے،',
-      kanzulImanUrdu: 'جس نے سات آسمان بنائے ایک کے اوپر دوسرا، تو رحمٰن کے بنانے میں کیا فرق دیکھتا ہے تو نگاہ اٹھا کر دیکھ تجھے کوئی رخنہ نظر آتا ہے،',
-      kanzulImanRomanUrdu: 'Jis ne saat aasman banaye ek ke upar doosra, to Rehman ke banane mein kya farq dekhta hai to nigah utha kar dekh tujhe koi rakhna nazar aata hai',
-    },
-    {
-      number: 4,
-      arabic: 'ثُمَّ ٱرْجِعِ ٱلْبَصَرَ كَرَّتَيْنِ يَنقَلِبْ إِلَيْكَ ٱلْبَصَرُ خَاسِئًا وَهُوَ حَسِيرٌ',
-      translation: 'Then return your vision twice again. [Your] vision will return to you humbled while it is fatigued.',
-      translationUrdu: 'پھر دوبارہ نگاہ اٹھا نظر تیری طرف ناکام پلٹ آئے گی تھکی ماندی',
-      kanzulImanUrdu: 'پھر دوبارہ نگاہ اٹھا نظر تیری طرف ناکام پلٹ آئے گی تھکی ماندی',
-      kanzulImanRomanUrdu: 'Phir dobara nigah utha nazar teri taraf nakaam palat aayegi thaki maandi',
-    },
-    {
-      number: 5,
-      arabic: 'وَلَقَدْ زَيَّنَّا ٱلسَّمَآءَ ٱلدُّنْيَا بِمَصَٰبِيحَ وَجَعَلْنَٰهَا رُجُومًا لِّلشَّيَٰطِينِ ۖ وَأَعْتَدْنَا لَهُمْ عَذَابَ ٱلسَّعِيرِ',
-      translation: 'And We have certainly beautified the nearest heaven with lamps and have made [from] them missiles for the devils and have prepared for them the punishment of the Blaze.',
-      translationUrdu: 'اور بیشک ہم نے نیچے کے آسمان کو چراغوں سے آراستہ کیا اور انہیں شیطانوں کے لیے مار کیا اور ان کے لیے بھڑکتی آگ کا عذاب تیار فرمایا',
-      kanzulImanUrdu: 'اور بیشک ہم نے نیچے کے آسمان کو چراغوں سے آراستہ کیا اور انہیں شیطانوں کے لیے مار کیا اور ان کے لیے بھڑکتی آگ کا عذاب تیار فرمایا',
-      kanzulImanRomanUrdu: 'Aur beshak hum ne neeche ke aasman ko chiraghon se aaraasta kiya aur unhein shaitano ke liye maar kiya aur un ke liye bhadakti aag ka azaab tayyar farmaya',
-    },
-    {
-      number: 6,
-      arabic: 'وَلِلَّذِينَ كَفَرُوا۟ بِرَبِّهِمْ عَذَابُ جَهَنَّمَ ۖ وَبِئْسَ ٱلْمَصِيرُ',
-      translation: 'And for those who disbelieved in their Lord is the punishment of Hell, and wretched is the destination.',
-      translationUrdu: 'اور جنہوں نے اپنے رب کے ساتھ کفر کیا ان کے لیے جہنم کا عذاب ہے، اور کیا ہی برا انجام،',
-      kanzulImanUrdu: 'اور جنہوں نے اپنے رب کے ساتھ کفر کیا ان کے لیے جہنم کا عذاب ہے، اور کیا ہی برا انجام،',
-      kanzulImanRomanUrdu: 'Aur jinho ne apne Rab ke saath kufr kiya un ke liye jahannam ka azaab hai, aur kya hi bura anjaam',
-    },
-    {
-      number: 7,
-      arabic: 'إِذَآ أُلْقُوا۟ فِيهَا سَمِعُوا۟ لَهَا شَهِيقًا وَهِيَ تَفُورُ',
-      translation: 'When they are thrown into it, they hear from it a [dreadful] inhaling while it boils up.',
-      translationUrdu: 'جب اس میں ڈالے جائیں گے اس کا رینکنا (چنگھاڑنا) سنیں گے کہ جوش مارتی ہے',
-      kanzulImanUrdu: 'جب اس میں ڈالے جائیں گے اس کا رینکنا (چنگھاڑنا) سنیں گے کہ جوش مارتی ہے',
-      kanzulImanRomanUrdu: 'Jab us mein daale jayenge uska reenkna (changhadna) sunenge ke josh marti hai',
-    },
-    {
-      number: 8,
-      arabic: 'تَكَادُ تَمَيَّزُ مِنَ ٱلْغَيْظِ ۖ كُلَّمَآ أُلْقِيَ فِيهَا فَوْجٌ سَأَلَهُمْ خَزَنَتُهَآ أَلَمْ يَأْتِكُمْ نَذِيرٌ',
-      translation: 'It almost bursts with rage. Every time a company is thrown into it, its keepers ask them, "Did there not come to you a warner?"',
-      translationUrdu: 'معلوم ہوتا ہے کہ شدت غضب میں پھٹ جائے گی، جب کبھی کوئی گروہ اس میں ڈالا جائے گا اس کے داروغہ ان سے پوچھیں گے کیا تمہارے پاس کوئی ڈر سنانے والا نہ آیا تھا',
-      kanzulImanUrdu: 'معلوم ہوتا ہے کہ شدت غضب میں پھٹ جائے گی، جب کبھی کوئی گروہ اس میں ڈالا جائے گا اس کے داروغہ ان سے پوچھیں گے کیا تمہارے پاس کوئی ڈر سنانے والا نہ آیا تھا',
-      kanzulImanRomanUrdu: 'Maloom hota hai ke shiddat-e-ghazab mein phat jayegi, jab kabhi koi giroh us mein daala jayega us ke darogha un se poochenge kya tumhare paas koi darr sunane wala na aaya tha',
-    },
-    {
-      number: 9,
-      arabic: 'قَالُوا۟ بَلَىٰ قَدْ جَآءَنَا نَذِيرٌ فَكَذَّبْنَا وَقُلْنَا مَا نَزَّلَ ٱللَّهُ مِن شَيْءٍ إِنْ أَنتُمْ إِلَّا فِي ضَلَٰلٍ كَبِيرٍ',
-      translation: 'They will say,"Yes, a warner had come to us, but we denied and said, \'Allah has not sent down anything. You are not but in great error.\'"',
-      translationUrdu: 'کہیں گے کیوں نہیں بیشک ہمارے پاس ڈر سنانے والے تشریف لائے پھر ہم نے جھٹلایا اور کہا اللہ نے کچھ نہیں اُتارا، تم تو نہیں مگر بڑی گمراہی میں،',
-      kanzulImanUrdu: 'کہیں گے کیوں نہیں بیشک ہمارے پاس ڈر سنانے والے تشریف لائے پھر ہم نے جھٹلایا اور کہا اللہ نے کچھ نہیں اُتارا، تم تو نہیں مگر بڑی گمراہی میں،',
-      kanzulImanRomanUrdu: 'Kahenge kyun nahi beshak hamare paas darr sunane wale tashreef laaye phir hum ne jhutlaya aur kaha Allah ne kuch nahi utara, tum to nahi magar badi gumraahi mein',
-    },
-    {
-      number: 10,
-      arabic: 'وَقَالُوا۟ لَوْ كُنَّا نَسْمَعُ أَوْ نَعْقِلُ مَا كُنَّا فِيٓ أَصْحَٰبِ ٱلسَّعِيرِ',
-      translation: 'And they will say, "If only we had been listening or reasoning, we would not be among the companions of the Blaze."',
-      translationUrdu: 'اور کہیں گے اگر ہم سنتے یا سمجھتے تو دوزخ والوں میں نہ ہوتے،',
-      kanzulImanUrdu: 'اور کہیں گے اگر ہم سنتے یا سمجھتے تو دوزخ والوں میں نہ ہوتے،',
-      kanzulImanRomanUrdu: 'Aur kahenge agar hum sunte ya samajhte to dozakh walon mein na hote',
-    },
-    {
-      number: 11,
-      arabic: 'فَٱعْتَرَفُوا۟ بِذَنۢبِهِمْ فَسُحْقًا لِّأَصْحَٰبِ ٱلسَّعِيرِ',
-      translation: 'And they will admit their sin, so [it is] alienation for the companions of the Blaze.',
-      translationUrdu: 'اب اپنے گناہ کا اقرار کیا تو پھٹکار ہو دوزخیوں کو،',
-      kanzulImanUrdu: 'اب اپنے گناہ کا اقرار کیا تو پھٹکار ہو دوزخیوں کو،',
-      kanzulImanRomanUrdu: 'Ab apne gunah ka iqraar kiya to phatkar ho dozakhiyon ko',
-    },
-    {
-      number: 12,
-      arabic: 'إِنَّ ٱلَّذِينَ يَخْشَوْنَ رَبَّهُم بِٱلْغَيْبِ لَهُم مَّغْفِرَةٌ وَأَجْرٌ كَبِيرٌ',
-      translation: 'Indeed, those who fear their Lord unseen will have forgiveness and great reward.',
-      translationUrdu: 'بیشک جو بے دیکھے اپنے رب سے ڈرتے ہیں ان کے لیے بخشش اور بڑا ثواب ہے',
-      kanzulImanUrdu: 'بیشک جو بے دیکھے اپنے رب سے ڈرتے ہیں ان کے لیے بخشش اور بڑا ثواب ہے',
-      kanzulImanRomanUrdu: 'Beshak jo be-dekhe apne Rab se darte hain un ke liye bakhshish aur bada sawaab hai',
-    },
-    {
-      number: 13,
-      arabic: 'وَأَسِرُّوا۟ قَوْلَكُمْ أَوِ ٱجْهَرُوا۟ بِهِۦٓ ۖ إِنَّهُۥ عَلِيمٌۢ بِذَاتِ ٱلصُّدُورِ',
-      translation: 'And conceal your speech or publicize it; indeed, He is Knowing of that within the breasts.',
-      translationUrdu: 'اور تم اپنی بات آہستہ کہو یا آواز سے، وہ تو دلوں کی جانتا ہے',
-      kanzulImanUrdu: 'اور تم اپنی بات آہستہ کہو یا آواز سے، وہ تو دلوں کی جانتا ہے',
-      kanzulImanRomanUrdu: 'Aur tum apni baat aahista kaho ya aawaaz se, woh to dilon ki jaanta hai',
-    },
-    {
-      number: 14,
-      arabic: 'أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ',
-      translation: 'Does He who created not know, while He is the Subtle, the Acquainted?',
-      translationUrdu: 'کیا وہ نہ جانے جس نے پیدا کیا؟ اور وہی ہے ہر باریکی جانتا خبردار،',
-      kanzulImanUrdu: 'کیا وہ نہ جانے جس نے پیدا کیا؟ اور وہی ہے ہر باریکی جانتا خبردار،',
-      kanzulImanRomanUrdu: 'Kya woh na jaane jis ne paida kiya? Aur wahi hai har bareeki jaanta khabardaar',
-    },
-    {
-      number: 15,
-      arabic: 'هُوَ ٱلَّذِي جَعَلَ لَكُمُ ٱلْأَرْضَ ذَلُولًا فَٱمْشُوا۟ فِي مَنَاكِبِهَا وَكُلُوا۟ مِن رِّزْقِهِۦ ۖ وَإِلَيْهِ ٱلنُّشُورُ',
-      translation: 'It is He who made the earth tame for you - so walk among its slopes and eat of His provision - and to Him is the resurrection.',
-      translationUrdu: 'وہی ہے جس نے تمہارے لیے زمین رام (تابع) کر دی تو اس کے رستوں میں چلو اور اللہ کی روزی میں سے کھاؤ اور اسی کی طرف اٹھنا ہے',
-      kanzulImanUrdu: 'وہی ہے جس نے تمہارے لیے زمین رام (تابع) کر دی تو اس کے رستوں میں چلو اور اللہ کی روزی میں سے کھاؤ اور اسی کی طرف اٹھنا ہے',
-      kanzulImanRomanUrdu: 'Wahi hai jis ne tumhare liye zameen raam (taabe) kar di to us ke raston mein chalo aur Allah ki rozi mein se khao aur usi ki taraf uthna hai',
-    },
-    {
-      number: 16,
-      arabic: 'ءَأَمِنتُم مَّن فِي ٱلسَّمَآءِ أَن يَخْسِفَ بِكُمُ ٱلْأَرْضَ فَإِذَا هِيَ تَمُورُ',
-      translation: 'Do you feel secure that He who [holds authority] in the heaven would not cause the earth to swallow you and suddenly it would sway?',
-      translationUrdu: 'کیا تم اس سےنڈر ہوگئے جس کی سلطنت آسمان میں ہے کہ تمہیں زمین میں دھنسادے جبھی وہ کانپتی رہے',
-      kanzulImanUrdu: 'کیا تم اس سےنڈر ہوگئے جس کی سلطنت آسمان میں ہے کہ تمہیں زمین میں دھنسادے جبھی وہ کانپتی رہے',
-      kanzulImanRomanUrdu: 'Kya tum us se nidar ho gaye jis ki saltanat aasman mein hai ke tumhein zameen mein dhansa de jabhi woh kaanpti rahe',
-    },
-    {
-      number: 17,
-      arabic: 'أَمْ أَمِنتُم مَّن فِي ٱلسَّمَآءِ أَن يُرْسِلَ عَلَيْكُمْ حَاصِبًا ۖ فَسَتَعْلَمُونَ كَيْفَ نَذِيرِ',
-      translation: 'Or do you feel secure that He who [holds authority] in the heaven would not send against you a storm of stones? Then you would know how [severe] was My warning.',
-      translationUrdu: 'یا تم نڈر ہوگئے اس سے جس کی سلطنت آسمان میں ہے کہ تم پر پتھراؤ بھیجے تو اب جانو گے کیسا تھا میرا ڈرانا،',
-      kanzulImanUrdu: 'یا تم نڈر ہوگئے اس سے جس کی سلطنت آسمان میں ہے کہ تم پر پتھراؤ بھیجے تو اب جانو گے کیسا تھا میرا ڈرانا،',
-      kanzulImanRomanUrdu: 'Ya tum nidar ho gaye us se jis ki saltanat aasman mein hai ke tum par pathrao bheje to ab jaanoge kaisa tha mera darana',
-    },
-    {
-      number: 18,
-      arabic: 'وَلَقَدْ كَذَّبَ ٱلَّذِينَ مِن قَبْلِهِمْ فَكَيْفَ كَانَ نَكِيرِ',
-      translation: 'And already had those before them denied, and how [terrible] was My reproach.',
-      translationUrdu: 'اور بیشک ان سے اگلوں نے جھٹلایا تو کیسا ہوا میرا انکار',
-      kanzulImanUrdu: 'اور بیشک ان سے اگلوں نے جھٹلایا تو کیسا ہوا میرا انکار',
-      kanzulImanRomanUrdu: 'Aur beshak un se aglon ne jhutlaya to kaisa hua mera inkaar',
-    },
-    {
-      number: 19,
-      arabic: 'أَوَلَمْ يَرَوْا۟ إِلَى ٱلطَّيْرِ فَوْقَهُمْ صَٰٓفَّٰتٍ وَيَقْبِضْنَ ۚ مَا يُمْسِكُهُنَّ إِلَّا ٱلرَّحْمَٰنُ ۚ إِنَّهُۥ بِكُلِّ شَيْءٍ بَصِيرٌ',
-      translation: 'Do they not see the birds above them with wings outspread and [then] folding in? None holds them up except the Most Merciful. Indeed He is, of all things, Seeing.',
-      translationUrdu: 'اور کیا انہوں نے اپنے اوپر پرندے نہ دیکھے پر پھیلاتے اور سمیٹتے انہیں کوئی نہیں روکتا سوا رحمٰن کے بیشک وہ سب کچھ دیکھتا ہے،',
-      kanzulImanUrdu: 'اور کیا انہوں نے اپنے اوپر پرندے نہ دیکھے پر پھیلاتے اور سمیٹتے انہیں کوئی نہیں روکتا سوا رحمٰن کے بیشک وہ سب کچھ دیکھتا ہے،',
-      kanzulImanRomanUrdu: 'Aur kya unho ne apne upar parinday na dekhe par phailate aur samaitte unhein koi nahi rokta siwa Rehman ke beshak woh sab kuch dekhta hai',
-    },
-    {
-      number: 20,
-      arabic: 'أَمَّنْ هَٰذَا ٱلَّذِي هُوَ جُندٌ لَّكُمْ يَنصُرُكُم مِّن دُونِ ٱلرَّحْمَٰنِ ۚ إِنِ ٱلْكَٰفِرُونَ إِلَّا فِي غُرُورٍ',
-      translation: 'Or who is it that could be an army for you to aid you other than the Most Merciful? The disbelievers are not but in delusion.',
-      translationUrdu: 'یا وہ کونسا تمہارا لشکر ہے کہ رحمٰن کے مقابل تمہاری مدد کرے کافر نہیں مگر دھوکے میں',
-      kanzulImanUrdu: 'یا وہ کونسا تمہارا لشکر ہے کہ رحمٰن کے مقابل تمہاری مدد کرے کافر نہیں مگر دھوکے میں',
-      kanzulImanRomanUrdu: 'Ya woh kaunsa tumhara lashkar hai ke Rehman ke muqabil tumhari madad kare kafir nahi magar dhoke mein',
-    },
-    {
-      number: 21,
-      arabic: 'أَمَّنْ هَٰذَا ٱلَّذِي يَرْزُقُكُمْ إِنْ أَمْسَكَ رِزْقَهُۥ ۚ بَل لَّجُّوا۟ فِي عُتُوٍّ وَنُفُورٍ',
-      translation: 'Or who is it that could provide for you if He withheld His provision? But they have persisted in insolence and aversion.',
-      translationUrdu: 'یا کونسا ایسا ہے جو تمہیں روزی دے اگر وہ اپنی روزی روک لے بلکہ وہ سرکش اور نفرت میں ڈھیٹ بنے ہوئے ہیں',
-      kanzulImanUrdu: 'یا کونسا ایسا ہے جو تمہیں روزی دے اگر وہ اپنی روزی روک لے بلکہ وہ سرکش اور نفرت میں ڈھیٹ بنے ہوئے ہیں',
-      kanzulImanRomanUrdu: 'Ya kaunsa aisa hai jo tumhein rozi de agar woh apni rozi rok le balkay woh sarkash aur nafrat mein dheet bane hue hain',
-    },
-    {
-      number: 22,
-      arabic: 'أَفَمَن يَمْشِي مُكِبًّا عَلَىٰ وَجْهِهِۦٓ أَهْدَىٰٓ أَمَّن يَمْشِي سَوِيًّا عَلَىٰ صِرَٰطٍ مُّسْتَقِيمٍ',
-      translation: 'Then is one who walks fallen on his face better guided or one who walks erect on a straight path?',
-      translationUrdu: 'تو کیا وہ جو اپنے منہ کے بل اوندھا چلے زیادہ راہ پر ہے یا وہ جو سیدھا چلے سیدھی راہ پر',
-      kanzulImanUrdu: 'تو کیا وہ جو اپنے منہ کے بل اوندھا چلے زیادہ راہ پر ہے یا وہ جو سیدھا چلے سیدھی راہ پر',
-      kanzulImanRomanUrdu: 'To kya woh jo apne munh ke bal aundha chale zyada raah par hai ya woh jo seedha chale seedhi raah par',
-    },
-    {
-      number: 23,
-      arabic: 'قُلْ هُوَ ٱلَّذِيٓ أَنشَأَكُمْ وَجَعَلَ لَكُمُ ٱلسَّمْعَ وَٱلْأَبْصَٰرَ وَٱلْأَفْـِٔدَةَ ۖ قَلِيلًا مَّا تَشْكُرُونَ',
-      translation: 'Say, "It is He who has produced you and made for you hearing and vision and hearts; little are you grateful."',
-      translationUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں پیدا کیا اور تمہارے لیے کان اور آنکھ اور دل بنائے کتنا کم حق مانتے ہو',
-      kanzulImanUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں پیدا کیا اور تمہارے لیے کان اور آنکھ اور دل بنائے کتنا کم حق مانتے ہو',
-      kanzulImanRomanUrdu: 'Tum farmao wahi hai jis ne tumhein paida kiya aur tumhare liye kaan aur aankh aur dil banaye kitna kam haq maante ho',
-    },
-    {
-      number: 24,
-      arabic: 'قُلْ هُوَ ٱلَّذِي ذَرَأَكُمْ فِي ٱلْأَرْضِ وَإِلَيْهِ تُحْشَرُونَ',
-      translation: 'Say, "It is He who has multiplied you throughout the earth, and to Him you will be gathered."',
-      translationUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں زمین میں پھیلایا اور اسی کی طرف اٹھائے جاؤ گے',
-      kanzulImanUrdu: 'تم فرماؤ وہی ہے جس نے تمہیں زمین میں پھیلایا اور اسی کی طرف اٹھائے جاؤ گے',
-      kanzulImanRomanUrdu: 'Tum farmao wahi hai jis ne tumhein zameen mein phailaya aur usi ki taraf uthaye jaoge',
-    },
-    {
-      number: 25,
-      arabic: 'وَيَقُولُونَ مَتَىٰ هَٰذَا ٱلْوَعْدُ إِن كُنتُمْ صَٰدِقِينَ',
-      translation: 'And they say, "When is this promise, if you should be truthful?"',
-      translationUrdu: 'اور کہتے ہیں یہ وعدہ کب آئے گا اگر تم سچے ہو،',
-      kanzulImanUrdu: 'اور کہتے ہیں یہ وعدہ کب آئے گا اگر تم سچے ہو،',
-      kanzulImanRomanUrdu: 'Aur kehte hain yeh wada kab aayega agar tum sachhe ho',
-    },
-    {
-      number: 26,
-      arabic: 'قُلْ إِنَّمَا ٱلْعِلْمُ عِندَ ٱللَّهِ وَإِنَّمَآ أَنَا۠ نَذِيرٌ مُّبِينٌ',
-      translation: 'Say, "The knowledge is only with Allah, and I am only a clear warner."',
-      translationUrdu: 'تم فرماؤ یہ علم تو اللہ کے پاس ہے، اور میں تو یہی صاف ڈر سنانے والا ہوں',
-      kanzulImanUrdu: 'تم فرماؤ یہ علم تو اللہ کے پاس ہے، اور میں تو یہی صاف ڈر سنانے والا ہوں',
-      kanzulImanRomanUrdu: 'Tum farmao yeh ilm to Allah ke paas hai, aur main to yahi saaf darr sunane wala hoon',
-    },
-    {
-      number: 27,
-      arabic: 'فَلَمَّا رَأَوْهُ زُلْفَةً سِيٓـَٔتْ وُجُوهُ ٱلَّذِينَ كَفَرُوا۟ وَقِيلَ هَٰذَا ٱلَّذِي كُنتُم بِهِۦ تَدَّعُونَ',
-      translation: 'But when they see it approaching, the faces of those who disbelieve will be distressed, and it will be said, "This is that for which you used to call."',
-      translationUrdu: 'پھر جب اسے پاس دیکھیں گے کافروں کے منہ بگڑ جائیں گے اور ان سے فرمادیا جائے گا یہ ہے جو تم مانگتے تھے',
-      kanzulImanUrdu: 'پھر جب اسے پاس دیکھیں گے کافروں کے منہ بگڑ جائیں گے اور ان سے فرمادیا جائے گا یہ ہے جو تم مانگتے تھے',
-      kanzulImanRomanUrdu: 'Phir jab use paas dekhenge kafiron ke munh bigad jayenge aur un se farma diya jayega yeh hai jo tum maangte the',
-    },
-    {
-      number: 28,
-      arabic: 'قُلْ أَرَءَيْتُمْ إِنْ أَهْلَكَنِيَ ٱللَّهُ وَمَن مَّعِيَ أَوْ رَحِمَنَا فَمَن يُجِيرُ ٱلْكَٰفِرِينَ مِنْ عَذَابٍ أَلِيمٍ',
-      translation: 'Say, [O Muhammad], "Have you considered: whether Allah should cause my death and those with me or have mercy upon us, who can protect the disbelievers from a painful punishment?"',
-      translationUrdu: 'تم فرماؤ بھلا دیکھو تو اگر اللہ مجھے اور میرے ساتھ والوں کو بلاک کردے یا ہم پر رحم فرمائے تو وہ کونسا ہے جو کافروں کو دکھ کے عذاب سے بچالے گا',
-      kanzulImanUrdu: 'تم فرماؤ بھلا دیکھو تو اگر اللہ مجھے اور میرے ساتھ والوں کو بلاک کردے یا ہم پر رحم فرمائے تو وہ کونسا ہے جو کافروں کو دکھ کے عذاب سے بچالے گا',
-      kanzulImanRomanUrdu: 'Tum farmao bhala dekho to agar Allah mujhe aur mere saath walon ko halak kar de ya hum par reham farmaye to woh kaunsa hai jo kafiron ko dukh ke azaab se bacha lega',
-    },
-    {
-      number: 29,
-      arabic: 'قُلْ هُوَ ٱلرَّحْمَٰنُ ءَامَنَّا بِهِۦ وَعَلَيْهِ تَوَكَّلْنَا ۖ فَسَتَعْلَمُونَ مَنْ هُوَ فِي ضَلَٰلٍ مُّبِينٍ',
-      translation: 'Say, "He is the Most Merciful; we have believed in Him, and upon Him we have relied. And you will [come to] know who it is that is in clear error."',
-      translationUrdu: 'تم فرماؤ وہی رحمٰن ہے ہم اس پر ایمان لائے اور اسی پر بھروسہ کیا، تو اب جان جاؤ گے کون کھلی گمراہی میں ہے،',
-      kanzulImanUrdu: 'تم فرماؤ وہی رحمٰن ہے ہم اس پر ایمان لائے اور اسی پر بھروسہ کیا، تو اب جان جاؤ گے کون کھلی گمراہی میں ہے،',
-      kanzulImanRomanUrdu: 'Tum farmao wahi Rehman hai hum us par imaan laaye aur usi par bharosa kiya, to ab jaan jaoge kaun khuli gumraahi mein hai',
-    },
-    {
-      number: 30,
-      arabic: 'قُلْ أَرَءَيْتُمْ إِنْ أَصْبَحَ مَآؤُكُمْ غَوْرًا فَمَن يَأْتِيكُم بِمَآءٍ مَّعِينٍۭ',
-      translation: 'Say, "Have you considered: if your water was to become sunken [into the earth], then who could bring you flowing water?"',
-      translationUrdu: 'تم فرماؤ بھلا دیکھو تو اگر صبح کو تمہارا پانی زمین میں دھنس جائے تو وہ کون ہے جو تمہیں پانی لادے نگاہ کے سامنے بہتا',
-      kanzulImanUrdu: 'تم فرماؤ بھلا دیکھو تو اگر صبح کو تمہارا پانی زمین میں دھنس جائے تو وہ کون ہے جو تمہیں پانی لادے نگاہ کے سامنے بہتا',
-      kanzulImanRomanUrdu: 'Tum farmao bhala dekho to agar subah ko tumhara paani zameen mein dhans jaye to woh kaun hai jo tumhein paani laa de nigah ke saamne behta',
-    },
-  ],
-};
+  ];
 
-export const SURAH_AL_FATIHAH_DETAIL: SurahDetail = {
-  number: 1,
-  name: 'Al-Fatihah',
-  arabicName: 'الفاتحة',
-  meaning: 'The Opening',
-  versesCount: 7,
-  revelationType: 'Meccan',
-  juzStart: 1,
-  pageStart: 1,
-  bismillahPre: false,
-  audioRecitations: [
-    {
-      reciterId: 'alafasy',
-      reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: 'https://server8.mp3quran.net/afs/001.mp3',
-    },
-    {
-      reciterId: 'husary',
-      reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-      audioUrl: 'https://server13.mp3quran.net/husr/001.mp3',
-    },
-  ],
-  ayahs: [
-    { number: 1, arabic: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ', translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful.', translationUrdu: 'اللہ کے نام سے شروع جو بہت مہربان رحمت والا', kanzulImanUrdu: 'اللہ کے نام سے شروع جو بہت مہربان رحمت والا', kanzulImanRomanUrdu: 'Allah ke naam se shuru jo nihayat meharban rehm wala' },
-    { number: 2, arabic: 'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ', translation: '[All] praise is [due] to Allah, Lord of the worlds -', translationUrdu: 'سب خوبیاں اللہ کو جو مالک سارے جہان والوں کا،', kanzulImanUrdu: 'سب خوبیاں اللہ کو جو مالک سارے جہان والوں کا،', kanzulImanRomanUrdu: 'Sab khoobiyan Allah ko jo Malik saare jahan walon ka' },
-    { number: 3, arabic: 'ٱلرَّحْمَٰنِ ٱلرَّحِيمِ', translation: 'The Entirely Merciful, the Especially Merciful,', translationUrdu: 'بہت مہربان رحمت والا،', kanzulImanUrdu: 'بہت مہربان رحمت والا،', kanzulImanRomanUrdu: 'Nihayat meharban rehm wala' },
-    { number: 4, arabic: 'مَٰلِكِ يَوْمِ ٱلدِّينِ', translation: 'Sovereign of the Day of Recompense.', translationUrdu: 'روز جزا کا مالک،', kanzulImanUrdu: 'روز جزا کا مالک،', kanzulImanRomanUrdu: 'Roz-e-jaza ka Malik' },
-    { number: 5, arabic: 'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ', translation: 'It is You we worship and You we ask for help.', translationUrdu: 'ہم تجھی کو پوجیں اور تجھی سے مدد چاہیں،', kanzulImanUrdu: 'ہم تجھی کو پوجیں اور تجھی سے مدد چاہیں،', kanzulImanRomanUrdu: 'Hum Tujhi ko poojen aur Tujhi se madad chahein' },
-    { number: 6, arabic: 'ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ', translation: 'Guide us to the straight path -', translationUrdu: 'ہم کو سیدھا راستہ چلا،', kanzulImanUrdu: 'ہم کو سیدھا راستہ چلا،', kanzulImanRomanUrdu: 'Hum ko seedha rasta chala' },
-    { number: 7, arabic: 'صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ', translation: 'The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.', translationUrdu: 'راستہ ان کا جن پر تو نے احسان کیا، نہ ان کا جن پر غضب ہوا اور نہ بہکے ہوؤں کا', kanzulImanUrdu: 'راستہ ان کا جن پر تو نے احسان کیا، نہ ان کا جن پر غضب ہوا اور نہ بہکے ہوؤں کا', kanzulImanRomanUrdu: 'Rasta unka jin par Tu ne ehsan kiya, na unka jin par ghazab hua aur na behke huon ka' },
-  ],
-};
+  if (!data) {
+    const meta = SURAHS_LIST.find((s) => s.number === surahNumber) || SURAHS_LIST[0];
+    return {
+      ...meta,
+      bismillahPre: surahNumber !== 1 && surahNumber !== 9,
+      ayahs: [],
+      audioRecitations,
+    };
+  }
 
-// Verified Full Surah 112 (Al-Ikhlas)
-export const SURAH_AL_IKHLAS_DETAIL: SurahDetail = {
-  number: 112,
-  name: 'Al-Ikhlas',
-  arabicName: 'الإخلاص',
-  meaning: 'The Sincerity',
-  versesCount: 4,
-  revelationType: 'Meccan',
-  juzStart: 30,
-  pageStart: 604,
-  bismillahPre: true,
-  audioRecitations: [
-    {
-      reciterId: 'alafasy',
-      reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: 'https://server8.mp3quran.net/afs/112.mp3',
-    },
-  ],
-  ayahs: [
-    { number: 1, arabic: 'قُلْ هُوَ ٱللَّهُ أَحَدٌ', translation: 'Say, "He is Allah, [who is] One,', translationUrdu: 'تم فرماؤ وہ اللہ ہے وہ ایک ہے', kanzulImanUrdu: 'تم فرماؤ وہ اللہ ہے وہ ایک ہے', kanzulImanRomanUrdu: 'Tum farmao woh Allah hai woh ek hai' },
-    { number: 2, arabic: 'ٱللَّهُ ٱلصَّمَدُ', translation: 'Allah, the Eternal Refuge.', translationUrdu: 'اللہ بے نیاز ہے', kanzulImanUrdu: 'اللہ بے نیاز ہے', kanzulImanRomanUrdu: 'Allah be-niyaz hai' },
-    { number: 3, arabic: 'لَمْ يَلِدْ وَلَمْ يُولَدْ', translation: 'He neither begets nor is born,', translationUrdu: 'نہ اس کی کوئی اولاد اور نہ وہ کسی سے پیدا ہوا', kanzulImanUrdu: 'نہ اس کی کوئی اولاد اور نہ وہ کسی سے پیدا ہوا', kanzulImanRomanUrdu: 'Na uski koi aulad aur na woh kisi se paida hua' },
-    { number: 4, arabic: 'وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ', translation: 'Nor is there to Him any equivalent."', translationUrdu: 'اور نہ کوئی اس کے جوڑ کا', kanzulImanUrdu: 'اور نہ کوئی اس کے جوڑ کا', kanzulImanRomanUrdu: 'Aur na koi uske jod ka' },
-  ],
-};
+  return {
+    ...data,
+    audioRecitations,
+  };
+}
 
-// Verified Full Surah 113 (Al-Falaq)
-export const SURAH_AL_FALAQ_DETAIL: SurahDetail = {
-  number: 113,
-  name: 'Al-Falaq',
-  arabicName: 'الفلق',
-  meaning: 'The Daybreak',
-  versesCount: 5,
-  revelationType: 'Meccan',
-  juzStart: 30,
-  pageStart: 604,
-  bismillahPre: true,
-  audioRecitations: [
-    {
-      reciterId: 'alafasy',
-      reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: 'https://server8.mp3quran.net/afs/113.mp3',
-    },
-  ],
-  ayahs: [
-    { number: 1, arabic: 'قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ', translation: 'Say, "I seek refuge in the Lord of daybreak', translationUrdu: 'تم فرماؤ میں اس کی پناہ لیتا ہوں جو صبح کا پیدا کرنے والا ہے', kanzulImanUrdu: 'تم فرماؤ میں اس کی پناہ لیتا ہوں جو صبح کا پیدا کرنے والا ہے', kanzulImanRomanUrdu: 'Tum farmao main uski panah leta hoon jo subah ka paida karne wala hai' },
-    { number: 2, arabic: 'مِن شَرِّ مَا خَلَقَ', translation: 'From the evil of that which He created', translationUrdu: 'اس کی سب مخلوق کی برائی سے', kanzulImanUrdu: 'اس کی سب مخلوق کی برائی سے', kanzulImanRomanUrdu: 'Uski sab makhlooq ki burayi se' },
-    { number: 3, arabic: 'وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ', translation: 'And from the evil of darkness when it settles', translationUrdu: 'اور اندھیری ڈالنے والے کے شر سے جب وہ ڈوبے', kanzulImanUrdu: 'اور اندھیری ڈالنے والے کے شر سے جب وہ ڈوبے', kanzulImanRomanUrdu: 'Aur andheri daalne wale ke shar se jab woh doobe' },
-    { number: 4, arabic: 'وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ فِي ٱلْعُقَدِ', translation: 'And from the evil of the blowers in knots', translationUrdu: 'اور ان عورتوں کے شر سے جو گرہوں میں پھونکتی ہیں', kanzulImanUrdu: 'اور ان عورتوں کے شر سے جو گرہوں میں پھونکتی ہیں', kanzulImanRomanUrdu: 'Aur un auraton ke shar se jo girhon mein phoonkti hain' },
-    { number: 5, arabic: 'وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ', translation: 'And from the evil of an envier when he envies."', translationUrdu: 'اور حسد والے کے شر سے جب وہ مجھ سے حسد کرے', kanzulImanUrdu: 'اور حسد والے کے شر سے جب وہ مجھ سے حسد کرے', kanzulImanRomanUrdu: 'Aur hasad wale ke shar se jab woh mujh se hasad kare' },
-  ],
-};
+// Build complete, verified 114 Surahs map directly from Tanzil source
+export const SURAH_DETAILS_MAP: Record<number, SurahDetail> = {};
+for (let i = 1; i <= 114; i++) {
+  SURAH_DETAILS_MAP[i] = buildSurahDetail(i);
+}
 
-// Verified Full Surah 114 (An-Nas)
-export const SURAH_AN_NAS_DETAIL: SurahDetail = {
-  number: 114,
-  name: 'An-Nas',
-  arabicName: 'الناس',
-  meaning: 'Mankind',
-  versesCount: 6,
-  revelationType: 'Meccan',
-  juzStart: 30,
-  pageStart: 604,
-  bismillahPre: true,
-  audioRecitations: [
-    {
-      reciterId: 'alafasy',
-      reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: 'https://server8.mp3quran.net/afs/114.mp3',
-    },
-  ],
-  ayahs: [
-    { number: 1, arabic: 'قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ', translation: 'Say, "I seek refuge in the Lord of mankind,', translationUrdu: 'تم فرماؤ میں اس کی پناہ میں آیا جو سب لوگوں کا رب', kanzulImanUrdu: 'تم فرماؤ میں اس کی پناہ میں آیا جو سب لوگوں کا رب', kanzulImanRomanUrdu: 'Tum farmao main uski panah mein aaya jo sab logon ka Rab' },
-    { number: 2, arabic: 'مَلِكِ ٱلنَّاسِ', translation: 'The Sovereign of mankind.', translationUrdu: 'سب لوگوں کا بادشاہ', kanzulImanUrdu: 'سب لوگوں کا بادشاہ', kanzulImanRomanUrdu: 'Sab logon ka Badshah' },
-    { number: 3, arabic: 'إِلَٰهِ ٱلنَّاسِ', translation: 'The God of mankind,', translationUrdu: 'سب لوگوں کا معبود', kanzulImanUrdu: 'سب لوگوں کا معبود', kanzulImanRomanUrdu: 'Sab logon ka Mabood' },
-    { number: 4, arabic: 'مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ', translation: 'From the evil of the retreating whisperer -', translationUrdu: 'اس کے شر سے جو دل میں برے خطرے ڈالے اور دبک رہے', kanzulImanUrdu: 'اس کے شر سے جو دل میں برے خطرے ڈالے اور دبک رہے', kanzulImanRomanUrdu: 'Uske shar se jo dil mein bure khatre daale aur dabak rahe' },
-    { number: 5, arabic: 'ٱلَّذِي يُوَسْوِسُ فِي صُدُورِ ٱلنَّاسِ', translation: 'Who whispers into the breasts of mankind -', translationUrdu: 'وہ جو لوگوں کے دلوں میں وسوسے ڈالتا ہے', kanzulImanUrdu: 'وہ جو لوگوں کے دلوں میں وسوسے ڈالتا ہے', kanzulImanRomanUrdu: 'Woh jo logon ke dilon mein waswase daalta hai' },
-    { number: 6, arabic: 'مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ', translation: 'From among the jinn and mankind."', translationUrdu: 'جن اور آدمی', kanzulImanUrdu: 'جن اور آدمی', kanzulImanRomanUrdu: 'Jinn aur Aadmi' },
-  ],
-};
-
-// Verified Full Surah 18 (Al-Kahf) - Opening Verses
-export const SURAH_AL_KAHF_DETAIL: SurahDetail = {
-  number: 18,
-  name: 'Al-Kahf',
-  arabicName: 'الكهف',
-  meaning: 'The Cave',
-  versesCount: 110,
-  revelationType: 'Meccan',
-  juzStart: 15,
-  pageStart: 293,
-  bismillahPre: true,
-  audioRecitations: [
-    {
-      reciterId: 'alafasy',
-      reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: 'https://server8.mp3quran.net/afs/018.mp3',
-    },
-    {
-      reciterId: 'husary',
-      reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-      audioUrl: 'https://server13.mp3quran.net/husr/018.mp3',
-    },
-  ],
-  ayahs: [
-    { number: 1, arabic: 'ٱلْحَمْدُ لِلَّهِ ٱلَّذِيٓ أَنزَلَ عَلَىٰ عَبْدِهِ ٱلْكِتَٰبَ وَلَمْ يَجْعَل لَّهُۥ عِوَجَاۜ', translation: '[All] praise is [due] to Allah, who has sent down upon His Servant the Book and has not made therein any deviance.', translationUrdu: 'سب خوبیاں اللہ کو جس نے اپنے بندے پر قرآن اتارا اور اس میں کوئی ٹیڑھ نہ رکھی', kanzulImanUrdu: 'سب خوبیاں اللہ کو جس نے اپنے بندے پر قرآن اتارا اور اس میں کوئی ٹیڑھ نہ رکھی', kanzulImanRomanUrdu: 'Sab khoobiyan Allah ko jis ne apne bande par Quran utara aur us mein koi tedh na rakhi' },
-    { number: 2, arabic: 'قَيِّمًا لِّيُنذِرَ بَأْسًا شَدِيدًا مِّن لَّدُنْهُ وَيُبَشِّرَ ٱلْمُؤْمِنِينَ ٱلَّذِينَ يَعْمَلُونَ ٱلصَّٰلِحَٰتِ أَنَّ لَهُمْ أَجْرًا حَسَنًا', translation: '[He has made it] straight, to warn of severe punishment from Him and to give good tidings to the believers who do righteous deeds that they will have a good reward.', translationUrdu: 'عدل والا کہ اللہ کے سخت عذاب سے ڈرائے اور ایمان والوں کو جو اچھے کام کرتے ہیں خوشخبری دے کہ ان کے لیے اچھا ثواب ہے', kanzulImanUrdu: 'عدل والا کہ اللہ کے سخت عذاب سے ڈرائے اور ایمان والوں کو جو اچھے کام کرتے ہیں خوشخبری دے کہ ان کے لیے اچھا ثواب ہے', kanzulImanRomanUrdu: 'Adl wala ke Allah ke sakht azaab se daraye aur imaan walon ko jo achhe kaam karte hain khushkhabri de ke un ke لیے achha sawaab hai' },
-    { number: 3, arabic: 'مَّٰكِثِينَ فِيهِ أَبَدًا', translation: 'In which they will remain forever', translationUrdu: 'جس میں وہ ہمیشہ رہیں گے', kanzulImanUrdu: 'جس میں وہ ہمیشہ رہیں گے', kanzulImanRomanUrdu: 'Jis mein woh hamesha rahenge' },
-    { number: 4, arabic: 'وَيُنذِرَ ٱلَّذِينَ قَالُوا۟ ٱتَّخَذَ ٱللَّهُ وَلَدًا', translation: 'And to warn those who say, "Allah has taken a son."', translationUrdu: 'اور ان کو ڈرائے جو کہتے ہیں کہ اللہ نے اپنے لیے اولاد بنائی ہے', kanzulImanUrdu: 'اور ان کو ڈرائے جو کہتے ہیں کہ اللہ نے اپنے لیے اولاد بنائی ہے', kanzulImanRomanUrdu: 'Aur un ko daraye jo kehte hain ke Allah ne apne liye aulaad banayi hai' },
-    { number: 5, arabic: 'مَّا لَهُم بِهِۦ مِنْ عِلْمٍ وَلَا لِءَابَآئِهِمْ ۚ كَبُرَتْ كَلِمَةً تَخْرُجُ مِنْ أَفْوَٰهِهِمْ ۚ إِن يَقُولُونَ إِلَّا كَذِبًا', translation: 'They have no knowledge of it, nor had their fathers. Grave is the word that comes out of their mouths; they say not except a lie.', translationUrdu: 'اس بات کا نہ انہیں علم ہے اور نہ ان کے باپ دادا کو، بڑی بات ہے جو ان کے منہ سے نکلتی ہے، وہ تو محض جھوٹ بولتے ہیں', kanzulImanUrdu: 'اس بات کا نہ انہیں علم ہے اور نہ ان کے باپ دادا کو، بڑی بات ہے جو ان کے منہ سے نکلتی ہے، وہ تو محض جھوٹ بولتے ہیں', kanzulImanRomanUrdu: 'Is baat ka na unhein ilm hai aur na un ke baap dada ko, badi baat hai jo un ke munh se nikalti hai, woh to mehaz jhooth bolte hain' },
-    { number: 6, arabic: 'فَلَعَلَّكَ بَٰخِعٌ نَّفْسَكَ عَلَىٰٓ ءَاثَٰرِهِمْ إِن لَّمْ يُؤْمِنُوا۟ بِهَٰذَا ٱلْحَدِيثِ أَسَفًا', translation: 'Then perhaps you would kill yourself through grief over their footprints, [O Muhammad], if they do not believe in this message.', translationUrdu: 'تو شاید آپ ان کے پیچھے غم کے مارے اپنی جان ہلاک کر ڈالیں گے اگر وہ اس بات پر ایمان نہ لائیں', kanzulImanUrdu: 'تو شاید آپ ان کے پیچھے غم کے مارے اپنی جان ہلاک کر ڈالیں گے اگر وہ اس بات پر ایمان نہ لائیں', kanzulImanRomanUrdu: 'To shayad aap un ke peeche gham ke maare apni jaan halak kar daalenge agar woh is baat par imaan na layein' },
-    { number: 7, arabic: 'إِنَّا جَعَلْنَا مَا عَلَى ٱلْأَرْضِ زِينَةً لَّهَا لِنَبْلُوَهُمْ أَيُّهُمْ أَحْسَنُ عَمَلًا', translation: 'Indeed, We have made that which is on the earth adornment for it that We may test them [as to] which of them is best in deed.', translationUrdu: 'بیشک جو کچھ زمین پر ہے ہم نے اسے اس کے لیے زینت بنایا تاکہ ہم ان کا امتحان لیں کہ ان میں کون اچھے عمل والا ہے', kanzulImanUrdu: 'بیشک جو کچھ زمین پر ہے ہم نے اسے اس کے لیے زینت بنایا تاکہ ہم ان کا امتحان لیں کہ ان میں کون اچھے عمل والا ہے', kanzulImanRomanUrdu: 'Beshak jo kuch zameen par hai hum ne use us ke liye zeenat banaya taake hum un ka imtihan lein ke un mein kaun achhe amal wala hai' },
-    { number: 8, arabic: 'وَإِنَّا لَجَٰعِلُونَ مَا عَلَيْهَا صَعِيدًا جُرُزًا', translation: 'And indeed, We will make that which is upon it [into] a barren ground.', translationUrdu: 'اور بیشک جو کچھ اس پر ہے ہم اسے چٹیل میدان بنا دینے والے ہیں', kanzulImanUrdu: 'اور بیشک جو کچھ اس پر ہے ہم اسے چٹیل میدان بنا دینے والے ہیں', kanzulImanRomanUrdu: 'Aur beshak jo kuch us par hai hum use chateel maidan bana dene wale hain' },
-    { number: 9, arabic: 'أَمْ حَسِبْتَ أَنَّ أَصْحَٰبَ ٱلْكَهْفِ وَٱلرَّقِيمِ كَانُوا۟ مِنْ ءَايَٰتِنَا عَجَبًا', translation: 'Or have you thought that the companions of the cave and the inscription were, among Our signs, a wonder?', translationUrdu: 'کیا تم نے گمان کیا کہ غار اور کتبے والے ہماری نشانیوں میں سے ایک عجیب نشانی تھے', kanzulImanUrdu: 'کیا تم نے گمان کیا کہ غار اور کتبے والے ہماری نشانیوں میں سے ایک عجیب نشانی تھے', kanzulImanRomanUrdu: 'Kya tum ne guman kiya ke ghaar aur katbe wale hamari nishaniyon mein se ek ajeeb nishani the' },
-    { number: 10, arabic: 'إِذْ أَوَى ٱلْفِتْيَةُ إِلَى ٱلْكَهْفِ فَقَالُوا۟ رَبَّنَآ ءَاتِنَا مِن لَّدُنكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا', translation: '[Mention] when the youths retreated to the cave and said, "Our Lord, grant us from Yourself mercy and prepare for us from our affair right guidance."', translationUrdu: 'جب ان جوانوں نے غار میں پناہ لی تو کہا: اے ہمارے رب! ہمیں اپنے پاس سے رحمت عطا فرما اور ہمارے لیے ہمارے کام میں رہنمائی مہیا فرما', kanzulImanUrdu: 'جب ان جوانوں نے غار میں پناہ لی تو کہا: اے ہمارے رب! ہمیں اپنے پاس سے رحمت عطا فرما اور ہمارے لیے ہمارے کام میں رہنمائی مہیا فرما', kanzulImanRomanUrdu: 'Jab un jawano ne ghaar mein panah li to kaha: Aye hamare Rab! Humein apne paas se rehmat ata farma aur hamare liye hamare kaam mein rehnumai muhayya farma' },
-  ],
-};
-
-export const SURAH_DETAILS_MAP: Record<number, SurahDetail> = {
-  1: SURAH_AL_FATIHAH_DETAIL,
-  18: SURAH_AL_KAHF_DETAIL,
-  67: SURAH_AL_MULK_DETAIL,
-  112: SURAH_AL_IKHLAS_DETAIL,
-  113: SURAH_AL_FALAQ_DETAIL,
-  114: SURAH_AN_NAS_DETAIL,
-};
+export const SURAH_AL_FATIHAH_DETAIL = SURAH_DETAILS_MAP[1];
+export const SURAH_AL_KAHF_DETAIL = SURAH_DETAILS_MAP[18];
+export const SURAH_AL_MULK_DETAIL = SURAH_DETAILS_MAP[67];
+export const SURAH_AL_IKHLAS_DETAIL = SURAH_DETAILS_MAP[112];
+export const SURAH_AL_FALAQ_DETAIL = SURAH_DETAILS_MAP[113];
+export const SURAH_AN_NAS_DETAIL = SURAH_DETAILS_MAP[114];

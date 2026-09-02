@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
@@ -11,6 +11,7 @@ import {
   SURAHS_LIST,
   JUZ_LIST,
   getMushafPageUrl,
+  getMushafPageFallbackUrl,
   getSurahByPage,
   getJuzByPage,
 } from '../../data/quranData';
@@ -23,15 +24,17 @@ import {
   Pause,
   RotateCcw,
   RotateCw,
+  SkipBack,
+  SkipForward,
   Repeat,
   Volume2,
   VolumeX,
   ChevronLeft,
   ChevronRight,
-  Languages,
   ZoomIn,
   ZoomOut,
-  AlertCircle,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 
 export const QuranPage: React.FC = () => {
@@ -50,7 +53,6 @@ export const QuranPage: React.FC = () => {
     audioVolume,
     isLooping,
     autoPlayNext,
-    translationLang,
     bookmarks,
     readingProgress,
     searchTerm,
@@ -67,8 +69,9 @@ export const QuranPage: React.FC = () => {
     loadSurah,
     setSearchTerm,
     setActiveTab,
-    setTranslationLang,
     playSurahAudio,
+    playNextSurahAudio,
+    playPrevSurahAudio,
     toggleAudioPlay,
     seekAudio,
     setAudioVolume,
@@ -80,10 +83,14 @@ export const QuranPage: React.FC = () => {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
   const [pageInputValue, setPageInputValue] = useState<string>(String(mushafPage));
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [imageSrc, setImageSrc] = useState<string>(getMushafPageUrl(mushafPage));
+  const readerContainerRef = useRef<HTMLDivElement>(null);
 
-  // Sync pageInputValue with current mushafPage
+  // Sync pageInputValue and imageSrc with current mushafPage
   useEffect(() => {
     setPageInputValue(String(mushafPage));
+    setImageSrc(getMushafPageUrl(mushafPage));
     setIsImageLoading(true);
   }, [mushafPage]);
 
@@ -95,10 +102,81 @@ export const QuranPage: React.FC = () => {
     }
   }, [mushafPage, currentSurah, loadSurah]);
 
+  const handleImageError = () => {
+    const fallback = getMushafPageFallbackUrl(mushafPage);
+    if (imageSrc !== fallback) {
+      setImageSrc(fallback);
+    } else {
+      setIsImageLoading(false);
+    }
+  };
+
+  // Fullscreen event listener
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      if (readerContainerRef.current) {
+        readerContainerRef.current.requestFullscreen().catch(() => {});
+      } else {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      setIsFullscreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      setIsFullscreen(false);
+    }
+  }, []);
+
+  // Keyboard navigation shortcuts in Reading Mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only capture shortcuts when not typing inside an input
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (mode === 'read') {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+          e.preventDefault();
+          nextMushafPage();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevMushafPage();
+        } else if (e.key === '+' || e.key === '=') {
+          e.preventDefault();
+          zoomIn();
+        } else if (e.key === '-' || e.key === '_') {
+          e.preventDefault();
+          zoomOut();
+        } else if (e.key === '0') {
+          e.preventDefault();
+          resetZoom();
+        } else if (e.key === 'f' || e.key === 'F') {
+          e.preventDefault();
+          toggleFullscreen();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mode, nextMushafPage, prevMushafPage, zoomIn, zoomOut, resetZoom, toggleFullscreen]);
+
   // Current page metadata
   const currentSurahMeta = getSurahByPage(mushafPage);
   const currentJuzMeta = getJuzByPage(mushafPage);
-  const mushafImageUrl = getMushafPageUrl(mushafPage);
 
   // Filtered surahs for search
   const filteredSurahs = surahs.filter(
@@ -167,7 +245,7 @@ export const QuranPage: React.FC = () => {
         subtitle="Authentic Madinah Mushaf & Revered Recitations"
         actions={
           <div className="flex items-center gap-2">
-            {/* Dual Mode Switcher */}
+            {/* Dual Mode Switcher: Read | Listen */}
             <div
               style={{
                 display: 'flex',
@@ -191,7 +269,7 @@ export const QuranPage: React.FC = () => {
                 }}
               >
                 <BookOpen size={16} />
-                <span>Reading Mode</span>
+                <span>Read</span>
               </button>
               <button
                 type="button"
@@ -206,7 +284,7 @@ export const QuranPage: React.FC = () => {
                 }}
               >
                 <Headphones size={16} />
-                <span>Audio Studio</span>
+                <span>Listen</span>
               </button>
             </div>
           </div>
@@ -248,7 +326,7 @@ export const QuranPage: React.FC = () => {
           MODE 1: QURAN READING MODE (AUTHENTIC MUSHAF PAGE IMAGES)
           ======================================================== */}
       {mode === 'read' && (
-        <div className="mushaf-view-container">
+        <div ref={readerContainerRef} className={`mushaf-view-container ${isFullscreen ? 'is-fullscreen' : ''}`}>
           {/* Top Selectors Bar: Independent Surah & Juz dropdowns */}
           <div className="mushaf-selectors-bar">
             {/* Surah Selector */}
@@ -289,13 +367,13 @@ export const QuranPage: React.FC = () => {
               </select>
             </div>
 
-            {/* Zoom Controls */}
+            {/* Zoom & Fullscreen Controls */}
             <div className="mushaf-zoom-controls">
               <button
                 type="button"
                 className="mushaf-zoom-btn"
                 onClick={zoomOut}
-                title="Zoom Out"
+                title="Zoom Out (-)"
                 aria-label="Zoom Out"
               >
                 <ZoomOut size={16} />
@@ -304,7 +382,7 @@ export const QuranPage: React.FC = () => {
                 type="button"
                 className="mushaf-zoom-btn"
                 onClick={resetZoom}
-                title="Reset Zoom (100%)"
+                title="Reset Zoom (0 / 100%)"
                 style={{ fontSize: '0.75rem', width: 'auto', padding: '0 6px' }}
               >
                 {Math.round(zoomLevel * 100)}%
@@ -313,10 +391,19 @@ export const QuranPage: React.FC = () => {
                 type="button"
                 className="mushaf-zoom-btn"
                 onClick={zoomIn}
-                title="Zoom In"
+                title="Zoom In (+)"
                 aria-label="Zoom In"
               >
                 <ZoomIn size={16} />
+              </button>
+              <button
+                type="button"
+                className={`mushaf-zoom-btn ${isFullscreen ? 'active-btn' : ''}`}
+                onClick={toggleFullscreen}
+                title={isFullscreen ? 'Exit Fullscreen (F)' : 'Fullscreen Reader (F)'}
+                aria-label={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+              >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </button>
             </div>
           </div>
@@ -328,7 +415,7 @@ export const QuranPage: React.FC = () => {
               className="mushaf-nav-btn"
               onClick={prevMushafPage}
               disabled={mushafPage <= 1}
-              title="Previous Mushaf Page"
+              title="Previous Mushaf Page (Left Arrow)"
             >
               <ChevronLeft size={18} />
               <span>Prev Page</span>
@@ -358,7 +445,7 @@ export const QuranPage: React.FC = () => {
               className="mushaf-nav-btn"
               onClick={nextMushafPage}
               disabled={mushafPage >= 604}
-              title="Next Mushaf Page"
+              title="Next Mushaf Page (Right Arrow)"
             >
               <span>Next Page</span>
               <ChevronRight size={18} />
@@ -397,139 +484,18 @@ export const QuranPage: React.FC = () => {
                 </div>
               )}
               <img
-                src={mushafImageUrl}
+                src={imageSrc}
                 alt={`Authentic Quran Page ${mushafPage} - Surah ${currentSurahMeta.name}`}
                 className="mushaf-img-element"
                 onLoad={() => setIsImageLoading(false)}
-                onError={() => setIsImageLoading(false)}
+                onError={handleImageError}
                 loading="eager"
               />
             </div>
 
             {/* Mushaf Footer Line */}
             <div className="mushaf-page-footer-info">
-              <span>Standard Madinah Mushaf (1440H) • Page {mushafPage} of 604</span>
-            </div>
-          </div>
-
-          {/* Translation Options Section (Cleanly Displayed Below Mushaf Page) */}
-          <div className="mushaf-translation-section">
-            <div className="translation-box-card">
-              <div className="translation-box-header">
-                <div className="flex items-center gap-2">
-                  <Languages size={18} className="text-emerald-500" />
-                  <span style={{ fontWeight: 'var(--weight-semibold)', fontSize: 'var(--text-sm)' }}>
-                    Authentic Translation / ترجمہ
-                  </span>
-                </div>
-
-                {/* Translation Language Selector */}
-                <div className="translation-toggle-pills">
-                  <button
-                    type="button"
-                    className={`trans-pill-btn ${translationLang === 'urdu' ? 'active' : ''}`}
-                    onClick={() => setTranslationLang('urdu')}
-                  >
-                    اردو (کنز الایمان)
-                  </button>
-                  <button
-                    type="button"
-                    className={`trans-pill-btn ${translationLang === 'english' ? 'active' : ''}`}
-                    onClick={() => setTranslationLang('english')}
-                  >
-                    English (Kanzul Iman)
-                  </button>
-                  <button
-                    type="button"
-                    className={`trans-pill-btn ${translationLang === 'roman-urdu' ? 'active' : ''}`}
-                    onClick={() => setTranslationLang('roman-urdu')}
-                  >
-                    Roman Urdu
-                  </button>
-                </div>
-              </div>
-
-              {/* Translation Content */}
-              {translationLang === 'roman-urdu' && currentSurah?.ayahs && currentSurah.ayahs.some(a => !!a.kanzulImanRomanUrdu) ? (
-                <div className="translation-ayah-list" style={{ maxHeight: '420px', overflowY: 'auto' }}>
-                  <div className="roman-urdu-badge-bar" style={{ padding: '8px 12px', background: 'rgba(16, 185, 129, 0.08)', borderRadius: 'var(--radius-md)', marginBottom: '12px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                    <span style={{ fontSize: 'var(--text-xs)', color: 'var(--brand-primary)', fontWeight: 'var(--weight-medium)' }}>
-                      ✓ Verified Kanzul Iman Roman Urdu Translation (کنز الایمان رومن اردو)
-                    </span>
-                  </div>
-                  {currentSurah.ayahs.map((ayah) => (
-                    <div key={ayah.number} className="translation-ayah-item">
-                      <div className="flex items-center gap-2">
-                        <span className="ayah-num-tag">{ayah.number}</span>
-                        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                          Surah {currentSurah.name}, Ayah {ayah.number}
-                        </span>
-                      </div>
-                      <p
-                        className="roman-urdu-translation-text"
-                        dir="ltr"
-                        style={{
-                          margin: '6px 0 0 0',
-                          fontSize: '0.98rem',
-                          lineHeight: '1.7',
-                          color: 'var(--text-primary)',
-                          fontStyle: 'normal',
-                        }}
-                      >
-                        {ayah.kanzulImanRomanUrdu}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : translationLang === 'roman-urdu' ? (
-                <div className="roman-urdu-status-banner">
-                  <AlertCircle size={20} className="warning-icon" />
-                  <div>
-                    <strong style={{ display: 'block', marginBottom: '4px' }}>
-                      Roman Urdu Translation Source Status — Surah {currentSurahMeta.name}
-                    </strong>
-                    <p style={{ margin: 0, fontSize: 'var(--text-xs)', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-                      An authentic peer-verified Roman Urdu translation dataset for <strong>Surah {currentSurahMeta.name}</strong> is currently being compiled from verified Kanzul Iman sources. In strict adherence to authentic Quran preservation guidelines, AI generation, placeholder text, or converting English translations to Roman Urdu is strictly prohibited. Please view the verified{' '}
-                      <strong style={{ color: 'var(--brand-primary)' }}>Kanzul Iman Urdu (کنز الایمان)</strong> or authentic English translation.
-                    </p>
-                  </div>
-                </div>
-              ) : currentSurah?.ayahs && currentSurah.ayahs.length > 0 ? (
-                <div className="translation-ayah-list" style={{ maxHeight: '420px', overflowY: 'auto' }}>
-                  {currentSurah.ayahs.map((ayah) => (
-                    <div key={ayah.number} className="translation-ayah-item">
-                      <div className="flex items-center gap-2">
-                        <span className="ayah-num-tag">{ayah.number}</span>
-                        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                          Surah {currentSurah.name}, Ayah {ayah.number}
-                        </span>
-                      </div>
-                      <p
-                        className={
-                          translationLang === 'urdu'
-                            ? 'urdu-translation-text'
-                            : 'english-translation-text'
-                        }
-                        dir={translationLang === 'urdu' ? 'rtl' : 'ltr'}
-                        style={{
-                          margin: '4px 0 0 0',
-                          fontSize: translationLang === 'urdu' ? '1.15rem' : '0.95rem',
-                          lineHeight: translationLang === 'urdu' ? '2.2' : '1.6',
-                          color: 'var(--text-primary)',
-                        }}
-                      >
-                        {translationLang === 'urdu'
-                          ? ayah.kanzulImanUrdu || ayah.translationUrdu || ayah.translation
-                          : ayah.kanzulImanEn || ayah.translation}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ padding: 'var(--space-4)', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                  Loading verified translation verses for Surah {currentSurahMeta.name}...
-                </div>
-              )}
+              <span>مصحف المدينة المنورة • Standard Madinah Mushaf • Page {mushafPage} of 604</span>
             </div>
           </div>
         </div>
@@ -668,14 +634,24 @@ export const QuranPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Center: Skip back, Play/Pause, Skip forward */}
-                <div className="flex items-center gap-3">
+                {/* Center: Prev Surah, Rewind 10s, Play/Pause, Forward 10s, Next Surah */}
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={playPrevSurahAudio}
+                    title="Previous Surah"
+                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
+                  >
+                    <SkipBack size={18} />
+                  </button>
+
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => seekAudio(Math.max(0, playbackTime - 10))}
                     title="Rewind 10 seconds"
-                    style={{ borderRadius: '50%', width: '42px', height: '42px', padding: 0 }}
+                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
                   >
                     <RotateCcw size={18} />
                   </button>
@@ -701,9 +677,19 @@ export const QuranPage: React.FC = () => {
                     className="btn btn-outline-secondary"
                     onClick={() => seekAudio(Math.min(playbackDuration, playbackTime + 10))}
                     title="Forward 10 seconds"
-                    style={{ borderRadius: '50%', width: '42px', height: '42px', padding: 0 }}
+                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
                   >
                     <RotateCw size={18} />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={playNextSurahAudio}
+                    title="Next Surah"
+                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
+                  >
+                    <SkipForward size={18} />
                   </button>
                 </div>
 

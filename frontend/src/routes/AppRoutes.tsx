@@ -16,6 +16,8 @@ import { QiblaPage } from '../pages/Qibla/QiblaPage';
 import { CalendarPage } from '../pages/Calendar/CalendarPage';
 import { RamadanPage } from '../pages/Ramadan/RamadanPage';
 import { JumuahPage } from '../pages/Jumuah/JumuahPage';
+import { AsmaUlHusnaPage } from '../pages/Names/AsmaUlHusnaPage';
+import { AsmaEMustafaPage } from '../pages/Names/AsmaEMustafaPage';
 import { SettingsPage } from '../pages/Settings/SettingsPage';
 
 export const AppRoutes: React.FC = () => {
@@ -28,7 +30,15 @@ export const AppRoutes: React.FC = () => {
         <Route path="/tracker" element={<TrackerPage />} />
         <Route path="/quran" element={<QuranPage />} />
         <Route path="/azkar" element={<AzkarPage />} />
+        <Route path="/duas" element={<Navigate to="/azkar" replace />} />
+        <Route path="/dua" element={<Navigate to="/azkar" replace />} />
         <Route path="/qibla" element={<QiblaPage />} />
+
+        {/* Dedicated Islamic Names Routes */}
+        <Route path="/allah-names" element={<AsmaUlHusnaPage />} />
+        <Route path="/asma-ul-husna" element={<Navigate to="/allah-names" replace />} />
+        <Route path="/prophet-names" element={<AsmaEMustafaPage />} />
+        <Route path="/asma-e-mustafa" element={<Navigate to="/prophet-names" replace />} />
 
         {/* Secondary / Feature Routes */}
         <Route path="/qaza" element={<QazaPage />} />
@@ -40,6 +50,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/ramadan" element={<RamadanPage />} />
         <Route path="/jumuah" element={<JumuahPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+
 
         {/* Catch-all redirect to Dashboard */}
         <Route path="*" element={<Navigate to="/" replace />} />

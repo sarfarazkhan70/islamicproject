@@ -5,10 +5,22 @@ import { sendSuccess, sendError } from '../utils/apiResponse.js';
 export class CalendarController {
   static getHijriDate(req: Request, res: Response, next: NextFunction): void {
     try {
-      const dateStr = (req.query.date as string) || new Date().toISOString().slice(0, 10);
+      const dateStr = (req.query.date as string) || new Date().toISOString();
       const adjustment = parseInt((req.query.adjustment as string) || '0', 10);
+      const timezone = (req.query.timezone as string) || undefined;
+      const lat = req.query.latitude ? parseFloat(req.query.latitude as string) : undefined;
+      const lng = req.query.longitude ? parseFloat(req.query.longitude as string) : undefined;
+      const location =
+        lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)
+          ? { latitude: lat, longitude: lng }
+          : undefined;
 
-      const hijri = CalendarService.toHijri(dateStr, isNaN(adjustment) ? 0 : adjustment);
+      const hijri = CalendarService.toHijri(
+        dateStr,
+        isNaN(adjustment) ? 0 : adjustment,
+        timezone,
+        location
+      );
       res.status(200).json(sendSuccess({ hijri }));
     } catch (err: any) {
       res.status(400).json(sendError('CALENDAR_ERROR', err.message));

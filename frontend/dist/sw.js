@@ -1,6 +1,6 @@
 // Islamic Prayer Service Worker (Phase 5 — Web Push & PWA Offline Support)
 
-const CACHE_NAME = 'islamic-prayer-v2';
+const CACHE_NAME = 'islamic-prayer-v5';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -10,6 +10,8 @@ self.addEventListener('install', (event) => {
         '/index.html',
         '/favicon.svg',
         '/manifest.json',
+        '/audio/madina_azaan.mp3',
+        '/audio/namaz_reminder.mp3',
       ]);
     })
   );

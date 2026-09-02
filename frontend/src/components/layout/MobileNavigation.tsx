@@ -31,17 +31,20 @@ export const MobileNavigation: React.FC = () => {
   ];
 
   const secondaryTabs = [
+    { path: '/allah-names', label: 'Asma-ul-Husna', icon: Sparkles, desc: '99 Names of Allah Ta’ala' },
+    { path: '/prophet-names', label: 'Asma-e-Mustafa ﷺ', icon: Heart, desc: 'Verified Prophetic Names' },
     { path: '/azkar', label: 'Azkar & Duas', icon: Heart, desc: 'Daily authentic prayers' },
     { path: '/qibla', label: 'Qibla Finder', icon: Compass, desc: 'Kaaba compass direction' },
-    { path: '/qaza', label: 'Qaza Namaz', icon: RotateCcw, desc: 'Lifetime missed prayer log' },
-    { path: '/history', label: 'Prayer History', icon: BarChart3, desc: 'Streak & analytics' },
-    { path: '/notifications', label: 'Notifications', icon: Bell, desc: 'Adhans & custom alerts' },
     { path: '/surah-al-mulk', label: 'Surah Al-Mulk', icon: Moon, desc: 'Sleep audio recitation' },
     { path: '/calendar', label: 'Islamic Calendar', icon: Calendar, desc: 'Hijri & sacred events' },
     { path: '/ramadan', label: 'Ramadan', icon: Sparkles, desc: 'Sehri, Iftar & fast log' },
     { path: '/jumuah', label: "Jumu'ah Portal", icon: Users, desc: 'Kahf & Friday sunnahs' },
+    { path: '/qaza', label: 'Qaza Namaz', icon: RotateCcw, desc: 'Lifetime missed prayer log' },
+    { path: '/history', label: 'Prayer History', icon: BarChart3, desc: 'Streak & analytics' },
+    { path: '/notifications', label: 'Notifications', icon: Bell, desc: 'Adhans & custom alerts' },
     { path: '/settings', label: 'Settings', icon: Settings, desc: 'Preferences & location' },
   ];
+
 
   const isMoreActive = secondaryTabs.some((tab) => tab.path === location.pathname);
 

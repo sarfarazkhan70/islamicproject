@@ -5,6 +5,7 @@ import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { ProgressBar } from '../../components/common/ProgressBar';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes.js';
+import { useCentralHijriDate } from '../../hooks/useCentralHijriDate.js';
 import { useRamadanStore, FastingStatus } from '../../stores/useRamadanStore.js';
 import {
   Sparkles,
@@ -17,15 +18,17 @@ import {
 
 export const RamadanPage: React.FC = () => {
   const { timetable } = usePrayerTimes();
+  const centralHijri = useCentralHijriDate();
   const {
-    isRamadan,
-    currentRamadanDay,
-    currentHijriYear,
     completedJuz,
     getFastingStatus,
     logFast,
     toggleJuz,
   } = useRamadanStore();
+
+  const isRamadan = centralHijri.month === 9;
+  const currentRamadanDay = isRamadan ? centralHijri.day : 1;
+  const currentHijriYear = centralHijri.year;
 
   const [activeTab, setActiveTab] = useState<'overview' | 'khatam' | 'calendar'>('overview');
   const [countdownText, setCountdownText] = useState('00:00:00');

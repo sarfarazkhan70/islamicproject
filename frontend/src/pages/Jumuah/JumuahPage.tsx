@@ -5,12 +5,12 @@ import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { Link } from 'react-router-dom';
 import { useNotificationStore } from '../../stores/useNotificationStore.js';
-import { getCurrentHijriDate } from '../../utils/hijriCalendar.js';
+import { useCentralHijriDate } from '../../hooks/useCentralHijriDate.js';
 import { Users, BookOpen, Check, Clock, Bell, Sparkles } from 'lucide-react';
 
 export const JumuahPage: React.FC = () => {
   const { preferences, setJumuahTime } = useNotificationStore();
-  const todayHijri = getCurrentHijriDate();
+  const todayHijri = useCentralHijriDate();
   const [kahfRead, setKahfRead] = useState(false);
   const [duroodCount, setDuroodCount] = useState(42);
   const [sunnahs, setSunnahs] = useState({

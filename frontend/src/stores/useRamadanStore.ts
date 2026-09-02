@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getCurrentHijriDate } from '../utils/hijriCalendar.js';
+import { getCentralHijriDate } from '../utils/hijriCalendar.js';
 
 
 export type FastingStatus = 'FASTED' | 'MISSED' | 'EXCUSED' | 'QAZA' | 'NONE';
@@ -39,7 +39,7 @@ function getStoredKhatam(): number[] {
   }
 }
 
-const todayHijri = getCurrentHijriDate(0);
+const todayHijri = getCentralHijriDate();
 const isCurrentlyRamadan = todayHijri.month === 9;
 
 export const useRamadanStore = create<RamadanState>((set, get) => ({
@@ -50,7 +50,7 @@ export const useRamadanStore = create<RamadanState>((set, get) => ({
   completedJuz: getStoredKhatam(),
 
   refreshDate: () => {
-    const freshToday = getCurrentHijriDate(0);
+    const freshToday = getCentralHijriDate();
     const inRamadan = freshToday.month === 9;
     set({
       isRamadan: inRamadan,

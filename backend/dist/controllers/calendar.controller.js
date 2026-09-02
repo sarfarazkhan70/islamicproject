@@ -3,9 +3,15 @@ import { sendSuccess, sendError } from '../utils/apiResponse.js';
 export class CalendarController {
     static getHijriDate(req, res, next) {
         try {
-            const dateStr = req.query.date || new Date().toISOString().slice(0, 10);
+            const dateStr = req.query.date || new Date().toISOString();
             const adjustment = parseInt(req.query.adjustment || '0', 10);
-            const hijri = CalendarService.toHijri(dateStr, isNaN(adjustment) ? 0 : adjustment);
+            const timezone = req.query.timezone || undefined;
+            const lat = req.query.latitude ? parseFloat(req.query.latitude) : undefined;
+            const lng = req.query.longitude ? parseFloat(req.query.longitude) : undefined;
+            const location = lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)
+                ? { latitude: lat, longitude: lng }
+                : undefined;
+            const hijri = CalendarService.toHijri(dateStr, isNaN(adjustment) ? 0 : adjustment, timezone, location);
             res.status(200).json(sendSuccess({ hijri }));
         }
         catch (err) {

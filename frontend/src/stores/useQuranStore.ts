@@ -124,6 +124,8 @@ interface QuranState {
 
   // Audio Actions
   playSurahAudio: (surahNumber: number, reciterId?: string) => void;
+  playNextSurahAudio: () => void;
+  playPrevSurahAudio: () => void;
   toggleAudioPlay: () => void;
   pauseAudio: () => void;
   resumeAudio: () => void;
@@ -508,6 +510,18 @@ export const useQuranStore = create<QuranState>((set, get) => ({
         reciterId: reciter,
       })
     );
+  },
+
+  playNextSurahAudio: () => {
+    const { activeAudioSurah, selectedReciter } = get();
+    const nextSurah = activeAudioSurah < 114 ? activeAudioSurah + 1 : 1;
+    get().playSurahAudio(nextSurah, selectedReciter);
+  },
+
+  playPrevSurahAudio: () => {
+    const { activeAudioSurah, selectedReciter } = get();
+    const prevSurah = activeAudioSurah > 1 ? activeAudioSurah - 1 : 114;
+    get().playSurahAudio(prevSurah, selectedReciter);
   },
 
   toggleAudioPlay: () => {

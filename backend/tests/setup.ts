@@ -2,6 +2,33 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { beforeAll, afterAll, beforeEach } from 'vitest';
 
+// Minimal browser mocks for frontend engine tests running in Node
+if (typeof (globalThis as any).window === 'undefined') {
+  (globalThis as any).window = globalThis;
+}
+if (typeof (globalThis as any).Audio === 'undefined') {
+  (globalThis as any).Audio = class {
+    src: string;
+    volume: number = 1.0;
+    currentTime: number = 0;
+    loop: boolean = false;
+    onended: (() => void) | null = null;
+    constructor(src: string) {
+      this.src = src;
+    }
+    play() {
+      return Promise.resolve();
+    }
+    pause() {}
+  };
+}
+if (typeof (globalThis as any).Notification === 'undefined') {
+  (globalThis as any).Notification = class {
+    static permission = 'granted';
+    constructor(public title: string, public options: any) {}
+  };
+}
+
 let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {

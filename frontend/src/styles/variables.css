@@ -140,36 +140,37 @@ html[data-theme="dark"] {
 }
 
 /* ==========================================================================
-   LIGHT THEME (Desert Dawn — Soft Warm Cream)
+   LIGHT THEME (Very Light Soft Cream — Clean & Eye-Friendly)
    ========================================================================== */
 html[data-theme="light"] {
-  --bg-app: #FAF7F0;
-  --bg-surface: #FFFDF8;
-  --bg-surface-elevated: #F5F0E6;
-  --bg-surface-hover: #EFE8DB;
-  --bg-card: rgba(255, 253, 248, 0.94);
-  --bg-card-hover: #FFFDF8;
-  --bg-glass: rgba(255, 253, 248, 0.85);
+  --bg-app: #FFFCF2;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #FFF9EE;
+  --bg-surface-hover: #FFF4E0;
+  --bg-card: rgba(255, 255, 255, 0.98);
+  --bg-card-hover: #FFFFFF;
+  --bg-glass: rgba(255, 252, 242, 0.92);
 
-  --border-subtle: rgba(180, 168, 150, 0.28);
-  --border-default: rgba(170, 155, 135, 0.38);
-  --border-strong: rgba(16, 185, 129, 0.45);
-  --border-highlight: rgba(245, 158, 11, 0.45);
+  --border-subtle: rgba(215, 205, 190, 0.35);
+  --border-default: rgba(200, 190, 175, 0.50);
+  --border-strong: rgba(5, 150, 105, 0.40);
+  --border-highlight: rgba(217, 119, 6, 0.40);
 
-  --text-primary: #232B28;
-  --text-secondary: #55605B;
-  --text-muted: #78847E;
+  --text-primary: #1C2826;
+  --text-secondary: #4A5853;
+  --text-muted: #6C7A75;
   --text-accent: #059669;
-  --text-gold: #c26a05;
+  --text-gold: #b45309;
   --text-inverse: #ffffff;
 
-  --shadow-sm: 0 1px 2px 0 rgba(70, 55, 40, 0.04);
-  --shadow-md: 0 4px 8px -1px rgba(70, 55, 40, 0.06), 0 2px 4px -2px rgba(70, 55, 40, 0.04);
-  --shadow-lg: 0 10px 18px -3px rgba(70, 55, 40, 0.08), 0 4px 6px -4px rgba(70, 55, 40, 0.03);
-  --shadow-xl: 0 20px 25px -5px rgba(70, 55, 40, 0.09), 0 8px 10px -6px rgba(70, 55, 40, 0.04);
-  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.12);
-  --shadow-gold-glow: 0 0 20px rgba(245, 158, 11, 0.12);
+  --shadow-sm: 0 1px 2px 0 rgba(40, 30, 20, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(40, 30, 20, 0.04), 0 2px 4px -2px rgba(40, 30, 20, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(40, 30, 20, 0.05), 0 4px 6px -4px rgba(40, 30, 20, 0.02);
+  --shadow-xl: 0 20px 25px -5px rgba(40, 30, 20, 0.06), 0 8px 10px -6px rgba(40, 30, 20, 0.02);
+  --shadow-glow: 0 0 20px rgba(5, 150, 105, 0.12);
+  --shadow-gold-glow: 0 0 20px rgba(217, 119, 6, 0.12);
 
   --backdrop-blur: blur(12px);
 }
+
 

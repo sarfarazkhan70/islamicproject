@@ -372,8 +372,12 @@ export function calculatePrayerTimes(params: PrayerCalculationParams): DailyPray
     timeToNextPrayerFormatted = formatCountdown(timeToNextPrayerSeconds);
   }
 
-  // Calculate live Hijri date for the prayer day
-  const hijri = gregorianToHijri(date, 0, timezone);
+  // Calculate live Hijri date for the prayer day (Maghrib-aware)
+  const hijri = gregorianToHijri(date, 0, timezone, {
+    latitude,
+    longitude,
+    maghribOffsetMinutes: maghribOffsetMin,
+  });
 
   return {
     date,

@@ -1,0 +1,275 @@
+export interface DuaItem {
+  id: string;
+  section: 'namaz-ke-baad' | 'qurani-duain';
+  number?: number;
+  title: string;
+  arabic: string;
+  reference: string;
+  surahName?: string;
+  ayahReference?: string;
+}
+
+export interface DuaSectionMeta {
+  id: 'all' | 'namaz-ke-baad' | 'qurani-duain';
+  title: string;
+  arabicTitle: string;
+  count: number;
+}
+
+// SECTION 1 — NAMAZ KE BAAD KI DUA
+export const NAMAZ_KE_BAAD_DUA: DuaItem = {
+  id: 'dua-namaz-baad-1',
+  section: 'namaz-ke-baad',
+  title: 'Namaz Ke Baad Ki Dua',
+  arabic:
+    'اللَّهُمَّ أَنْتَ السَّلَامُ، وَمِنْكَ السَّلَامُ، وَإِلَيْكَ يَرْجِعُ السَّلَامُ، أَدْخِلْنَا دَارَ السَّلَامِ، تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ، يَا ذَا الْجَلَالِ وَالْإِكْرَامِ، اللَّهُمَّ رَبَّنَا سَمِعْنَا وَأَطَعْنَا، غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ، بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ.',
+  reference: 'Namaz ke baad ki Masnoon Dua',
+};
+
+// SECTION 2 — 20 QURANI DUAIN (Verified from Authoritative Tanzil Uthmani Text)
+export const QURANI_DUAS: DuaItem[] = [
+  {
+    id: 'qurani-dua-1',
+    section: 'qurani-duain',
+    number: 1,
+    title: 'Rabbana Atina Fid-Dunya',
+    arabic:
+      'رَبَّنَآ ءَاتِنَا فِى ٱلدُّنْيَا حَسَنَةًۭ وَفِى ٱلْءَاخِرَةِ حَسَنَةًۭ وَقِنَا عَذَابَ ٱلنَّارِ',
+    reference: 'Surah Al-Baqarah — 2:201',
+    surahName: 'Surah Al-Baqarah',
+    ayahReference: '2:201',
+  },
+  {
+    id: 'qurani-dua-2',
+    section: 'qurani-duain',
+    number: 2,
+    title: 'Rabbana Afrigh Alayna Sabran',
+    arabic:
+      'رَبَّنَآ أَفْرِغْ عَلَيْنَا صَبْرًۭا وَثَبِّتْ أَقْدَامَنَا وَٱنصُرْنَا عَلَى ٱلْقَوْمِ ٱلْكَٰفِرِينَ',
+    reference: 'Surah Al-Baqarah — 2:250',
+    surahName: 'Surah Al-Baqarah',
+    ayahReference: '2:250',
+  },
+  {
+    id: 'qurani-dua-3',
+    section: 'qurani-duain',
+    number: 3,
+    title: "Rabbana La Tu'akhidhna",
+    arabic:
+      'رَبَّنَا لَا تُؤَاخِذْنَآ إِن نَّسِينَآ أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَآ إِصْرًۭا كَمَا حَمَلْتَهُۥ عَلَى ٱلَّذِينَ مِن قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِۦ ۖ وَٱعْفُ عَنَّا وَٱغْفِرْ لَنَا وَٱرْحَمْنَآ ۚ أَنتَ مَوْلَىٰنَا فَٱنصُرْنَا عَلَى ٱلْقَوْمِ ٱلْكَٰفِرِينَ',
+    reference: 'Surah Al-Baqarah — 2:286',
+    surahName: 'Surah Al-Baqarah',
+    ayahReference: '2:286',
+  },
+  {
+    id: 'qurani-dua-4',
+    section: 'qurani-duain',
+    number: 4,
+    title: 'Rabbana La Tuzigh Qulubana',
+    arabic:
+      'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً ۚ إِنَّكَ أَنتَ ٱلْوَهَّابُ',
+    reference: 'Surah Aal-e-Imran — 3:8',
+    surahName: 'Surah Aal-e-Imran',
+    ayahReference: '3:8',
+  },
+  {
+    id: 'qurani-dua-5',
+    section: 'qurani-duain',
+    number: 5,
+    title: 'Rabbana Innana Amanna',
+    arabic:
+      'رَبَّنَآ إِنَّنَآ ءَامَنَّا فَٱغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ ٱلنَّارِ',
+    reference: 'Surah Aal-e-Imran — 3:16',
+    surahName: 'Surah Aal-e-Imran',
+    ayahReference: '3:16',
+  },
+  {
+    id: 'qurani-dua-6',
+    section: 'qurani-duain',
+    number: 6,
+    title: 'Rabbana Amanna Bima Anzalta',
+    arabic:
+      'رَبَّنَآ ءَامَنَّا بِمَآ أَنزَلْتَ وَٱتَّبَعْنَا ٱلرَّسُولَ فَٱكْتُبْنَا مَعَ ٱلشَّٰهِدِينَ',
+    reference: 'Surah Aal-e-Imran — 3:53',
+    surahName: 'Surah Aal-e-Imran',
+    ayahReference: '3:53',
+  },
+  {
+    id: 'qurani-dua-7',
+    section: 'qurani-duain',
+    number: 7,
+    title: 'Rabbana Ighfir Lana',
+    arabic:
+      'رَبَّنَا ٱغْفِرْ لَنَا ذُنُوبَنَا وَإِسْرَافَنَا فِىٓ أَمْرِنَا وَثَبِّتْ أَقْدَامَنَا وَٱنصُرْنَا عَلَى ٱلْقَوْمِ ٱلْكَٰفِرِينَ',
+    reference: 'Surah Aal-e-Imran — 3:147',
+    surahName: 'Surah Aal-e-Imran',
+    ayahReference: '3:147',
+  },
+  {
+    id: 'qurani-dua-8',
+    section: 'qurani-duain',
+    number: 8,
+    title: 'Rabbana Ma Khalaqta',
+    arabic:
+      'رَبَّنَا مَا خَلَقْتَ هَٰذَا بَٰطِلًۭا سُبْحَٰنَكَ فَقِنَا عَذَابَ ٱلنَّارِ',
+    reference: 'Surah Aal-e-Imran — 3:191',
+    surahName: 'Surah Aal-e-Imran',
+    ayahReference: '3:191',
+  },
+  {
+    id: 'qurani-dua-9',
+    section: 'qurani-duain',
+    number: 9,
+    title: "Rabbana Innana Sami'na",
+    arabic:
+      'رَّبَّنَآ إِنَّنَا سَمِعْنَا مُنَادِيًۭا يُنَادِى لِلْإِيمَٰنِ أَنْ ءَامِنُوا۟ بِرَبِّكُمْ فَـَٔامَنَّا ۚ رَبَّنَا فَٱغْفِرْ لَنَا ذُنُوبَنَا وَكَفِّرْ عَنَّا سَيِّـَٔاتِنَا وَتَوَفَّنَا مَعَ ٱلْأَبْرَارِ ۦ رَبَّنَا وَءَاتِنَا مَا وَعَدتَّنَا عَلَىٰ رُسُلِكَ وَلَا تُخْزِنَا يَوْمَ ٱلْقِيَٰمَةِ ۗ إِنَّكَ لَا تُخْلِفُ ٱلْمِيعَادَ',
+    reference: 'Surah Aal-e-Imran — 3:193–194',
+    surahName: 'Surah Aal-e-Imran',
+    ayahReference: '3:193–194',
+  },
+  {
+    id: 'qurani-dua-10',
+    section: 'qurani-duain',
+    number: 10,
+    title: "Rabbana La Taj'alna",
+    arabic:
+      'رَبَّنَا لَا تَجْعَلْنَا مَعَ ٱلْقَوْمِ ٱلظَّٰلِمِينَ',
+    reference: "Surah Al-A'raf — 7:47",
+    surahName: "Surah Al-A'raf",
+    ayahReference: '7:47',
+  },
+  {
+    id: 'qurani-dua-11',
+    section: 'qurani-duain',
+    number: 11,
+    title: 'Rabbana Zalamna Anfusana',
+    arabic:
+      'رَبَّنَا ظَلَمْنَآ أَنفُسَنَا وَإِن لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ ٱلْخَٰسِرِينَ',
+    reference: "Surah Al-A'raf — 7:23",
+    surahName: "Surah Al-A'raf",
+    ayahReference: '7:23',
+  },
+  {
+    id: 'qurani-dua-12',
+    section: 'qurani-duain',
+    number: 12,
+    title: 'Rabbana Afrigh Alayna Sabran',
+    arabic:
+      'رَبَّنَآ أَفْرِغْ عَلَيْنَا صَبْرًۭا وَتَوَفَّنَا مُسْلِمِينَ',
+    reference: "Surah Al-A'raf — 7:126",
+    surahName: "Surah Al-A'raf",
+    ayahReference: '7:126',
+  },
+  {
+    id: 'qurani-dua-13',
+    section: 'qurani-duain',
+    number: 13,
+    title: 'Rabbana Alayka Tawakkalna',
+    arabic:
+      'رَّبَّنَا عَلَيْكَ تَوَكَّلْنَا وَإِلَيْكَ أَنَبْنَا وَإِلَيْكَ ٱلْمَصِيرُ',
+    reference: 'Surah Al-Mumtahanah — 60:4',
+    surahName: 'Surah Al-Mumtahanah',
+    ayahReference: '60:4',
+  },
+  {
+    id: 'qurani-dua-14',
+    section: 'qurani-duain',
+    number: 14,
+    title: "Rabbana La Taj'alna Fitnatan",
+    arabic:
+      'رَبَّنَا لَا تَجْعَلْنَا فِتْنَةًۭ لِّلَّذِينَ كَفَرُوا۟ وَٱغْفِرْ لَنَا رَبَّنَآ ۖ إِنَّكَ أَنتَ ٱلْعَزِيزُ ٱلْحَكِيمُ',
+    reference: 'Surah Al-Mumtahanah — 60:5',
+    surahName: 'Surah Al-Mumtahanah',
+    ayahReference: '60:5',
+  },
+  {
+    id: 'qurani-dua-15',
+    section: 'qurani-duain',
+    number: 15,
+    title: 'Rabbana Hab Lana Min Azwajina',
+    arabic:
+      'رَبَّنَا هَبْ لَنَا مِنْ أَزْوَٰجِنَا وَذُرِّيَّٰتِنَا قُرَّةَ أَعْيُنٍۢ وَٱجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا',
+    reference: 'Surah Al-Furqan — 25:74',
+    surahName: 'Surah Al-Furqan',
+    ayahReference: '25:74',
+  },
+  {
+    id: 'qurani-dua-16',
+    section: 'qurani-duain',
+    number: 16,
+    title: 'Rabbana Isrif Anna Adhaba Jahannam',
+    arabic:
+      'رَبَّنَا ٱصْرِفْ عَنَّا عَذَابَ جَهَنَّمَ ۖ إِنَّ عَذَابَهَا كَانَ غَرَامًا ۦ إِنَّهَا سَآءَتْ مُسْتَقَرًّۭا وَمُقَامًۭا',
+    reference: 'Surah Al-Furqan — 25:65–66',
+    surahName: 'Surah Al-Furqan',
+    ayahReference: '25:65–66',
+  },
+  {
+    id: 'qurani-dua-17',
+    section: 'qurani-duain',
+    number: 17,
+    title: 'Rabbana Atina Min Ladunka',
+    arabic:
+      'رَبَّنَآ ءَاتِنَا مِن لَّدُنكَ رَحْمَةًۭ وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًۭا',
+    reference: 'Surah Al-Kahf — 18:10',
+    surahName: 'Surah Al-Kahf',
+    ayahReference: '18:10',
+  },
+  {
+    id: 'qurani-dua-18',
+    section: 'qurani-duain',
+    number: 18,
+    title: 'Rabbana Ighfir Lana Wa Li Ikhwanina',
+    arabic:
+      'رَبَّنَا ٱغْفِرْ لَنَا وَلِإِخْوَٰنِنَا ٱلَّذِينَ سَبَقُونَا بِٱلْإِيمَٰنِ وَلَا تَجْعَلْ فِى قُلُوبِنَا غِلًّۭا لِّلَّذِينَ ءَامَنُوا۟ رَبَّنَآ إِنَّكَ رَءُوفٌۭ رَّحِيمٌ',
+    reference: 'Surah Al-Hashr — 59:10',
+    surahName: 'Surah Al-Hashr',
+    ayahReference: '59:10',
+  },
+  {
+    id: 'qurani-dua-19',
+    section: 'qurani-duain',
+    number: 19,
+    title: 'Rabbana Waghfir Li Walidayya',
+    arabic:
+      'رَبَّنَا ٱغْفِرْ لِى وَلِوَٰلِدَىَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ ٱلْحِسَابُ',
+    reference: 'Surah Ibrahim — 14:41',
+    surahName: 'Surah Ibrahim',
+    ayahReference: '14:41',
+  },
+  {
+    id: 'qurani-dua-20',
+    section: 'qurani-duain',
+    number: 20,
+    title: 'Rabbana Wa Adkhilhum Jannati Adn',
+    arabic:
+      'رَبَّنَا وَأَدْخِلْهُمْ جَنَّٰتِ عَدْنٍ ٱلَّتِى وَعَدتَّهُمْ وَمَن صَلَحَ مِنْ ءَابَآئِهِمْ وَأَزْوَٰجِهِمْ وَذُرِّيَّٰتِهِمْ ۚ إِنَّكَ أَنتَ ٱلْعَزِيزُ ٱلْحَكِيمُ ۦ وَقِهِمُ ٱلسَّيِّـَٔاتِ ۚ وَمَن تَقِ ٱلسَّيِّـَٔاتِ يَوْمَئِذٍۢ فَقَدْ رَحِمْتَهُۥ ۚ وَذَٰلِكَ هُوَ ٱلْفَوْزُ ٱلْعَظِيمُ',
+    reference: 'Surah Ghafir — 40:8–9',
+    surahName: 'Surah Ghafir',
+    ayahReference: '40:8–9',
+  },
+];
+
+// All verified Duas in total (21 Duas: 1 Masnoon + 20 Qurani)
+export const ALL_DUAS: DuaItem[] = [NAMAZ_KE_BAAD_DUA, ...QURANI_DUAS];
+
+export const DUA_SECTIONS: DuaSectionMeta[] = [
+  {
+    id: 'all',
+    title: 'All Duas',
+    arabicTitle: 'جميع الأدعية',
+    count: ALL_DUAS.length,
+  },
+  {
+    id: 'namaz-ke-baad',
+    title: 'Namaz Ke Baad Ki Dua',
+    arabicTitle: 'دعاء ما بعد الصلاة',
+    count: 1,
+  },
+  {
+    id: 'qurani-duain',
+    title: '20 Qurani Duain',
+    arabicTitle: '٢٠ دعاء قرآني',
+    count: QURANI_DUAS.length,
+  },
+];

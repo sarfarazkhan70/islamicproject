@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { Router } from 'express';
 import { authRouter } from './auth.routes.js';
 import { userRouter } from './user.routes.js';
@@ -37,3 +39,23 @@ v1Router.use('/azkar', azkarRoutes);
 v1Router.use('/qibla', qiblaRoutes);
 v1Router.use('/calendar', calendarRoutes);
 v1Router.use('/ramadan', ramadanRoutes);
+// Internal utility to save synthesized audio files
+v1Router.post('/internal/save-prophet-audio', (req, res) => {
+    try {
+        const { id, base64 } = req.body;
+        if (!id || !base64) {
+            res.status(400).json({ error: 'Missing id or base64' });
+            return;
+        }
+        const outDir = path.resolve(process.cwd(), '../frontend/public/audio/prophet');
+        if (!fs.existsSync(outDir)) {
+            fs.mkdirSync(outDir, { recursive: true });
+        }
+        const filePath = path.join(outDir, `${id}.mp3`);
+        fs.writeFileSync(filePath, Buffer.from(base64, 'base64'));
+        res.json({ success: true, path: filePath });
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});

@@ -2,6 +2,10 @@ import { create } from 'zustand';
 
 export interface NotificationSettingsState {
   enabled: boolean;
+  azaanEnabled: boolean;
+  azaanVolume: number;
+  reminder15MinEnabled: boolean;
+  reminderVolume: number;
   prayerReminders: {
     enabled: boolean;
     fajr: boolean;
@@ -45,6 +49,10 @@ const STORAGE_KEY = 'islamic_prayer_notifications_v1';
 
 const DEFAULT_PREFERENCES: NotificationSettingsState = {
   enabled: true,
+  azaanEnabled: true,
+  azaanVolume: 0.8,
+  reminder15MinEnabled: true,
+  reminderVolume: 0.7,
   prayerReminders: {
     enabled: true,
     fajr: true,

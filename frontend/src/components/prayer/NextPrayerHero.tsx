@@ -4,8 +4,7 @@ import { DailyTimetable } from '../../types/prayer.types';
 import { DailyPrayerTimesResult } from '../../core/prayerEngine/types';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
-import { getCurrentHijriDate } from '../../utils/hijriCalendar.js';
-
+import { useCentralHijriDate } from '../../hooks/useCentralHijriDate.js';
 
 export interface NextPrayerHeroProps {
   timetable?: DailyTimetable | DailyPrayerTimesResult;
@@ -30,6 +29,8 @@ export const NextPrayerHero: React.FC<NextPrayerHeroProps> = ({
   hijriDate,
   onOpenLocationPicker,
 }) => {
+  const centralHijri = useCentralHijriDate();
+
   // Extract values with flexible support
   const name =
     nextPrayerName ||
@@ -79,11 +80,7 @@ export const NextPrayerHero: React.FC<NextPrayerHeroProps> = ({
       ? timetable.dateGregorian
       : '';
 
-  const hijri =
-    hijriDate ||
-    (timetable && 'dateHijri' in timetable && timetable.dateHijri
-      ? timetable.dateHijri
-      : getCurrentHijriDate().formatted);
+  const hijri = hijriDate || centralHijri.formatted;
 
 
   const active =

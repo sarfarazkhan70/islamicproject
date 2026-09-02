@@ -102,6 +102,70 @@ export const ISLAMIC_EVENTS = [
         category: 'major',
     },
 ];
+import { getJulianDay, calculateSolarCoordinates, calculateHourAngle, STANDARD_HORIZON_REFRACTION_DEG, } from '../services/prayerEngine/astronomical.js';
+/**
+ * Extracts local date components (year, month, day, hour, minute, second) in a specific IANA timezone
+ */
+export function getLocalDateComponents(date, timezone) {
+    try {
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: timezone,
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hourCycle: 'h23',
+        });
+        const parts = formatter.formatToParts(date);
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let second = date.getSeconds();
+        for (const p of parts) {
+            if (p.type === 'year')
+                year = parseInt(p.value, 10);
+            else if (p.type === 'month')
+                month = parseInt(p.value, 10);
+            else if (p.type === 'day')
+                day = parseInt(p.value, 10);
+            else if (p.type === 'hour')
+                hour = parseInt(p.value, 10);
+            else if (p.type === 'minute')
+                minute = parseInt(p.value, 10);
+            else if (p.type === 'second')
+                second = parseInt(p.value, 10);
+        }
+        return { year, month, day, hour, minute, second };
+    }
+    catch {
+        return {
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+            day: date.getDate(),
+            hour: date.getHours(),
+            minute: date.getMinutes(),
+            second: date.getSeconds(),
+        };
+    }
+}
+/**
+ * Calculates exact local Maghrib (sunset) time for a date and location
+ */
+export function calculateMaghribDate(date, latitude, longitude, timezone, maghribOffsetMinutes = 0) {
+    const tz = timezone || getResolvedTimezone();
+    const { year, month, day } = getLocalDateComponents(date, tz);
+    const julianDay = getJulianDay(year, month, day);
+    const solarCoords = calculateSolarCoordinates(julianDay);
+    const solarNoonUtcHours = 12 - longitude / 15 - solarCoords.equationOfTimeMinutes / 60;
+    const sunsetHourAngle = calculateHourAngle(STANDARD_HORIZON_REFRACTION_DEG, latitude, solarCoords.declinationRad);
+    const sunsetUtcHours = solarNoonUtcHours + sunsetHourAngle.hourAngleHours + maghribOffsetMinutes / 60;
+    const maghribTimestamp = Date.UTC(year, month - 1, day, 0, 0, 0) + sunsetUtcHours * 3600 * 1000;
+    return new Date(maghribTimestamp);
+}
 /**
  * Returns current resolved system/browser timezone
  */
@@ -122,15 +186,33 @@ export function getMidnightRolloverDelay() {
     return Math.max(1000, tomorrowMidnight.getTime() - now.getTime());
 }
 /**
- * Returns the live automatic Hijri date for today in the local timezone
+ * Computes milliseconds remaining until the next local Maghrib (sunset) day boundary
  */
-export function getCurrentHijriDate(adjustmentDays = 0, timezone) {
-    return gregorianToHijri(new Date(), adjustmentDays, timezone);
+export function getMaghribRolloverDelay(location, timezone, nowDate) {
+    const now = nowDate || new Date();
+    const tz = timezone || getResolvedTimezone();
+    const loc = location || { latitude: 21.422487, longitude: 39.826206 };
+    const todayMaghrib = calculateMaghribDate(now, loc.latitude, loc.longitude, tz, loc.maghribOffsetMinutes || 0);
+    if (now.getTime() < todayMaghrib.getTime()) {
+        return Math.max(1000, todayMaghrib.getTime() - now.getTime() + 1000);
+    }
+    // Next rollover is tomorrow's Maghrib
+    const tomorrow = new Date(now.getTime() + 86400000);
+    const tomorrowMaghrib = calculateMaghribDate(tomorrow, loc.latitude, loc.longitude, tz, loc.maghribOffsetMinutes || 0);
+    return Math.max(1000, tomorrowMaghrib.getTime() - now.getTime() + 1000);
 }
 /**
- * Converts a Gregorian Date to Hijri Date using Umm al-Qura standard
+ * Returns the live automatic Hijri date for today in the local timezone,
+ * transitioning at local sunset (Maghrib)
  */
-export function gregorianToHijri(gregorianDate, adjustmentDays = 0, timezone) {
+export function getCurrentHijriDate(adjustmentDays = 0, timezone, location) {
+    return gregorianToHijri(new Date(), adjustmentDays, timezone, location);
+}
+/**
+ * Converts a Gregorian Date to Hijri Date using Umm al-Qura standard.
+ * Islamic day rolls over at local SUNSET (Maghrib).
+ */
+export function gregorianToHijri(gregorianDate, adjustmentDays = 0, timezone, location) {
     const tz = timezone || getResolvedTimezone();
     let targetDate;
     let yearG;
@@ -139,28 +221,45 @@ export function gregorianToHijri(gregorianDate, adjustmentDays = 0, timezone) {
     let dayOfWeek;
     if (typeof gregorianDate === 'string') {
         if (/^\d{4}-\d{2}-\d{2}$/.test(gregorianDate)) {
+            // Pure calendar date string (e.g. "2026-09-02") — standard daytime baseline
             const [y, m, d] = gregorianDate.split('-').map(Number);
             yearG = y;
             monthG = m;
             dayG = d;
-            targetDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-            dayOfWeek = targetDate.getUTCDay();
+            // Daytime of civil date y-m-d corresponds to target day d - 1 in Umm al-Qura baseline
+            targetDate = new Date(Date.UTC(y, m - 1, d - 1, 12, 0, 0));
+            dayOfWeek = new Date(Date.UTC(y, m - 1, d, 12, 0, 0)).getUTCDay();
         }
         else {
             const parsed = new Date(gregorianDate);
-            targetDate = new Date(parsed.getTime());
-            yearG = parsed.getFullYear();
-            monthG = parsed.getMonth() + 1;
-            dayG = parsed.getDate();
-            dayOfWeek = parsed.getDay();
+            const loc = location || { latitude: 28.6139, longitude: 77.209, maghribOffsetMinutes: 0 };
+            const maghribDate = calculateMaghribDate(parsed, loc.latitude, loc.longitude, tz, loc.maghribOffsetMinutes || 0);
+            const isAfterMaghrib = parsed.getTime() >= maghribDate.getTime();
+            const localComp = getLocalDateComponents(parsed, tz);
+            yearG = localComp.year;
+            monthG = localComp.month;
+            dayG = localComp.day;
+            // Before Maghrib: active Islamic day is baseline (day - 1)
+            // At/After Maghrib: new Islamic day begins (day)
+            const targetDay = isAfterMaghrib ? localComp.day : localComp.day - 1;
+            targetDate = new Date(Date.UTC(localComp.year, localComp.month - 1, targetDay, 12, 0, 0));
+            dayOfWeek = new Date(Date.UTC(localComp.year, localComp.month - 1, localComp.day, 12, 0, 0)).getUTCDay();
         }
     }
     else {
-        targetDate = new Date(gregorianDate.getTime());
-        yearG = gregorianDate.getFullYear();
-        monthG = gregorianDate.getMonth() + 1;
-        dayG = gregorianDate.getDate();
-        dayOfWeek = gregorianDate.getDay();
+        // gregorianDate is a Date object (e.g. new Date())
+        const loc = location || { latitude: 28.6139, longitude: 77.209, maghribOffsetMinutes: 0 };
+        const maghribDate = calculateMaghribDate(gregorianDate, loc.latitude, loc.longitude, tz, loc.maghribOffsetMinutes || 0);
+        const isAfterMaghrib = gregorianDate.getTime() >= maghribDate.getTime();
+        const localComp = getLocalDateComponents(gregorianDate, tz);
+        yearG = localComp.year;
+        monthG = localComp.month;
+        dayG = localComp.day;
+        // Before Maghrib: active Islamic day is baseline (day - 1)
+        // At/After Maghrib: new Islamic day begins (day)
+        const targetDay = isAfterMaghrib ? localComp.day : localComp.day - 1;
+        targetDate = new Date(Date.UTC(localComp.year, localComp.month - 1, targetDay, 12, 0, 0));
+        dayOfWeek = new Date(Date.UTC(localComp.year, localComp.month - 1, localComp.day, 12, 0, 0)).getUTCDay();
     }
     // Apply moon-sighting day adjustment
     if (adjustmentDays !== 0) {
@@ -251,7 +350,8 @@ export function gregorianToHijri(gregorianDate, adjustmentDays = 0, timezone) {
             }
         }
         catch {
-            const approxYear = Math.floor((yearG - 622) * 1.030684);
+            // Approximate fallback
+            const approxYear = Math.floor((targetDate.getUTCFullYear() - 622) * 1.030684);
             hijriYear = approxYear;
             hijriMonth = 3;
             hijriDay = 19;
@@ -263,6 +363,7 @@ export function gregorianToHijri(gregorianDate, adjustmentDays = 0, timezone) {
         hijriMonth = 12;
     const monthObj = HIJRI_MONTHS[hijriMonth - 1] || HIJRI_MONTHS[0];
     const matchedEvent = ISLAMIC_EVENTS.find((e) => e.hijriMonth === hijriMonth && e.hijriDay === hijriDay);
+    // Exact Gregorian local date string YYYY-MM-DD
     const dateStr = `${yearG}-${String(monthG).padStart(2, '0')}-${String(dayG).padStart(2, '0')}`;
     return {
         year: hijriYear,

@@ -32,24 +32,30 @@ export const Sidebar: React.FC = () => {
   ];
 
   const secondaryNav = [
-    { path: '/qaza', label: 'Qaza Namaz', icon: RotateCcw },
-    { path: '/history', label: 'Prayer History', icon: BarChart3 },
-    { path: '/notifications', label: 'Notifications', icon: Bell },
+    { path: '/allah-names', label: 'Asma-ul-Husna', icon: Sparkles, badge: '99 Names' },
+    { path: '/prophet-names', label: 'Asma-e-Mustafa', icon: Heart, badge: 'ﷺ' },
     { path: '/surah-al-mulk', label: 'Surah Al-Mulk', icon: Moon, badge: 'Sleep' },
     { path: '/calendar', label: 'Islamic Calendar', icon: Calendar },
     { path: '/ramadan', label: 'Ramadan', icon: Sparkles },
     { path: '/jumuah', label: "Jumu'ah", icon: Users },
+    { path: '/qaza', label: 'Qaza Namaz', icon: RotateCcw },
+    { path: '/history', label: 'Prayer History', icon: BarChart3 },
+    { path: '/notifications', label: 'Notifications', icon: Bell },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
+
 
   return (
     <aside className="sidebar" aria-label="Main Navigation">
       <div className="sidebar-header">
         <div className="brand-logo">
-          <img src="/favicon.svg" alt="Islamic Prayer Logo" width={26} height={26} />
+          <img src="/favicon.svg" alt="Islamic Project Logo" width={36} height={36} />
         </div>
         <div>
-          <h1 className="brand-title">Islamic Prayer</h1>
+          <h1 className="brand-title">
+            <span className="brand-text-islamic">Islamic</span>
+            <span className="brand-text-project">Project</span>
+          </h1>
           <span className="brand-subtitle">Daily Companion</span>
         </div>
       </div>

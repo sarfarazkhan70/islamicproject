@@ -4,6 +4,7 @@ import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { useCalendarStore } from '../../stores/useCalendarStore.js';
+import { useCentralHijriDate } from '../../hooks/useCentralHijriDate.js';
 import { HIJRI_MONTHS } from '../../utils/hijriCalendar.js';
 import {
   ChevronLeft,
@@ -13,13 +14,13 @@ import {
 } from 'lucide-react';
 
 export const CalendarPage: React.FC = () => {
+  const centralHijri = useCentralHijriDate();
   const {
     currentYear,
     currentMonth,
     moonAdjustment,
     calendarGrid,
     events,
-    todayDate,
     converterResultHijri,
     converterResultGregorian,
     nextMonth,
@@ -29,10 +30,6 @@ export const CalendarPage: React.FC = () => {
     convertGregorian,
     convertHijri,
   } = useCalendarStore();
-
-
-
-
 
   const [gregInput, setGregInput] = useState(new Date().toISOString().slice(0, 10));
   const [hijriYearInput, setHijriYearInput] = useState(1448);
@@ -71,7 +68,7 @@ export const CalendarPage: React.FC = () => {
         actions={
           <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
             <Badge variant="gold">
-              <Sparkles size={12} /> Today: {todayDate.day} {todayDate.monthName} {todayDate.year} AH
+              <Sparkles size={12} /> Today: {centralHijri.day} {centralHijri.monthName} {centralHijri.year} AH
             </Badge>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
               <span className="text-xs text-muted">Moon Sighting:</span>

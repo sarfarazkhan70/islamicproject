@@ -7,8 +7,13 @@ import {
 } from '../utils/hijriCalendar.js';
 
 export class CalendarService {
-  static toHijri(gregorianDateStr: string, adjustment: number = 0): HijriDate {
-    return gregorianToHijri(gregorianDateStr, adjustment);
+  static toHijri(
+    gregorianDateStr: string,
+    adjustment: number = 0,
+    timezone?: string,
+    location?: { latitude: number; longitude: number; maghribOffsetMinutes?: number }
+  ): HijriDate {
+    return gregorianToHijri(gregorianDateStr, adjustment, timezone, location);
   }
 
   static toGregorian(
@@ -20,8 +25,13 @@ export class CalendarService {
     return hijriToGregorian(hijriYear, hijriMonth, hijriDay, adjustment);
   }
 
-  static getMonthlyGrid(year: number, month: number, adjustment: number = 0) {
-    return getMonthlyCalendarGrid(year, month, adjustment);
+  static getMonthlyGrid(
+    year: number,
+    month: number,
+    adjustment: number = 0,
+    timezone?: string
+  ) {
+    return getMonthlyCalendarGrid(year, month, adjustment, timezone);
   }
 
   static getEvents() {

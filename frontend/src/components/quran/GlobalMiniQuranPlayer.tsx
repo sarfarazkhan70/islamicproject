@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useQuranStore, RECITERS_LIST } from '../../stores/useQuranStore';
-import { SURAHS_LIST } from '../../data/quranData';
+import { useQuranStore } from '../../stores/useQuranStore';
+import { SURAHS_LIST, QURAN_COM_RECITERS } from '../../data/quranData';
 
 export const GlobalMiniQuranPlayer: React.FC = () => {
   const location = useLocation();
@@ -9,7 +9,7 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
 
   const {
     activeAudioSurah,
-    selectedReciter,
+    selectedReciterId,
     isPlaying,
     playbackTime,
     playbackDuration,
@@ -25,8 +25,9 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     return null;
   }
 
-  const surahMeta = SURAHS_LIST.find((s) => s.number === activeAudioSurah) || SURAHS_LIST[66];
-  const reciterObj = RECITERS_LIST.find((r) => r.id === selectedReciter) || RECITERS_LIST[0];
+  const surahMeta = SURAHS_LIST.find((s) => s.number === activeAudioSurah) || SURAHS_LIST[0];
+  const reciterObj =
+    QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
 
   const formatTime = (sec: number) => {
     if (isNaN(sec) || !isFinite(sec) || sec < 0) return '00:00';
@@ -36,7 +37,6 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // If clicking a button or slider, don't navigate
     const target = e.target as HTMLElement;
     if (target.closest('button') || target.closest('input')) {
       return;

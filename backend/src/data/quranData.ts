@@ -1,5 +1,3 @@
-import quranDatasetRaw from './quranDataset.json';
-
 export interface SurahMeta {
   number: number;
   name: string;
@@ -22,22 +20,15 @@ export interface JuzMeta {
 }
 
 export interface AyahData {
-  number: number; // Ayah number in surah
+  number: number;
   globalNumber?: number;
   arabic: string;
   arabicWithBismillah?: string;
-  translation: string; // English translation (Saheeh / Kanzul Iman rendition)
-  translationUrdu?: string; // Authentic Kanzul Iman Urdu translation by Ala Hazrat Imam Ahmad Raza Khan
+  translation: string;
+  translationUrdu?: string;
   kanzulImanUrdu?: string;
-  kanzulImanEn?: string;
-  kanzulImanRomanUrdu?: string;
   juz?: number;
   page?: number;
-  manzil?: number;
-  ruku?: number;
-  hizbQuarter?: number;
-  sajda?: boolean | any;
-  audio?: string;
 }
 
 export interface SurahDetail extends SurahMeta {
@@ -201,58 +192,3 @@ export const JUZ_LIST: JuzMeta[] = [
   { number: 29, name: 'Juz 29 (تبارك الذي)', arabicName: 'الجزء التاسع والعشرون (تبارك الذي)', startSurah: 67, startSurahName: 'Al-Mulk', startAyah: 1, pageStart: 562 },
   { number: 30, name: 'Juz 30 (عم يتساءلون)', arabicName: 'الجزء الثلاثون (عم يتساءلون)', startSurah: 78, startSurahName: 'An-Naba', startAyah: 1, pageStart: 582 },
 ];
-
-function buildSurahDetail(surahNumber: number): SurahDetail {
-  const data = (quranDatasetRaw as Record<string, any>)[String(surahNumber)];
-  const padded = String(surahNumber).padStart(3, '0');
-  const audioRecitations = [
-    {
-      reciterId: 'alafasy',
-      reciterName: 'Sheikh Mishary Rashid Alafasy',
-      audioUrl: `https://server8.mp3quran.net/afs/${padded}.mp3`,
-    },
-    {
-      reciterId: 'husary',
-      reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-      audioUrl: `https://server13.mp3quran.net/husr/${padded}.mp3`,
-    },
-    {
-      reciterId: 'abdulbasit',
-      reciterName: 'Sheikh Abdul Basit Abdul Samad (Murattal)',
-      audioUrl: `https://server7.mp3quran.net/basit/${padded}.mp3`,
-    },
-    {
-      reciterId: 'ghamdi',
-      reciterName: 'Sheikh Saad Al-Ghamdi',
-      audioUrl: `https://server7.mp3quran.net/ghamdi/${padded}.mp3`,
-    },
-  ];
-
-  if (!data) {
-    const meta = SURAHS_LIST.find((s) => s.number === surahNumber) || SURAHS_LIST[0];
-    return {
-      ...meta,
-      bismillahPre: surahNumber !== 1 && surahNumber !== 9,
-      ayahs: [],
-      audioRecitations,
-    };
-  }
-
-  return {
-    ...data,
-    audioRecitations,
-  };
-}
-
-// Build complete, verified 114 Surahs map directly from Tanzil source
-export const SURAH_DETAILS_MAP: Record<number, SurahDetail> = {};
-for (let i = 1; i <= 114; i++) {
-  SURAH_DETAILS_MAP[i] = buildSurahDetail(i);
-}
-
-export const SURAH_AL_FATIHAH_DETAIL = SURAH_DETAILS_MAP[1];
-export const SURAH_AL_KAHF_DETAIL = SURAH_DETAILS_MAP[18];
-export const SURAH_AL_MULK_DETAIL = SURAH_DETAILS_MAP[67];
-export const SURAH_AL_IKHLAS_DETAIL = SURAH_DETAILS_MAP[112];
-export const SURAH_AL_FALAQ_DETAIL = SURAH_DETAILS_MAP[113];
-export const SURAH_AN_NAS_DETAIL = SURAH_DETAILS_MAP[114];

@@ -1,0 +1,914 @@
+[
+  {
+    "number": 1,
+    "name": "Al-Fatihah",
+    "arabicName": "الفاتحة",
+    "mappedPdfPage": 3,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 2,
+    "name": "Al-Baqarah",
+    "arabicName": "البقرة",
+    "mappedPdfPage": 4,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 3,
+    "name": "Ali 'Imran",
+    "arabicName": "آل عمران",
+    "mappedPdfPage": 92,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 4,
+    "name": "An-Nisa",
+    "arabicName": "النساء",
+    "mappedPdfPage": 143,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 5,
+    "name": "Al-Ma'idah",
+    "arabicName": "المائدة",
+    "mappedPdfPage": 196,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 6,
+    "name": "Al-An'am",
+    "arabicName": "الأنعام",
+    "mappedPdfPage": 238,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 7,
+    "name": "Al-A'raf",
+    "arabicName": "الأعراف",
+    "mappedPdfPage": 280,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 8,
+    "name": "Al-Anfal",
+    "arabicName": "الأنفال",
+    "mappedPdfPage": 329,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 9,
+    "name": "At-Tawbah",
+    "arabicName": "التوبة",
+    "mappedPdfPage": 348,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 10,
+    "name": "Yunus",
+    "arabicName": "يونس",
+    "mappedPdfPage": 386,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 11,
+    "name": "Hud",
+    "arabicName": "هود",
+    "mappedPdfPage": 409,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 12,
+    "name": "Yusuf",
+    "arabicName": "يوسف",
+    "mappedPdfPage": 435,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 13,
+    "name": "Ar-Ra'd",
+    "arabicName": "الرعد",
+    "mappedPdfPage": 461,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 14,
+    "name": "Ibrahim",
+    "arabicName": "إبراهيم",
+    "mappedPdfPage": 472,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 15,
+    "name": "Al-Hijr",
+    "arabicName": "الحجر",
+    "mappedPdfPage": 485,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 16,
+    "name": "An-Nahl",
+    "arabicName": "النحل",
+    "mappedPdfPage": 494,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 17,
+    "name": "Al-Isra",
+    "arabicName": "الإسراء",
+    "mappedPdfPage": 522,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 18,
+    "name": "Al-Kahf",
+    "arabicName": "الكهف",
+    "mappedPdfPage": 542,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 19,
+    "name": "Maryam",
+    "arabicName": "مريم",
+    "mappedPdfPage": 564,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 20,
+    "name": "Taha",
+    "arabicName": "طه",
+    "mappedPdfPage": 577,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 21,
+    "name": "Al-Anbiya",
+    "arabicName": "الأنبياء",
+    "mappedPdfPage": 596,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 22,
+    "name": "Al-Hajj",
+    "arabicName": "الحج",
+    "mappedPdfPage": 614,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 23,
+    "name": "Al-Mu'minun",
+    "arabicName": "المؤمنون",
+    "mappedPdfPage": 633,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 24,
+    "name": "An-Nur",
+    "arabicName": "النور",
+    "mappedPdfPage": 648,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 25,
+    "name": "Al-Furqan",
+    "arabicName": "الفرقان",
+    "mappedPdfPage": 664,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 26,
+    "name": "Ash-Shu'ara",
+    "arabicName": "الشعراء",
+    "mappedPdfPage": 678,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 27,
+    "name": "An-Naml",
+    "arabicName": "النمل",
+    "mappedPdfPage": 697,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 28,
+    "name": "Al-Qasas",
+    "arabicName": "القصص",
+    "mappedPdfPage": 712,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 29,
+    "name": "Al-'Ankabut",
+    "arabicName": "العنكبوت",
+    "mappedPdfPage": 731,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 30,
+    "name": "Ar-Rum",
+    "arabicName": "الروم",
+    "mappedPdfPage": 746,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 31,
+    "name": "Luqman",
+    "arabicName": "لقمان",
+    "mappedPdfPage": 759,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 32,
+    "name": "As-Sajdah",
+    "arabicName": "السجدة",
+    "mappedPdfPage": 766,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 33,
+    "name": "Al-Ahzab",
+    "arabicName": "الأحزاب",
+    "mappedPdfPage": 772,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 34,
+    "name": "Saba",
+    "arabicName": "سبأ",
+    "mappedPdfPage": 790,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 35,
+    "name": "Fatir",
+    "arabicName": "فاطر",
+    "mappedPdfPage": 801,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 36,
+    "name": "Ya-Sin",
+    "arabicName": "يس",
+    "mappedPdfPage": 812,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 37,
+    "name": "As-Saffat",
+    "arabicName": "الصافات",
+    "mappedPdfPage": 824,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 38,
+    "name": "Sad",
+    "arabicName": "ص",
+    "mappedPdfPage": 837,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 39,
+    "name": "Az-Zumar",
+    "arabicName": "الزمر",
+    "mappedPdfPage": 846,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 40,
+    "name": "Ghafir",
+    "arabicName": "غافر",
+    "mappedPdfPage": 863,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 41,
+    "name": "Fussilat",
+    "arabicName": "فصلت",
+    "mappedPdfPage": 882,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 42,
+    "name": "Ash-Shura",
+    "arabicName": "الشورى",
+    "mappedPdfPage": 893,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 43,
+    "name": "Az-Zukhruf",
+    "arabicName": "الزخرف",
+    "mappedPdfPage": 904,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 44,
+    "name": "Ad-Dukhan",
+    "arabicName": "الدخان",
+    "mappedPdfPage": 917,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 45,
+    "name": "Al-Jathiyah",
+    "arabicName": "الجاثية",
+    "mappedPdfPage": 923,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 46,
+    "name": "Al-Ahqaf",
+    "arabicName": "الأحقاف",
+    "mappedPdfPage": 929,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 47,
+    "name": "Muhammad",
+    "arabicName": "محمد",
+    "mappedPdfPage": 938,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 48,
+    "name": "Al-Fath",
+    "arabicName": "الفتح",
+    "mappedPdfPage": 946,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 49,
+    "name": "Al-Hujurat",
+    "arabicName": "الحجرات",
+    "mappedPdfPage": 954,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 50,
+    "name": "Qaf",
+    "arabicName": "ق",
+    "mappedPdfPage": 960,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 51,
+    "name": "Adh-Dhariyat",
+    "arabicName": "الذاريات",
+    "mappedPdfPage": 966,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 52,
+    "name": "At-Tur",
+    "arabicName": "الطور",
+    "mappedPdfPage": 971,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 53,
+    "name": "An-Najm",
+    "arabicName": "النجم",
+    "mappedPdfPage": 976,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 54,
+    "name": "Al-Qamar",
+    "arabicName": "القمر",
+    "mappedPdfPage": 980,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 55,
+    "name": "Ar-Rahman",
+    "arabicName": "الرحمن",
+    "mappedPdfPage": 985,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 56,
+    "name": "Al-Waqi'ah",
+    "arabicName": "الواقعة",
+    "mappedPdfPage": 991,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 57,
+    "name": "Al-Hadid",
+    "arabicName": "الحديد",
+    "mappedPdfPage": 997,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 58,
+    "name": "Al-Mujadila",
+    "arabicName": "المجادلة",
+    "mappedPdfPage": 1004,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 59,
+    "name": "Al-Hashr",
+    "arabicName": "الحشر",
+    "mappedPdfPage": 1010,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 60,
+    "name": "Al-Mumtahanah",
+    "arabicName": "الممتحنة",
+    "mappedPdfPage": 1016,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 61,
+    "name": "As-Saff",
+    "arabicName": "الصف",
+    "mappedPdfPage": 1021,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 62,
+    "name": "Al-Jumu'ah",
+    "arabicName": "الجمعة",
+    "mappedPdfPage": 1024,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 63,
+    "name": "Al-Munafiqun",
+    "arabicName": "المنافقون",
+    "mappedPdfPage": 1026,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 64,
+    "name": "At-Taghabun",
+    "arabicName": "التغابن",
+    "mappedPdfPage": 1028,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 65,
+    "name": "At-Talaq",
+    "arabicName": "الطلاق",
+    "mappedPdfPage": 1032,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 66,
+    "name": "At-Tahrim",
+    "arabicName": "التحريم",
+    "mappedPdfPage": 1035,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 67,
+    "name": "Al-Mulk",
+    "arabicName": "الملك",
+    "mappedPdfPage": 1044,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 68,
+    "name": "Al-Qalam",
+    "arabicName": "القلم",
+    "mappedPdfPage": 1048,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 69,
+    "name": "Al-Haqqah",
+    "arabicName": "الحاقة",
+    "mappedPdfPage": 1051,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 70,
+    "name": "Al-Ma'arij",
+    "arabicName": "المعارج",
+    "mappedPdfPage": 1053,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 71,
+    "name": "Nuh",
+    "arabicName": "نوح",
+    "mappedPdfPage": 1060,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 72,
+    "name": "Al-Jinn",
+    "arabicName": "الجن",
+    "mappedPdfPage": 1062,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 73,
+    "name": "Al-Muzzammil",
+    "arabicName": "المزمل",
+    "mappedPdfPage": 1065,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 74,
+    "name": "Al-Muddaththir",
+    "arabicName": "المدثر",
+    "mappedPdfPage": 1067,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 75,
+    "name": "Al-Qiyamah",
+    "arabicName": "القيامة",
+    "mappedPdfPage": 1073,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 76,
+    "name": "Al-Insan",
+    "arabicName": "الإنسان",
+    "mappedPdfPage": 1077,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 77,
+    "name": "Al-Mursalat",
+    "arabicName": "المرسلات",
+    "mappedPdfPage": 1081,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 78,
+    "name": "An-Naba",
+    "arabicName": "النبأ",
+    "mappedPdfPage": 1085,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 79,
+    "name": "An-Nazi'at",
+    "arabicName": "النازعات",
+    "mappedPdfPage": 1088,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 80,
+    "name": "'Abasa",
+    "arabicName": "عبس",
+    "mappedPdfPage": 1090,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 81,
+    "name": "At-Takwir",
+    "arabicName": "التكوير",
+    "mappedPdfPage": 1092,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 82,
+    "name": "Al-Infitar",
+    "arabicName": "الانفطار",
+    "mappedPdfPage": 1094,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 83,
+    "name": "Al-Mutaffifin",
+    "arabicName": "المطففين",
+    "mappedPdfPage": 1098,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 84,
+    "name": "Al-Inshiqaq",
+    "arabicName": "الانشقاق",
+    "mappedPdfPage": 1099,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 85,
+    "name": "Al-Buruj",
+    "arabicName": "البروج",
+    "mappedPdfPage": 1101,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 86,
+    "name": "At-Tariq",
+    "arabicName": "الطارق",
+    "mappedPdfPage": 1102,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 87,
+    "name": "Al-A'la",
+    "arabicName": "الأعلى",
+    "mappedPdfPage": 1106,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 88,
+    "name": "Al-Ghashiyah",
+    "arabicName": "الغاشية",
+    "mappedPdfPage": 1107,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 89,
+    "name": "Al-Fajr",
+    "arabicName": "الفجر",
+    "mappedPdfPage": 1109,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 90,
+    "name": "Al-Balad",
+    "arabicName": "البلد",
+    "mappedPdfPage": 1111,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 91,
+    "name": "Ash-Shams",
+    "arabicName": "الشمس",
+    "mappedPdfPage": 1112,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 92,
+    "name": "Al-Layl",
+    "arabicName": "الليل",
+    "mappedPdfPage": 1113,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 93,
+    "name": "Ad-Duha",
+    "arabicName": "الضحى",
+    "mappedPdfPage": 1114,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 94,
+    "name": "Ash-Sharh",
+    "arabicName": "الشرح",
+    "mappedPdfPage": 1115,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 95,
+    "name": "At-Tin",
+    "arabicName": "التين",
+    "mappedPdfPage": 1116,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 96,
+    "name": "Al-'Alaq",
+    "arabicName": "العلق",
+    "mappedPdfPage": 1117,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 97,
+    "name": "Al-Qadr",
+    "arabicName": "القدر",
+    "mappedPdfPage": 1118,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 98,
+    "name": "Al-Bayyinah",
+    "arabicName": "البينة",
+    "mappedPdfPage": 1118,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 99,
+    "name": "Az-Zalzalah",
+    "arabicName": "الزلزلة",
+    "mappedPdfPage": 1119,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 100,
+    "name": "Al-'Adiyat",
+    "arabicName": "العاديات",
+    "mappedPdfPage": 1120,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 101,
+    "name": "Al-Qari'ah",
+    "arabicName": "القارعة",
+    "mappedPdfPage": 1120,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 102,
+    "name": "At-Takathur",
+    "arabicName": "التكاثر",
+    "mappedPdfPage": 1121,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 103,
+    "name": "Al-'Asr",
+    "arabicName": "العصر",
+    "mappedPdfPage": 1121,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 104,
+    "name": "Al-Humazah",
+    "arabicName": "الهمزة",
+    "mappedPdfPage": 1122,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 105,
+    "name": "Al-Fil",
+    "arabicName": "الفيل",
+    "mappedPdfPage": 1122,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 106,
+    "name": "Quraysh",
+    "arabicName": "قريش",
+    "mappedPdfPage": 1122,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 107,
+    "name": "Al-Ma'un",
+    "arabicName": "الماعون",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 108,
+    "name": "Al-Kawthar",
+    "arabicName": "الکوثر",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 109,
+    "name": "Al-Kafirun",
+    "arabicName": "الكافرون",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 110,
+    "name": "An-Nasr",
+    "arabicName": "النصر",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 111,
+    "name": "Al-Masad",
+    "arabicName": "المسد",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 112,
+    "name": "Al-Ikhlas",
+    "arabicName": "الإخلاص",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 113,
+    "name": "Al-Falaq",
+    "arabicName": "الفلق",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  },
+  {
+    "number": 114,
+    "name": "An-Nas",
+    "arabicName": "الناس",
+    "mappedPdfPage": 1123,
+    "pdfPageValid": true,
+    "proofSaved": true
+  }
+]

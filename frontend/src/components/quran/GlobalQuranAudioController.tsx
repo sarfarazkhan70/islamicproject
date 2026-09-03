@@ -6,9 +6,11 @@ export const GlobalQuranAudioController: React.FC = () => {
 
   const {
     activeAudioSurah,
-    selectedReciter,
+    selectedReciterId,
+    audioRecitationUrl,
     isPlaying,
     audioVolume,
+    playbackSpeed,
     isLooping,
     autoPlayNext,
     seekTarget,
@@ -20,7 +22,7 @@ export const GlobalQuranAudioController: React.FC = () => {
     pauseAudio,
   } = useQuranStore();
 
-  const audioUrl = getAudioUrl(activeAudioSurah, selectedReciter);
+  const audioUrl = audioRecitationUrl || getAudioUrl(activeAudioSurah, selectedReciterId);
 
   // Sync audio source when Surah or reciter changes
   useEffect(() => {
@@ -31,13 +33,8 @@ export const GlobalQuranAudioController: React.FC = () => {
     if (currentSrc !== audioUrl) {
       audio.setAttribute('data-src', audioUrl);
       audio.src = audioUrl;
+      audio.playbackRate = playbackSpeed || 1.0;
       audio.load();
-
-      // If user had playback time stored and changed surah or reciter
-      const { playbackTime } = useQuranStore.getState();
-      if (playbackTime > 0) {
-        audio.currentTime = playbackTime;
-      }
 
       if (isPlaying) {
         audio.play().catch(() => {
@@ -45,7 +42,7 @@ export const GlobalQuranAudioController: React.FC = () => {
         });
       }
     }
-  }, [audioUrl, isPlaying, setIsPlaying]);
+  }, [audioUrl, isPlaying, setIsPlaying, playbackSpeed]);
 
   // Sync play / pause state
   useEffect(() => {
@@ -73,6 +70,13 @@ export const GlobalQuranAudioController: React.FC = () => {
       audioRef.current.volume = audioVolume;
     }
   }, [audioVolume]);
+
+  // Sync playback speed
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackSpeed || 1.0;
+    }
+  }, [playbackSpeed]);
 
   // Sync looping
   useEffect(() => {
@@ -110,7 +114,7 @@ export const GlobalQuranAudioController: React.FC = () => {
       return; // Handled by audio.loop
     }
     if (autoPlayNext && activeAudioSurah < 114) {
-      playSurahAudio(activeAudioSurah + 1, selectedReciter);
+      playSurahAudio(activeAudioSurah + 1, selectedReciterId);
     } else {
       pauseAudio();
     }

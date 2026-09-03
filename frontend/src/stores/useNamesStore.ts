@@ -39,14 +39,14 @@ const getInitialFavorites = (): string[] => {
 
 // Pre-initialize dedicated audio instances for instant browser playback
 let allahAudio: HTMLAudioElement | null =
-  typeof Audio !== 'undefined' ? new Audio('/audio/asma_recitation.mp3') : null;
+  typeof Audio !== 'undefined' ? new Audio('/audio/allah/allah-01.wav') : null;
 if (allahAudio) {
   allahAudio.preload = 'auto';
   allahAudio.volume = 1.0;
 }
 
 let prophetAudio: HTMLAudioElement | null =
-  typeof Audio !== 'undefined' ? new Audio('/audio/prophet_recitation_male_source.mp3') : null;
+  typeof Audio !== 'undefined' ? new Audio('/audio/prophet/prophet-01.wav') : null;
 if (prophetAudio) {
   prophetAudio.preload = 'auto';
   prophetAudio.volume = 1.0;
@@ -59,7 +59,7 @@ let endedHandler: (() => void) | null = null;
 const getCategoryAudio = (category: 'allah' | 'prophet', url?: string): HTMLAudioElement => {
   if (category === 'allah') {
     if (!allahAudio) {
-      allahAudio = new Audio(url || '/audio/asma_recitation.mp3');
+      allahAudio = new Audio(url || '/audio/allah/allah-01.wav');
       allahAudio.preload = 'auto';
     } else if (url && !allahAudio.src.endsWith(url)) {
       allahAudio.src = url;
@@ -69,7 +69,7 @@ const getCategoryAudio = (category: 'allah' | 'prophet', url?: string): HTMLAudi
     return allahAudio;
   } else {
     if (!prophetAudio) {
-      prophetAudio = new Audio(url || '/audio/prophet_recitation_male_source.mp3');
+      prophetAudio = new Audio(url || '/audio/prophet/prophet-01.wav');
       prophetAudio.preload = 'auto';
     } else if (url && !prophetAudio.src.endsWith(url)) {
       prophetAudio.src = url;
@@ -140,7 +140,7 @@ export const useNamesStore = create<NamesState>((set, get) => {
     const category = item.category || 'allah';
 
     // Strict Cross-Audio Protection
-    if (category === 'prophet' && item.audioUrl.includes('asma_recitation.mp3')) {
+    if (category === 'prophet' && item.audioUrl.includes('allah')) {
       console.error('[NamesAudio] BLOCKED: Attempted to play Allah audio for Prophet entry:', item.id);
       set({
         isPlaying: false,
@@ -185,7 +185,7 @@ export const useNamesStore = create<NamesState>((set, get) => {
       autoPlayStatus: 'Playing',
     });
 
-    audio.playbackRate = category === 'prophet' ? 0.90 : 1.0;
+    audio.playbackRate = 1.0;
     audio.volume = 1.0;
     audio.muted = false;
 
@@ -328,7 +328,7 @@ export const useNamesStore = create<NamesState>((set, get) => {
       }
 
       // 4. Strict Cross-Audio Protection
-      if (itemCategory === 'prophet' && item.audioUrl.includes('asma_recitation.mp3')) {
+      if (itemCategory === 'prophet' && item.audioUrl.includes('allah')) {
         console.error('[NamesAudio] BLOCKED: Attempted to play Allah audio for Prophet entry:', item.id);
         set({
           isPlaying: false,
@@ -371,7 +371,7 @@ export const useNamesStore = create<NamesState>((set, get) => {
         audioError: null,
       });
 
-      audio.playbackRate = itemCategory === 'prophet' ? 0.90 : 1.0;
+      audio.playbackRate = 1.0;
       audio.volume = 1.0;
       audio.muted = false;
 

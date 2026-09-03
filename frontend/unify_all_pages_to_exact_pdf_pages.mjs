@@ -1,0 +1,176 @@
+import fs from 'fs';
+import path from 'path';
+
+// Exact physical PDF starting page for each of the 114 Surahs
+const SURAH_PAGES = [
+  2, 3, 92, 144, 195, 239, 280, 328, 347, 386,       // 1-10
+  409, 436, 462, 473, 484, 495, 522, 541, 563, 576,  // 11-20
+  596, 613, 632, 648, 663, 677, 696, 711, 732, 746,  // 21-30
+  759, 765, 771, 789, 800, 811, 825, 836, 845, 862,  // 31-40
+  881, 892, 905, 917, 923, 929, 939, 945, 953, 960,  // 41-50
+  966, 970, 977, 979, 985, 992, 996, 1003, 1009, 1017, // 51-60
+  1021, 1024, 1025, 1028, 1032, 1034, 1044, 1048, 1051, 1053, // 61-70
+  1059, 1062, 1064, 1068, 1072, 1077, 1081, 1085, 1088, 1090, // 71-80
+  1092, 1094, 1099, 1099, 1101, 1101, 1106, 1106, 1109, 1112, // 81-90
+  1112, 1112, 1115, 1115, 1115, 1118, 1118, 1118, 1118, 1119, // 91-100
+  1119, 1120, 1120, 1121, 1121, 1121, 1123, 1123, 1123, 1123, // 101-110
+  1123, 1123, 1123, 1123                                       // 111-114
+];
+
+// Exact physical PDF starting page for each of the 30 Juz
+const JUZ_PAGES = [
+  2, 41, 78, 115, 152, 189, 226, 263, 300, 337,
+  374, 411, 448, 485, 522, 559, 596, 633, 670, 707,
+  744, 781, 818, 855, 892, 929, 966, 1003, 1044, 1085
+];
+
+const quranData = await import('./src/data/quranData.ts');
+const surahs = quranData.SURAHS_LIST;
+const juzs = quranData.JUZ_LIST;
+
+for (let i = 0; i < surahs.length; i++) {
+  surahs[i].pageStart = SURAH_PAGES[i];
+}
+
+for (let j = 0; j < juzs.length; j++) {
+  juzs[j].pageStart = JUZ_PAGES[j];
+}
+
+const fileHeader = `/**
+ * Quran Static Metadata and Registries
+ * Fully aligned with Quran.com API v4 standard
+ * Mushaf PDF Mapping for Zia-ul-Quran / Subcontinent 9-Line Mushaf (1124 Physical PDF Pages, Unified 1:1 Page Indexing)
+ */
+
+export interface SurahMeta {
+  number: number;
+  name: string;
+  arabicName: string;
+  meaning: string;
+  versesCount: number;
+  revelationType: 'Meccan' | 'Medinan';
+  juzStart: number;
+  pageStart: number;
+}
+
+export interface JuzMeta {
+  number: number;
+  name: string;
+  arabicName: string;
+  startSurah: number;
+  startSurahName: string;
+  startAyah: number;
+  pageStart: number;
+}
+
+export interface QuranScriptOption {
+  id: 'indopak' | 'uthmani' | 'uthmani_tajweed' | 'uthmani_simple' | 'imlaei';
+  label: string;
+  sublabel: string;
+  fontFamily: string;
+  sample: string;
+}
+
+export interface QuranTranslationOption {
+  id: number;
+  name: string;
+  author: string;
+  language: 'urdu' | 'english' | 'hindi' | 'roman-urdu';
+  languageLabel: string;
+}
+
+export interface QuranReciterOption {
+  id: number;
+  name: string;
+  style?: string;
+  reciterSlug: string;
+}
+
+export const SUPPORTED_SCRIPTS: QuranScriptOption[] = ${JSON.stringify(quranData.SUPPORTED_SCRIPTS, null, 2)};
+
+export const SUPPORTED_TRANSLATIONS: QuranTranslationOption[] = ${JSON.stringify(quranData.SUPPORTED_TRANSLATIONS, null, 2)};
+
+export const QURAN_COM_RECITERS: QuranReciterOption[] = ${JSON.stringify(quranData.QURAN_COM_RECITERS, null, 2)};
+
+// Complete 114 Surahs Directory with 1:1 Unified PDF page starts (1 to 1124)
+export const SURAHS_LIST: SurahMeta[] = ${JSON.stringify(surahs, null, 2)};
+
+// 30 Paras / Juz Directory with 1:1 Unified PDF page starts (1 to 1124)
+export const JUZ_LIST: JuzMeta[] = ${JSON.stringify(juzs, null, 2)};
+
+export const TOTAL_MUSHAF_PDF_PAGES = 1124;
+export const PDF_PHYSICAL_TOTAL_PAGES = 1124;
+export const QURAN_PDF_PATH = '/quran/quran.pdf';
+
+// 30 Para Green Cover Physical PDF Pages
+export const PARA_COVER_PDF_PAGES = [
+  1, 40, 77, 114, 151, 188, 225, 262, 299, 336,
+  373, 410, 447, 484, 521, 558, 595, 632, 669, 706,
+  743, 780, 817, 854, 891, 928, 965, 1002, 1043, 1084
+];
+
+/**
+ * 1:1 Page Number Mapping (Physical PDF Page = Website Page)
+ */
+export function quranTextPageToPdfPage(pageNumber: number): number {
+  return Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(pageNumber) || 1));
+}
+
+export function pdfPageToQuranTextPage(physicalPdfPage: number): number {
+  return Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(physicalPdfPage) || 1));
+}
+
+export function isCoverPage(physicalPdfPage: number): boolean {
+  return PARA_COVER_PDF_PAGES.includes(physicalPdfPage);
+}
+
+export function getPrintedPageLabel(pageNumber: number): string {
+  const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, pageNumber));
+  return \`Page \${clamped} / \${TOTAL_MUSHAF_PDF_PAGES}\`;
+}
+
+export function getMushafPageUrl(pageNumber: number): string {
+  const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, pageNumber));
+  const padded = String(clamped).padStart(4, '0');
+  return 'https://android.quran.com/data/width_1260/page' + padded + '.png';
+}
+
+export function getMushafPageFallbackUrl(pageNumber: number): string {
+  const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, pageNumber));
+  const padded = String(clamped).padStart(4, '0');
+  return 'https://raw.githubusercontent.com/thetruerevival/quran-images/master/images/page' + padded + '.png';
+}
+
+export function getSurahByPage(pageNumber: number): SurahMeta {
+  const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, pageNumber));
+  let matched = SURAHS_LIST[0];
+  for (const s of SURAHS_LIST) {
+    if (s.pageStart <= clamped) {
+      matched = s;
+    } else {
+      break;
+    }
+  }
+  return matched;
+}
+
+export function getJuzByPage(pageNumber: number): JuzMeta {
+  const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, pageNumber));
+  let matched = JUZ_LIST[0];
+  for (const j of JUZ_LIST) {
+    if (j.pageStart <= clamped) {
+      matched = j;
+    } else {
+      break;
+    }
+  }
+  return matched;
+}
+
+export function getSurahByNumber(surahNumber: number): SurahMeta {
+  return SURAHS_LIST.find((s) => s.number === surahNumber) || SURAHS_LIST[0];
+}
+`;
+
+fs.writeFileSync('src/data/quranData.ts', fileHeader);
+console.log('Regenerated src/data/quranData.ts with 1:1 Unified PDF page numbers!');

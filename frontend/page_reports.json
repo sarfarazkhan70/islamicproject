@@ -1,0 +1,7904 @@
+{
+  "greenPages": [
+    1,
+    40,
+    77,
+    114,
+    151,
+    188,
+    225,
+    262,
+    299,
+    336,
+    373,
+    410,
+    447,
+    484,
+    521,
+    558,
+    595,
+    632,
+    669,
+    706,
+    743,
+    780,
+    817,
+    854,
+    891,
+    928,
+    965,
+    1002,
+    1043,
+    1084
+  ],
+  "pageReports": [
+    {
+      "pdfPage": 1,
+      "isGreenCover": true,
+      "greenRatio": 0.882,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 2,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 3,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 4,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 5,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 6,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 7,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 8,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 9,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 10,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 11,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 794,
+      "height": 1123
+    },
+    {
+      "pdfPage": 12,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 13,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 14,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 15,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 16,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 17,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 18,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 19,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 20,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 21,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 22,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 23,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 24,
+      "isGreenCover": false,
+      "greenRatio": 0.008,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 25,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 26,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 27,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 28,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 29,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 30,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 31,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 32,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 33,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 34,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 35,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 36,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 37,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 38,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 39,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 40,
+      "isGreenCover": true,
+      "greenRatio": 0.869,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 41,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 42,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 43,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 44,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 45,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 46,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 47,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 48,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 49,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 50,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 51,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 52,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 53,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 54,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 55,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 56,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 57,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 58,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 59,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 60,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 61,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 62,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 63,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 64,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 65,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 66,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 67,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 68,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 69,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 70,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 71,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 72,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 73,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 74,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 75,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 76,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 77,
+      "isGreenCover": true,
+      "greenRatio": 0.883,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 78,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 79,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 80,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 81,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 82,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 83,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 84,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 85,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 86,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 87,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 88,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 89,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 90,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 91,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 92,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 93,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 94,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 95,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 96,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 97,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 98,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 99,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 100,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 101,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 102,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 103,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 104,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 105,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 106,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 107,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 108,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 109,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 110,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 111,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 112,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 113,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 114,
+      "isGreenCover": true,
+      "greenRatio": 0.896,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 115,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 116,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 117,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 118,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 119,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 120,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 121,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 122,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 123,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 124,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 125,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 126,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 127,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 128,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 129,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 130,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 131,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 132,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 133,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 134,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 135,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 136,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 137,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 138,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 139,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 140,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 141,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 142,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 143,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 144,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 145,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 146,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 147,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 148,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 149,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 150,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 151,
+      "isGreenCover": true,
+      "greenRatio": 0.866,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 152,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 153,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 154,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 155,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 156,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 157,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 158,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 159,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 160,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 161,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 162,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 163,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 164,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 165,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 166,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 167,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 168,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 169,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 170,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 171,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 172,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 173,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 174,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 175,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 176,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 177,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 178,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 179,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 180,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 181,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 182,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 183,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 184,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 185,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 186,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 187,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 188,
+      "isGreenCover": true,
+      "greenRatio": 0.882,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 189,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 190,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 191,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 192,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 193,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 194,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 195,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 196,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 197,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 198,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 199,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 200,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 201,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 202,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 203,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 204,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 205,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 206,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 207,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 208,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 209,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 210,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 211,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 212,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 213,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 214,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 215,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 216,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 217,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 218,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 219,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 220,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 221,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 222,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 223,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 224,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 225,
+      "isGreenCover": true,
+      "greenRatio": 0.888,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 226,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 227,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 228,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 229,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 230,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 231,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 232,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 233,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 234,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 235,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 236,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 237,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 238,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 239,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 240,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 241,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 242,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 243,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 244,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 245,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 246,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 247,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 248,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 249,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 250,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 251,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 252,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 253,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 254,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 255,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 256,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 257,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 258,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 259,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 260,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 261,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 262,
+      "isGreenCover": true,
+      "greenRatio": 0.887,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 263,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 264,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 265,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 266,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 267,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 268,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 269,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 270,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 271,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 272,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 273,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 274,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 275,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 276,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 277,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 278,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 279,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 280,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 281,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 282,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 283,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 284,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 285,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 286,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 287,
+      "isGreenCover": false,
+      "greenRatio": 0.005,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 288,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 289,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 290,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 291,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 292,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 293,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 294,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 295,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 296,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 297,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 298,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 299,
+      "isGreenCover": true,
+      "greenRatio": 0.882,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 300,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 301,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 302,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 303,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 304,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 305,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 306,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 307,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 308,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 309,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 310,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 311,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 312,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 313,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 314,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 315,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 316,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 317,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 318,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 319,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 320,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 321,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 322,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 323,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 324,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 325,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 326,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 327,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 328,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 329,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 330,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 331,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 332,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 333,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 334,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 335,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 336,
+      "isGreenCover": true,
+      "greenRatio": 0.894,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 337,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 338,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 339,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 340,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 341,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 342,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 343,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 344,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 345,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 346,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 347,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 348,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 349,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 350,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 351,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 352,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 353,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 354,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 355,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 356,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 357,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 358,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 359,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 360,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 361,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 362,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 363,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 364,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 365,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 366,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 367,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 368,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 369,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 370,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 371,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 372,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 373,
+      "isGreenCover": true,
+      "greenRatio": 0.877,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 374,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 375,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 376,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 377,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 378,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 379,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 380,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 381,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 382,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 383,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 384,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 385,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 386,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 387,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 388,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 389,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 390,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 391,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 392,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 393,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 394,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 395,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 396,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 397,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 398,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 399,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 400,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 401,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 402,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 403,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 404,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 405,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 406,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 407,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 408,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 409,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 410,
+      "isGreenCover": true,
+      "greenRatio": 0.901,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 411,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 412,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 413,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 414,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 415,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 416,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 417,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 418,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 419,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 420,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 421,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 422,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 423,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 424,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 425,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 426,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 427,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 428,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 429,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 430,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 431,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 432,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 433,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 434,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 435,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 436,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 437,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 438,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 439,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 440,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 441,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 442,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 443,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 444,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 445,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 446,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 447,
+      "isGreenCover": true,
+      "greenRatio": 0.877,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 448,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 449,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 450,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 451,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 452,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 453,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 454,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 455,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 456,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 457,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 458,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 459,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 460,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 461,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 462,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 463,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 464,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 465,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 466,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 467,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 468,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 469,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 470,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 471,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 472,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 473,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 474,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 475,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 476,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 477,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 478,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 479,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 480,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 481,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 482,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 483,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 484,
+      "isGreenCover": true,
+      "greenRatio": 0.885,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 485,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 486,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 487,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 488,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 489,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 490,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 491,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 492,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 493,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 494,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 495,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 496,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 497,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 498,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 499,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 500,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 501,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 502,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 503,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 504,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 505,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 506,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 507,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 508,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 509,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 510,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 511,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 512,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 513,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 514,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 515,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 516,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 517,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 518,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 519,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 520,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 521,
+      "isGreenCover": true,
+      "greenRatio": 0.897,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 522,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 523,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 524,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 525,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 526,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 527,
+      "isGreenCover": false,
+      "greenRatio": 0.005,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 528,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 529,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 530,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 531,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 532,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 533,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 534,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 535,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 536,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 537,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 538,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 539,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 540,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 541,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 542,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 543,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 544,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 545,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 546,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 547,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 548,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 549,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 550,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 551,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 552,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 553,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 554,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 555,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 556,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 557,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 558,
+      "isGreenCover": true,
+      "greenRatio": 0.892,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 559,
+      "isGreenCover": false,
+      "greenRatio": 0.006,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 560,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 561,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 562,
+      "isGreenCover": false,
+      "greenRatio": 0.006,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 563,
+      "isGreenCover": false,
+      "greenRatio": 0.013,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 564,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 565,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 566,
+      "isGreenCover": false,
+      "greenRatio": 0.006,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 567,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 568,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 569,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 570,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 571,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 572,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 573,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 574,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 575,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 576,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 577,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 578,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 579,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 580,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 581,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 582,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 583,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 584,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 585,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 586,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 587,
+      "isGreenCover": false,
+      "greenRatio": 0.005,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 588,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 589,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 590,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 591,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 592,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 593,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 594,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 595,
+      "isGreenCover": true,
+      "greenRatio": 0.898,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 596,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 597,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 598,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 599,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 600,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 601,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 602,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 603,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 604,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 605,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 606,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 607,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 608,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 609,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 610,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 611,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 612,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 613,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 614,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 615,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 616,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 617,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 618,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 619,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 620,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 621,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 622,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 623,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 624,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 625,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 626,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 627,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 628,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 629,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 630,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 631,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 632,
+      "isGreenCover": true,
+      "greenRatio": 0.882,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 633,
+      "isGreenCover": false,
+      "greenRatio": 0.012,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 634,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 635,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 636,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 637,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 638,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 639,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 640,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 641,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 642,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 643,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 644,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 645,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 646,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 647,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 648,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 649,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 650,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 651,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 652,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 653,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 654,
+      "isGreenCover": false,
+      "greenRatio": 0.005,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 655,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 656,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 657,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 658,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 659,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 660,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 661,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 662,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 663,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 664,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 665,
+      "isGreenCover": false,
+      "greenRatio": 0.006,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 666,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 667,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 668,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 669,
+      "isGreenCover": true,
+      "greenRatio": 0.908,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 670,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 671,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 672,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 673,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 674,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 675,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 676,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 677,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 678,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 679,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 680,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 681,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 682,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 683,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 684,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 685,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 686,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 687,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 688,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 689,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 690,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 691,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 692,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 693,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 694,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 695,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 696,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 697,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 698,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 699,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 700,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 701,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 702,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 703,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 704,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 705,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 706,
+      "isGreenCover": true,
+      "greenRatio": 0.913,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 707,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 708,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 709,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 710,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 711,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 712,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 713,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 714,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 715,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 716,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 717,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 718,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 719,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 720,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 721,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 722,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 723,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 724,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 725,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 726,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 727,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 728,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 729,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 730,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 731,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 732,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 733,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 734,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 735,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 736,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 737,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 738,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 739,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 740,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 741,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 742,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 743,
+      "isGreenCover": true,
+      "greenRatio": 0.894,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 744,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 745,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 746,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 747,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 748,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 749,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 750,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 751,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 752,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 753,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 754,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 755,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 756,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 757,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 758,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 759,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 760,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 761,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 762,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 763,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 764,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 765,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 766,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 767,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 768,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 769,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 770,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 771,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 772,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 773,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 774,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 775,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 776,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 777,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 778,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 779,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 780,
+      "isGreenCover": true,
+      "greenRatio": 0.883,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 781,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 782,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 783,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 784,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 785,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 786,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 787,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 788,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 789,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 790,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 791,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 792,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 793,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 794,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 795,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 796,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 797,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 798,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 799,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 800,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 801,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 802,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 803,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 804,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 805,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 806,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 807,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 808,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 809,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 810,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 811,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 812,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 813,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 814,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 815,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 816,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 817,
+      "isGreenCover": true,
+      "greenRatio": 0.88,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 818,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 819,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 820,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 821,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 822,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 823,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 824,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 825,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 826,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 827,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 828,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 829,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 830,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 831,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 832,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 833,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 834,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 835,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 836,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 837,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 838,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 839,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 840,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 841,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 842,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 843,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 844,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 845,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 846,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 847,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 848,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 849,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 850,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 851,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 852,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 853,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 854,
+      "isGreenCover": true,
+      "greenRatio": 0.87,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 855,
+      "isGreenCover": false,
+      "greenRatio": 0.007,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 856,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 857,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 858,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 859,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 860,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 861,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 862,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 863,
+      "isGreenCover": false,
+      "greenRatio": 0.006,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 864,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 865,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 866,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 867,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 868,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 869,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 870,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 871,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 872,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 873,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 874,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 875,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 876,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 877,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 878,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 879,
+      "isGreenCover": false,
+      "greenRatio": 0.007,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 880,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 881,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 882,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 883,
+      "isGreenCover": false,
+      "greenRatio": 0.005,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 884,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 885,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 886,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 887,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 888,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 889,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 890,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 891,
+      "isGreenCover": true,
+      "greenRatio": 0.882,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 892,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 893,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 894,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 895,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 896,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 897,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 898,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 899,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 900,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 901,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 902,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 903,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 904,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 905,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 906,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 907,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 908,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 909,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 910,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 911,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 912,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 913,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 914,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 915,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 916,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 917,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 918,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 919,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 920,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 921,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 922,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 923,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 924,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 925,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 926,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 927,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 928,
+      "isGreenCover": true,
+      "greenRatio": 0.889,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 929,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 930,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 931,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 932,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 933,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 934,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 935,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 936,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 937,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 938,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 939,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 940,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 941,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 942,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 943,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 944,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 945,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 946,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 947,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 948,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 949,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 950,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 951,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 952,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 953,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 954,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 955,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 956,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 957,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 958,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 959,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 960,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 961,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 962,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 963,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 964,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 965,
+      "isGreenCover": true,
+      "greenRatio": 0.883,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 966,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 967,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 968,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 969,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 970,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 971,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 972,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 973,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 974,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 975,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 976,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 977,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 978,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 979,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 980,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 981,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 982,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 983,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 984,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 985,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 986,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 987,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 988,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 989,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 990,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 991,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 992,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 993,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 994,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 995,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 996,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 997,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 998,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 999,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1000,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1001,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1002,
+      "isGreenCover": true,
+      "greenRatio": 0.883,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1003,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1004,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1005,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1006,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1007,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1008,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1009,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1010,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1011,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1012,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1013,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1014,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1015,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1016,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1017,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1018,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1019,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1020,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1021,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1022,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1023,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1024,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1025,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1026,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1027,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1028,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1029,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1030,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1031,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1032,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1033,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1034,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1035,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1036,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1037,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1038,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1039,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1040,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1041,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1042,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1043,
+      "isGreenCover": true,
+      "greenRatio": 0.883,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1044,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1045,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1046,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1047,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1048,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1049,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1050,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1051,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1052,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1053,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1054,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1055,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1056,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1057,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1058,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1059,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1060,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1061,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1062,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1063,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1064,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1065,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1066,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1067,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1068,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1069,
+      "isGreenCover": false,
+      "greenRatio": 0.006,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1070,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1071,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1072,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1073,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1074,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1075,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1076,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1077,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1078,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1079,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1080,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1081,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1082,
+      "isGreenCover": false,
+      "greenRatio": 0.004,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1083,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1084,
+      "isGreenCover": true,
+      "greenRatio": 0.886,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1085,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1086,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1087,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1088,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1089,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1090,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1091,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1092,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1093,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1094,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1095,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1096,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1097,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1098,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1099,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1100,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1101,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1102,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1103,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1104,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1105,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1106,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1107,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1108,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1109,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1110,
+      "isGreenCover": false,
+      "greenRatio": 0.003,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1111,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1112,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1113,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1114,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1115,
+      "isGreenCover": false,
+      "greenRatio": 0.002,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1116,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1117,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1118,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1119,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1120,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1121,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1122,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1123,
+      "isGreenCover": false,
+      "greenRatio": 0.001,
+      "width": 793,
+      "height": 1123
+    },
+    {
+      "pdfPage": 1124,
+      "isGreenCover": false,
+      "greenRatio": 0,
+      "width": 793,
+      "height": 1123
+    }
+  ]
+}

@@ -1,0 +1,800 @@
+[
+  {
+    "number": 1,
+    "name": "Al-Fatihah",
+    "textPage": 1,
+    "physicalPdfPage": 2,
+    "roundtripValid": true
+  },
+  {
+    "number": 2,
+    "name": "Al-Baqarah",
+    "textPage": 2,
+    "physicalPdfPage": 3,
+    "roundtripValid": true
+  },
+  {
+    "number": 3,
+    "name": "AliImran",
+    "textPage": 89,
+    "physicalPdfPage": 92,
+    "roundtripValid": true
+  },
+  {
+    "number": 4,
+    "name": "An-Nisa",
+    "textPage": 140,
+    "physicalPdfPage": 144,
+    "roundtripValid": true
+  },
+  {
+    "number": 5,
+    "name": "Al-Maidah",
+    "textPage": 190,
+    "physicalPdfPage": 196,
+    "roundtripValid": true
+  },
+  {
+    "number": 6,
+    "name": "Al-Anam",
+    "textPage": 231,
+    "physicalPdfPage": 238,
+    "roundtripValid": true
+  },
+  {
+    "number": 7,
+    "name": "Al-Araf",
+    "textPage": 272,
+    "physicalPdfPage": 280,
+    "roundtripValid": true
+  },
+  {
+    "number": 8,
+    "name": "Al-Anfal",
+    "textPage": 319,
+    "physicalPdfPage": 328,
+    "roundtripValid": true
+  },
+  {
+    "number": 9,
+    "name": "At-Tawbah",
+    "textPage": 339,
+    "physicalPdfPage": 349,
+    "roundtripValid": true
+  },
+  {
+    "number": 10,
+    "name": "Yunus",
+    "textPage": 375,
+    "physicalPdfPage": 386,
+    "roundtripValid": true
+  },
+  {
+    "number": 11,
+    "name": "Hud",
+    "textPage": 398,
+    "physicalPdfPage": 410,
+    "roundtripValid": false
+  },
+  {
+    "number": 12,
+    "name": "Yusuf",
+    "textPage": 424,
+    "physicalPdfPage": 436,
+    "roundtripValid": true
+  },
+  {
+    "number": 13,
+    "name": "Ar-Rad",
+    "textPage": 447,
+    "physicalPdfPage": 460,
+    "roundtripValid": true
+  },
+  {
+    "number": 14,
+    "name": "Ibrahim",
+    "textPage": 458,
+    "physicalPdfPage": 471,
+    "roundtripValid": true
+  },
+  {
+    "number": 15,
+    "name": "Al-Hijr",
+    "textPage": 470,
+    "physicalPdfPage": 484,
+    "roundtripValid": false
+  },
+  {
+    "number": 16,
+    "name": "An-Nahl",
+    "textPage": 480,
+    "physicalPdfPage": 494,
+    "roundtripValid": true
+  },
+  {
+    "number": 17,
+    "name": "Al-Isra",
+    "textPage": 506,
+    "physicalPdfPage": 521,
+    "roundtripValid": false
+  },
+  {
+    "number": 18,
+    "name": "Al-Kahf",
+    "textPage": 527,
+    "physicalPdfPage": 542,
+    "roundtripValid": true
+  },
+  {
+    "number": 19,
+    "name": "Maryam",
+    "textPage": 547,
+    "physicalPdfPage": 563,
+    "roundtripValid": true
+  },
+  {
+    "number": 20,
+    "name": "Taha",
+    "textPage": 562,
+    "physicalPdfPage": 578,
+    "roundtripValid": true
+  },
+  {
+    "number": 21,
+    "name": "Al-Anbiya",
+    "textPage": 578,
+    "physicalPdfPage": 595,
+    "roundtripValid": false
+  },
+  {
+    "number": 22,
+    "name": "Al-Hajj",
+    "textPage": 596,
+    "physicalPdfPage": 613,
+    "roundtripValid": true
+  },
+  {
+    "number": 23,
+    "name": "Al-Muminun",
+    "textPage": 614,
+    "physicalPdfPage": 632,
+    "roundtripValid": false
+  },
+  {
+    "number": 24,
+    "name": "An-Nur",
+    "textPage": 630,
+    "physicalPdfPage": 648,
+    "roundtripValid": true
+  },
+  {
+    "number": 25,
+    "name": "Al-Furqan",
+    "textPage": 645,
+    "physicalPdfPage": 663,
+    "roundtripValid": true
+  },
+  {
+    "number": 26,
+    "name": "Ash-Shuara",
+    "textPage": 658,
+    "physicalPdfPage": 677,
+    "roundtripValid": true
+  },
+  {
+    "number": 27,
+    "name": "An-Naml",
+    "textPage": 679,
+    "physicalPdfPage": 698,
+    "roundtripValid": true
+  },
+  {
+    "number": 28,
+    "name": "Al-Qasas",
+    "textPage": 693,
+    "physicalPdfPage": 713,
+    "roundtripValid": true
+  },
+  {
+    "number": 29,
+    "name": "Al-Ankabut",
+    "textPage": 712,
+    "physicalPdfPage": 732,
+    "roundtripValid": true
+  },
+  {
+    "number": 30,
+    "name": "Ar-Rum",
+    "textPage": 726,
+    "physicalPdfPage": 747,
+    "roundtripValid": true
+  },
+  {
+    "number": 31,
+    "name": "Luqman",
+    "textPage": 737,
+    "physicalPdfPage": 758,
+    "roundtripValid": true
+  },
+  {
+    "number": 32,
+    "name": "As-Sajdah",
+    "textPage": 745,
+    "physicalPdfPage": 766,
+    "roundtripValid": true
+  },
+  {
+    "number": 33,
+    "name": "Al-Ahzab",
+    "textPage": 750,
+    "physicalPdfPage": 771,
+    "roundtripValid": true
+  },
+  {
+    "number": 34,
+    "name": "Saba",
+    "textPage": 767,
+    "physicalPdfPage": 789,
+    "roundtripValid": true
+  },
+  {
+    "number": 35,
+    "name": "Fatir",
+    "textPage": 778,
+    "physicalPdfPage": 800,
+    "roundtripValid": true
+  },
+  {
+    "number": 36,
+    "name": "Ya-Sin",
+    "textPage": 791,
+    "physicalPdfPage": 813,
+    "roundtripValid": true
+  },
+  {
+    "number": 37,
+    "name": "As-Saffat",
+    "textPage": 800,
+    "physicalPdfPage": 823,
+    "roundtripValid": true
+  },
+  {
+    "number": 38,
+    "name": "Sad",
+    "textPage": 815,
+    "physicalPdfPage": 838,
+    "roundtripValid": true
+  },
+  {
+    "number": 39,
+    "name": "Az-Zumar",
+    "textPage": 822,
+    "physicalPdfPage": 845,
+    "roundtripValid": true
+  },
+  {
+    "number": 40,
+    "name": "Ghafir",
+    "textPage": 839,
+    "physicalPdfPage": 863,
+    "roundtripValid": true
+  },
+  {
+    "number": 41,
+    "name": "Fussilat",
+    "textPage": 858,
+    "physicalPdfPage": 882,
+    "roundtripValid": true
+  },
+  {
+    "number": 42,
+    "name": "Ash-Shura",
+    "textPage": 867,
+    "physicalPdfPage": 892,
+    "roundtripValid": true
+  },
+  {
+    "number": 43,
+    "name": "Az-Zukhruf",
+    "textPage": 878,
+    "physicalPdfPage": 903,
+    "roundtripValid": true
+  },
+  {
+    "number": 44,
+    "name": "Ad-Dukhan",
+    "textPage": 892,
+    "physicalPdfPage": 917,
+    "roundtripValid": true
+  },
+  {
+    "number": 45,
+    "name": "Al-Jathiyah",
+    "textPage": 897,
+    "physicalPdfPage": 922,
+    "roundtripValid": true
+  },
+  {
+    "number": 46,
+    "name": "Al-Ahqaf",
+    "textPage": 902,
+    "physicalPdfPage": 928,
+    "roundtripValid": false
+  },
+  {
+    "number": 47,
+    "name": "Muhammad",
+    "textPage": 913,
+    "physicalPdfPage": 939,
+    "roundtripValid": true
+  },
+  {
+    "number": 48,
+    "name": "Al-Fath",
+    "textPage": 921,
+    "physicalPdfPage": 947,
+    "roundtripValid": true
+  },
+  {
+    "number": 49,
+    "name": "Al-Hujurat",
+    "textPage": 927,
+    "physicalPdfPage": 953,
+    "roundtripValid": true
+  },
+  {
+    "number": 50,
+    "name": "Qaf",
+    "textPage": 934,
+    "physicalPdfPage": 960,
+    "roundtripValid": true
+  },
+  {
+    "number": 51,
+    "name": "Adh-Dhariyat",
+    "textPage": 938,
+    "physicalPdfPage": 965,
+    "roundtripValid": false
+  },
+  {
+    "number": 52,
+    "name": "At-Tur",
+    "textPage": 943,
+    "physicalPdfPage": 970,
+    "roundtripValid": true
+  },
+  {
+    "number": 53,
+    "name": "An-Najm",
+    "textPage": 949,
+    "physicalPdfPage": 976,
+    "roundtripValid": true
+  },
+  {
+    "number": 54,
+    "name": "Al-Qamar",
+    "textPage": 952,
+    "physicalPdfPage": 979,
+    "roundtripValid": true
+  },
+  {
+    "number": 55,
+    "name": "Ar-Rahman",
+    "textPage": 959,
+    "physicalPdfPage": 986,
+    "roundtripValid": true
+  },
+  {
+    "number": 56,
+    "name": "Al-Waqiah",
+    "textPage": 964,
+    "physicalPdfPage": 991,
+    "roundtripValid": true
+  },
+  {
+    "number": 57,
+    "name": "Al-Hadid",
+    "textPage": 969,
+    "physicalPdfPage": 996,
+    "roundtripValid": true
+  },
+  {
+    "number": 58,
+    "name": "Al-Mujadila",
+    "textPage": 975,
+    "physicalPdfPage": 1003,
+    "roundtripValid": true
+  },
+  {
+    "number": 59,
+    "name": "Al-Hashr",
+    "textPage": 983,
+    "physicalPdfPage": 1011,
+    "roundtripValid": true
+  },
+  {
+    "number": 60,
+    "name": "Al-Mumtahanah",
+    "textPage": 989,
+    "physicalPdfPage": 1017,
+    "roundtripValid": true
+  },
+  {
+    "number": 61,
+    "name": "As-Saff",
+    "textPage": 992,
+    "physicalPdfPage": 1020,
+    "roundtripValid": true
+  },
+  {
+    "number": 62,
+    "name": "Al-Jumuah",
+    "textPage": 996,
+    "physicalPdfPage": 1024,
+    "roundtripValid": true
+  },
+  {
+    "number": 63,
+    "name": "Al-Munafiqun",
+    "textPage": 998,
+    "physicalPdfPage": 1026,
+    "roundtripValid": true
+  },
+  {
+    "number": 64,
+    "name": "At-Taghabun",
+    "textPage": 1001,
+    "physicalPdfPage": 1029,
+    "roundtripValid": true
+  },
+  {
+    "number": 65,
+    "name": "At-Talaq",
+    "textPage": 1004,
+    "physicalPdfPage": 1032,
+    "roundtripValid": true
+  },
+  {
+    "number": 66,
+    "name": "At-Tahrim",
+    "textPage": 1007,
+    "physicalPdfPage": 1035,
+    "roundtripValid": true
+  },
+  {
+    "number": 67,
+    "name": "Al-Mulk",
+    "textPage": 1014,
+    "physicalPdfPage": 1043,
+    "roundtripValid": false
+  },
+  {
+    "number": 68,
+    "name": "Al-Qalam",
+    "textPage": 1019,
+    "physicalPdfPage": 1048,
+    "roundtripValid": true
+  },
+  {
+    "number": 69,
+    "name": "Al-Haqqah",
+    "textPage": 1022,
+    "physicalPdfPage": 1051,
+    "roundtripValid": true
+  },
+  {
+    "number": 70,
+    "name": "Al-Maarij",
+    "textPage": 1025,
+    "physicalPdfPage": 1054,
+    "roundtripValid": true
+  },
+  {
+    "number": 71,
+    "name": "Nuh",
+    "textPage": 1032,
+    "physicalPdfPage": 1061,
+    "roundtripValid": true
+  },
+  {
+    "number": 72,
+    "name": "Al-Jinn",
+    "textPage": 1032,
+    "physicalPdfPage": 1061,
+    "roundtripValid": true
+  },
+  {
+    "number": 73,
+    "name": "Al-Muzzammil",
+    "textPage": 1037,
+    "physicalPdfPage": 1066,
+    "roundtripValid": true
+  },
+  {
+    "number": 74,
+    "name": "Al-Muddaththir",
+    "textPage": 1039,
+    "physicalPdfPage": 1068,
+    "roundtripValid": true
+  },
+  {
+    "number": 75,
+    "name": "Al-Qiyamah",
+    "textPage": 1043,
+    "physicalPdfPage": 1072,
+    "roundtripValid": true
+  },
+  {
+    "number": 76,
+    "name": "Al-Insan",
+    "textPage": 1047,
+    "physicalPdfPage": 1076,
+    "roundtripValid": true
+  },
+  {
+    "number": 77,
+    "name": "Al-Mursalat",
+    "textPage": 1052,
+    "physicalPdfPage": 1081,
+    "roundtripValid": true
+  },
+  {
+    "number": 78,
+    "name": "An-Naba",
+    "textPage": 1054,
+    "physicalPdfPage": 1084,
+    "roundtripValid": false
+  },
+  {
+    "number": 79,
+    "name": "An-Naziat",
+    "textPage": 1058,
+    "physicalPdfPage": 1088,
+    "roundtripValid": true
+  },
+  {
+    "number": 80,
+    "name": "Abasa",
+    "textPage": 1061,
+    "physicalPdfPage": 1091,
+    "roundtripValid": true
+  },
+  {
+    "number": 81,
+    "name": "At-Takwir",
+    "textPage": 1061,
+    "physicalPdfPage": 1091,
+    "roundtripValid": true
+  },
+  {
+    "number": 82,
+    "name": "Al-Infitar",
+    "textPage": 1065,
+    "physicalPdfPage": 1095,
+    "roundtripValid": true
+  },
+  {
+    "number": 83,
+    "name": "Al-Mutaffifin",
+    "textPage": 1067,
+    "physicalPdfPage": 1097,
+    "roundtripValid": true
+  },
+  {
+    "number": 84,
+    "name": "Al-Inshiqaq",
+    "textPage": 1069,
+    "physicalPdfPage": 1099,
+    "roundtripValid": true
+  },
+  {
+    "number": 85,
+    "name": "Al-Buruj",
+    "textPage": 1071,
+    "physicalPdfPage": 1101,
+    "roundtripValid": true
+  },
+  {
+    "number": 86,
+    "name": "At-Tariq",
+    "textPage": 1073,
+    "physicalPdfPage": 1103,
+    "roundtripValid": true
+  },
+  {
+    "number": 87,
+    "name": "Al-Ala",
+    "textPage": 1076,
+    "physicalPdfPage": 1106,
+    "roundtripValid": true
+  },
+  {
+    "number": 88,
+    "name": "Al-Ghashiyah",
+    "textPage": 1076,
+    "physicalPdfPage": 1106,
+    "roundtripValid": true
+  },
+  {
+    "number": 89,
+    "name": "Al-Fajr",
+    "textPage": 1080,
+    "physicalPdfPage": 1110,
+    "roundtripValid": true
+  },
+  {
+    "number": 90,
+    "name": "Al-Balad",
+    "textPage": 1080,
+    "physicalPdfPage": 1110,
+    "roundtripValid": true
+  },
+  {
+    "number": 91,
+    "name": "Ash-Shams",
+    "textPage": 1083,
+    "physicalPdfPage": 1113,
+    "roundtripValid": true
+  },
+  {
+    "number": 92,
+    "name": "Al-Layl",
+    "textPage": 1084,
+    "physicalPdfPage": 1114,
+    "roundtripValid": true
+  },
+  {
+    "number": 93,
+    "name": "Ad-Duha",
+    "textPage": 1084,
+    "physicalPdfPage": 1114,
+    "roundtripValid": true
+  },
+  {
+    "number": 94,
+    "name": "Ash-Sharh",
+    "textPage": 1084,
+    "physicalPdfPage": 1114,
+    "roundtripValid": true
+  },
+  {
+    "number": 95,
+    "name": "At-Tin",
+    "textPage": 1086,
+    "physicalPdfPage": 1116,
+    "roundtripValid": true
+  },
+  {
+    "number": 96,
+    "name": "Al-Alaq",
+    "textPage": 1086,
+    "physicalPdfPage": 1116,
+    "roundtripValid": true
+  },
+  {
+    "number": 97,
+    "name": "Al-Qadr",
+    "textPage": 1089,
+    "physicalPdfPage": 1119,
+    "roundtripValid": true
+  },
+  {
+    "number": 98,
+    "name": "Al-Bayyinah",
+    "textPage": 1089,
+    "physicalPdfPage": 1119,
+    "roundtripValid": true
+  },
+  {
+    "number": 99,
+    "name": "Az-Zalzalah",
+    "textPage": 1089,
+    "physicalPdfPage": 1119,
+    "roundtripValid": true
+  },
+  {
+    "number": 100,
+    "name": "Al-Adiyat",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 101,
+    "name": "Al-Qariah",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 102,
+    "name": "At-Takathur",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 103,
+    "name": "Al-Asr",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 104,
+    "name": "Al-Humazah",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 105,
+    "name": "Al-Fil",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 106,
+    "name": "Quraysh",
+    "textPage": 1091,
+    "physicalPdfPage": 1121,
+    "roundtripValid": true
+  },
+  {
+    "number": 107,
+    "name": "Al-Maun",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 108,
+    "name": "Al-Kawthar",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 109,
+    "name": "Al-Kafirun",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 110,
+    "name": "An-Nasr",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 111,
+    "name": "Al-Masad",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 112,
+    "name": "Al-Ikhlas",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 113,
+    "name": "Al-Falaq",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  },
+  {
+    "number": 114,
+    "name": "An-Nas",
+    "textPage": 1092,
+    "physicalPdfPage": 1122,
+    "roundtripValid": true
+  }
+]

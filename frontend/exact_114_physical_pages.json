@@ -1,0 +1,2588 @@
+[
+  {
+    "surahNum": 1,
+    "surahName": "Al-Fatihah",
+    "physicalPdfPage": 2
+  },
+  {
+    "surahNum": 2,
+    "surahName": "Al-Baqarah",
+    "physicalPdfPage": 3
+  },
+  {
+    "surahNum": 3,
+    "surahName": "AliImran",
+    "physicalPdfPage": 92,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 92,
+        "maxDarkness": 1,
+        "peakY": 565
+      },
+      {
+        "pageNum": 93,
+        "maxDarkness": 0.7689075630252101,
+        "peakY": 366
+      },
+      {
+        "pageNum": 91,
+        "maxDarkness": 0.7016806722689075,
+        "peakY": 200
+      }
+    ]
+  },
+  {
+    "surahNum": 4,
+    "surahName": "An-Nisa",
+    "physicalPdfPage": 144,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 144,
+        "maxDarkness": 1,
+        "peakY": 141
+      },
+      {
+        "pageNum": 142,
+        "maxDarkness": 0.884453781512605,
+        "peakY": 486
+      },
+      {
+        "pageNum": 143,
+        "maxDarkness": 0.6428571428571429,
+        "peakY": 628
+      }
+    ]
+  },
+  {
+    "surahNum": 5,
+    "surahName": "Al-Maidah",
+    "physicalPdfPage": 195,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 195,
+        "maxDarkness": 1,
+        "peakY": 159
+      },
+      {
+        "pageNum": 197,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 196,
+        "maxDarkness": 0.6848739495798319,
+        "peakY": 535
+      }
+    ]
+  },
+  {
+    "surahNum": 6,
+    "surahName": "Al-Anam",
+    "physicalPdfPage": 239,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 239,
+        "maxDarkness": 1,
+        "peakY": 147
+      },
+      {
+        "pageNum": 237,
+        "maxDarkness": 0.8886554621848739,
+        "peakY": 144
+      },
+      {
+        "pageNum": 238,
+        "maxDarkness": 0.8508403361344538,
+        "peakY": 147
+      }
+    ]
+  },
+  {
+    "surahNum": 7,
+    "surahName": "Al-Araf",
+    "physicalPdfPage": 280,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 280,
+        "maxDarkness": 1,
+        "peakY": 148
+      },
+      {
+        "pageNum": 281,
+        "maxDarkness": 0.9453781512605042,
+        "peakY": 400
+      },
+      {
+        "pageNum": 279,
+        "maxDarkness": 0.7163865546218487,
+        "peakY": 703
+      }
+    ]
+  },
+  {
+    "surahNum": 8,
+    "surahName": "Al-Anfal",
+    "physicalPdfPage": 329,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 329,
+        "maxDarkness": 1,
+        "peakY": 310
+      },
+      {
+        "pageNum": 328,
+        "maxDarkness": 0.9789915966386554,
+        "peakY": 150
+      },
+      {
+        "pageNum": 330,
+        "maxDarkness": 0.6932773109243697,
+        "peakY": 126
+      }
+    ]
+  },
+  {
+    "surahNum": 9,
+    "surahName": "At-Tawbah",
+    "physicalPdfPage": 347,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 347,
+        "maxDarkness": 1,
+        "peakY": 904
+      },
+      {
+        "pageNum": 349,
+        "maxDarkness": 1,
+        "peakY": 147
+      },
+      {
+        "pageNum": 348,
+        "maxDarkness": 0.7899159663865546,
+        "peakY": 812
+      }
+    ]
+  },
+  {
+    "surahNum": 10,
+    "surahName": "Yunus",
+    "physicalPdfPage": 386,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 386,
+        "maxDarkness": 1,
+        "peakY": 483
+      },
+      {
+        "pageNum": 387,
+        "maxDarkness": 0.7058823529411765,
+        "peakY": 787
+      },
+      {
+        "pageNum": 385,
+        "maxDarkness": 0.6680672268907563,
+        "peakY": 898
+      }
+    ]
+  },
+  {
+    "surahNum": 11,
+    "surahName": "Hud",
+    "physicalPdfPage": 409,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 409,
+        "maxDarkness": 1,
+        "peakY": 226
+      },
+      {
+        "pageNum": 410,
+        "maxDarkness": 1,
+        "peakY": 108
+      },
+      {
+        "pageNum": 408,
+        "maxDarkness": 0.7205882352941176,
+        "peakY": 908
+      }
+    ]
+  },
+  {
+    "surahNum": 12,
+    "surahName": "Yusuf",
+    "physicalPdfPage": 435,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 435,
+        "maxDarkness": 1,
+        "peakY": 484
+      },
+      {
+        "pageNum": 436,
+        "maxDarkness": 1,
+        "peakY": 143
+      },
+      {
+        "pageNum": 434,
+        "maxDarkness": 0.6470588235294118,
+        "peakY": 983
+      }
+    ]
+  },
+  {
+    "surahNum": 13,
+    "surahName": "Ar-Rad",
+    "physicalPdfPage": 462,
+    "confidence": 0.8760504201680672,
+    "candidates": [
+      {
+        "pageNum": 462,
+        "maxDarkness": 0.8760504201680672,
+        "peakY": 738
+      },
+      {
+        "pageNum": 460,
+        "maxDarkness": 0.6638655462184874,
+        "peakY": 233
+      },
+      {
+        "pageNum": 461,
+        "maxDarkness": 0.6260504201680672,
+        "peakY": 985
+      }
+    ]
+  },
+  {
+    "surahNum": 14,
+    "surahName": "Ibrahim",
+    "physicalPdfPage": 473,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 473,
+        "maxDarkness": 1,
+        "peakY": 565
+      },
+      {
+        "pageNum": 472,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 147
+      },
+      {
+        "pageNum": 471,
+        "maxDarkness": 0.9117647058823529,
+        "peakY": 986
+      }
+    ]
+  },
+  {
+    "surahNum": 15,
+    "surahName": "Al-Hijr",
+    "physicalPdfPage": 484,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 484,
+        "maxDarkness": 1,
+        "peakY": 104
+      },
+      {
+        "pageNum": 485,
+        "maxDarkness": 1,
+        "peakY": 149
+      },
+      {
+        "pageNum": 486,
+        "maxDarkness": 1,
+        "peakY": 143
+      }
+    ]
+  },
+  {
+    "surahNum": 16,
+    "surahName": "An-Nahl",
+    "physicalPdfPage": 495,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 495,
+        "maxDarkness": 1,
+        "peakY": 731
+      },
+      {
+        "pageNum": 494,
+        "maxDarkness": 0.6491596638655462,
+        "peakY": 367
+      },
+      {
+        "pageNum": 493,
+        "maxDarkness": 0.6428571428571429,
+        "peakY": 316
+      }
+    ]
+  },
+  {
+    "surahNum": 17,
+    "surahName": "Al-Isra",
+    "physicalPdfPage": 521,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 521,
+        "maxDarkness": 1,
+        "peakY": 80
+      },
+      {
+        "pageNum": 522,
+        "maxDarkness": 0.9894957983193278,
+        "peakY": 231
+      },
+      {
+        "pageNum": 523,
+        "maxDarkness": 0.6869747899159664,
+        "peakY": 896
+      }
+    ]
+  },
+  {
+    "surahNum": 18,
+    "surahName": "Al-Kahf",
+    "physicalPdfPage": 541,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 541,
+        "maxDarkness": 1,
+        "peakY": 143
+      },
+      {
+        "pageNum": 543,
+        "maxDarkness": 1,
+        "peakY": 142
+      },
+      {
+        "pageNum": 542,
+        "maxDarkness": 0.9978991596638656,
+        "peakY": 233
+      }
+    ]
+  },
+  {
+    "surahNum": 19,
+    "surahName": "Maryam",
+    "physicalPdfPage": 563,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 563,
+        "maxDarkness": 1,
+        "peakY": 152
+      },
+      {
+        "pageNum": 565,
+        "maxDarkness": 1,
+        "peakY": 320
+      },
+      {
+        "pageNum": 564,
+        "maxDarkness": 0.9432773109243697,
+        "peakY": 734
+      }
+    ]
+  },
+  {
+    "surahNum": 20,
+    "surahName": "Taha",
+    "physicalPdfPage": 576,
+    "confidence": 0.9537815126050421,
+    "candidates": [
+      {
+        "pageNum": 576,
+        "maxDarkness": 0.9537815126050421,
+        "peakY": 730
+      },
+      {
+        "pageNum": 577,
+        "maxDarkness": 0.8508403361344538,
+        "peakY": 655
+      },
+      {
+        "pageNum": 578,
+        "maxDarkness": 0.8109243697478992,
+        "peakY": 819
+      }
+    ]
+  },
+  {
+    "surahNum": 21,
+    "surahName": "Al-Anbiya",
+    "physicalPdfPage": 595,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 595,
+        "maxDarkness": 1,
+        "peakY": 105
+      },
+      {
+        "pageNum": 596,
+        "maxDarkness": 1,
+        "peakY": 225
+      },
+      {
+        "pageNum": 597,
+        "maxDarkness": 0.7689075630252101,
+        "peakY": 1042
+      }
+    ]
+  },
+  {
+    "surahNum": 22,
+    "surahName": "Al-Hajj",
+    "physicalPdfPage": 613,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 613,
+        "maxDarkness": 1,
+        "peakY": 151
+      },
+      {
+        "pageNum": 614,
+        "maxDarkness": 1,
+        "peakY": 140
+      },
+      {
+        "pageNum": 615,
+        "maxDarkness": 0.7100840336134454,
+        "peakY": 895
+      }
+    ]
+  },
+  {
+    "surahNum": 23,
+    "surahName": "Al-Muminun",
+    "physicalPdfPage": 632,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 632,
+        "maxDarkness": 1,
+        "peakY": 100
+      },
+      {
+        "pageNum": 633,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 634,
+        "maxDarkness": 0.6974789915966386,
+        "peakY": 209
+      }
+    ]
+  },
+  {
+    "surahNum": 24,
+    "surahName": "An-Nur",
+    "physicalPdfPage": 648,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 648,
+        "maxDarkness": 1,
+        "peakY": 562
+      },
+      {
+        "pageNum": 649,
+        "maxDarkness": 1,
+        "peakY": 145
+      },
+      {
+        "pageNum": 647,
+        "maxDarkness": 0.8697478991596639,
+        "peakY": 567
+      }
+    ]
+  },
+  {
+    "surahNum": 25,
+    "surahName": "Al-Furqan",
+    "physicalPdfPage": 663,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 663,
+        "maxDarkness": 1,
+        "peakY": 232
+      },
+      {
+        "pageNum": 664,
+        "maxDarkness": 0.9894957983193278,
+        "peakY": 899
+      },
+      {
+        "pageNum": 665,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 408
+      }
+    ]
+  },
+  {
+    "surahNum": 26,
+    "surahName": "Ash-Shuara",
+    "physicalPdfPage": 677,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 677,
+        "maxDarkness": 1,
+        "peakY": 315
+      },
+      {
+        "pageNum": 679,
+        "maxDarkness": 1,
+        "peakY": 140
+      },
+      {
+        "pageNum": 678,
+        "maxDarkness": 0.8067226890756303,
+        "peakY": 573
+      }
+    ]
+  },
+  {
+    "surahNum": 27,
+    "surahName": "An-Naml",
+    "physicalPdfPage": 696,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 696,
+        "maxDarkness": 1,
+        "peakY": 145
+      },
+      {
+        "pageNum": 697,
+        "maxDarkness": 0.6827731092436975,
+        "peakY": 704
+      },
+      {
+        "pageNum": 698,
+        "maxDarkness": 0.657563025210084,
+        "peakY": 795
+      }
+    ]
+  },
+  {
+    "surahNum": 28,
+    "surahName": "Al-Qasas",
+    "physicalPdfPage": 711,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 711,
+        "maxDarkness": 1,
+        "peakY": 567
+      },
+      {
+        "pageNum": 712,
+        "maxDarkness": 1,
+        "peakY": 149
+      },
+      {
+        "pageNum": 713,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 147
+      }
+    ]
+  },
+  {
+    "surahNum": 29,
+    "surahName": "Al-Ankabut",
+    "physicalPdfPage": 732,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 732,
+        "maxDarkness": 1,
+        "peakY": 229
+      },
+      {
+        "pageNum": 730,
+        "maxDarkness": 0.8172268907563025,
+        "peakY": 729
+      },
+      {
+        "pageNum": 731,
+        "maxDarkness": 0.5861344537815126,
+        "peakY": 124
+      }
+    ]
+  },
+  {
+    "surahNum": 30,
+    "surahName": "Ar-Rum",
+    "physicalPdfPage": 746,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 746,
+        "maxDarkness": 1,
+        "peakY": 316
+      },
+      {
+        "pageNum": 745,
+        "maxDarkness": 0.7542016806722689,
+        "peakY": 988
+      },
+      {
+        "pageNum": 747,
+        "maxDarkness": 0.6134453781512605,
+        "peakY": 287
+      }
+    ]
+  },
+  {
+    "surahNum": 31,
+    "surahName": "Luqman",
+    "physicalPdfPage": 759,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 759,
+        "maxDarkness": 1,
+        "peakY": 233
+      },
+      {
+        "pageNum": 760,
+        "maxDarkness": 0.865546218487395,
+        "peakY": 820
+      },
+      {
+        "pageNum": 758,
+        "maxDarkness": 0.7710084033613446,
+        "peakY": 818
+      }
+    ]
+  },
+  {
+    "surahNum": 32,
+    "surahName": "As-Sajdah",
+    "physicalPdfPage": 765,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 765,
+        "maxDarkness": 1,
+        "peakY": 148
+      },
+      {
+        "pageNum": 767,
+        "maxDarkness": 1,
+        "peakY": 227
+      },
+      {
+        "pageNum": 766,
+        "maxDarkness": 0.9369747899159664,
+        "peakY": 402
+      }
+    ]
+  },
+  {
+    "surahNum": 33,
+    "surahName": "Al-Ahzab",
+    "physicalPdfPage": 771,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 771,
+        "maxDarkness": 1,
+        "peakY": 142
+      },
+      {
+        "pageNum": 772,
+        "maxDarkness": 1,
+        "peakY": 149
+      },
+      {
+        "pageNum": 773,
+        "maxDarkness": 0.6239495798319328,
+        "peakY": 953
+      }
+    ]
+  },
+  {
+    "surahNum": 34,
+    "surahName": "Saba",
+    "physicalPdfPage": 789,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 789,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 790,
+        "maxDarkness": 1,
+        "peakY": 141
+      },
+      {
+        "pageNum": 791,
+        "maxDarkness": 1,
+        "peakY": 149
+      }
+    ]
+  },
+  {
+    "surahNum": 35,
+    "surahName": "Fatir",
+    "physicalPdfPage": 800,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 800,
+        "maxDarkness": 1,
+        "peakY": 903
+      },
+      {
+        "pageNum": 801,
+        "maxDarkness": 1,
+        "peakY": 485
+      },
+      {
+        "pageNum": 802,
+        "maxDarkness": 1,
+        "peakY": 136
+      }
+    ]
+  },
+  {
+    "surahNum": 36,
+    "surahName": "Ya-Sin",
+    "physicalPdfPage": 811,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 811,
+        "maxDarkness": 1,
+        "peakY": 150
+      },
+      {
+        "pageNum": 813,
+        "maxDarkness": 1,
+        "peakY": 314
+      },
+      {
+        "pageNum": 812,
+        "maxDarkness": 0.6827731092436975,
+        "peakY": 986
+      }
+    ]
+  },
+  {
+    "surahNum": 37,
+    "surahName": "As-Saffat",
+    "physicalPdfPage": 825,
+    "confidence": 0.9936974789915967,
+    "candidates": [
+      {
+        "pageNum": 825,
+        "maxDarkness": 0.9936974789915967,
+        "peakY": 729
+      },
+      {
+        "pageNum": 824,
+        "maxDarkness": 0.7584033613445378,
+        "peakY": 898
+      },
+      {
+        "pageNum": 823,
+        "maxDarkness": 0.7289915966386554,
+        "peakY": 954
+      }
+    ]
+  },
+  {
+    "surahNum": 38,
+    "surahName": "Sad",
+    "physicalPdfPage": 836,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 836,
+        "maxDarkness": 1,
+        "peakY": 243
+      },
+      {
+        "pageNum": 838,
+        "maxDarkness": 0.7941176470588235,
+        "peakY": 160
+      },
+      {
+        "pageNum": 837,
+        "maxDarkness": 0.657563025210084,
+        "peakY": 463
+      }
+    ]
+  },
+  {
+    "surahNum": 39,
+    "surahName": "Az-Zumar",
+    "physicalPdfPage": 845,
+    "confidence": 0.9831932773109243,
+    "candidates": [
+      {
+        "pageNum": 845,
+        "maxDarkness": 0.9831932773109243,
+        "peakY": 392
+      },
+      {
+        "pageNum": 847,
+        "maxDarkness": 0.6470588235294118,
+        "peakY": 786
+      },
+      {
+        "pageNum": 846,
+        "maxDarkness": 0.5714285714285714,
+        "peakY": 546
+      }
+    ]
+  },
+  {
+    "surahNum": 40,
+    "surahName": "Ghafir",
+    "physicalPdfPage": 862,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 862,
+        "maxDarkness": 1,
+        "peakY": 138
+      },
+      {
+        "pageNum": 863,
+        "maxDarkness": 1,
+        "peakY": 148
+      },
+      {
+        "pageNum": 864,
+        "maxDarkness": 0.9684873949579832,
+        "peakY": 566
+      }
+    ]
+  },
+  {
+    "surahNum": 41,
+    "surahName": "Fussilat",
+    "physicalPdfPage": 881,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 881,
+        "maxDarkness": 1,
+        "peakY": 149
+      },
+      {
+        "pageNum": 882,
+        "maxDarkness": 0.7436974789915967,
+        "peakY": 981
+      },
+      {
+        "pageNum": 883,
+        "maxDarkness": 0.6953781512605042,
+        "peakY": 452
+      }
+    ]
+  },
+  {
+    "surahNum": 42,
+    "surahName": "Ash-Shura",
+    "physicalPdfPage": 892,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 892,
+        "maxDarkness": 1,
+        "peakY": 142
+      },
+      {
+        "pageNum": 893,
+        "maxDarkness": 1,
+        "peakY": 144
+      },
+      {
+        "pageNum": 894,
+        "maxDarkness": 1,
+        "peakY": 149
+      }
+    ]
+  },
+  {
+    "surahNum": 43,
+    "surahName": "Az-Zukhruf",
+    "physicalPdfPage": 905,
+    "confidence": 0.8382352941176471,
+    "candidates": [
+      {
+        "pageNum": 905,
+        "maxDarkness": 0.8382352941176471,
+        "peakY": 389
+      },
+      {
+        "pageNum": 903,
+        "maxDarkness": 0.7352941176470589,
+        "peakY": 1041
+      },
+      {
+        "pageNum": 904,
+        "maxDarkness": 0.657563025210084,
+        "peakY": 286
+      }
+    ]
+  },
+  {
+    "surahNum": 44,
+    "surahName": "Ad-Dukhan",
+    "physicalPdfPage": 916,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 916,
+        "maxDarkness": 1,
+        "peakY": 989
+      },
+      {
+        "pageNum": 917,
+        "maxDarkness": 1,
+        "peakY": 393
+      },
+      {
+        "pageNum": 918,
+        "maxDarkness": 1,
+        "peakY": 149
+      }
+    ]
+  },
+  {
+    "surahNum": 45,
+    "surahName": "Al-Jathiyah",
+    "physicalPdfPage": 923,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 923,
+        "maxDarkness": 1,
+        "peakY": 315
+      },
+      {
+        "pageNum": 922,
+        "maxDarkness": 0.7563025210084033,
+        "peakY": 373
+      },
+      {
+        "pageNum": 924,
+        "maxDarkness": 0.6638655462184874,
+        "peakY": 459
+      }
+    ]
+  },
+  {
+    "surahNum": 46,
+    "surahName": "Al-Ahqaf",
+    "physicalPdfPage": 928,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 928,
+        "maxDarkness": 1,
+        "peakY": 98
+      },
+      {
+        "pageNum": 929,
+        "maxDarkness": 1,
+        "peakY": 151
+      },
+      {
+        "pageNum": 930,
+        "maxDarkness": 0.7836134453781513,
+        "peakY": 226
+      }
+    ]
+  },
+  {
+    "surahNum": 47,
+    "surahName": "Muhammad",
+    "physicalPdfPage": 939,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 939,
+        "maxDarkness": 1,
+        "peakY": 152
+      },
+      {
+        "pageNum": 937,
+        "maxDarkness": 0.8802521008403361,
+        "peakY": 747
+      },
+      {
+        "pageNum": 938,
+        "maxDarkness": 0.5861344537815126,
+        "peakY": 540
+      }
+    ]
+  },
+  {
+    "surahNum": 48,
+    "surahName": "Al-Fath",
+    "physicalPdfPage": 945,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 945,
+        "maxDarkness": 1,
+        "peakY": 486
+      },
+      {
+        "pageNum": 947,
+        "maxDarkness": 1,
+        "peakY": 739
+      },
+      {
+        "pageNum": 946,
+        "maxDarkness": 0.7457983193277311,
+        "peakY": 482
+      }
+    ]
+  },
+  {
+    "surahNum": 49,
+    "surahName": "Al-Hujurat",
+    "physicalPdfPage": 953,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 953,
+        "maxDarkness": 1,
+        "peakY": 148
+      },
+      {
+        "pageNum": 955,
+        "maxDarkness": 1,
+        "peakY": 154
+      },
+      {
+        "pageNum": 954,
+        "maxDarkness": 0.6176470588235294,
+        "peakY": 966
+      }
+    ]
+  },
+  {
+    "surahNum": 50,
+    "surahName": "Qaf",
+    "physicalPdfPage": 960,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 960,
+        "maxDarkness": 1,
+        "peakY": 145
+      },
+      {
+        "pageNum": 959,
+        "maxDarkness": 0.8697478991596639,
+        "peakY": 992
+      },
+      {
+        "pageNum": 961,
+        "maxDarkness": 0.7037815126050421,
+        "peakY": 213
+      }
+    ]
+  },
+  {
+    "surahNum": 51,
+    "surahName": "Adh-Dhariyat",
+    "physicalPdfPage": 965,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 965,
+        "maxDarkness": 1,
+        "peakY": 92
+      },
+      {
+        "pageNum": 966,
+        "maxDarkness": 1,
+        "peakY": 153
+      },
+      {
+        "pageNum": 967,
+        "maxDarkness": 0.9789915966386554,
+        "peakY": 819
+      }
+    ]
+  },
+  {
+    "surahNum": 52,
+    "surahName": "At-Tur",
+    "physicalPdfPage": 970,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 970,
+        "maxDarkness": 1,
+        "peakY": 148
+      },
+      {
+        "pageNum": 971,
+        "maxDarkness": 0.7163865546218487,
+        "peakY": 787
+      },
+      {
+        "pageNum": 972,
+        "maxDarkness": 0.6470588235294118,
+        "peakY": 202
+      }
+    ]
+  },
+  {
+    "surahNum": 53,
+    "surahName": "An-Najm",
+    "physicalPdfPage": 977,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 977,
+        "maxDarkness": 1,
+        "peakY": 318
+      },
+      {
+        "pageNum": 975,
+        "maxDarkness": 0.7247899159663865,
+        "peakY": 732
+      },
+      {
+        "pageNum": 976,
+        "maxDarkness": 0.6449579831932774,
+        "peakY": 126
+      }
+    ]
+  },
+  {
+    "surahNum": 54,
+    "surahName": "Al-Qamar",
+    "physicalPdfPage": 979,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 979,
+        "maxDarkness": 1,
+        "peakY": 142
+      },
+      {
+        "pageNum": 980,
+        "maxDarkness": 0.707983193277311,
+        "peakY": 709
+      },
+      {
+        "pageNum": 981,
+        "maxDarkness": 0.6995798319327731,
+        "peakY": 115
+      }
+    ]
+  },
+  {
+    "surahNum": 55,
+    "surahName": "Ar-Rahman",
+    "physicalPdfPage": 985,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 985,
+        "maxDarkness": 1,
+        "peakY": 137
+      },
+      {
+        "pageNum": 986,
+        "maxDarkness": 1,
+        "peakY": 819
+      },
+      {
+        "pageNum": 984,
+        "maxDarkness": 0.5672268907563025,
+        "peakY": 151
+      }
+    ]
+  },
+  {
+    "surahNum": 56,
+    "surahName": "Al-Waqiah",
+    "physicalPdfPage": 991,
+    "confidence": 0.8025210084033614,
+    "candidates": [
+      {
+        "pageNum": 991,
+        "maxDarkness": 0.8025210084033614,
+        "peakY": 965
+      },
+      {
+        "pageNum": 992,
+        "maxDarkness": 0.7689075630252101,
+        "peakY": 902
+      },
+      {
+        "pageNum": 990,
+        "maxDarkness": 0.6596638655462185,
+        "peakY": 993
+      }
+    ]
+  },
+  {
+    "surahNum": 57,
+    "surahName": "Al-Hadid",
+    "physicalPdfPage": 996,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 996,
+        "maxDarkness": 1,
+        "peakY": 317
+      },
+      {
+        "pageNum": 998,
+        "maxDarkness": 0.7415966386554622,
+        "peakY": 149
+      },
+      {
+        "pageNum": 997,
+        "maxDarkness": 0.5840336134453782,
+        "peakY": 282
+      }
+    ]
+  },
+  {
+    "surahNum": 58,
+    "surahName": "Al-Mujadila",
+    "physicalPdfPage": 1003,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1003,
+        "maxDarkness": 1,
+        "peakY": 154
+      },
+      {
+        "pageNum": 1005,
+        "maxDarkness": 1,
+        "peakY": 315
+      },
+      {
+        "pageNum": 1004,
+        "maxDarkness": 0.9852941176470589,
+        "peakY": 222
+      }
+    ]
+  },
+  {
+    "surahNum": 59,
+    "surahName": "Al-Hashr",
+    "physicalPdfPage": 1009,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1009,
+        "maxDarkness": 1,
+        "peakY": 150
+      },
+      {
+        "pageNum": 1011,
+        "maxDarkness": 0.9810924369747899,
+        "peakY": 817
+      },
+      {
+        "pageNum": 1010,
+        "maxDarkness": 0.930672268907563,
+        "peakY": 305
+      }
+    ]
+  },
+  {
+    "surahNum": 60,
+    "surahName": "Al-Mumtahanah",
+    "physicalPdfPage": 1017,
+    "confidence": 0.7289915966386554,
+    "candidates": [
+      {
+        "pageNum": 1017,
+        "maxDarkness": 0.7289915966386554,
+        "peakY": 1035
+      },
+      {
+        "pageNum": 1015,
+        "maxDarkness": 0.6995798319327731,
+        "peakY": 877
+      },
+      {
+        "pageNum": 1016,
+        "maxDarkness": 0.6512605042016807,
+        "peakY": 452
+      }
+    ]
+  },
+  {
+    "surahNum": 61,
+    "surahName": "As-Saff",
+    "physicalPdfPage": 1021,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1021,
+        "maxDarkness": 1,
+        "peakY": 152
+      },
+      {
+        "pageNum": 1020,
+        "maxDarkness": 0.9348739495798319,
+        "peakY": 138
+      },
+      {
+        "pageNum": 1022,
+        "maxDarkness": 0.865546218487395,
+        "peakY": 479
+      }
+    ]
+  },
+  {
+    "surahNum": 62,
+    "surahName": "Al-Jumuah",
+    "physicalPdfPage": 1024,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1024,
+        "maxDarkness": 1,
+        "peakY": 138
+      },
+      {
+        "pageNum": 1025,
+        "maxDarkness": 0.9600840336134454,
+        "peakY": 986
+      },
+      {
+        "pageNum": 1023,
+        "maxDarkness": 0.6785714285714286,
+        "peakY": 486
+      }
+    ]
+  },
+  {
+    "surahNum": 63,
+    "surahName": "Al-Munafiqun",
+    "physicalPdfPage": 1025,
+    "confidence": 0.9600840336134454,
+    "candidates": [
+      {
+        "pageNum": 1025,
+        "maxDarkness": 0.9600840336134454,
+        "peakY": 986
+      },
+      {
+        "pageNum": 1027,
+        "maxDarkness": 0.6911764705882353,
+        "peakY": 705
+      },
+      {
+        "pageNum": 1026,
+        "maxDarkness": 0.6701680672268907,
+        "peakY": 280
+      }
+    ]
+  },
+  {
+    "surahNum": 64,
+    "surahName": "At-Taghabun",
+    "physicalPdfPage": 1028,
+    "confidence": 0.7878151260504201,
+    "candidates": [
+      {
+        "pageNum": 1028,
+        "maxDarkness": 0.7878151260504201,
+        "peakY": 563
+      },
+      {
+        "pageNum": 1029,
+        "maxDarkness": 0.726890756302521,
+        "peakY": 460
+      },
+      {
+        "pageNum": 1027,
+        "maxDarkness": 0.6911764705882353,
+        "peakY": 705
+      }
+    ]
+  },
+  {
+    "surahNum": 65,
+    "surahName": "At-Talaq",
+    "physicalPdfPage": 1033,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1033,
+        "maxDarkness": 1,
+        "peakY": 154
+      },
+      {
+        "pageNum": 1032,
+        "maxDarkness": 0.9621848739495799,
+        "peakY": 812
+      },
+      {
+        "pageNum": 1031,
+        "maxDarkness": 0.9600840336134454,
+        "peakY": 489
+      }
+    ]
+  },
+  {
+    "surahNum": 66,
+    "surahName": "At-Tahrim",
+    "physicalPdfPage": 1034,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1034,
+        "maxDarkness": 1,
+        "peakY": 141
+      },
+      {
+        "pageNum": 1035,
+        "maxDarkness": 1,
+        "peakY": 147
+      },
+      {
+        "pageNum": 1036,
+        "maxDarkness": 0.9285714285714286,
+        "peakY": 812
+      }
+    ]
+  },
+  {
+    "surahNum": 67,
+    "surahName": "Al-Mulk",
+    "physicalPdfPage": 1043,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1043,
+        "maxDarkness": 1,
+        "peakY": 106
+      },
+      {
+        "pageNum": 1044,
+        "maxDarkness": 1,
+        "peakY": 232
+      },
+      {
+        "pageNum": 1045,
+        "maxDarkness": 0.7415966386554622,
+        "peakY": 200
+      }
+    ]
+  },
+  {
+    "surahNum": 68,
+    "surahName": "Al-Qalam",
+    "physicalPdfPage": 1048,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1048,
+        "maxDarkness": 1,
+        "peakY": 319
+      },
+      {
+        "pageNum": 1049,
+        "maxDarkness": 1,
+        "peakY": 224
+      },
+      {
+        "pageNum": 1047,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 732
+      }
+    ]
+  },
+  {
+    "surahNum": 69,
+    "surahName": "Al-Haqqah",
+    "physicalPdfPage": 1051,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1051,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 1050,
+        "maxDarkness": 0.7394957983193278,
+        "peakY": 541
+      },
+      {
+        "pageNum": 1052,
+        "maxDarkness": 0.7226890756302521,
+        "peakY": 457
+      }
+    ]
+  },
+  {
+    "surahNum": 70,
+    "surahName": "Al-Maarij",
+    "physicalPdfPage": 1053,
+    "confidence": 0.9978991596638656,
+    "candidates": [
+      {
+        "pageNum": 1053,
+        "maxDarkness": 0.9978991596638656,
+        "peakY": 888
+      },
+      {
+        "pageNum": 1054,
+        "maxDarkness": 0.8403361344537815,
+        "peakY": 898
+      },
+      {
+        "pageNum": 1052,
+        "maxDarkness": 0.7226890756302521,
+        "peakY": 457
+      }
+    ]
+  },
+  {
+    "surahNum": 71,
+    "surahName": "Nuh",
+    "physicalPdfPage": 1059,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1059,
+        "maxDarkness": 1,
+        "peakY": 140
+      },
+      {
+        "pageNum": 1060,
+        "maxDarkness": 1,
+        "peakY": 152
+      },
+      {
+        "pageNum": 1061,
+        "maxDarkness": 0.6995798319327731,
+        "peakY": 615
+      }
+    ]
+  },
+  {
+    "surahNum": 72,
+    "surahName": "Al-Jinn",
+    "physicalPdfPage": 1062,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1062,
+        "maxDarkness": 1,
+        "peakY": 236
+      },
+      {
+        "pageNum": 1063,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 902
+      },
+      {
+        "pageNum": 1061,
+        "maxDarkness": 0.6995798319327731,
+        "peakY": 615
+      }
+    ]
+  },
+  {
+    "surahNum": 73,
+    "surahName": "Al-Muzzammil",
+    "physicalPdfPage": 1064,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1064,
+        "maxDarkness": 1,
+        "peakY": 818
+      },
+      {
+        "pageNum": 1065,
+        "maxDarkness": 1,
+        "peakY": 145
+      },
+      {
+        "pageNum": 1066,
+        "maxDarkness": 0.8235294117647058,
+        "peakY": 986
+      }
+    ]
+  },
+  {
+    "surahNum": 74,
+    "surahName": "Al-Muddaththir",
+    "physicalPdfPage": 1068,
+    "confidence": 0.9894957983193278,
+    "candidates": [
+      {
+        "pageNum": 1068,
+        "maxDarkness": 0.9894957983193278,
+        "peakY": 402
+      },
+      {
+        "pageNum": 1067,
+        "maxDarkness": 0.9369747899159664,
+        "peakY": 900
+      },
+      {
+        "pageNum": 1066,
+        "maxDarkness": 0.8235294117647058,
+        "peakY": 986
+      }
+    ]
+  },
+  {
+    "surahNum": 75,
+    "surahName": "Al-Qiyamah",
+    "physicalPdfPage": 1072,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1072,
+        "maxDarkness": 1,
+        "peakY": 156
+      },
+      {
+        "pageNum": 1073,
+        "maxDarkness": 1,
+        "peakY": 142
+      },
+      {
+        "pageNum": 1074,
+        "maxDarkness": 0.907563025210084,
+        "peakY": 735
+      }
+    ]
+  },
+  {
+    "surahNum": 76,
+    "surahName": "Al-Insan",
+    "physicalPdfPage": 1077,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1077,
+        "maxDarkness": 1,
+        "peakY": 151
+      },
+      {
+        "pageNum": 1076,
+        "maxDarkness": 0.8172268907563025,
+        "peakY": 736
+      },
+      {
+        "pageNum": 1078,
+        "maxDarkness": 0.6827731092436975,
+        "peakY": 624
+      }
+    ]
+  },
+  {
+    "surahNum": 77,
+    "surahName": "Al-Mursalat",
+    "physicalPdfPage": 1081,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1081,
+        "maxDarkness": 1,
+        "peakY": 225
+      },
+      {
+        "pageNum": 1082,
+        "maxDarkness": 1,
+        "peakY": 150
+      },
+      {
+        "pageNum": 1080,
+        "maxDarkness": 0.8214285714285714,
+        "peakY": 655
+      }
+    ]
+  },
+  {
+    "surahNum": 78,
+    "surahName": "An-Naba",
+    "physicalPdfPage": 1084,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1084,
+        "maxDarkness": 1,
+        "peakY": 107
+      },
+      {
+        "pageNum": 1085,
+        "maxDarkness": 1,
+        "peakY": 236
+      },
+      {
+        "pageNum": 1086,
+        "maxDarkness": 1,
+        "peakY": 147
+      }
+    ]
+  },
+  {
+    "surahNum": 79,
+    "surahName": "An-Naziat",
+    "physicalPdfPage": 1088,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1088,
+        "maxDarkness": 1,
+        "peakY": 148
+      },
+      {
+        "pageNum": 1087,
+        "maxDarkness": 0.819327731092437,
+        "peakY": 959
+      },
+      {
+        "pageNum": 1089,
+        "maxDarkness": 0.7037815126050421,
+        "peakY": 291
+      }
+    ]
+  },
+  {
+    "surahNum": 80,
+    "surahName": "Abasa",
+    "physicalPdfPage": 1090,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1090,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 1089,
+        "maxDarkness": 0.7037815126050421,
+        "peakY": 291
+      },
+      {
+        "pageNum": 1091,
+        "maxDarkness": 0.6554621848739496,
+        "peakY": 787
+      }
+    ]
+  },
+  {
+    "surahNum": 81,
+    "surahName": "At-Takwir",
+    "physicalPdfPage": 1092,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1092,
+        "maxDarkness": 1,
+        "peakY": 136
+      },
+      {
+        "pageNum": 1093,
+        "maxDarkness": 0.6890756302521008,
+        "peakY": 292
+      },
+      {
+        "pageNum": 1091,
+        "maxDarkness": 0.6554621848739496,
+        "peakY": 787
+      }
+    ]
+  },
+  {
+    "surahNum": 82,
+    "surahName": "Al-Infitar",
+    "physicalPdfPage": 1094,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1094,
+        "maxDarkness": 1,
+        "peakY": 144
+      },
+      {
+        "pageNum": 1095,
+        "maxDarkness": 0.9117647058823529,
+        "peakY": 658
+      },
+      {
+        "pageNum": 1093,
+        "maxDarkness": 0.6890756302521008,
+        "peakY": 292
+      }
+    ]
+  },
+  {
+    "surahNum": 83,
+    "surahName": "Al-Mutaffifin",
+    "physicalPdfPage": 1099,
+    "confidence": 0.9915966386554622,
+    "candidates": [
+      {
+        "pageNum": 1099,
+        "maxDarkness": 0.9915966386554622,
+        "peakY": 564
+      },
+      {
+        "pageNum": 1098,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 318
+      },
+      {
+        "pageNum": 1097,
+        "maxDarkness": 0.7415966386554622,
+        "peakY": 624
+      }
+    ]
+  },
+  {
+    "surahNum": 84,
+    "surahName": "Al-Inshiqaq",
+    "physicalPdfPage": 1099,
+    "confidence": 0.9915966386554622,
+    "candidates": [
+      {
+        "pageNum": 1099,
+        "maxDarkness": 0.9915966386554622,
+        "peakY": 564
+      },
+      {
+        "pageNum": 1098,
+        "maxDarkness": 0.9705882352941176,
+        "peakY": 318
+      },
+      {
+        "pageNum": 1100,
+        "maxDarkness": 0.7710084033613446,
+        "peakY": 142
+      }
+    ]
+  },
+  {
+    "surahNum": 85,
+    "surahName": "Al-Buruj",
+    "physicalPdfPage": 1101,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1101,
+        "maxDarkness": 1,
+        "peakY": 160
+      },
+      {
+        "pageNum": 1102,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 1100,
+        "maxDarkness": 0.7710084033613446,
+        "peakY": 142
+      }
+    ]
+  },
+  {
+    "surahNum": 86,
+    "surahName": "At-Tariq",
+    "physicalPdfPage": 1101,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1101,
+        "maxDarkness": 1,
+        "peakY": 160
+      },
+      {
+        "pageNum": 1102,
+        "maxDarkness": 1,
+        "peakY": 146
+      },
+      {
+        "pageNum": 1103,
+        "maxDarkness": 0.707983193277311,
+        "peakY": 957
+      }
+    ]
+  },
+  {
+    "surahNum": 87,
+    "surahName": "Al-Ala",
+    "physicalPdfPage": 1106,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1106,
+        "maxDarkness": 1,
+        "peakY": 141
+      },
+      {
+        "pageNum": 1107,
+        "maxDarkness": 0.8760504201680672,
+        "peakY": 403
+      },
+      {
+        "pageNum": 1105,
+        "maxDarkness": 0.8403361344537815,
+        "peakY": 400
+      }
+    ]
+  },
+  {
+    "surahNum": 88,
+    "surahName": "Al-Ghashiyah",
+    "physicalPdfPage": 1106,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1106,
+        "maxDarkness": 1,
+        "peakY": 141
+      },
+      {
+        "pageNum": 1107,
+        "maxDarkness": 0.8760504201680672,
+        "peakY": 403
+      },
+      {
+        "pageNum": 1108,
+        "maxDarkness": 0.8382352941176471,
+        "peakY": 648
+      }
+    ]
+  },
+  {
+    "surahNum": 89,
+    "surahName": "Al-Fajr",
+    "physicalPdfPage": 1109,
+    "confidence": 0.865546218487395,
+    "candidates": [
+      {
+        "pageNum": 1109,
+        "maxDarkness": 0.865546218487395,
+        "peakY": 573
+      },
+      {
+        "pageNum": 1108,
+        "maxDarkness": 0.8382352941176471,
+        "peakY": 648
+      },
+      {
+        "pageNum": 1110,
+        "maxDarkness": 0.7415966386554622,
+        "peakY": 733
+      }
+    ]
+  },
+  {
+    "surahNum": 90,
+    "surahName": "Al-Balad",
+    "physicalPdfPage": 1112,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1112,
+        "maxDarkness": 1,
+        "peakY": 144
+      },
+      {
+        "pageNum": 1111,
+        "maxDarkness": 0.8823529411764706,
+        "peakY": 393
+      },
+      {
+        "pageNum": 1110,
+        "maxDarkness": 0.7415966386554622,
+        "peakY": 733
+      }
+    ]
+  },
+  {
+    "surahNum": 91,
+    "surahName": "Ash-Shams",
+    "physicalPdfPage": 1112,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1112,
+        "maxDarkness": 1,
+        "peakY": 144
+      },
+      {
+        "pageNum": 1111,
+        "maxDarkness": 0.8823529411764706,
+        "peakY": 393
+      },
+      {
+        "pageNum": 1113,
+        "maxDarkness": 0.865546218487395,
+        "peakY": 574
+      }
+    ]
+  },
+  {
+    "surahNum": 92,
+    "surahName": "Al-Layl",
+    "physicalPdfPage": 1112,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1112,
+        "maxDarkness": 1,
+        "peakY": 144
+      },
+      {
+        "pageNum": 1114,
+        "maxDarkness": 0.9684873949579832,
+        "peakY": 142
+      },
+      {
+        "pageNum": 1113,
+        "maxDarkness": 0.865546218487395,
+        "peakY": 574
+      }
+    ]
+  },
+  {
+    "surahNum": 93,
+    "surahName": "Ad-Duha",
+    "physicalPdfPage": 1115,
+    "confidence": 0.9726890756302521,
+    "candidates": [
+      {
+        "pageNum": 1115,
+        "maxDarkness": 0.9726890756302521,
+        "peakY": 571
+      },
+      {
+        "pageNum": 1114,
+        "maxDarkness": 0.9684873949579832,
+        "peakY": 142
+      },
+      {
+        "pageNum": 1113,
+        "maxDarkness": 0.865546218487395,
+        "peakY": 574
+      }
+    ]
+  },
+  {
+    "surahNum": 94,
+    "surahName": "Ash-Sharh",
+    "physicalPdfPage": 1115,
+    "confidence": 0.9726890756302521,
+    "candidates": [
+      {
+        "pageNum": 1115,
+        "maxDarkness": 0.9726890756302521,
+        "peakY": 571
+      },
+      {
+        "pageNum": 1116,
+        "maxDarkness": 0.9726890756302521,
+        "peakY": 985
+      },
+      {
+        "pageNum": 1114,
+        "maxDarkness": 0.9684873949579832,
+        "peakY": 142
+      }
+    ]
+  },
+  {
+    "surahNum": 95,
+    "surahName": "At-Tin",
+    "physicalPdfPage": 1115,
+    "confidence": 0.9726890756302521,
+    "candidates": [
+      {
+        "pageNum": 1115,
+        "maxDarkness": 0.9726890756302521,
+        "peakY": 571
+      },
+      {
+        "pageNum": 1116,
+        "maxDarkness": 0.9726890756302521,
+        "peakY": 985
+      },
+      {
+        "pageNum": 1117,
+        "maxDarkness": 0.9474789915966386,
+        "peakY": 725
+      }
+    ]
+  },
+  {
+    "surahNum": 96,
+    "surahName": "Al-Alaq",
+    "physicalPdfPage": 1118,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1118,
+        "maxDarkness": 1,
+        "peakY": 143
+      },
+      {
+        "pageNum": 1116,
+        "maxDarkness": 0.9726890756302521,
+        "peakY": 985
+      },
+      {
+        "pageNum": 1117,
+        "maxDarkness": 0.9474789915966386,
+        "peakY": 725
+      }
+    ]
+  },
+  {
+    "surahNum": 97,
+    "surahName": "Al-Qadr",
+    "physicalPdfPage": 1118,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1118,
+        "maxDarkness": 1,
+        "peakY": 143
+      },
+      {
+        "pageNum": 1119,
+        "maxDarkness": 1,
+        "peakY": 406
+      },
+      {
+        "pageNum": 1117,
+        "maxDarkness": 0.9474789915966386,
+        "peakY": 725
+      }
+    ]
+  },
+  {
+    "surahNum": 98,
+    "surahName": "Al-Bayyinah",
+    "physicalPdfPage": 1118,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1118,
+        "maxDarkness": 1,
+        "peakY": 143
+      },
+      {
+        "pageNum": 1119,
+        "maxDarkness": 1,
+        "peakY": 406
+      },
+      {
+        "pageNum": 1117,
+        "maxDarkness": 0.9474789915966386,
+        "peakY": 725
+      }
+    ]
+  },
+  {
+    "surahNum": 99,
+    "surahName": "Az-Zalzalah",
+    "physicalPdfPage": 1118,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1118,
+        "maxDarkness": 1,
+        "peakY": 143
+      },
+      {
+        "pageNum": 1119,
+        "maxDarkness": 1,
+        "peakY": 406
+      },
+      {
+        "pageNum": 1120,
+        "maxDarkness": 1,
+        "peakY": 480
+      }
+    ]
+  },
+  {
+    "surahNum": 100,
+    "surahName": "Al-Adiyat",
+    "physicalPdfPage": 1119,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1119,
+        "maxDarkness": 1,
+        "peakY": 406
+      },
+      {
+        "pageNum": 1120,
+        "maxDarkness": 1,
+        "peakY": 480
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      }
+    ]
+  },
+  {
+    "surahNum": 101,
+    "surahName": "Al-Qariah",
+    "physicalPdfPage": 1119,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1119,
+        "maxDarkness": 1,
+        "peakY": 406
+      },
+      {
+        "pageNum": 1120,
+        "maxDarkness": 1,
+        "peakY": 480
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      }
+    ]
+  },
+  {
+    "surahNum": 102,
+    "surahName": "At-Takathur",
+    "physicalPdfPage": 1120,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1120,
+        "maxDarkness": 1,
+        "peakY": 480
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      }
+    ]
+  },
+  {
+    "surahNum": 103,
+    "surahName": "Al-Asr",
+    "physicalPdfPage": 1120,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1120,
+        "maxDarkness": 1,
+        "peakY": 480
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      }
+    ]
+  },
+  {
+    "surahNum": 104,
+    "surahName": "Al-Humazah",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      }
+    ]
+  },
+  {
+    "surahNum": 105,
+    "surahName": "Al-Fil",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      }
+    ]
+  },
+  {
+    "surahNum": 106,
+    "surahName": "Quraysh",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1121,
+        "maxDarkness": 0.9957983193277311,
+        "peakY": 822
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      }
+    ]
+  },
+  {
+    "surahNum": 107,
+    "surahName": "Al-Maun",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 108,
+    "surahName": "Al-Kawthar",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 109,
+    "surahName": "Al-Kafirun",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 110,
+    "surahName": "An-Nasr",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 111,
+    "surahName": "Al-Masad",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 112,
+    "surahName": "Al-Ikhlas",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 113,
+    "surahName": "Al-Falaq",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  },
+  {
+    "surahNum": 114,
+    "surahName": "An-Nas",
+    "physicalPdfPage": 1123,
+    "confidence": 1,
+    "candidates": [
+      {
+        "pageNum": 1123,
+        "maxDarkness": 1,
+        "peakY": 248
+      },
+      {
+        "pageNum": 1122,
+        "maxDarkness": 0.8529411764705882,
+        "peakY": 727
+      },
+      {
+        "pageNum": 1124,
+        "maxDarkness": 0.7794117647058824,
+        "peakY": 958
+      }
+    ]
+  }
+]

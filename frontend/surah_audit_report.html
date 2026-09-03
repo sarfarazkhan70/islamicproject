@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Surah Mapping Audit (114 Surahs)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #111; color: #eee; padding: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .card { background: #222; border-radius: 8px; padding: 12px; border: 1px solid #444; }
+    .card h3 { margin: 0 0 8px 0; color: #10b981; font-size: 16px; }
+    .card img { width: 100%; border-radius: 4px; border: 1px solid #555; background: #fff; }
+    .meta { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+    .badge { background: #059669; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Audit of 114 Surahs vs PDF Pages (Zia-ul-Quran 9-Line Mushaf)</h1>
+  <p>Verifying exact starting page of every Surah</p>
+  <div class="grid">
+
+    <div class="card">
+      <h3>1. Al-Fatihah (الفاتحة)</h3>
+      <div class="meta">
+        <span class="badge">Page 3</span> • Juz 1 • 7 Verses
+      </div>
+      <img src="surah_audit\surah_001_p3_Al_Fatihah.png" alt="Surah 1 on Page 3" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>2. Al-Baqarah (البقرة)</h3>
+      <div class="meta">
+        <span class="badge">Page 4</span> • Juz 1 • 286 Verses
+      </div>
+      <img src="surah_audit\surah_002_p4_Al_Baqarah.png" alt="Surah 2 on Page 4" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>3. Ali 'Imran (آل عمران)</h3>
+      <div class="meta">
+        <span class="badge">Page 92</span> • Juz 3 • 200 Verses
+      </div>
+      <img src="surah_audit\surah_003_p92_Ali__Imran.png" alt="Surah 3 on Page 92" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>4. An-Nisa (النساء)</h3>
+      <div class="meta">
+        <span class="badge">Page 143</span> • Juz 4 • 176 Verses
+      </div>
+      <img src="surah_audit\surah_004_p143_An_Nisa.png" alt="Surah 4 on Page 143" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>5. Al-Ma'idah (المائدة)</h3>
+      <div class="meta">
+        <span class="badge">Page 196</span> • Juz 6 • 120 Verses
+      </div>
+      <img src="surah_audit\surah_005_p196_Al_Ma_idah.png" alt="Surah 5 on Page 196" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>6. Al-An'am (الأنعام)</h3>
+      <div class="meta">
+        <span class="badge">Page 238</span> • Juz 7 • 165 Verses
+      </div>
+      <img src="surah_audit\surah_006_p238_Al_An_am.png" alt="Surah 6 on Page 238" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>7. Al-A'raf (الأعراف)</h3>
+      <div class="meta">
+        <span class="badge">Page 280</span> • Juz 8 • 206 Verses
+      </div>
+      <img src="surah_audit\surah_007_p280_Al_A_raf.png" alt="Surah 7 on Page 280" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>8. Al-Anfal (الأنفال)</h3>
+      <div class="meta">
+        <span class="badge">Page 329</span> • Juz 9 • 75 Verses
+      </div>
+      <img src="surah_audit\surah_008_p329_Al_Anfal.png" alt="Surah 8 on Page 329" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>9. At-Tawbah (التوبة)</h3>
+      <div class="meta">
+        <span class="badge">Page 348</span> • Juz 10 • 129 Verses
+      </div>
+      <img src="surah_audit\surah_009_p348_At_Tawbah.png" alt="Surah 9 on Page 348" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>10. Yunus (يونس)</h3>
+      <div class="meta">
+        <span class="badge">Page 386</span> • Juz 11 • 109 Verses
+      </div>
+      <img src="surah_audit\surah_010_p386_Yunus.png" alt="Surah 10 on Page 386" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>11. Hud (هود)</h3>
+      <div class="meta">
+        <span class="badge">Page 409</span> • Juz 11 • 123 Verses
+      </div>
+      <img src="surah_audit\surah_011_p409_Hud.png" alt="Surah 11 on Page 409" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>12. Yusuf (يوسف)</h3>
+      <div class="meta">
+        <span class="badge">Page 435</span> • Juz 12 • 111 Verses
+      </div>
+      <img src="surah_audit\surah_012_p435_Yusuf.png" alt="Surah 12 on Page 435" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>13. Ar-Ra'd (الرعد)</h3>
+      <div class="meta">
+        <span class="badge">Page 461</span> • Juz 13 • 43 Verses
+      </div>
+      <img src="surah_audit\surah_013_p461_Ar_Ra_d.png" alt="Surah 13 on Page 461" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>14. Ibrahim (إبراهيم)</h3>
+      <div class="meta">
+        <span class="badge">Page 472</span> • Juz 13 • 52 Verses
+      </div>
+      <img src="surah_audit\surah_014_p472_Ibrahim.png" alt="Surah 14 on Page 472" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>15. Al-Hijr (الحجر)</h3>
+      <div class="meta">
+        <span class="badge">Page 485</span> • Juz 14 • 99 Verses
+      </div>
+      <img src="surah_audit\surah_015_p485_Al_Hijr.png" alt="Surah 15 on Page 485" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>16. An-Nahl (النحل)</h3>
+      <div class="meta">
+        <span class="badge">Page 494</span> • Juz 14 • 128 Verses
+      </div>
+      <img src="surah_audit\surah_016_p494_An_Nahl.png" alt="Surah 16 on Page 494" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>17. Al-Isra (الإسراء)</h3>
+      <div class="meta">
+        <span class="badge">Page 522</span> • Juz 15 • 111 Verses
+      </div>
+      <img src="surah_audit\surah_017_p522_Al_Isra.png" alt="Surah 17 on Page 522" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>18. Al-Kahf (الكهف)</h3>
+      <div class="meta">
+        <span class="badge">Page 542</span> • Juz 15 • 110 Verses
+      </div>
+      <img src="surah_audit\surah_018_p542_Al_Kahf.png" alt="Surah 18 on Page 542" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>19. Maryam (مريم)</h3>
+      <div class="meta">
+        <span class="badge">Page 564</span> • Juz 16 • 98 Verses
+      </div>
+      <img src="surah_audit\surah_019_p564_Maryam.png" alt="Surah 19 on Page 564" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>20. Taha (طه)</h3>
+      <div class="meta">
+        <span class="badge">Page 577</span> • Juz 16 • 135 Verses
+      </div>
+      <img src="surah_audit\surah_020_p577_Taha.png" alt="Surah 20 on Page 577" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>21. Al-Anbiya (الأنبياء)</h3>
+      <div class="meta">
+        <span class="badge">Page 596</span> • Juz 17 • 112 Verses
+      </div>
+      <img src="surah_audit\surah_021_p596_Al_Anbiya.png" alt="Surah 21 on Page 596" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>22. Al-Hajj (الحج)</h3>
+      <div class="meta">
+        <span class="badge">Page 614</span> • Juz 17 • 78 Verses
+      </div>
+      <img src="surah_audit\surah_022_p614_Al_Hajj.png" alt="Surah 22 on Page 614" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>23. Al-Mu'minun (المؤمنون)</h3>
+      <div class="meta">
+        <span class="badge">Page 633</span> • Juz 18 • 118 Verses
+      </div>
+      <img src="surah_audit\surah_023_p633_Al_Mu_minun.png" alt="Surah 23 on Page 633" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>24. An-Nur (النور)</h3>
+      <div class="meta">
+        <span class="badge">Page 648</span> • Juz 18 • 64 Verses
+      </div>
+      <img src="surah_audit\surah_024_p648_An_Nur.png" alt="Surah 24 on Page 648" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>25. Al-Furqan (الفرقان)</h3>
+      <div class="meta">
+        <span class="badge">Page 664</span> • Juz 18 • 77 Verses
+      </div>
+      <img src="surah_audit\surah_025_p664_Al_Furqan.png" alt="Surah 25 on Page 664" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>26. Ash-Shu'ara (الشعراء)</h3>
+      <div class="meta">
+        <span class="badge">Page 678</span> • Juz 19 • 227 Verses
+      </div>
+      <img src="surah_audit\surah_026_p678_Ash_Shu_ara.png" alt="Surah 26 on Page 678" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>27. An-Naml (النمل)</h3>
+      <div class="meta">
+        <span class="badge">Page 697</span> • Juz 19 • 93 Verses
+      </div>
+      <img src="surah_audit\surah_027_p697_An_Naml.png" alt="Surah 27 on Page 697" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>28. Al-Qasas (القصص)</h3>
+      <div class="meta">
+        <span class="badge">Page 712</span> • Juz 20 • 88 Verses
+      </div>
+      <img src="surah_audit\surah_028_p712_Al_Qasas.png" alt="Surah 28 on Page 712" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>29. Al-'Ankabut (العنكبوت)</h3>
+      <div class="meta">
+        <span class="badge">Page 731</span> • Juz 20 • 69 Verses
+      </div>
+      <img src="surah_audit\surah_029_p731_Al__Ankabut.png" alt="Surah 29 on Page 731" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>30. Ar-Rum (الروم)</h3>
+      <div class="meta">
+        <span class="badge">Page 746</span> • Juz 21 • 60 Verses
+      </div>
+      <img src="surah_audit\surah_030_p746_Ar_Rum.png" alt="Surah 30 on Page 746" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>31. Luqman (لقمان)</h3>
+      <div class="meta">
+        <span class="badge">Page 759</span> • Juz 21 • 34 Verses
+      </div>
+      <img src="surah_audit\surah_031_p759_Luqman.png" alt="Surah 31 on Page 759" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>32. As-Sajdah (السجدة)</h3>
+      <div class="meta">
+        <span class="badge">Page 766</span> • Juz 21 • 30 Verses
+      </div>
+      <img src="surah_audit\surah_032_p766_As_Sajdah.png" alt="Surah 32 on Page 766" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>33. Al-Ahzab (الأحزاب)</h3>
+      <div class="meta">
+        <span class="badge">Page 772</span> • Juz 21 • 73 Verses
+      </div>
+      <img src="surah_audit\surah_033_p772_Al_Ahzab.png" alt="Surah 33 on Page 772" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>34. Saba (سبأ)</h3>
+      <div class="meta">
+        <span class="badge">Page 790</span> • Juz 22 • 54 Verses
+      </div>
+      <img src="surah_audit\surah_034_p790_Saba.png" alt="Surah 34 on Page 790" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>35. Fatir (فاطر)</h3>
+      <div class="meta">
+        <span class="badge">Page 801</span> • Juz 22 • 45 Verses
+      </div>
+      <img src="surah_audit\surah_035_p801_Fatir.png" alt="Surah 35 on Page 801" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>36. Ya-Sin (يس)</h3>
+      <div class="meta">
+        <span class="badge">Page 812</span> • Juz 22 • 83 Verses
+      </div>
+      <img src="surah_audit\surah_036_p812_Ya_Sin.png" alt="Surah 36 on Page 812" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>37. As-Saffat (الصافات)</h3>
+      <div class="meta">
+        <span class="badge">Page 824</span> • Juz 23 • 182 Verses
+      </div>
+      <img src="surah_audit\surah_037_p824_As_Saffat.png" alt="Surah 37 on Page 824" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>38. Sad (ص)</h3>
+      <div class="meta">
+        <span class="badge">Page 837</span> • Juz 23 • 88 Verses
+      </div>
+      <img src="surah_audit\surah_038_p837_Sad.png" alt="Surah 38 on Page 837" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>39. Az-Zumar (الزمر)</h3>
+      <div class="meta">
+        <span class="badge">Page 846</span> • Juz 23 • 75 Verses
+      </div>
+      <img src="surah_audit\surah_039_p846_Az_Zumar.png" alt="Surah 39 on Page 846" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>40. Ghafir (غافر)</h3>
+      <div class="meta">
+        <span class="badge">Page 863</span> • Juz 24 • 85 Verses
+      </div>
+      <img src="surah_audit\surah_040_p863_Ghafir.png" alt="Surah 40 on Page 863" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>41. Fussilat (فصلت)</h3>
+      <div class="meta">
+        <span class="badge">Page 882</span> • Juz 24 • 54 Verses
+      </div>
+      <img src="surah_audit\surah_041_p882_Fussilat.png" alt="Surah 41 on Page 882" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>42. Ash-Shura (الشورى)</h3>
+      <div class="meta">
+        <span class="badge">Page 893</span> • Juz 25 • 53 Verses
+      </div>
+      <img src="surah_audit\surah_042_p893_Ash_Shura.png" alt="Surah 42 on Page 893" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>43. Az-Zukhruf (الزخرف)</h3>
+      <div class="meta">
+        <span class="badge">Page 904</span> • Juz 25 • 89 Verses
+      </div>
+      <img src="surah_audit\surah_043_p904_Az_Zukhruf.png" alt="Surah 43 on Page 904" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>44. Ad-Dukhan (الدخان)</h3>
+      <div class="meta">
+        <span class="badge">Page 917</span> • Juz 25 • 59 Verses
+      </div>
+      <img src="surah_audit\surah_044_p917_Ad_Dukhan.png" alt="Surah 44 on Page 917" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>45. Al-Jathiyah (الجاثية)</h3>
+      <div class="meta">
+        <span class="badge">Page 923</span> • Juz 25 • 37 Verses
+      </div>
+      <img src="surah_audit\surah_045_p923_Al_Jathiyah.png" alt="Surah 45 on Page 923" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>46. Al-Ahqaf (الأحقاف)</h3>
+      <div class="meta">
+        <span class="badge">Page 929</span> • Juz 26 • 35 Verses
+      </div>
+      <img src="surah_audit\surah_046_p929_Al_Ahqaf.png" alt="Surah 46 on Page 929" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>47. Muhammad (محمد)</h3>
+      <div class="meta">
+        <span class="badge">Page 938</span> • Juz 26 • 38 Verses
+      </div>
+      <img src="surah_audit\surah_047_p938_Muhammad.png" alt="Surah 47 on Page 938" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>48. Al-Fath (الفتح)</h3>
+      <div class="meta">
+        <span class="badge">Page 946</span> • Juz 26 • 29 Verses
+      </div>
+      <img src="surah_audit\surah_048_p946_Al_Fath.png" alt="Surah 48 on Page 946" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>49. Al-Hujurat (الحجرات)</h3>
+      <div class="meta">
+        <span class="badge">Page 954</span> • Juz 26 • 18 Verses
+      </div>
+      <img src="surah_audit\surah_049_p954_Al_Hujurat.png" alt="Surah 49 on Page 954" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>50. Qaf (ق)</h3>
+      <div class="meta">
+        <span class="badge">Page 960</span> • Juz 26 • 45 Verses
+      </div>
+      <img src="surah_audit\surah_050_p960_Qaf.png" alt="Surah 50 on Page 960" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>51. Adh-Dhariyat (الذاريات)</h3>
+      <div class="meta">
+        <span class="badge">Page 966</span> • Juz 26 • 60 Verses
+      </div>
+      <img src="surah_audit\surah_051_p966_Adh_Dhariyat.png" alt="Surah 51 on Page 966" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>52. At-Tur (الطور)</h3>
+      <div class="meta">
+        <span class="badge">Page 971</span> • Juz 27 • 49 Verses
+      </div>
+      <img src="surah_audit\surah_052_p971_At_Tur.png" alt="Surah 52 on Page 971" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>53. An-Najm (النجم)</h3>
+      <div class="meta">
+        <span class="badge">Page 976</span> • Juz 27 • 62 Verses
+      </div>
+      <img src="surah_audit\surah_053_p976_An_Najm.png" alt="Surah 53 on Page 976" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>54. Al-Qamar (القمر)</h3>
+      <div class="meta">
+        <span class="badge">Page 980</span> • Juz 27 • 55 Verses
+      </div>
+      <img src="surah_audit\surah_054_p980_Al_Qamar.png" alt="Surah 54 on Page 980" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>55. Ar-Rahman (الرحمن)</h3>
+      <div class="meta">
+        <span class="badge">Page 985</span> • Juz 27 • 78 Verses
+      </div>
+      <img src="surah_audit\surah_055_p985_Ar_Rahman.png" alt="Surah 55 on Page 985" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>56. Al-Waqi'ah (الواقعة)</h3>
+      <div class="meta">
+        <span class="badge">Page 991</span> • Juz 27 • 96 Verses
+      </div>
+      <img src="surah_audit\surah_056_p991_Al_Waqi_ah.png" alt="Surah 56 on Page 991" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>57. Al-Hadid (الحديد)</h3>
+      <div class="meta">
+        <span class="badge">Page 997</span> • Juz 27 • 29 Verses
+      </div>
+      <img src="surah_audit\surah_057_p997_Al_Hadid.png" alt="Surah 57 on Page 997" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>58. Al-Mujadila (المجادلة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1004</span> • Juz 28 • 22 Verses
+      </div>
+      <img src="surah_audit\surah_058_p1004_Al_Mujadila.png" alt="Surah 58 on Page 1004" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>59. Al-Hashr (الحشر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1010</span> • Juz 28 • 24 Verses
+      </div>
+      <img src="surah_audit\surah_059_p1010_Al_Hashr.png" alt="Surah 59 on Page 1010" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>60. Al-Mumtahanah (الممتحنة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1016</span> • Juz 28 • 13 Verses
+      </div>
+      <img src="surah_audit\surah_060_p1016_Al_Mumtahanah.png" alt="Surah 60 on Page 1016" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>61. As-Saff (الصف)</h3>
+      <div class="meta">
+        <span class="badge">Page 1021</span> • Juz 28 • 14 Verses
+      </div>
+      <img src="surah_audit\surah_061_p1021_As_Saff.png" alt="Surah 61 on Page 1021" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>62. Al-Jumu'ah (الجمعة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1024</span> • Juz 28 • 11 Verses
+      </div>
+      <img src="surah_audit\surah_062_p1024_Al_Jumu_ah.png" alt="Surah 62 on Page 1024" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>63. Al-Munafiqun (المنافقون)</h3>
+      <div class="meta">
+        <span class="badge">Page 1026</span> • Juz 28 • 11 Verses
+      </div>
+      <img src="surah_audit\surah_063_p1026_Al_Munafiqun.png" alt="Surah 63 on Page 1026" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>64. At-Taghabun (التغابن)</h3>
+      <div class="meta">
+        <span class="badge">Page 1028</span> • Juz 28 • 18 Verses
+      </div>
+      <img src="surah_audit\surah_064_p1028_At_Taghabun.png" alt="Surah 64 on Page 1028" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>65. At-Talaq (الطلاق)</h3>
+      <div class="meta">
+        <span class="badge">Page 1032</span> • Juz 28 • 12 Verses
+      </div>
+      <img src="surah_audit\surah_065_p1032_At_Talaq.png" alt="Surah 65 on Page 1032" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>66. At-Tahrim (التحريم)</h3>
+      <div class="meta">
+        <span class="badge">Page 1035</span> • Juz 28 • 12 Verses
+      </div>
+      <img src="surah_audit\surah_066_p1035_At_Tahrim.png" alt="Surah 66 on Page 1035" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>67. Al-Mulk (الملك)</h3>
+      <div class="meta">
+        <span class="badge">Page 1044</span> • Juz 29 • 30 Verses
+      </div>
+      <img src="surah_audit\surah_067_p1044_Al_Mulk.png" alt="Surah 67 on Page 1044" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>68. Al-Qalam (القلم)</h3>
+      <div class="meta">
+        <span class="badge">Page 1048</span> • Juz 29 • 52 Verses
+      </div>
+      <img src="surah_audit\surah_068_p1048_Al_Qalam.png" alt="Surah 68 on Page 1048" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>69. Al-Haqqah (الحاقة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1051</span> • Juz 29 • 52 Verses
+      </div>
+      <img src="surah_audit\surah_069_p1051_Al_Haqqah.png" alt="Surah 69 on Page 1051" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>70. Al-Ma'arij (المعارج)</h3>
+      <div class="meta">
+        <span class="badge">Page 1053</span> • Juz 29 • 44 Verses
+      </div>
+      <img src="surah_audit\surah_070_p1053_Al_Ma_arij.png" alt="Surah 70 on Page 1053" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>71. Nuh (نوح)</h3>
+      <div class="meta">
+        <span class="badge">Page 1060</span> • Juz 29 • 28 Verses
+      </div>
+      <img src="surah_audit\surah_071_p1060_Nuh.png" alt="Surah 71 on Page 1060" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>72. Al-Jinn (الجن)</h3>
+      <div class="meta">
+        <span class="badge">Page 1062</span> • Juz 29 • 28 Verses
+      </div>
+      <img src="surah_audit\surah_072_p1062_Al_Jinn.png" alt="Surah 72 on Page 1062" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>73. Al-Muzzammil (المزمل)</h3>
+      <div class="meta">
+        <span class="badge">Page 1065</span> • Juz 29 • 20 Verses
+      </div>
+      <img src="surah_audit\surah_073_p1065_Al_Muzzammil.png" alt="Surah 73 on Page 1065" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>74. Al-Muddaththir (المدثر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1067</span> • Juz 29 • 56 Verses
+      </div>
+      <img src="surah_audit\surah_074_p1067_Al_Muddaththir.png" alt="Surah 74 on Page 1067" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>75. Al-Qiyamah (القيامة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1073</span> • Juz 29 • 40 Verses
+      </div>
+      <img src="surah_audit\surah_075_p1073_Al_Qiyamah.png" alt="Surah 75 on Page 1073" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>76. Al-Insan (الإنسان)</h3>
+      <div class="meta">
+        <span class="badge">Page 1077</span> • Juz 29 • 31 Verses
+      </div>
+      <img src="surah_audit\surah_076_p1077_Al_Insan.png" alt="Surah 76 on Page 1077" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>77. Al-Mursalat (المرسلات)</h3>
+      <div class="meta">
+        <span class="badge">Page 1081</span> • Juz 29 • 50 Verses
+      </div>
+      <img src="surah_audit\surah_077_p1081_Al_Mursalat.png" alt="Surah 77 on Page 1081" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>78. An-Naba (النبأ)</h3>
+      <div class="meta">
+        <span class="badge">Page 1085</span> • Juz 30 • 40 Verses
+      </div>
+      <img src="surah_audit\surah_078_p1085_An_Naba.png" alt="Surah 78 on Page 1085" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>79. An-Nazi'at (النازعات)</h3>
+      <div class="meta">
+        <span class="badge">Page 1088</span> • Juz 30 • 46 Verses
+      </div>
+      <img src="surah_audit\surah_079_p1088_An_Nazi_at.png" alt="Surah 79 on Page 1088" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>80. 'Abasa (عبس)</h3>
+      <div class="meta">
+        <span class="badge">Page 1090</span> • Juz 30 • 42 Verses
+      </div>
+      <img src="surah_audit\surah_080_p1090__Abasa.png" alt="Surah 80 on Page 1090" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>81. At-Takwir (التكوير)</h3>
+      <div class="meta">
+        <span class="badge">Page 1092</span> • Juz 30 • 29 Verses
+      </div>
+      <img src="surah_audit\surah_081_p1092_At_Takwir.png" alt="Surah 81 on Page 1092" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>82. Al-Infitar (الانفطار)</h3>
+      <div class="meta">
+        <span class="badge">Page 1094</span> • Juz 30 • 19 Verses
+      </div>
+      <img src="surah_audit\surah_082_p1094_Al_Infitar.png" alt="Surah 82 on Page 1094" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>83. Al-Mutaffifin (المطففين)</h3>
+      <div class="meta">
+        <span class="badge">Page 1098</span> • Juz 30 • 36 Verses
+      </div>
+      <img src="surah_audit\surah_083_p1098_Al_Mutaffifin.png" alt="Surah 83 on Page 1098" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>84. Al-Inshiqaq (الانشقاق)</h3>
+      <div class="meta">
+        <span class="badge">Page 1099</span> • Juz 30 • 25 Verses
+      </div>
+      <img src="surah_audit\surah_084_p1099_Al_Inshiqaq.png" alt="Surah 84 on Page 1099" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>85. Al-Buruj (البروج)</h3>
+      <div class="meta">
+        <span class="badge">Page 1101</span> • Juz 30 • 22 Verses
+      </div>
+      <img src="surah_audit\surah_085_p1101_Al_Buruj.png" alt="Surah 85 on Page 1101" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>86. At-Tariq (الطارق)</h3>
+      <div class="meta">
+        <span class="badge">Page 1102</span> • Juz 30 • 17 Verses
+      </div>
+      <img src="surah_audit\surah_086_p1102_At_Tariq.png" alt="Surah 86 on Page 1102" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>87. Al-A'la (الأعلى)</h3>
+      <div class="meta">
+        <span class="badge">Page 1106</span> • Juz 30 • 19 Verses
+      </div>
+      <img src="surah_audit\surah_087_p1106_Al_A_la.png" alt="Surah 87 on Page 1106" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>88. Al-Ghashiyah (الغاشية)</h3>
+      <div class="meta">
+        <span class="badge">Page 1107</span> • Juz 30 • 26 Verses
+      </div>
+      <img src="surah_audit\surah_088_p1107_Al_Ghashiyah.png" alt="Surah 88 on Page 1107" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>89. Al-Fajr (الفجر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1109</span> • Juz 30 • 30 Verses
+      </div>
+      <img src="surah_audit\surah_089_p1109_Al_Fajr.png" alt="Surah 89 on Page 1109" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>90. Al-Balad (البلد)</h3>
+      <div class="meta">
+        <span class="badge">Page 1111</span> • Juz 30 • 20 Verses
+      </div>
+      <img src="surah_audit\surah_090_p1111_Al_Balad.png" alt="Surah 90 on Page 1111" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>91. Ash-Shams (الشمس)</h3>
+      <div class="meta">
+        <span class="badge">Page 1112</span> • Juz 30 • 15 Verses
+      </div>
+      <img src="surah_audit\surah_091_p1112_Ash_Shams.png" alt="Surah 91 on Page 1112" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>92. Al-Layl (الليل)</h3>
+      <div class="meta">
+        <span class="badge">Page 1113</span> • Juz 30 • 21 Verses
+      </div>
+      <img src="surah_audit\surah_092_p1113_Al_Layl.png" alt="Surah 92 on Page 1113" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>93. Ad-Duha (الضحى)</h3>
+      <div class="meta">
+        <span class="badge">Page 1114</span> • Juz 30 • 11 Verses
+      </div>
+      <img src="surah_audit\surah_093_p1114_Ad_Duha.png" alt="Surah 93 on Page 1114" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>94. Ash-Sharh (الشرح)</h3>
+      <div class="meta">
+        <span class="badge">Page 1115</span> • Juz 30 • 8 Verses
+      </div>
+      <img src="surah_audit\surah_094_p1115_Ash_Sharh.png" alt="Surah 94 on Page 1115" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>95. At-Tin (التين)</h3>
+      <div class="meta">
+        <span class="badge">Page 1116</span> • Juz 30 • 8 Verses
+      </div>
+      <img src="surah_audit\surah_095_p1116_At_Tin.png" alt="Surah 95 on Page 1116" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>96. Al-'Alaq (العلق)</h3>
+      <div class="meta">
+        <span class="badge">Page 1117</span> • Juz 30 • 19 Verses
+      </div>
+      <img src="surah_audit\surah_096_p1117_Al__Alaq.png" alt="Surah 96 on Page 1117" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>97. Al-Qadr (القدر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1118</span> • Juz 30 • 5 Verses
+      </div>
+      <img src="surah_audit\surah_097_p1118_Al_Qadr.png" alt="Surah 97 on Page 1118" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>98. Al-Bayyinah (البينة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1118</span> • Juz 30 • 8 Verses
+      </div>
+      <img src="surah_audit\surah_098_p1118_Al_Bayyinah.png" alt="Surah 98 on Page 1118" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>99. Az-Zalzalah (الزلزلة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1119</span> • Juz 30 • 8 Verses
+      </div>
+      <img src="surah_audit\surah_099_p1119_Az_Zalzalah.png" alt="Surah 99 on Page 1119" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>100. Al-'Adiyat (العاديات)</h3>
+      <div class="meta">
+        <span class="badge">Page 1120</span> • Juz 30 • 11 Verses
+      </div>
+      <img src="surah_audit\surah_100_p1120_Al__Adiyat.png" alt="Surah 100 on Page 1120" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>101. Al-Qari'ah (القارعة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1120</span> • Juz 30 • 11 Verses
+      </div>
+      <img src="surah_audit\surah_101_p1120_Al_Qari_ah.png" alt="Surah 101 on Page 1120" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>102. At-Takathur (التكاثر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1121</span> • Juz 30 • 8 Verses
+      </div>
+      <img src="surah_audit\surah_102_p1121_At_Takathur.png" alt="Surah 102 on Page 1121" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>103. Al-'Asr (العصر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1121</span> • Juz 30 • 3 Verses
+      </div>
+      <img src="surah_audit\surah_103_p1121_Al__Asr.png" alt="Surah 103 on Page 1121" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>104. Al-Humazah (الهمزة)</h3>
+      <div class="meta">
+        <span class="badge">Page 1122</span> • Juz 30 • 9 Verses
+      </div>
+      <img src="surah_audit\surah_104_p1122_Al_Humazah.png" alt="Surah 104 on Page 1122" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>105. Al-Fil (الفيل)</h3>
+      <div class="meta">
+        <span class="badge">Page 1122</span> • Juz 30 • 5 Verses
+      </div>
+      <img src="surah_audit\surah_105_p1122_Al_Fil.png" alt="Surah 105 on Page 1122" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>106. Quraysh (قريش)</h3>
+      <div class="meta">
+        <span class="badge">Page 1122</span> • Juz 30 • 4 Verses
+      </div>
+      <img src="surah_audit\surah_106_p1122_Quraysh.png" alt="Surah 106 on Page 1122" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>107. Al-Ma'un (الماعون)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 7 Verses
+      </div>
+      <img src="surah_audit\surah_107_p1123_Al_Ma_un.png" alt="Surah 107 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>108. Al-Kawthar (الکوثر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 3 Verses
+      </div>
+      <img src="surah_audit\surah_108_p1123_Al_Kawthar.png" alt="Surah 108 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>109. Al-Kafirun (الكافرون)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 6 Verses
+      </div>
+      <img src="surah_audit\surah_109_p1123_Al_Kafirun.png" alt="Surah 109 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>110. An-Nasr (النصر)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 3 Verses
+      </div>
+      <img src="surah_audit\surah_110_p1123_An_Nasr.png" alt="Surah 110 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>111. Al-Masad (المسد)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 5 Verses
+      </div>
+      <img src="surah_audit\surah_111_p1123_Al_Masad.png" alt="Surah 111 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>112. Al-Ikhlas (الإخلاص)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 4 Verses
+      </div>
+      <img src="surah_audit\surah_112_p1123_Al_Ikhlas.png" alt="Surah 112 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>113. Al-Falaq (الفلق)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 5 Verses
+      </div>
+      <img src="surah_audit\surah_113_p1123_Al_Falaq.png" alt="Surah 113 on Page 1123" loading="lazy" />
+    </div>
+    
+    <div class="card">
+      <h3>114. An-Nas (الناس)</h3>
+      <div class="meta">
+        <span class="badge">Page 1123</span> • Juz 30 • 6 Verses
+      </div>
+      <img src="surah_audit\surah_114_p1123_An_Nas.png" alt="Surah 114 on Page 1123" loading="lazy" />
+    </div>
+    
+  </div>
+</body>
+</html>

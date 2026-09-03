@@ -10,13 +10,16 @@ async function setupLame() {
   (global as any).MPEGMode = mpegModeModule.default || mpegModeModule;
   (globalThis as any).MPEGMode = (global as any).MPEGMode;
 
+  // @ts-ignore
   const LameModule = await import('lamejs/src/js/Lame.js');
   (global as any).Lame = LameModule.default || LameModule;
   (globalThis as any).Lame = (global as any).Lame;
 
+  // @ts-ignore
   const BitStreamModule = await import('lamejs/src/js/BitStream.js');
   (global as any).BitStream = BitStreamModule.default || BitStreamModule;
 
+  // @ts-ignore
   const TablesModule = await import('lamejs/src/js/Tables.js');
   (global as any).Tables = TablesModule.default || TablesModule;
 

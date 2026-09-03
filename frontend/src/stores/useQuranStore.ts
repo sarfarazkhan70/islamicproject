@@ -2,117 +2,111 @@ import { create } from 'zustand';
 import {
   SURAHS_LIST,
   JUZ_LIST,
-  SURAH_DETAILS_MAP,
+  TOTAL_MUSHAF_PDF_PAGES,
   SurahMeta,
   JuzMeta,
-  SurahDetail,
   getSurahByPage,
   getJuzByPage,
-} from '../data/quranData.js';
+  getSurahByNumber,
+} from '../data/quranData';
+import {
+  QuranApiService,
+  QuranVerseApi,
+  QuranChapterInfo,
+} from '../services/quranApiService';
 
 export interface QuranBookmark {
   surahNumber: number;
   ayahNumber: number;
+  verseKey: string;
   surahName: string;
-  ayahText?: string;
+  arabicText?: string;
+  translationText?: string;
   createdAt: string;
 }
 
 export interface QuranReadingProgress {
   surahNumber: number;
   ayahNumber: number;
+  verseKey: string;
   surahName: string;
   pageNumber: number;
   updatedAt: string;
 }
 
 export type QuranMode = 'read' | 'listen';
-export type TranslationLanguage = 'urdu' | 'english' | 'roman-urdu' | 'both';
-
-export interface AudioReciter {
-  id: string;
-  name: string;
-  serverUrlPrefix: string;
-  style: string;
-}
-
-export const RECITERS_LIST: AudioReciter[] = [
-  {
-    id: 'alafasy',
-    name: 'Sheikh Mishary Rashid Alafasy',
-    serverUrlPrefix: 'https://server8.mp3quran.net/afs',
-    style: 'Murattal with clear Tajweed',
-  },
-  {
-    id: 'husary',
-    name: 'Sheikh Mahmoud Khalil Al-Husary',
-    serverUrlPrefix: 'https://server13.mp3quran.net/husr',
-    style: 'Master of Tajweed & Classical Recitation',
-  },
-  {
-    id: 'abdulbasit',
-    name: 'Sheikh Abdul Basit Abdul Samad',
-    serverUrlPrefix: 'https://server7.mp3quran.net/basit',
-    style: 'Legendary Egyptian Murattal',
-  },
-  {
-    id: 'ghamdi',
-    name: 'Sheikh Saad Al-Ghamdi',
-    serverUrlPrefix: 'https://server7.mp3quran.net/ghamdi',
-    style: 'Harmonious & Emotional Recitation',
-  },
-];
-
-export function getAudioUrl(surahNumber: number, reciterId: string = 'alafasy'): string {
-  const reciter = RECITERS_LIST.find((r) => r.id === reciterId) || RECITERS_LIST[0];
-  const padded = String(surahNumber).padStart(3, '0');
-  return `${reciter.serverUrlPrefix}/${padded}.mp3`;
-}
+export type QuranReadViewType = 'surah' | 'mushaf';
 
 interface QuranState {
   mode: QuranMode;
+  readViewType: QuranReadViewType;
   surahs: SurahMeta[];
   juzList: JuzMeta[];
-  currentSurah: SurahDetail | null;
-  currentAyah: number | null;
-  
-  // Mushaf Page Reading Mode State (Pages 1 to 604)
+  currentSurahNumber: number;
+  currentSurahMeta: SurahMeta;
+  currentSurahVerses: QuranVerseApi[];
+  currentSurahInfo: QuranChapterInfo | null;
+  isVersesLoading: boolean;
+  isInfoLoading: boolean;
+  versesError: string | null;
+
+  // Typography & Script state
+  selectedScript: 'indopak' | 'uthmani' | 'uthmani_tajweed' | 'uthmani_simple' | 'imlaei';
+  showTajweedColors: boolean;
+  arabicFontSize: number;
+  translationFontSize: number;
+
+  // Translations
+  showTranslation: boolean;
+  selectedTranslationIds: number[]; // e.g. [234] (Jalandhari), [20] (Saheeh)
+
+  // Mushaf Page Reader State (1-604)
   mushafPage: number;
   selectedPara: number;
   zoomLevel: number;
-  
-  // Audio Playback State (Application / Global level)
+
+  // Audio Playback State
   activeAudioSurah: number;
-  selectedReciter: string;
+  selectedReciterId: number; // Quran.com Reciter ID (default 7 Mishary Rashid)
+  audioRecitationUrl: string | null;
   isPlaying: boolean;
   playbackTime: number;
   playbackDuration: number;
   audioVolume: number;
+  playbackSpeed: number;
   isLooping: boolean;
   autoPlayNext: boolean;
   seekTarget: number | null;
   hasUserStartedAudio: boolean;
 
-  // Translation & View Settings
-  showTranslation: boolean;
-  translationLang: TranslationLanguage;
-  arabicFontSize: number;
-  translationFontSize: number;
+  // Individual Ayah Audio
+  playingAyahKey: string | null;
+  isAyahAudioPlaying: boolean;
 
-  // Bookmarks & Progress
+  // Bookmarks & Reading Progress
   bookmarks: QuranBookmark[];
   readingProgress: QuranReadingProgress | null;
   searchTerm: string;
-  activeTab: 'surahs' | 'juz' | 'bookmarks';
-  isLoading: boolean;
+  activeTab: 'surahs' | 'juz' | 'bookmarks' | 'info';
 
-  // Actions
+  // State setters & actions
   setMode: (mode: QuranMode) => void;
-  fetchSurahs: () => void;
-  fetchJuzList: () => void;
+  setReadViewType: (viewType: QuranReadViewType) => void;
+  setSelectedScript: (script: 'indopak' | 'uthmani' | 'uthmani_tajweed' | 'uthmani_simple' | 'imlaei') => void;
+  setShowTajweedColors: (show: boolean) => void;
+  setArabicFontSize: (size: number) => void;
+  setTranslationFontSize: (size: number) => void;
+  setShowTranslation: (show: boolean) => void;
+  setSelectedTranslationIds: (ids: number[]) => void;
+  toggleTranslationId: (id: number) => void;
+
+  // Async Loaders
   loadSurah: (surahNumber: number) => Promise<void>;
+  loadSurahInfo: (surahNumber: number) => Promise<void>;
+
+  // Mushaf navigation
+  goToQuranPage: (page: number) => void;
   setMushafPage: (page: number) => void;
-  setSelectedPara: (paraNumber: number) => void;
   jumpToSurahPage: (surahNumber: number) => void;
   jumpToJuzPage: (juzNumber: number) => void;
   nextMushafPage: () => void;
@@ -122,8 +116,8 @@ interface QuranState {
   zoomOut: () => void;
   resetZoom: () => void;
 
-  // Audio Actions
-  playSurahAudio: (surahNumber: number, reciterId?: string) => void;
+  // Audio actions
+  playSurahAudio: (surahNumber?: number, reciterId?: number) => Promise<void>;
   playNextSurahAudio: () => void;
   playPrevSurahAudio: () => void;
   toggleAudioPlay: () => void;
@@ -132,582 +126,425 @@ interface QuranState {
   stopAudio: () => void;
   seekAudio: (seconds: number) => void;
   clearSeekTarget: () => void;
-  setSelectedReciter: (reciterId: string) => void;
+  setSelectedReciterId: (reciterId: number) => void;
   setPlaybackTime: (time: number) => void;
   setPlaybackDuration: (duration: number) => void;
   setAudioVolume: (volume: number) => void;
+  setPlaybackSpeed: (speed: number) => void;
   setIsPlaying: (playing: boolean) => void;
   setIsLooping: (loop: boolean) => void;
   setAutoPlayNext: (auto: boolean) => void;
 
-  // UI Actions
-  setSearchTerm: (term: string) => void;
-  setActiveTab: (tab: 'surahs' | 'juz' | 'bookmarks') => void;
-  toggleTranslation: () => void;
-  setTranslationLang: (lang: TranslationLanguage) => void;
-  setArabicFontSize: (size: number) => void;
-  setTranslationFontSize: (size: number) => void;
-  toggleBookmark: (
-    surahNumber: number,
-    ayahNumber: number,
-    surahName: string,
-    ayahText?: string
-  ) => Promise<void>;
+  // Ayah Audio
+  setPlayingAyahKey: (key: string | null) => void;
+  setIsAyahAudioPlaying: (playing: boolean) => void;
+
+  // Bookmarks & Progress
+  toggleBookmark: (bookmark: Omit<QuranBookmark, 'createdAt'>) => void;
+  removeBookmark: (surahNumber: number, ayahNumber: number) => void;
   updateReadingProgress: (
     surahNumber: number,
     ayahNumber: number,
+    verseKey: string,
     surahName: string,
     pageNumber: number
-  ) => Promise<void>;
+  ) => void;
+
+  // UI
+  setSearchTerm: (term: string) => void;
+  setActiveTab: (tab: 'surahs' | 'juz' | 'bookmarks' | 'info') => void;
 }
 
-const LOCAL_BOOKMARKS_KEY = 'islamic_prayer_quran_bookmarks';
-const LOCAL_PROGRESS_KEY = 'islamic_prayer_quran_progress';
-const LOCAL_RECITER_KEY = 'islamic_prayer_quran_reciter';
-const LOCAL_TRANSLATION_LANG_KEY = 'islamic_prayer_quran_trans_lang';
-const LOCAL_MUSHAF_PAGE_KEY = 'islamic_prayer_mushaf_page';
-const LOCAL_LAST_AUDIO_KEY = 'islamic_prayer_last_audio_state';
+// Local storage keys
+const BOOKMARKS_STORAGE_KEY = 'islamic_quran_bookmarks_v4';
+const PROGRESS_STORAGE_KEY = 'islamic_quran_progress_v4';
+const SCRIPT_STORAGE_KEY = 'islamic_quran_script_v4';
+const TRANSLATIONS_STORAGE_KEY = 'islamic_quran_translations_v4';
+const FONT_SIZE_STORAGE_KEY = 'islamic_quran_font_size_v4';
 
-// In-memory cache for all 114 Surahs on frontend
-const loadedSurahsCache = new Map<number, SurahDetail>();
-for (const [numStr, detail] of Object.entries(SURAH_DETAILS_MAP)) {
-  loadedSurahsCache.set(Number(numStr), detail);
-}
-
-function getStoredBookmarks(): QuranBookmark[] {
+function loadInitialBookmarks(): QuranBookmark[] {
   try {
-    const raw = localStorage.getItem(LOCAL_BOOKMARKS_KEY);
-    return raw
-      ? JSON.parse(raw)
-      : [
-          { surahNumber: 67, ayahNumber: 1, surahName: 'Al-Mulk', createdAt: new Date().toISOString() },
-          { surahNumber: 18, ayahNumber: 1, surahName: 'Al-Kahf', createdAt: new Date().toISOString() },
-        ];
+    const raw = localStorage.getItem(BOOKMARKS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 }
 
-function getStoredProgress(): QuranReadingProgress | null {
+function loadInitialProgress(): QuranReadingProgress | null {
   try {
-    const raw = localStorage.getItem(LOCAL_PROGRESS_KEY);
-    return raw
-      ? JSON.parse(raw)
-      : {
-          surahNumber: 67,
-          ayahNumber: 1,
-          surahName: 'Al-Mulk',
-          pageNumber: 562,
-          updatedAt: new Date().toISOString(),
-        };
+    const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
-function getStoredMushafPage(): number {
+function loadInitialScript(): 'indopak' | 'uthmani' | 'uthmani_tajweed' | 'uthmani_simple' | 'imlaei' {
   try {
-    const raw = localStorage.getItem(LOCAL_MUSHAF_PAGE_KEY);
-    const parsed = raw ? parseInt(raw, 10) : 562; // Default to Surah Al-Mulk page 562
-    return !isNaN(parsed) && parsed >= 1 && parsed <= 604 ? parsed : 562;
-  } catch {
-    return 562;
-  }
+    const raw = localStorage.getItem(SCRIPT_STORAGE_KEY);
+    if (raw && ['indopak', 'uthmani', 'uthmani_tajweed', 'uthmani_simple', 'imlaei'].includes(raw)) {
+      return raw as any;
+    }
+  } catch {}
+  return 'indopak'; // Default to popular IndoPak script for subcontinent users
 }
 
-function getStoredAudioState(): { surahNumber: number; playbackTime: number; reciterId: string } {
+function loadInitialTranslations(): number[] {
   try {
-    const raw = localStorage.getItem(LOCAL_LAST_AUDIO_KEY);
+    const raw = localStorage.getItem(TRANSLATIONS_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      return {
-        surahNumber: parsed.surahNumber || 67,
-        playbackTime: parsed.playbackTime || 0,
-        reciterId: parsed.reciterId || 'alafasy',
-      };
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
-  } catch {
-    // fallback
-  }
-  return { surahNumber: 67, playbackTime: 0, reciterId: 'alafasy' };
+  } catch {}
+  return [234, 20]; // Default: Urdu Jalandhari (234) + English Saheeh (20)
 }
 
-const initialAudio = getStoredAudioState();
-const initialPage = getStoredMushafPage();
+function loadInitialArabicFontSize(): number {
+  try {
+    const raw = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
+    if (raw) {
+      const num = parseInt(raw, 10);
+      if (!isNaN(num) && num >= 20 && num <= 60) return num;
+    }
+  } catch {}
+  return 32;
+}
 
 export const useQuranStore = create<QuranState>((set, get) => ({
   mode: 'read',
+  readViewType: 'mushaf',
   surahs: SURAHS_LIST,
   juzList: JUZ_LIST,
-  currentSurah: SURAH_DETAILS_MAP[67] || null,
-  currentAyah: 1,
+  currentSurahNumber: 1,
+  currentSurahMeta: SURAHS_LIST[0],
+  currentSurahVerses: [],
+  currentSurahInfo: null,
+  isVersesLoading: false,
+  isInfoLoading: false,
+  versesError: null,
 
-  // Mushaf Page Reading Mode State
-  mushafPage: initialPage,
-  selectedPara: getJuzByPage(initialPage).number,
+  selectedScript: loadInitialScript(),
+  showTajweedColors: true,
+  arabicFontSize: loadInitialArabicFontSize(),
+  translationFontSize: 16,
+
+  showTranslation: true,
+  selectedTranslationIds: loadInitialTranslations(),
+
+  mushafPage: 3,
+  selectedPara: 1,
   zoomLevel: 1.0,
 
-  // Global Audio Playback State
-  activeAudioSurah: initialAudio.surahNumber,
-  selectedReciter: localStorage.getItem(LOCAL_RECITER_KEY) || initialAudio.reciterId,
+  activeAudioSurah: 1,
+  selectedReciterId: 7, // Mishary Rashid Alafasy
+  audioRecitationUrl: null,
   isPlaying: false,
-  playbackTime: initialAudio.playbackTime,
+  playbackTime: 0,
   playbackDuration: 0,
   audioVolume: 0.9,
+  playbackSpeed: 1.0,
   isLooping: false,
   autoPlayNext: true,
   seekTarget: null,
   hasUserStartedAudio: false,
 
-  // Translation & View Settings
-  showTranslation: true,
-  translationLang: (localStorage.getItem(LOCAL_TRANSLATION_LANG_KEY) as TranslationLanguage) || 'urdu',
-  arabicFontSize: 28,
-  translationFontSize: 16,
+  playingAyahKey: null,
+  isAyahAudioPlaying: false,
 
-  // Bookmarks & Progress
-  bookmarks: getStoredBookmarks(),
-  readingProgress: getStoredProgress(),
+  bookmarks: loadInitialBookmarks(),
+  readingProgress: loadInitialProgress(),
   searchTerm: '',
   activeTab: 'surahs',
-  isLoading: false,
 
-  setMode: (mode: QuranMode) => {
-    set({ mode });
+  setMode: (mode) => set({ mode }),
+  setReadViewType: (readViewType) => set({ readViewType }),
+
+  setSelectedScript: (script) => {
+    try {
+      localStorage.setItem(SCRIPT_STORAGE_KEY, script);
+    } catch {}
+    set({ selectedScript: script });
   },
 
-  fetchSurahs: () => {
-    set({ surahs: SURAHS_LIST });
+  setShowTajweedColors: (showTajweedColors) => set({ showTajweedColors }),
+
+  setArabicFontSize: (size) => {
+    const clamped = Math.max(20, Math.min(56, size));
+    try {
+      localStorage.setItem(FONT_SIZE_STORAGE_KEY, String(clamped));
+    } catch {}
+    set({ arabicFontSize: clamped });
   },
 
-  fetchJuzList: () => {
-    set({ juzList: JUZ_LIST });
+  setTranslationFontSize: (size) => {
+    const clamped = Math.max(12, Math.min(28, size));
+    set({ translationFontSize: clamped });
   },
 
-  setMushafPage: (page: number) => {
-    const clamped = Math.max(1, Math.min(604, page));
-    const matchedSurah = getSurahByPage(clamped);
-    const matchedJuz = getJuzByPage(clamped);
-    
+  setShowTranslation: (showTranslation) => set({ showTranslation }),
+
+  setSelectedTranslationIds: (ids) => {
+    try {
+      localStorage.setItem(TRANSLATIONS_STORAGE_KEY, JSON.stringify(ids));
+    } catch {}
+    set({ selectedTranslationIds: ids });
+    const { currentSurahNumber } = get();
+    get().loadSurah(currentSurahNumber);
+  },
+
+  toggleTranslationId: (id) => {
+    const { selectedTranslationIds, currentSurahNumber } = get();
+    let updated: number[];
+    if (selectedTranslationIds.includes(id)) {
+      if (selectedTranslationIds.length === 1) return; // keep at least 1
+      updated = selectedTranslationIds.filter((t) => t !== id);
+    } else {
+      updated = [...selectedTranslationIds, id];
+    }
+    try {
+      localStorage.setItem(TRANSLATIONS_STORAGE_KEY, JSON.stringify(updated));
+    } catch {}
+    set({ selectedTranslationIds: updated });
+    get().loadSurah(currentSurahNumber);
+  },
+
+  loadSurah: async (surahNumber: number) => {
+    const validNumber = Math.max(1, Math.min(114, surahNumber));
+    const meta = getSurahByNumber(validNumber);
+    const { selectedTranslationIds } = get();
+
+    set({
+      currentSurahNumber: validNumber,
+      currentSurahMeta: meta,
+      isVersesLoading: true,
+      versesError: null,
+      mushafPage: meta.pageStart,
+      selectedPara: meta.juzStart,
+    });
+
+    try {
+      const verses = await QuranApiService.getVersesByChapter(validNumber, selectedTranslationIds);
+      set({
+        currentSurahVerses: verses,
+        isVersesLoading: false,
+      });
+      // Also asynchronously fetch Surah historical context info in background
+      get().loadSurahInfo(validNumber);
+    } catch (err: any) {
+      console.error(`Failed to load verses for Surah ${validNumber}:`, err);
+      set({
+        isVersesLoading: false,
+        versesError: err?.message || 'Failed to load verses. Please check internet connection.',
+      });
+    }
+  },
+
+  loadSurahInfo: async (surahNumber: number) => {
+    set({ isInfoLoading: true });
+    try {
+      const info = await QuranApiService.getChapterInfo(surahNumber);
+      set({ currentSurahInfo: info, isInfoLoading: false });
+    } catch {
+      set({ isInfoLoading: false });
+    }
+  },
+
+  // Central 1-based PDF page navigation function (1 to 1124)
+  goToQuranPage: (pageNumber: number) => {
+    const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(pageNumber) || 1));
+    const meta = getSurahByPage(clamped);
+    const juz = getJuzByPage(clamped);
     set({
       mushafPage: clamped,
-      selectedPara: matchedJuz.number,
+      currentSurahNumber: meta.number,
+      currentSurahMeta: meta,
+      selectedPara: juz.number,
     });
-    localStorage.setItem(LOCAL_MUSHAF_PAGE_KEY, String(clamped));
-    get().updateReadingProgress(matchedSurah.number, 1, matchedSurah.name, clamped);
   },
 
-  setSelectedPara: (paraNumber: number) => {
-    const clampedPara = Math.max(1, Math.min(30, paraNumber));
-    const juz = JUZ_LIST.find((j) => j.number === clampedPara) || JUZ_LIST[0];
-    get().setMushafPage(juz.pageStart);
+  setMushafPage: (page) => {
+    get().goToQuranPage(page);
   },
 
-  jumpToSurahPage: (surahNumber: number) => {
-    const surah = SURAHS_LIST.find((s) => s.number === surahNumber) || SURAHS_LIST[0];
-    get().loadSurah(surah.number);
-    get().setMushafPage(surah.pageStart);
+  jumpToSurahPage: (surahNumber) => {
+    const validNumber = Math.max(1, Math.min(114, surahNumber));
+    const meta = getSurahByNumber(validNumber);
+    get().goToQuranPage(meta.pageStart);
+    // Explicitly set the selected Surah in case multiple surahs start on this page (e.g. 112, 113, 114)
+    set({
+      currentSurahNumber: validNumber,
+      currentSurahMeta: meta,
+    });
   },
 
-  jumpToJuzPage: (juzNumber: number) => {
-    const juz = JUZ_LIST.find((j) => j.number === juzNumber) || JUZ_LIST[0];
-    get().setMushafPage(juz.pageStart);
+  jumpToJuzPage: (juzNumber) => {
+    const clamped = Math.max(1, Math.min(30, juzNumber));
+    const juz = JUZ_LIST.find((j) => j.number === clamped) || JUZ_LIST[0];
+    get().goToQuranPage(juz.pageStart);
+    set({
+      selectedPara: clamped,
+    });
   },
 
   nextMushafPage: () => {
     const { mushafPage } = get();
-    if (mushafPage < 604) {
-      get().setMushafPage(mushafPage + 1);
+    if (mushafPage < TOTAL_MUSHAF_PDF_PAGES) {
+      get().goToQuranPage(mushafPage + 1);
     }
   },
 
   prevMushafPage: () => {
     const { mushafPage } = get();
     if (mushafPage > 1) {
-      get().setMushafPage(mushafPage - 1);
+      get().goToQuranPage(mushafPage - 1);
     }
   },
 
-  setZoomLevel: (zoom: number) => {
-    const clamped = Math.max(0.8, Math.min(2.5, zoom));
-    set({ zoomLevel: clamped });
-  },
+  setZoomLevel: (zoom) => set({ zoomLevel: Math.max(0.6, Math.min(2.5, zoom)) }),
+  zoomIn: () => set((s) => ({ zoomLevel: Math.min(2.5, +(s.zoomLevel + 0.15).toFixed(2)) })),
+  zoomOut: () => set((s) => ({ zoomLevel: Math.max(0.6, +(s.zoomLevel - 0.15).toFixed(2)) })),
+  resetZoom: () => set({ zoomLevel: 1.0 }),
 
-  zoomIn: () => {
-    const { zoomLevel } = get();
-    get().setZoomLevel(Math.round((zoomLevel + 0.15) * 100) / 100);
-  },
+  // Audio Playback
+  playSurahAudio: async (surahNumber, reciterId) => {
+    const targetSurah = surahNumber || get().currentSurahNumber;
+    const targetReciter = reciterId || get().selectedReciterId;
 
-  zoomOut: () => {
-    const { zoomLevel } = get();
-    get().setZoomLevel(Math.round((zoomLevel - 0.15) * 100) / 100);
-  },
-
-  resetZoom: () => {
-    set({ zoomLevel: 1.0 });
-  },
-
-  loadSurah: async (surahNumber: number) => {
-    const cached = loadedSurahsCache.get(surahNumber);
-    const meta = SURAHS_LIST.find((s) => s.number === surahNumber);
-
-    if (cached && meta && cached.ayahs.length >= meta.versesCount) {
-      set({ currentSurah: cached, currentAyah: 1, isLoading: false });
-      get().updateReadingProgress(surahNumber, 1, cached.name, cached.pageStart);
-      return;
-    }
-
-    set({ isLoading: true });
-
-    try {
-      // 1. Try local API
-      const res = await fetch(`/api/v1/quran/surah/${surahNumber}`);
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.data?.surah?.ayahs && json.data.surah.ayahs.length > 0) {
-          const detail = json.data.surah as SurahDetail;
-          loadedSurahsCache.set(surahNumber, detail);
-          set({ currentSurah: detail, currentAyah: 1, isLoading: false });
-          get().updateReadingProgress(surahNumber, 1, detail.name, detail.pageStart);
-          return;
-        }
-      }
-    } catch {
-      // Backend fallback
-    }
-
-    try {
-      // 2. Direct fallback to verified Tanzil/AlQuran Cloud API
-      const cloudRes = await fetch(
-        `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,ur.kanzuliman,en.ahmedraza`
-      );
-      if (cloudRes.ok) {
-        const json = await cloudRes.json();
-        if (json?.code === 200 && Array.isArray(json.data) && json.data.length > 0 && meta) {
-          const arData = json.data.find((d: any) => d.edition.identifier === 'quran-uthmani') || json.data[0];
-          const urData = json.data.find((d: any) => d.edition.identifier === 'ur.kanzuliman');
-          const enData = json.data.find((d: any) => d.edition.identifier === 'en.ahmedraza');
-          const padded = String(surahNumber).padStart(3, '0');
-
-          const ayahs = arData.ayahs.map((ayahItem: any, index: number) => {
-            const urAyah = urData?.ayahs?.[index];
-            const enAyah = enData?.ayahs?.[index];
-            let arabicText = ayahItem.text;
-
-            if (surahNumber !== 1 && surahNumber !== 9 && ayahItem.numberInSurah === 1) {
-              const bismillahPrefix = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ';
-              if (arabicText.startsWith(bismillahPrefix)) {
-                arabicText = arabicText.slice(bismillahPrefix.length);
-              }
-            }
-
-            return {
-              number: ayahItem.numberInSurah,
-              globalNumber: ayahItem.number,
-              arabic: arabicText,
-              translation: enAyah?.text || urAyah?.text || `Surah ${meta.name} - Verse ${ayahItem.numberInSurah}`,
-              translationUrdu: urAyah?.text || '',
-              kanzulImanUrdu: urAyah?.text || '',
-              kanzulImanEn: enAyah?.text || '',
-            };
-          });
-
-          const completeDetail: SurahDetail = {
-            ...meta,
-            bismillahPre: surahNumber !== 1 && surahNumber !== 9,
-            ayahs,
-            audioRecitations: [
-              {
-                reciterId: 'alafasy',
-                reciterName: 'Sheikh Mishary Rashid Alafasy',
-                audioUrl: `https://server8.mp3quran.net/afs/${padded}.mp3`,
-              },
-              {
-                reciterId: 'husary',
-                reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-                audioUrl: `https://server13.mp3quran.net/husr/${padded}.mp3`,
-              },
-              {
-                reciterId: 'abdulbasit',
-                reciterName: 'Sheikh Abdul Basit Abdul Samad (Murattal)',
-                audioUrl: `https://server7.mp3quran.net/basit/${padded}.mp3`,
-              },
-              {
-                reciterId: 'ghamdi',
-                reciterName: 'Sheikh Saad Al-Ghamdi',
-                audioUrl: `https://server7.mp3quran.net/ghamdi/${padded}.mp3`,
-              },
-            ],
-          };
-
-          loadedSurahsCache.set(surahNumber, completeDetail);
-          set({ currentSurah: completeDetail, currentAyah: 1, isLoading: false });
-          get().updateReadingProgress(surahNumber, 1, meta.name, meta.pageStart);
-          return;
-        }
-      }
-    } catch {
-      // Fallback
-    }
-
-    const staticDetail = SURAH_DETAILS_MAP[surahNumber];
-    if (staticDetail) {
-      set({ currentSurah: staticDetail, currentAyah: 1, isLoading: false });
-      get().updateReadingProgress(surahNumber, 1, staticDetail.name, staticDetail.pageStart);
-    } else if (meta) {
-      const padded = String(surahNumber).padStart(3, '0');
-      const fallbackDetail: SurahDetail = {
-        ...meta,
-        bismillahPre: surahNumber !== 1 && surahNumber !== 9,
-        ayahs: [
-          {
-            number: 1,
-            arabic: `سُورَةُ ${meta.arabicName}`,
-            translation: `Surah ${meta.name} (${meta.meaning}) - ${meta.versesCount} Verses.`,
-            translationUrdu: `سورۃ ${meta.name} - کنز الایمان (اعلیٰ حضرت امام احمد رضا خان)`,
-            kanzulImanUrdu: `سورۃ ${meta.name} - کنز الایمان (اعلیٰ حضرت امام احمد رضا خان)`,
-          },
-        ],
-        audioRecitations: [
-          {
-            reciterId: 'alafasy',
-            reciterName: 'Sheikh Mishary Rashid Alafasy',
-            audioUrl: `https://server8.mp3quran.net/afs/${padded}.mp3`,
-          },
-          {
-            reciterId: 'husary',
-            reciterName: 'Sheikh Mahmoud Khalil Al-Husary',
-            audioUrl: `https://server13.mp3quran.net/husr/${padded}.mp3`,
-          },
-        ],
-      };
-      set({ currentSurah: fallbackDetail, currentAyah: 1, isLoading: false });
-      get().updateReadingProgress(surahNumber, 1, meta.name, meta.pageStart);
-    }
-
-    set({ isLoading: false });
-  },
-
-  // Audio Playback Implementation
-  playSurahAudio: (surahNumber: number, reciterId?: string) => {
-    const reciter = reciterId || get().selectedReciter || 'alafasy';
-    const isDifferentSurah = get().activeAudioSurah !== surahNumber;
-    
     set({
-      activeAudioSurah: surahNumber,
-      selectedReciter: reciter,
-      isPlaying: true,
+      activeAudioSurah: targetSurah,
+      selectedReciterId: targetReciter,
       hasUserStartedAudio: true,
-      playbackTime: isDifferentSurah ? 0 : get().playbackTime,
+      isPlaying: true,
+      playbackTime: 0,
     });
 
-    localStorage.setItem(LOCAL_RECITER_KEY, reciter);
-    localStorage.setItem(
-      LOCAL_LAST_AUDIO_KEY,
-      JSON.stringify({
-        surahNumber,
-        playbackTime: isDifferentSurah ? 0 : get().playbackTime,
-        reciterId: reciter,
-      })
-    );
+    try {
+      const audioUrl = await QuranApiService.getChapterRecitationAudio(targetReciter, targetSurah);
+      set({ audioRecitationUrl: audioUrl });
+    } catch {
+      const padded = String(targetSurah).padStart(3, '0');
+      set({ audioRecitationUrl: `https://server8.mp3quran.net/afs/${padded}.mp3` });
+    }
   },
 
   playNextSurahAudio: () => {
-    const { activeAudioSurah, selectedReciter } = get();
+    const { activeAudioSurah, selectedReciterId } = get();
     const nextSurah = activeAudioSurah < 114 ? activeAudioSurah + 1 : 1;
-    get().playSurahAudio(nextSurah, selectedReciter);
+    get().playSurahAudio(nextSurah, selectedReciterId);
   },
 
   playPrevSurahAudio: () => {
-    const { activeAudioSurah, selectedReciter } = get();
+    const { activeAudioSurah, selectedReciterId } = get();
     const prevSurah = activeAudioSurah > 1 ? activeAudioSurah - 1 : 114;
-    get().playSurahAudio(prevSurah, selectedReciter);
+    get().playSurahAudio(prevSurah, selectedReciterId);
   },
 
   toggleAudioPlay: () => {
-    const { isPlaying, activeAudioSurah, selectedReciter } = get();
+    const { isPlaying, audioRecitationUrl, activeAudioSurah, selectedReciterId } = get();
+    if (!audioRecitationUrl) {
+      get().playSurahAudio(activeAudioSurah, selectedReciterId);
+      return;
+    }
+    set({ isPlaying: !isPlaying, hasUserStartedAudio: true });
+  },
+
+  pauseAudio: () => set({ isPlaying: false }),
+  resumeAudio: () => set({ isPlaying: true, hasUserStartedAudio: true }),
+  stopAudio: () => set({ isPlaying: false, playbackTime: 0 }),
+  seekAudio: (seconds) => set({ seekTarget: seconds, playbackTime: seconds }),
+  clearSeekTarget: () => set({ seekTarget: null }),
+
+  setSelectedReciterId: (reciterId) => {
+    set({ selectedReciterId: reciterId });
+    const { isPlaying, activeAudioSurah } = get();
     if (isPlaying) {
-      get().pauseAudio();
-    } else {
-      get().playSurahAudio(activeAudioSurah || 67, selectedReciter || 'alafasy');
+      get().playSurahAudio(activeAudioSurah, reciterId);
     }
   },
 
-  pauseAudio: () => {
-    set({ isPlaying: false });
-    const { activeAudioSurah, playbackTime, selectedReciter } = get();
-    localStorage.setItem(
-      LOCAL_LAST_AUDIO_KEY,
-      JSON.stringify({ surahNumber: activeAudioSurah, playbackTime, reciterId: selectedReciter })
-    );
-  },
+  setPlaybackTime: (time) => set({ playbackTime: time }),
+  setPlaybackDuration: (duration) => set({ playbackDuration: duration }),
+  setAudioVolume: (volume) => set({ audioVolume: Math.max(0, Math.min(1, volume)) }),
+  setPlaybackSpeed: (speed) => set({ playbackSpeed: speed }),
+  setIsPlaying: (playing) => set({ isPlaying: playing }),
+  setIsLooping: (loop) => set({ isLooping: loop }),
+  setAutoPlayNext: (auto) => set({ autoPlayNext: auto }),
 
-  resumeAudio: () => {
-    set({ isPlaying: true, hasUserStartedAudio: true });
-  },
+  setPlayingAyahKey: (key) => set({ playingAyahKey: key }),
+  setIsAyahAudioPlaying: (playing) => set({ isAyahAudioPlaying: playing }),
 
-  stopAudio: () => {
-    set({ isPlaying: false, playbackTime: 0 });
-    const { activeAudioSurah, selectedReciter } = get();
-    localStorage.setItem(
-      LOCAL_LAST_AUDIO_KEY,
-      JSON.stringify({ surahNumber: activeAudioSurah, playbackTime: 0, reciterId: selectedReciter })
-    );
-  },
-
-  seekAudio: (seconds: number) => {
-    set({ seekTarget: seconds, playbackTime: seconds });
-    const { activeAudioSurah, selectedReciter } = get();
-    localStorage.setItem(
-      LOCAL_LAST_AUDIO_KEY,
-      JSON.stringify({ surahNumber: activeAudioSurah, playbackTime: seconds, reciterId: selectedReciter })
-    );
-  },
-
-  clearSeekTarget: () => {
-    set({ seekTarget: null });
-  },
-
-  setSelectedReciter: (reciterId: string) => {
-    set({ selectedReciter: reciterId });
-    localStorage.setItem(LOCAL_RECITER_KEY, reciterId);
-    const { activeAudioSurah, playbackTime } = get();
-    localStorage.setItem(
-      LOCAL_LAST_AUDIO_KEY,
-      JSON.stringify({ surahNumber: activeAudioSurah, playbackTime, reciterId })
-    );
-  },
-
-  setPlaybackTime: (playbackTime: number) => {
-    set({ playbackTime });
-  },
-
-  setPlaybackDuration: (playbackDuration: number) => {
-    set({ playbackDuration });
-  },
-
-  setAudioVolume: (audioVolume: number) => {
-    set({ audioVolume: Math.max(0, Math.min(1, audioVolume)) });
-  },
-
-  setIsPlaying: (isPlaying: boolean) => {
-    set({ isPlaying });
-  },
-
-  setIsLooping: (isLooping: boolean) => {
-    set({ isLooping });
-  },
-
-  setAutoPlayNext: (autoPlayNext: boolean) => {
-    set({ autoPlayNext });
-  },
-
-  setSearchTerm: (term: string) => {
-    set({ searchTerm: term });
-  },
-
-  setActiveTab: (activeTab: 'surahs' | 'juz' | 'bookmarks') => {
-    set({ activeTab });
-  },
-
-  toggleTranslation: () => {
-    set((state) => ({ showTranslation: !state.showTranslation }));
-  },
-
-  setTranslationLang: (translationLang: TranslationLanguage) => {
-    set({ translationLang });
-    localStorage.setItem(LOCAL_TRANSLATION_LANG_KEY, translationLang);
-  },
-
-  setArabicFontSize: (size: number) => {
-    const clamped = Math.max(20, Math.min(44, size));
-    set({ arabicFontSize: clamped });
-  },
-
-  setTranslationFontSize: (size: number) => {
-    const clamped = Math.max(12, Math.min(26, size));
-    set({ translationFontSize: clamped });
-  },
-
-  toggleBookmark: async (surahNumber, ayahNumber, surahName, ayahText) => {
+  // Bookmarks
+  toggleBookmark: (bm) => {
     const { bookmarks } = get();
-    const existingIndex = bookmarks.findIndex(
-      (b) => b.surahNumber === surahNumber && b.ayahNumber === ayahNumber
+    const exists = bookmarks.some(
+      (b) => b.surahNumber === bm.surahNumber && b.ayahNumber === bm.ayahNumber
     );
-
-    let updatedBookmarks: QuranBookmark[];
-    if (existingIndex >= 0) {
-      updatedBookmarks = bookmarks.filter((_, idx) => idx !== existingIndex);
+    let updated: QuranBookmark[];
+    if (exists) {
+      updated = bookmarks.filter(
+        (b) => !(b.surahNumber === bm.surahNumber && b.ayahNumber === bm.ayahNumber)
+      );
     } else {
-      updatedBookmarks = [
-        {
-          surahNumber,
-          ayahNumber,
-          surahName,
-          ayahText,
-          createdAt: new Date().toISOString(),
-        },
-        ...bookmarks,
-      ];
+      updated = [{ ...bm, createdAt: new Date().toISOString() }, ...bookmarks];
     }
-
-    set({ bookmarks: updatedBookmarks });
-    localStorage.setItem(LOCAL_BOOKMARKS_KEY, JSON.stringify(updatedBookmarks));
-
     try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        if (existingIndex >= 0) {
-          await fetch('/api/v1/quran/bookmarks', {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ surahNumber, ayahNumber }),
-          });
-        } else {
-          await fetch('/api/v1/quran/bookmarks', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ surahNumber, ayahNumber, surahName, ayahText }),
-          });
-        }
-      }
-    } catch {
-      // Local fallback
-    }
+      localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(updated));
+    } catch {}
+    set({ bookmarks: updated });
   },
 
-  updateReadingProgress: async (surahNumber, ayahNumber, surahName, pageNumber) => {
+  removeBookmark: (surahNumber, ayahNumber) => {
+    const { bookmarks } = get();
+    const updated = bookmarks.filter(
+      (b) => !(b.surahNumber === surahNumber && b.ayahNumber === ayahNumber)
+    );
+    try {
+      localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(updated));
+    } catch {}
+    set({ bookmarks: updated });
+  },
+
+  updateReadingProgress: (surahNumber, ayahNumber, verseKey, surahName, pageNumber) => {
     const progress: QuranReadingProgress = {
       surahNumber,
       ayahNumber,
+      verseKey,
       surahName,
       pageNumber,
       updatedAt: new Date().toISOString(),
     };
-
-    set({ readingProgress: progress });
-    localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(progress));
-
     try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        await fetch('/api/v1/quran/progress', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ surahNumber, ayahNumber, surahName, pageNumber }),
-        });
-      }
-    } catch {
-      // Local fallback
-    }
+      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    } catch {}
+    set({ readingProgress: progress });
   },
+
+  setSearchTerm: (searchTerm) => set({ searchTerm }),
+  setActiveTab: (activeTab) => set({ activeTab }),
 }));
+
+// Helper function to get audio URL for reciters
+export function getAudioUrl(surahNumber: number, reciterId: number = 7): string {
+  const padded = String(surahNumber).padStart(3, '0');
+  if (reciterId === 2 || reciterId === 1) {
+    return `https://server7.mp3quran.net/basit/${padded}.mp3`;
+  }
+  if (reciterId === 6 || reciterId === 12) {
+    return `https://server13.mp3quran.net/husr/${padded}.mp3`;
+  }
+  if (reciterId === 3) {
+    return `https://server11.mp3quran.net/sds/${padded}.mp3`;
+  }
+  if (reciterId === 9 || reciterId === 8) {
+    return `https://server10.mp3quran.net/minsh/${padded}.mp3`;
+  }
+  if (reciterId === 4) {
+    return `https://server7.mp3quran.net/shatri/${padded}.mp3`;
+  }
+  if (reciterId === 5) {
+    return `https://server8.mp3quran.net/rifai/${padded}.mp3`;
+  }
+  return `https://server8.mp3quran.net/afs/${padded}.mp3`;
+}

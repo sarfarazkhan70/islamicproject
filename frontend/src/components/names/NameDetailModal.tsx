@@ -124,6 +124,20 @@ export const NameDetailModal: React.FC<NameDetailModalProps> = ({ item, onClose 
             }}
           >
             {item.arabic}
+            {item.category === 'allah' && (
+              <span
+                style={{
+                  fontSize: '0.62em',
+                  fontWeight: 'normal',
+                  marginRight: '8px',
+                  opacity: 0.85,
+                  color: 'var(--brand-gold, #f59e0b)',
+                  fontFamily: 'inherit',
+                }}
+              >
+                {' '}جَلَّ جَلَالُهُ
+              </span>
+            )}
           </h1>
 
           <div

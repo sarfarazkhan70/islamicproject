@@ -1,0 +1,2107 @@
+[
+  {
+    "surahNum": 1,
+    "surahName": "Al-Fatihah",
+    "folder": "001-Al-Fatihah",
+    "files": [
+      2,
+      3,
+      4
+    ],
+    "pageBanners": [
+      {
+        "page": 3,
+        "banners": [
+          396,
+          492
+        ]
+      },
+      {
+        "page": 4,
+        "banners": [
+          395,
+          491,
+          566
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 2,
+    "surahName": "Al-Baqarah",
+    "folder": "002-Al-Baqarah",
+    "files": [
+      3,
+      4,
+      5
+    ],
+    "pageBanners": [
+      {
+        "page": 3,
+        "banners": [
+          396,
+          492
+        ]
+      },
+      {
+        "page": 4,
+        "banners": [
+          395,
+          491,
+          566
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 3,
+    "surahName": "AliImran",
+    "folder": "003-AliImran",
+    "files": [
+      91,
+      92,
+      93
+    ],
+    "pageBanners": [
+      {
+        "page": 92,
+        "banners": [
+          405
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 4,
+    "surahName": "An-Nisa",
+    "folder": "004-An-Nisa",
+    "files": [
+      142,
+      143,
+      144
+    ],
+    "pageBanners": [
+      {
+        "page": 144,
+        "banners": [
+          141,
+          224,
+          308,
+          391,
+          808
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 5,
+    "surahName": "Al-Maidah",
+    "folder": "005-Al-Maidah",
+    "files": [
+      195,
+      196,
+      197
+    ],
+    "pageBanners": [
+      {
+        "page": 197,
+        "banners": [
+          233,
+          896
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 6,
+    "surahName": "Al-Anam",
+    "folder": "006-Al-Anam",
+    "files": [
+      237,
+      238,
+      239
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 7,
+    "surahName": "Al-Araf",
+    "folder": "007-Al-Araf",
+    "files": [
+      279,
+      280,
+      281
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 8,
+    "surahName": "Al-Anfal",
+    "folder": "008-Al-Anfal",
+    "files": [
+      328,
+      329,
+      330
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 9,
+    "surahName": "At-Tawbah",
+    "folder": "009-At-Tawbah",
+    "files": [
+      347,
+      348,
+      349
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 10,
+    "surahName": "Yunus",
+    "folder": "010-Yunus",
+    "files": [
+      385,
+      386,
+      387
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 11,
+    "surahName": "Hud",
+    "folder": "011-Hud",
+    "files": [
+      408,
+      409,
+      410
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 12,
+    "surahName": "Yusuf",
+    "folder": "012-Yusuf",
+    "files": [
+      434,
+      435,
+      436
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 13,
+    "surahName": "Ar-Rad",
+    "folder": "013-Ar-Rad",
+    "files": [
+      460,
+      461,
+      462
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 14,
+    "surahName": "Ibrahim",
+    "folder": "014-Ibrahim",
+    "files": [
+      471,
+      472,
+      473
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 15,
+    "surahName": "Al-Hijr",
+    "folder": "015-Al-Hijr",
+    "files": [
+      484,
+      485,
+      486
+    ],
+    "pageBanners": [
+      {
+        "page": 485,
+        "banners": [
+          141
+        ]
+      },
+      {
+        "page": 486,
+        "banners": [
+          730,
+          813
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 16,
+    "surahName": "An-Nahl",
+    "folder": "016-An-Nahl",
+    "files": [
+      493,
+      494,
+      495
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 17,
+    "surahName": "Al-Isra",
+    "folder": "017-Al-Isra",
+    "files": [
+      521,
+      522,
+      523
+    ],
+    "pageBanners": [
+      {
+        "page": 522,
+        "banners": [
+          150
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 18,
+    "surahName": "Al-Kahf",
+    "folder": "018-Al-Kahf",
+    "files": [
+      541,
+      542,
+      543
+    ],
+    "pageBanners": [
+      {
+        "page": 541,
+        "banners": [
+          310,
+          393,
+          476
+        ]
+      },
+      {
+        "page": 543,
+        "banners": [
+          142,
+          225,
+          479,
+          555,
+          643,
+          894
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 19,
+    "surahName": "Maryam",
+    "folder": "019-Maryam",
+    "files": [
+      563,
+      564,
+      565
+    ],
+    "pageBanners": [
+      {
+        "page": 563,
+        "banners": [
+          235
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 20,
+    "surahName": "Taha",
+    "folder": "020-Taha",
+    "files": [
+      576,
+      577,
+      578
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 21,
+    "surahName": "Al-Anbiya",
+    "folder": "021-Al-Anbiya",
+    "files": [
+      595,
+      596,
+      597
+    ],
+    "pageBanners": [
+      {
+        "page": 596,
+        "banners": [
+          145
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 22,
+    "surahName": "Al-Hajj",
+    "folder": "022-Al-Hajj",
+    "files": [
+      613,
+      614,
+      615
+    ],
+    "pageBanners": [
+      {
+        "page": 613,
+        "banners": [
+          397,
+          728
+        ]
+      },
+      {
+        "page": 614,
+        "banners": [
+          225,
+          480,
+          565
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 23,
+    "surahName": "Al-Muminun",
+    "folder": "023-Al-Muminun",
+    "files": [
+      632,
+      633,
+      634
+    ],
+    "pageBanners": [
+      {
+        "page": 633,
+        "banners": [
+          142
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 24,
+    "surahName": "An-Nur",
+    "folder": "024-An-Nur",
+    "files": [
+      647,
+      648,
+      649
+    ],
+    "pageBanners": [
+      {
+        "page": 649,
+        "banners": [
+          729,
+          812,
+          896
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 25,
+    "surahName": "Al-Furqan",
+    "folder": "025-Al-Furqan",
+    "files": [
+      663,
+      664,
+      665
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 26,
+    "surahName": "Ash-Shuara",
+    "folder": "026-Ash-Shuara",
+    "files": [
+      677,
+      678,
+      679
+    ],
+    "pageBanners": [
+      {
+        "page": 679,
+        "banners": [
+          730
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 27,
+    "surahName": "An-Naml",
+    "folder": "027-An-Naml",
+    "files": [
+      696,
+      697,
+      698
+    ],
+    "pageBanners": [
+      {
+        "page": 696,
+        "banners": [
+          821,
+          897
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 28,
+    "surahName": "Al-Qasas",
+    "folder": "028-Al-Qasas",
+    "files": [
+      711,
+      712,
+      713
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 29,
+    "surahName": "Al-Ankabut",
+    "folder": "029-Al-Ankabut",
+    "files": [
+      730,
+      731,
+      732
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 30,
+    "surahName": "Ar-Rum",
+    "folder": "030-Ar-Rum",
+    "files": [
+      745,
+      746,
+      747
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 31,
+    "surahName": "Luqman",
+    "folder": "031-Luqman",
+    "files": [
+      758,
+      759,
+      760
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 32,
+    "surahName": "As-Sajdah",
+    "folder": "032-As-Sajdah",
+    "files": [
+      765,
+      766,
+      767
+    ],
+    "pageBanners": [
+      {
+        "page": 767,
+        "banners": [
+          395,
+          479,
+          734
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 33,
+    "surahName": "Al-Ahzab",
+    "folder": "033-Al-Ahzab",
+    "files": [
+      771,
+      772,
+      773
+    ],
+    "pageBanners": [
+      {
+        "page": 771,
+        "banners": [
+          142,
+          226,
+          731,
+          815,
+          899
+        ]
+      },
+      {
+        "page": 772,
+        "banners": [
+          826
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 34,
+    "surahName": "Saba",
+    "folder": "034-Saba",
+    "files": [
+      789,
+      790,
+      791
+    ],
+    "pageBanners": [
+      {
+        "page": 789,
+        "banners": [
+          569
+        ]
+      },
+      {
+        "page": 791,
+        "banners": [
+          903
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 35,
+    "surahName": "Fatir",
+    "folder": "035-Fatir",
+    "files": [
+      800,
+      801,
+      802
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 36,
+    "surahName": "Ya-Sin",
+    "folder": "036-Ya-Sin",
+    "files": [
+      811,
+      812,
+      813
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 37,
+    "surahName": "As-Saffat",
+    "folder": "037-As-Saffat",
+    "files": [
+      823,
+      824,
+      825
+    ],
+    "pageBanners": [
+      {
+        "page": 825,
+        "banners": [
+          565
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 38,
+    "surahName": "Sad",
+    "folder": "038-Sad",
+    "files": [
+      836,
+      837,
+      838
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 39,
+    "surahName": "Az-Zumar",
+    "folder": "039-Az-Zumar",
+    "files": [
+      845,
+      846,
+      847
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 40,
+    "surahName": "Ghafir",
+    "folder": "040-Ghafir",
+    "files": [
+      862,
+      863,
+      864
+    ],
+    "pageBanners": [
+      {
+        "page": 863,
+        "banners": [
+          485,
+          822
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 41,
+    "surahName": "Fussilat",
+    "folder": "041-Fussilat",
+    "files": [
+      881,
+      882,
+      883
+    ],
+    "pageBanners": [
+      {
+        "page": 881,
+        "banners": [
+          320
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 42,
+    "surahName": "Ash-Shura",
+    "folder": "042-Ash-Shura",
+    "files": [
+      892,
+      893,
+      894
+    ],
+    "pageBanners": [
+      {
+        "page": 893,
+        "banners": [
+          816,
+          893
+        ]
+      },
+      {
+        "page": 894,
+        "banners": [
+          482,
+          565
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 43,
+    "surahName": "Az-Zukhruf",
+    "folder": "043-Az-Zukhruf",
+    "files": [
+      903,
+      904,
+      905
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 44,
+    "surahName": "Ad-Dukhan",
+    "folder": "044-Ad-Dukhan",
+    "files": [
+      916,
+      917,
+      918
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 45,
+    "surahName": "Al-Jathiyah",
+    "folder": "045-Al-Jathiyah",
+    "files": [
+      922,
+      923,
+      924
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 46,
+    "surahName": "Al-Ahqaf",
+    "folder": "046-Al-Ahqaf",
+    "files": [
+      928,
+      929,
+      930
+    ],
+    "pageBanners": [
+      {
+        "page": 929,
+        "banners": [
+          146,
+          227,
+          318
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 47,
+    "surahName": "Muhammad",
+    "folder": "047-Muhammad",
+    "files": [
+      937,
+      938,
+      939
+    ],
+    "pageBanners": [
+      {
+        "page": 939,
+        "banners": [
+          320,
+          404,
+          825,
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 48,
+    "surahName": "Al-Fath",
+    "folder": "048-Al-Fath",
+    "files": [
+      945,
+      946,
+      947
+    ],
+    "pageBanners": [
+      {
+        "page": 945,
+        "banners": [
+          155
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 49,
+    "surahName": "Al-Hujurat",
+    "folder": "049-Al-Hujurat",
+    "files": [
+      953,
+      954,
+      955
+    ],
+    "pageBanners": [
+      {
+        "page": 953,
+        "banners": [
+          316,
+          400
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 50,
+    "surahName": "Qaf",
+    "folder": "050-Qaf",
+    "files": [
+      959,
+      960,
+      961
+    ],
+    "pageBanners": [
+      {
+        "page": 960,
+        "banners": [
+          314
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 51,
+    "surahName": "Adh-Dhariyat",
+    "folder": "051-Adh-Dhariyat",
+    "files": [
+      965,
+      966,
+      967
+    ],
+    "pageBanners": [
+      {
+        "page": 966,
+        "banners": [
+          80
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 52,
+    "surahName": "At-Tur",
+    "folder": "052-At-Tur",
+    "files": [
+      970,
+      971,
+      972
+    ],
+    "pageBanners": [
+      {
+        "page": 970,
+        "banners": [
+          148,
+          655,
+          740,
+          824,
+          908
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 53,
+    "surahName": "An-Najm",
+    "folder": "053-An-Najm",
+    "files": [
+      975,
+      976,
+      977
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 54,
+    "surahName": "Al-Qamar",
+    "folder": "054-Al-Qamar",
+    "files": [
+      979,
+      980,
+      981
+    ],
+    "pageBanners": [
+      {
+        "page": 979,
+        "banners": [
+          226,
+          311,
+          647,
+          732,
+          816,
+          900
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 55,
+    "surahName": "Ar-Rahman",
+    "folder": "055-Ar-Rahman",
+    "files": [
+      984,
+      985,
+      986
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 56,
+    "surahName": "Al-Waqiah",
+    "folder": "056-Al-Waqiah",
+    "files": [
+      990,
+      991,
+      992
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 57,
+    "surahName": "Al-Hadid",
+    "folder": "057-Al-Hadid",
+    "files": [
+      996,
+      997,
+      998
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 58,
+    "surahName": "Al-Mujadila",
+    "folder": "058-Al-Mujadila",
+    "files": [
+      1003,
+      1004,
+      1005
+    ],
+    "pageBanners": [
+      {
+        "page": 1003,
+        "banners": [
+          149,
+          181,
+          229,
+          320,
+          403,
+          903
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 59,
+    "surahName": "Al-Hashr",
+    "folder": "059-Al-Hashr",
+    "files": [
+      1009,
+      1010,
+      1011
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 60,
+    "surahName": "Al-Mumtahanah",
+    "folder": "060-Al-Mumtahanah",
+    "files": [
+      1015,
+      1016,
+      1017
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 61,
+    "surahName": "As-Saff",
+    "folder": "061-As-Saff",
+    "files": [
+      1020,
+      1021,
+      1022
+    ],
+    "pageBanners": [
+      {
+        "page": 1021,
+        "banners": [
+          152,
+          235
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 62,
+    "surahName": "Al-Jumuah",
+    "folder": "062-Al-Jumuah",
+    "files": [
+      1023,
+      1024,
+      1025
+    ],
+    "pageBanners": [
+      {
+        "page": 1024,
+        "banners": [
+          222,
+          306,
+          807,
+          891
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 63,
+    "surahName": "Al-Munafiqun",
+    "folder": "063-Al-Munafiqun",
+    "files": [
+      1025,
+      1026,
+      1027
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 64,
+    "surahName": "At-Taghabun",
+    "folder": "064-At-Taghabun",
+    "files": [
+      1027,
+      1028,
+      1029
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 65,
+    "surahName": "At-Talaq",
+    "folder": "065-At-Talaq",
+    "files": [
+      1031,
+      1032,
+      1033
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 66,
+    "surahName": "At-Tahrim",
+    "folder": "066-At-Tahrim",
+    "files": [
+      1034,
+      1035,
+      1036
+    ],
+    "pageBanners": [
+      {
+        "page": 1035,
+        "banners": [
+          147,
+          235
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 67,
+    "surahName": "Al-Mulk",
+    "folder": "067-Al-Mulk",
+    "files": [
+      1043,
+      1044,
+      1045
+    ],
+    "pageBanners": [
+      {
+        "page": 1044,
+        "banners": [
+          144
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 68,
+    "surahName": "Al-Qalam",
+    "folder": "068-Al-Qalam",
+    "files": [
+      1047,
+      1048,
+      1049
+    ],
+    "pageBanners": [
+      {
+        "page": 1048,
+        "banners": [
+          739,
+          826,
+          902
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 69,
+    "surahName": "Al-Haqqah",
+    "folder": "069-Al-Haqqah",
+    "files": [
+      1050,
+      1051,
+      1052
+    ],
+    "pageBanners": [
+      {
+        "page": 1051,
+        "banners": [
+          397,
+          648
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 70,
+    "surahName": "Al-Maarij",
+    "folder": "070-Al-Maarij",
+    "files": [
+      1052,
+      1053,
+      1054
+    ],
+    "pageBanners": [
+      {
+        "page": 1053,
+        "banners": [
+          400
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 71,
+    "surahName": "Nuh",
+    "folder": "071-Nuh",
+    "files": [
+      1059,
+      1060,
+      1061
+    ],
+    "pageBanners": [
+      {
+        "page": 1060,
+        "banners": [
+          658,
+          734
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 72,
+    "surahName": "Al-Jinn",
+    "folder": "072-Al-Jinn",
+    "files": [
+      1061,
+      1062,
+      1063
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 73,
+    "surahName": "Al-Muzzammil",
+    "folder": "073-Al-Muzzammil",
+    "files": [
+      1064,
+      1065,
+      1066
+    ],
+    "pageBanners": [
+      {
+        "page": 1065,
+        "banners": [
+          648
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 74,
+    "surahName": "Al-Muddaththir",
+    "folder": "074-Al-Muddaththir",
+    "files": [
+      1066,
+      1067,
+      1068
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 75,
+    "surahName": "Al-Qiyamah",
+    "folder": "075-Al-Qiyamah",
+    "files": [
+      1072,
+      1073,
+      1074
+    ],
+    "pageBanners": [
+      {
+        "page": 1072,
+        "banners": [
+          323,
+          739,
+          822
+        ]
+      },
+      {
+        "page": 1073,
+        "banners": [
+          898
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 76,
+    "surahName": "Al-Insan",
+    "folder": "076-Al-Insan",
+    "files": [
+      1076,
+      1077,
+      1078
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 77,
+    "surahName": "Al-Mursalat",
+    "folder": "077-Al-Mursalat",
+    "files": [
+      1080,
+      1081,
+      1082
+    ],
+    "pageBanners": [
+      {
+        "page": 1081,
+        "banners": [
+          393,
+          644,
+          895
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 78,
+    "surahName": "An-Naba",
+    "folder": "078-An-Naba",
+    "files": [
+      1084,
+      1085,
+      1086
+    ],
+    "pageBanners": [
+      {
+        "page": 1085,
+        "banners": [
+          150,
+          187
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 79,
+    "surahName": "An-Naziat",
+    "folder": "079-An-Naziat",
+    "files": [
+      1087,
+      1088,
+      1089
+    ],
+    "pageBanners": [
+      {
+        "page": 1088,
+        "banners": [
+          148,
+          232,
+          316,
+          400,
+          484,
+          568,
+          652,
+          736,
+          820,
+          904
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 80,
+    "surahName": "Abasa",
+    "folder": "080-Abasa",
+    "files": [
+      1089,
+      1090,
+      1091
+    ],
+    "pageBanners": [
+      {
+        "page": 1090,
+        "banners": [
+          566,
+          897
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 81,
+    "surahName": "At-Takwir",
+    "folder": "081-At-Takwir",
+    "files": [
+      1091,
+      1092,
+      1093
+    ],
+    "pageBanners": [
+      {
+        "page": 1092,
+        "banners": [
+          644
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 82,
+    "surahName": "Al-Infitar",
+    "folder": "082-Al-Infitar",
+    "files": [
+      1093,
+      1094,
+      1095
+    ],
+    "pageBanners": [
+      {
+        "page": 1094,
+        "banners": [
+          311,
+          399,
+          475
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 83,
+    "surahName": "Al-Mutaffifin",
+    "folder": "083-Al-Mutaffifin",
+    "files": [
+      1097,
+      1098,
+      1099
+    ],
+    "pageBanners": [
+      {
+        "page": 1098,
+        "banners": [
+          318
+        ]
+      },
+      {
+        "page": 1099,
+        "banners": [
+          901
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 84,
+    "surahName": "Al-Inshiqaq",
+    "folder": "084-Al-Inshiqaq",
+    "files": [
+      1098,
+      1099,
+      1100
+    ],
+    "pageBanners": [
+      {
+        "page": 1098,
+        "banners": [
+          318
+        ]
+      },
+      {
+        "page": 1099,
+        "banners": [
+          901
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 85,
+    "surahName": "Al-Buruj",
+    "folder": "085-Al-Buruj",
+    "files": [
+      1100,
+      1101,
+      1102
+    ],
+    "pageBanners": [
+      {
+        "page": 1101,
+        "banners": [
+          661
+        ]
+      },
+      {
+        "page": 1102,
+        "banners": [
+          146,
+          229,
+          480,
+          564,
+          650,
+          726,
+          814,
+          898
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 86,
+    "surahName": "At-Tariq",
+    "folder": "086-At-Tariq",
+    "files": [
+      1101,
+      1102,
+      1103
+    ],
+    "pageBanners": [
+      {
+        "page": 1101,
+        "banners": [
+          661
+        ]
+      },
+      {
+        "page": 1102,
+        "banners": [
+          146,
+          229,
+          480,
+          564,
+          650,
+          726,
+          814,
+          898
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 87,
+    "surahName": "Al-Ala",
+    "folder": "087-Al-Ala",
+    "files": [
+      1105,
+      1106,
+      1107
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 88,
+    "surahName": "Al-Ghashiyah",
+    "folder": "088-Al-Ghashiyah",
+    "files": [
+      1106,
+      1107,
+      1108
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 89,
+    "surahName": "Al-Fajr",
+    "folder": "089-Al-Fajr",
+    "files": [
+      1108,
+      1109,
+      1110
+    ],
+    "pageBanners": []
+  },
+  {
+    "surahNum": 90,
+    "surahName": "Al-Balad",
+    "folder": "090-Al-Balad",
+    "files": [
+      1110,
+      1111,
+      1112
+    ],
+    "pageBanners": [
+      {
+        "page": 1112,
+        "banners": [
+          228,
+          313,
+          396,
+          483
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 91,
+    "surahName": "Ash-Shams",
+    "folder": "091-Ash-Shams",
+    "files": [
+      1111,
+      1112,
+      1113
+    ],
+    "pageBanners": [
+      {
+        "page": 1112,
+        "banners": [
+          228,
+          313,
+          396,
+          483
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 92,
+    "surahName": "Al-Layl",
+    "folder": "092-Al-Layl",
+    "files": [
+      1112,
+      1113,
+      1114
+    ],
+    "pageBanners": [
+      {
+        "page": 1112,
+        "banners": [
+          228,
+          313,
+          396,
+          483
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 93,
+    "surahName": "Ad-Duha",
+    "folder": "093-Ad-Duha",
+    "files": [
+      1113,
+      1114,
+      1115
+    ],
+    "pageBanners": [
+      {
+        "page": 1115,
+        "banners": [
+          571
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 94,
+    "surahName": "Ash-Sharh",
+    "folder": "094-Ash-Sharh",
+    "files": [
+      1114,
+      1115,
+      1116
+    ],
+    "pageBanners": [
+      {
+        "page": 1115,
+        "banners": [
+          571
+        ]
+      },
+      {
+        "page": 1116,
+        "banners": [
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 95,
+    "surahName": "At-Tin",
+    "folder": "095-At-Tin",
+    "files": [
+      1115,
+      1116,
+      1117
+    ],
+    "pageBanners": [
+      {
+        "page": 1115,
+        "banners": [
+          571
+        ]
+      },
+      {
+        "page": 1116,
+        "banners": [
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 96,
+    "surahName": "Al-Alaq",
+    "folder": "096-Al-Alaq",
+    "files": [
+      1116,
+      1117,
+      1118
+    ],
+    "pageBanners": [
+      {
+        "page": 1116,
+        "banners": [
+          909
+        ]
+      },
+      {
+        "page": 1118,
+        "banners": [
+          143,
+          230,
+          477,
+          564,
+          640,
+          895
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 97,
+    "surahName": "Al-Qadr",
+    "folder": "097-Al-Qadr",
+    "files": [
+      1117,
+      1118,
+      1119
+    ],
+    "pageBanners": [
+      {
+        "page": 1118,
+        "banners": [
+          143,
+          230,
+          477,
+          564,
+          640,
+          895
+        ]
+      },
+      {
+        "page": 1119,
+        "banners": [
+          243,
+          656,
+          744
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 98,
+    "surahName": "Al-Bayyinah",
+    "folder": "098-Al-Bayyinah",
+    "files": [
+      1117,
+      1118,
+      1119
+    ],
+    "pageBanners": [
+      {
+        "page": 1118,
+        "banners": [
+          143,
+          230,
+          477,
+          564,
+          640,
+          895
+        ]
+      },
+      {
+        "page": 1119,
+        "banners": [
+          243,
+          656,
+          744
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 99,
+    "surahName": "Az-Zalzalah",
+    "folder": "099-Az-Zalzalah",
+    "files": [
+      1118,
+      1119,
+      1120
+    ],
+    "pageBanners": [
+      {
+        "page": 1118,
+        "banners": [
+          143,
+          230,
+          477,
+          564,
+          640,
+          895
+        ]
+      },
+      {
+        "page": 1119,
+        "banners": [
+          243,
+          656,
+          744
+        ]
+      },
+      {
+        "page": 1120,
+        "banners": [
+          146,
+          737
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 100,
+    "surahName": "Al-Adiyat",
+    "folder": "100-Al-Adiyat",
+    "files": [
+      1119,
+      1120,
+      1121
+    ],
+    "pageBanners": [
+      {
+        "page": 1119,
+        "banners": [
+          243,
+          656,
+          744
+        ]
+      },
+      {
+        "page": 1120,
+        "banners": [
+          146,
+          737
+        ]
+      },
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 101,
+    "surahName": "Al-Qariah",
+    "folder": "101-Al-Qariah",
+    "files": [
+      1119,
+      1120,
+      1121
+    ],
+    "pageBanners": [
+      {
+        "page": 1119,
+        "banners": [
+          243,
+          656,
+          744
+        ]
+      },
+      {
+        "page": 1120,
+        "banners": [
+          146,
+          737
+        ]
+      },
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 102,
+    "surahName": "At-Takathur",
+    "folder": "102-At-Takathur",
+    "files": [
+      1120,
+      1121,
+      1122
+    ],
+    "pageBanners": [
+      {
+        "page": 1120,
+        "banners": [
+          146,
+          737
+        ]
+      },
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 103,
+    "surahName": "Al-Asr",
+    "folder": "103-Al-Asr",
+    "files": [
+      1120,
+      1121,
+      1122
+    ],
+    "pageBanners": [
+      {
+        "page": 1120,
+        "banners": [
+          146,
+          737
+        ]
+      },
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 104,
+    "surahName": "Al-Humazah",
+    "folder": "104-Al-Humazah",
+    "files": [
+      1121,
+      1122,
+      1123
+    ],
+    "pageBanners": [
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      },
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 105,
+    "surahName": "Al-Fil",
+    "folder": "105-Al-Fil",
+    "files": [
+      1121,
+      1122,
+      1123
+    ],
+    "pageBanners": [
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      },
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 106,
+    "surahName": "Quraysh",
+    "folder": "106-Quraysh",
+    "files": [
+      1121,
+      1122,
+      1123
+    ],
+    "pageBanners": [
+      {
+        "page": 1121,
+        "banners": [
+          491,
+          909
+        ]
+      },
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 107,
+    "surahName": "Al-Maun",
+    "folder": "107-Al-Maun",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 108,
+    "surahName": "Al-Kawthar",
+    "folder": "108-Al-Kawthar",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 109,
+    "surahName": "Al-Kafirun",
+    "folder": "109-Al-Kafirun",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 110,
+    "surahName": "An-Nasr",
+    "folder": "110-An-Nasr",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 111,
+    "surahName": "Al-Masad",
+    "folder": "111-Al-Masad",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 112,
+    "surahName": "Al-Ikhlas",
+    "folder": "112-Al-Ikhlas",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 113,
+    "surahName": "Al-Falaq",
+    "folder": "113-Al-Falaq",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  },
+  {
+    "surahNum": 114,
+    "surahName": "An-Nas",
+    "folder": "114-An-Nas",
+    "files": [
+      1122,
+      1123,
+      1124
+    ],
+    "pageBanners": [
+      {
+        "page": 1123,
+        "banners": [
+          85
+        ]
+      }
+    ]
+  }
+]

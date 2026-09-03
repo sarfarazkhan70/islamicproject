@@ -1,0 +1,64 @@
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { createCanvas } from '@napi-rs/canvas';
+import fs from 'fs';
+import path from 'path';
+
+async function extractPages() {
+  const data = new Uint8Array(fs.readFileSync('public/quran/quran.pdf'));
+  const doc = await pdfjsLib.getDocument({ data }).promise;
+
+  const outDir = path.resolve('scratch/surah_test_crops');
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+
+  const testPages = [
+    3, 4, 5,
+    90, 91, 92, 93, 94,
+    540, 541, 542, 543, 544,
+    810, 811, 812, 813, 814,
+    983, 984, 985, 986, 987,
+    1043, 1044, 1045,
+    1121, 1122, 1123, 1124
+  ];
+
+  for (const pageNum of testPages) {
+    const page = await doc.getPage(pageNum);
+    const ops = await page.getOperatorList();
+    
+    for (let i = 0; i < ops.fnArray.length; i++) {
+      if (ops.fnArray[i] === pdfjsLib.OPS.paintImageXObject) {
+        const objId = ops.argsArray[i][0];
+        await new Promise((resolve) => {
+          page.objs.get(objId, (img) => {
+            if (img && img.data) {
+              const canvas = createCanvas(img.width, img.height);
+              const ctx = canvas.getContext('2d');
+              const imgData = ctx.createImageData(img.width, img.height);
+              
+              let srcIdx = 0;
+              let dstIdx = 0;
+              for (let y = 0; y < img.height; y++) {
+                for (let x = 0; x < img.width; x++) {
+                  imgData.data[dstIdx] = img.data[srcIdx];
+                  imgData.data[dstIdx + 1] = img.data[srcIdx + 1];
+                  imgData.data[dstIdx + 2] = img.data[srcIdx + 2];
+                  imgData.data[dstIdx + 3] = 255;
+                  srcIdx += 3;
+                  dstIdx += 4;
+                }
+              }
+              ctx.putImageData(imgData, 0, 0);
+              const outPath = path.join(outDir, `page_${String(pageNum).padStart(4, '0')}.png`);
+              fs.writeFileSync(outPath, canvas.toBuffer('image/png'));
+            }
+            resolve();
+          });
+        });
+        break;
+      }
+    }
+  }
+
+  console.log('Successfully saved test page crops.');
+}
+
+extractPages().catch(console.error);

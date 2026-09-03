@@ -31,52 +31,44 @@ describe('Islamic Names Feature — Asma-ul-Husna & Asma-e-Mustafa ﷺ', () => {
         expect(item.english.trim().length).toBeGreaterThan(0);
         expect(item.explanation.trim().length).toBeGreaterThan(0);
         expect(item.reference.trim().length).toBeGreaterThan(0);
-        expect(item.audioUrl).toBe('/audio/asma_recitation.mp3');
-        expect(typeof item.startTime).toBe('number');
-        expect(typeof item.endTime).toBe('number');
-        expect(item.endTime!).toBeGreaterThan(item.startTime!);
+        expect(item.audioUrl).toMatch(/^\/audio\/allah\/allah-\d{2}\.wav$/);
         expect(item.category).toBe('allah');
       }
     });
 
     it('should verify physical audio file existence and size in public assets', () => {
-      const audioPath = path.resolve(__dirname, '../../frontend/public/audio/asma_recitation.mp3');
+      const audioPath = path.resolve(__dirname, '../../frontend/public/audio/allah/allah-01.wav');
       expect(fs.existsSync(audioPath)).toBe(true);
       const stats = fs.statSync(audioPath);
-      expect(stats.size).toBeGreaterThan(2 * 1024 * 1024); // Greater than 2 MB
+      expect(stats.size).toBeGreaterThan(200 * 1024); // Greater than 200 KB
     });
 
-    it('should verify key reference names against authentic Qur\'anic and Hadith citations and exact audio segments', () => {
+    it('should verify key reference names against authentic Qur\'anic and Hadith citations and audio mapping', () => {
       const rahman = ASMA_UL_HUSNA.find((n) => n.number === 1);
       expect(rahman?.transliteration).toBe('Ar-Rahman');
       expect(rahman?.arabic).toBe('الرَّحْمَنُ');
       expect(rahman?.reference).toContain('Surah Al-Fatihah');
-      expect(rahman?.startTime).toBe(8);
-      expect(rahman?.endTime).toBe(10);
+      expect(rahman?.audioUrl).toBe('/audio/allah/allah-01.wav');
 
       const malik = ASMA_UL_HUSNA.find((n) => n.number === 3);
       expect(malik?.transliteration).toBe('Al-Malik');
       expect(malik?.reference).toContain('Surah Al-Hashr 59:23');
-      expect(malik?.startTime).toBe(11);
-      expect(malik?.endTime).toBe(12);
+      expect(malik?.audioUrl).toBe('/audio/allah/allah-03.wav');
 
       const ahad = ASMA_UL_HUSNA.find((n) => n.number === 67);
       expect(ahad?.transliteration).toBe('Al-Ahad');
       expect(ahad?.reference).toContain('Surah Al-Ikhlas 112:1');
-      expect(ahad?.startTime).toBe(97);
-      expect(ahad?.endTime).toBe(98);
+      expect(ahad?.audioUrl).toBe('/audio/allah/allah-67.wav');
 
       const samad = ASMA_UL_HUSNA.find((n) => n.number === 68);
       expect(samad?.transliteration).toBe('As-Samad');
       expect(samad?.reference).toContain('Surah Al-Ikhlas 112:2');
-      expect(samad?.startTime).toBe(98);
-      expect(samad?.endTime).toBe(99);
+      expect(samad?.audioUrl).toBe('/audio/allah/allah-68.wav');
 
       const sabur = ASMA_UL_HUSNA.find((n) => n.number === 99);
       expect(sabur?.transliteration).toBe('As-Sabur');
       expect(sabur?.arabic).toBe('الصَّبُورُ');
-      expect(sabur?.startTime).toBe(144);
-      expect(sabur?.endTime).toBe(146);
+      expect(sabur?.audioUrl).toBe('/audio/allah/allah-99.wav');
     });
 
     it('should not contain any placeholder or test strings', () => {

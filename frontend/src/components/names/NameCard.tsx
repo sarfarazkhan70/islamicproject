@@ -101,6 +101,20 @@ export const NameCard: React.FC<NameCardProps> = ({ item, onSelect }) => {
           }}
         >
           {item.arabic}
+          {itemCategory === 'allah' && (
+            <span
+              style={{
+                fontSize: '0.62em',
+                fontWeight: 'normal',
+                marginRight: '6px',
+                opacity: 0.85,
+                color: isCurrentPlaying ? 'var(--brand-gold)' : 'var(--brand-primary)',
+                fontFamily: 'inherit',
+              }}
+            >
+              {' '}جَلَّ جَلَالُهُ
+            </span>
+          )}
         </h2>
 
         {/* Transliteration */}

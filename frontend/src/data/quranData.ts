@@ -1646,7 +1646,7 @@ export const JUZ_LIST: JuzMeta[] = [
   }
 ];
 
-export const TOTAL_MUSHAF_PDF_PAGES = 1094;
+export const TOTAL_MUSHAF_PDF_PAGES = 1124;
 export const PDF_PHYSICAL_TOTAL_PAGES = 1124;
 export const QURAN_PDF_PATH = '/quran/quran.pdf';
 
@@ -1658,28 +1658,17 @@ export const PARA_COVER_PDF_PAGES = [
 ];
 
 /**
- * Convert Printed Quran Page Number (1 to 1094) into Physical PDF Page Number (1 to 1124)
+ * Direct 1-to-1 Mapping: Website Page N = Physical PDF Page N (1 to 1124)
  */
 export function quranTextPageToPdfPage(textPageNumber: number): number {
-  const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(textPageNumber) || 1));
-  let pdfPage = clamped;
-  for (const coverPdfPage of PARA_COVER_PDF_PAGES) {
-    if (pdfPage >= coverPdfPage) {
-      pdfPage++;
-    } else {
-      break;
-    }
-  }
-  return pdfPage;
+  return Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(textPageNumber) || 1));
 }
 
 /**
- * Convert Physical PDF Page Number (1 to 1124) into Printed Quran Page Number (1 to 1094)
+ * Direct 1-to-1 Mapping: Physical PDF Page N = Website Page N (1 to 1124)
  */
 export function pdfPageToQuranTextPage(physicalPdfPage: number): number {
-  const clamped = Math.max(1, Math.min(PDF_PHYSICAL_TOTAL_PAGES, Math.floor(physicalPdfPage) || 1));
-  const precedingCovers = PARA_COVER_PDF_PAGES.filter((c) => c <= clamped).length;
-  return Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, clamped - precedingCovers));
+  return Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(physicalPdfPage) || 1));
 }
 
 export function isCoverPage(physicalPdfPage: number): boolean {

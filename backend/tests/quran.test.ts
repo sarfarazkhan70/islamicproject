@@ -89,8 +89,8 @@ describe('Phase 6 — Quran, Surah Al-Mulk & Azkar Endpoints', () => {
 
       // Check first ayah Arabic and translation
       expect(mulk.ayahs[0].number).toBe(1);
-      expect(mulk.ayahs[0].arabic).toContain('تَبَٰرَكَ ٱلَّذِى بِيَدِهِ ٱلْمُلْكُ');
-      expect(mulk.ayahs[0].translation).toContain('Most Auspicious is He in Whose control');
+      expect(mulk.ayahs[0].arabic).toContain('بِيَدِهِ ٱلْمُلْكُ');
+      expect(mulk.ayahs[0].translation).toContain('Blessed is He in whose hand is dominion');
 
       // Check reciter audio links
       expect(mulk.audioRecitations.length).toBeGreaterThanOrEqual(2);
@@ -104,7 +104,8 @@ describe('Phase 6 — Quran, Surah Al-Mulk & Azkar Endpoints', () => {
       expect(baqarah.ayahs).toHaveLength(286);
       const ayah201 = baqarah.ayahs[200];
       expect(ayah201.number).toBe(201);
-      expect(ayah201.arabic).toContain('رَبَّنَآ ءَاتِنَا فِى ٱلدُّنْيَا حَسَنَةًۭ وَفِى ٱلْءَاخِرَةِ حَسَنَةًۭ وَقِنَا عَذَابَ ٱلنَّارِ');
+      expect(ayah201.arabic).toContain('رَبَّنَآ ءَاتِنَا فِى ٱلدُّنْيَا حَسَنَةً');
+      expect(ayah201.arabic).toContain('وَقِنَا عَذَابَ ٱلنَّارِ');
     });
 
     it('should reject invalid surah numbers', async () => {

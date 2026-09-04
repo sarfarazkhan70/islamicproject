@@ -1661,8 +1661,8 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
-  min-height: 44px;
+  padding: 8px 16px;
+  min-height: 38px;
   border-radius: var(--radius-lg);
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
@@ -1672,25 +1672,62 @@ input:checked + .slider:before {
   text-decoration: none;
 }
 
-.mushaf-nav-btn-primary {
-  background-color: var(--brand-primary);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+.mushaf-continuous-scroll-viewport {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.4) transparent;
 }
 
-.mushaf-nav-btn-primary:hover:not(:disabled) {
-  background-color: var(--brand-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+.mushaf-continuous-scroll-viewport::-webkit-scrollbar {
+  width: 8px;
 }
 
-.mushaf-nav-btn-primary:disabled {
+.mushaf-continuous-scroll-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mushaf-continuous-scroll-viewport::-webkit-scrollbar-thumb {
+  background-color: rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.mushaf-continuous-scroll-viewport::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(16, 185, 129, 0.6);
+}
+
+.mushaf-nav-btn-subtle {
   background-color: var(--bg-surface);
-  border-color: var(--border-subtle);
-  color: var(--text-muted);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+}
+
+.mushaf-nav-btn-subtle:hover:not(:disabled) {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  transform: translateY(-1px);
+}
+
+.mushaf-nav-btn-subtle:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
-  box-shadow: none;
-  opacity: 0.5;
+  border-color: var(--border-subtle);
+}
+
+.mushaf-page-slot {
+  background: #fdfbf7;
+}
+
+[data-theme="dark"] .mushaf-page-slot {
+  background: #111a16;
+}
+
+.mushaf-page-slot.is-active-page {
+  border-color: rgba(16, 185, 129, 0.6) !important;
+}
+
+.mushaf-page-skeleton {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03), rgba(245, 158, 11, 0.03));
 }
 
 .mushaf-page-jump-container {

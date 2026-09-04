@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import {
@@ -7,13 +7,13 @@ import {
   BookOpen,
   Loader2,
   Compass,
-  ArrowLeft,
-  ArrowRight,
+  ArrowUp,
+  ArrowDown,
+  Hash,
 } from 'lucide-react';
 import {
   TOTAL_MUSHAF_PDF_PAGES,
   QURAN_PDF_PATH,
-  quranTextPageToPdfPage,
   getPrintedPageLabel,
   getSurahByPage,
   getSurahByNumber,
@@ -33,6 +33,235 @@ interface QuranPdfCanvasViewerProps {
   className?: string;
 }
 
+interface MushafPageItemProps {
+  pageNumber: number;
+  pdfDoc: pdfjsLib.PDFDocumentProxy | null;
+  shouldRender: boolean;
+  pageWidth: number;
+  pageHeight: number;
+  zoomLevel: number;
+  isCover: boolean;
+  isCurrentPage: boolean;
+}
+
+const MushafPageItem: React.FC<MushafPageItemProps> = React.memo(({
+  pageNumber,
+  pdfDoc,
+  shouldRender,
+  pageWidth,
+  pageHeight,
+  zoomLevel,
+  isCover,
+  isCurrentPage,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const renderTaskRef = useRef<any>(null);
+  const [isRendered, setIsRendered] = useState<boolean>(false);
+  const [isRendering, setIsRendering] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    if (!shouldRender || !pdfDoc) {
+      if (renderTaskRef.current) {
+        try {
+          renderTaskRef.current.cancel();
+        } catch {}
+        renderTaskRef.current = null;
+      }
+      setIsRendered(false);
+      setIsRendering(false);
+      return;
+    }
+
+    const renderCanvas = async () => {
+      const canvas = canvasRef.current;
+      if (!canvas || !pdfDoc) return;
+
+      setIsRendering(true);
+
+      // Cancel previous render task if any
+      if (renderTaskRef.current) {
+        try {
+          renderTaskRef.current.cancel();
+        } catch {}
+        renderTaskRef.current = null;
+      }
+
+      try {
+        const page = await pdfDoc.getPage(pageNumber);
+        if (isCancelled) return;
+
+        const unscaledViewport = page.getViewport({ scale: 1.0 });
+        const scale = (pageWidth / unscaledViewport.width);
+        const viewport = page.getViewport({ scale });
+
+        // High-DPI Retina scale factor
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
+
+        const ctx = canvas.getContext('2d', { alpha: true });
+        if (!ctx || isCancelled) return;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport,
+        };
+
+        const task = page.render(renderContext);
+        renderTaskRef.current = task;
+
+        await task.promise;
+        if (!isCancelled) {
+          setIsRendered(true);
+          setIsRendering(false);
+        }
+      } catch (err: any) {
+        if (err?.name !== 'RenderingCancelledException') {
+          console.warn(`Render error on Mushaf page ${pageNumber}:`, err);
+        }
+        if (!isCancelled) {
+          setIsRendering(false);
+        }
+      }
+    };
+
+    renderCanvas();
+
+    return () => {
+      isCancelled = true;
+      if (renderTaskRef.current) {
+        try {
+          renderTaskRef.current.cancel();
+        } catch {}
+        renderTaskRef.current = null;
+      }
+    };
+  }, [pageNumber, pdfDoc, shouldRender, pageWidth, pageHeight, zoomLevel]);
+
+  return (
+    <div
+      id={`mushaf-page-slot-${pageNumber}`}
+      className={`mushaf-page-slot ${isCurrentPage ? 'is-active-page' : ''} ${isCover ? 'is-cover-page' : ''}`}
+      style={{
+        width: `${pageWidth}px`,
+        minHeight: `${pageHeight}px`,
+        height: `${pageHeight}px`,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto 20px auto',
+        backgroundColor: 'var(--bg-card)',
+        borderRadius: 'var(--radius-xl)',
+        boxShadow: isCurrentPage
+          ? '0 10px 25px -5px rgba(16, 185, 129, 0.25), 0 0 0 2px rgba(16, 185, 129, 0.4)'
+          : '0 4px 16px -2px rgba(0, 0, 0, 0.08)',
+        border: isCover ? '2px solid rgba(16, 185, 129, 0.5)' : '1px solid var(--border-subtle)',
+        transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Page Header Indicator */}
+      <div
+        className="mushaf-page-pill-badge"
+        style={{
+          position: 'absolute',
+          top: '8px',
+          right: '12px',
+          zIndex: 5,
+          fontSize: '11px',
+          fontFamily: 'var(--font-mono)',
+          fontWeight: 600,
+          color: 'var(--text-secondary)',
+          backgroundColor: 'var(--bg-surface)',
+          padding: '2px 8px',
+          borderRadius: 'var(--radius-full)',
+          border: '1px solid var(--border-subtle)',
+          pointerEvents: 'none',
+          opacity: 0.85,
+        }}
+      >
+        Page {pageNumber}
+      </div>
+
+      {shouldRender ? (
+        <>
+          <canvas
+            ref={canvasRef}
+            className="mushaf-canvas-element"
+            style={{
+              opacity: isRendered ? 1 : 0.4,
+              transition: 'opacity 0.2s ease',
+              display: 'block',
+            }}
+          />
+          {isRendering && !isRendered && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                color: 'var(--brand-primary)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 600,
+              }}
+            >
+              <Loader2 size={16} className="animate-spin text-emerald-500" />
+              <span>Rendering Page {pageNumber}...</span>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Lightweight Skeleton Placeholder for Distant Virtualized Pages */
+        <div
+          className="mushaf-page-skeleton"
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            color: 'var(--text-muted)',
+          }}
+        >
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: 'var(--radius-lg)',
+              backgroundColor: 'var(--bg-surface-elevated)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <BookOpen size={20} className="text-emerald-500 opacity-60" />
+          </div>
+          <span style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)' }}>
+            Page {pageNumber} / {TOTAL_MUSHAF_PDF_PAGES}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+});
+
+MushafPageItem.displayName = 'MushafPageItem';
+
 export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
   currentPage,
   onPageChange,
@@ -42,27 +271,24 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
   className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const pdfDocRef = useRef<pdfjsLib.PDFDocumentProxy | null>(null);
-  const renderTaskRef = useRef<any>(null);
 
   const [isLoadingDoc, setIsLoadingDoc] = useState<boolean>(true);
-  const [isRenderingPage, setIsRenderingPage] = useState<boolean>(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [pageInputVal, setPageInputVal] = useState<string>(String(currentPage));
 
-  // Touch & Pointer swipe handling
-  const touchStartXRef = useRef<number | null>(null);
-  const touchStartYRef = useRef<number | null>(null);
-  const touchStartTimeRef = useRef<number>(0);
-  const pointerStartXRef = useRef<number | null>(null);
-  const pointerStartYRef = useRef<number | null>(null);
-  const pointerStartTimeRef = useRef<number>(0);
-  const gestureProcessedRef = useRef<boolean>(false);
-  const lastWheelNavTimeRef = useRef<number>(0);
+  // Virtualization state
+  const [containerWidth, setContainerWidth] = useState<number>(800);
+  const [baseAspectRatio, setBaseAspectRatio] = useState<number>(1.48); // Standard Subcontinent / Madani Quran page aspect ratio
+  const [renderedRange, setRenderedRange] = useState<[number, number]>([1, 6]);
 
-  // Sync page input when currentPage changes
+  const isProgrammaticScrollRef = useRef<boolean>(false);
+  const programmaticTimeoutRef = useRef<any>(null);
+  const lastReportedPageRef = useRef<number>(currentPage);
+
+  // Sync internal page input when currentPage changes
   useEffect(() => {
     setPageInputVal(String(currentPage));
   }, [currentPage]);
@@ -83,9 +309,21 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
     });
 
     loadingTask.promise
-      .then((doc) => {
+      .then(async (doc) => {
         if (!isMounted) return;
         pdfDocRef.current = doc;
+
+        // Measure Page 1 unscaled dimensions to get exact aspect ratio
+        try {
+          const firstPage = await doc.getPage(1);
+          const viewport = firstPage.getViewport({ scale: 1.0 });
+          if (viewport.width > 0 && viewport.height > 0) {
+            setBaseAspectRatio(viewport.height / viewport.width);
+          }
+        } catch {
+          // Fallback default aspect ratio
+        }
+
         setIsLoadingDoc(false);
       })
       .catch((err) => {
@@ -99,134 +337,119 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
 
     return () => {
       isMounted = false;
-      if (renderTaskRef.current) {
-        try {
-          renderTaskRef.current.cancel();
-        } catch {}
-      }
     };
   }, []);
 
-  const renderSeqRef = useRef<number>(0);
+  // Responsive container width measuring
+  useEffect(() => {
+    const measureWidth = () => {
+      if (scrollContainerRef.current) {
+        const w = scrollContainerRef.current.clientWidth;
+        if (w > 0) {
+          setContainerWidth(w);
+        }
+      }
+    };
 
-  // Render current page to canvas
-  const renderPage = useCallback(async () => {
-    const pdfDoc = pdfDocRef.current;
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!pdfDoc || !canvas || !container) return;
+    measureWidth();
+    window.addEventListener('resize', measureWidth);
+    return () => window.removeEventListener('resize', measureWidth);
+  }, []);
 
-    const thisSeq = ++renderSeqRef.current;
+  // Compute calculated dimensions for each page
+  const horizontalPadding = containerWidth < 640 ? 16 : 48;
+  const maxNormalWidth = Math.min(840, Math.max(280, containerWidth - horizontalPadding));
+  const pageWidth = Math.floor(maxNormalWidth * zoomLevel);
+  const pageHeight = Math.floor(pageWidth * baseAspectRatio);
+  const pageGap = 20;
+  const slotHeight = pageHeight + pageGap;
 
-    // Cancel any previous in-progress render task
-    if (renderTaskRef.current) {
-      try {
-        renderTaskRef.current.cancel();
-      } catch {}
-      renderTaskRef.current = null;
+  // Jump / Scroll to a specific page
+  const scrollToPage = useCallback((pageNum: number, smooth: boolean = true) => {
+    const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, pageNum));
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    isProgrammaticScrollRef.current = true;
+    if (programmaticTimeoutRef.current) {
+      clearTimeout(programmaticTimeoutRef.current);
     }
 
-    setIsRenderingPage(true);
+    const targetOffset = (clamped - 1) * slotHeight;
+    container.scrollTo({
+      top: targetOffset,
+      behavior: smooth ? 'smooth' : 'auto',
+    });
 
-    try {
-      const physicalPdfPage = quranTextPageToPdfPage(currentPage);
-      const page = await pdfDoc.getPage(physicalPdfPage);
+    // Update active render window immediately around target page
+    const buffer = 3;
+    setRenderedRange([
+      Math.max(1, clamped - buffer),
+      Math.min(TOTAL_MUSHAF_PDF_PAGES, clamped + buffer + 2),
+    ]);
 
-      if (thisSeq !== renderSeqRef.current) return;
+    // Release programmatic lock after animation finishes
+    programmaticTimeoutRef.current = setTimeout(() => {
+      isProgrammaticScrollRef.current = false;
+    }, smooth ? 600 : 50);
+  }, [slotHeight]);
 
-      // Measure container width for responsive fit
-      const podiumWidth = container.clientWidth || 800;
-      // Get unscaled viewport to determine aspect ratio
-      const unscaledViewport = page.getViewport({ scale: 1.0 });
-
-      // Optimal base scale: fit cleanly to container width with comfortable margin
-      const horizontalPadding = window.innerWidth < 640 ? 16 : 48;
-      const availableWidth = Math.max(260, podiumWidth - horizontalPadding);
-      const fitScale = availableWidth / unscaledViewport.width;
-      
-      // Effective scale with user zoom
-      const effectiveScale = fitScale * zoomLevel;
-      const viewport = page.getViewport({ scale: effectiveScale });
-
-      // High-DPI support (retina display crispness)
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.floor(viewport.width * dpr);
-      canvas.height = Math.floor(viewport.height * dpr);
-      canvas.style.width = `${Math.floor(viewport.width)}px`;
-      canvas.style.height = `${Math.floor(viewport.height)}px`;
-
-      const ctx = canvas.getContext('2d', { alpha: true });
-      if (!ctx) return;
-
-      if (thisSeq !== renderSeqRef.current) return;
-
-      // Scale context for DPR
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-
-      const renderContext = {
-        canvasContext: ctx,
-        viewport,
-      };
-
-      const task = page.render(renderContext);
-      renderTaskRef.current = task;
-
-      await task.promise;
-      if (thisSeq === renderSeqRef.current) {
-        setIsRenderingPage(false);
-      }
-    } catch (err: any) {
-      // Ignore cancellation errors
-      if (err?.name !== 'RenderingCancelledException') {
-        console.error('Error rendering Mushaf PDF page:', err);
-      }
-      if (thisSeq === renderSeqRef.current) {
-        setIsRenderingPage(false);
+  // Handle external currentPage changes (e.g. from Surah/Juz selector)
+  useEffect(() => {
+    if (isLoadingDoc || !pdfDocRef.current) return;
+    if (Math.abs(lastReportedPageRef.current - currentPage) > 0 && !isProgrammaticScrollRef.current) {
+      // Check if current scroll position matches currentPage
+      const container = scrollContainerRef.current;
+      if (container) {
+        const currentEstimatedPage = Math.floor((container.scrollTop + container.clientHeight / 2) / slotHeight) + 1;
+        if (currentEstimatedPage !== currentPage) {
+          scrollToPage(currentPage, true);
+        }
       }
     }
-  }, [currentPage, zoomLevel]);
+  }, [currentPage, isLoadingDoc, slotHeight, scrollToPage]);
 
-  // Re-render when page, zoom, or doc changes
+  // Initial scroll to starting page on load
   useEffect(() => {
     if (!isLoadingDoc && pdfDocRef.current) {
-      renderPage();
+      scrollToPage(currentPage, false);
     }
-  }, [currentPage, zoomLevel, isLoadingDoc, renderPage]);
+  }, [isLoadingDoc]);
 
-  // Handle window resize with debounce
-  useEffect(() => {
-    let resizeTimer: any;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        if (!isLoadingDoc && pdfDocRef.current) {
-          renderPage();
-        }
-      }, 150);
-    };
+  // Scroll Listener for Active Page Detection & Virtual Windowing
+  const handleScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimer);
-    };
-  }, [isLoadingDoc, renderPage]);
+    const scrollTop = container.scrollTop;
+    const clientHeight = container.clientHeight;
 
-  // Page Navigation Handlers
-  const handlePrevPage = useCallback(() => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+    // 1. Calculate active center page
+    const centerOffset = scrollTop + clientHeight / 2;
+    const activePage = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(centerOffset / slotHeight) + 1));
+
+    if (!isProgrammaticScrollRef.current && activePage !== lastReportedPageRef.current) {
+      lastReportedPageRef.current = activePage;
+      onPageChange(activePage);
     }
-  }, [currentPage, onPageChange]);
 
-  const handleNextPage = useCallback(() => {
-    if (currentPage < TOTAL_MUSHAF_PDF_PAGES) {
-      onPageChange(currentPage + 1);
-    }
-  }, [currentPage, onPageChange]);
+    // 2. Calculate virtualized rendering range
+    const firstVisibleIndex = Math.max(1, Math.floor(scrollTop / slotHeight) + 1);
+    const visibleCount = Math.ceil(clientHeight / slotHeight) + 1;
+    const buffer = 2; // Buffer 2 pages above and 2 pages below
 
+    const start = Math.max(1, firstVisibleIndex - buffer);
+    const end = Math.min(TOTAL_MUSHAF_PDF_PAGES, firstVisibleIndex + visibleCount + buffer);
+
+    setRenderedRange((prev) => {
+      if (prev[0] !== start || prev[1] !== end) {
+        return [start, end];
+      }
+      return prev;
+    });
+  }, [slotHeight, onPageChange]);
+
+  // Direct Page Form Submit Handler
   const handlePageInputSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const num = parseInt(pageInputVal, 10);
@@ -234,21 +457,37 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
       const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, num));
       onPageChange(clamped);
       setPageInputVal(String(clamped));
+      scrollToPage(clamped, true);
     } else {
       setPageInputVal(String(currentPage));
     }
   };
 
-  // Keyboard navigation
+  // Keyboard navigation for scrolling
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
         return;
       }
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-        handleNextPage();
-      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-        handlePrevPage();
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      if (e.key === 'ArrowDown') {
+        container.scrollBy({ top: 120, behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp') {
+        container.scrollBy({ top: -120, behavior: 'smooth' });
+      } else if (e.key === 'PageDown' || e.key === 'Space') {
+        e.preventDefault();
+        container.scrollBy({ top: container.clientHeight * 0.8, behavior: 'smooth' });
+      } else if (e.key === 'PageUp') {
+        e.preventDefault();
+        container.scrollBy({ top: -container.clientHeight * 0.8, behavior: 'smooth' });
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        scrollToPage(1, true);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        scrollToPage(TOTAL_MUSHAF_PDF_PAGES, true);
       } else if (e.key === '+' || e.key === '=') {
         onZoomChange(Math.min(2.5, +(zoomLevel + 0.15).toFixed(2)));
       } else if (e.key === '-') {
@@ -260,105 +499,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNextPage, handlePrevPage, zoomLevel, onZoomChange]);
-
-  // Touch / Finger Swipe Handlers for mobile & tablet
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      touchStartXRef.current = e.touches[0].clientX;
-      touchStartYRef.current = e.touches[0].clientY;
-      touchStartTimeRef.current = Date.now();
-      gestureProcessedRef.current = false;
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (gestureProcessedRef.current) return;
-    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
-
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-
-    const diffX = touchEndX - touchStartXRef.current;
-    const diffY = touchEndY - touchStartYRef.current;
-    const elapsedTime = Date.now() - touchStartTimeRef.current;
-
-    // Sensible threshold: at least 40px horizontal travel, dominant horizontal movement (not vertical scroll)
-    // and fast enough (< 1200ms)
-    if (Math.abs(diffX) >= 40 && Math.abs(diffX) > Math.abs(diffY) * 1.2 && elapsedTime < 1200) {
-      gestureProcessedRef.current = true;
-      if (diffX < 0) {
-        // Swiped Left -> Next page
-        handleNextPage();
-      } else {
-        // Swiped Right -> Previous page
-        handlePrevPage();
-      }
-    }
-
-    touchStartXRef.current = null;
-    touchStartYRef.current = null;
-  };
-
-  const handleTouchCancel = () => {
-    touchStartXRef.current = null;
-    touchStartYRef.current = null;
-    gestureProcessedRef.current = false;
-  };
-
-  // Pointer event handlers for touch-screen laptops and styluses
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-      pointerStartXRef.current = e.clientX;
-      pointerStartYRef.current = e.clientY;
-      pointerStartTimeRef.current = Date.now();
-      gestureProcessedRef.current = false;
-    }
-  };
-
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-      if (gestureProcessedRef.current) return;
-      if (pointerStartXRef.current === null || pointerStartYRef.current === null) return;
-
-      const diffX = e.clientX - pointerStartXRef.current;
-      const diffY = e.clientY - pointerStartYRef.current;
-      const elapsedTime = Date.now() - pointerStartTimeRef.current;
-
-      if (Math.abs(diffX) >= 40 && Math.abs(diffX) > Math.abs(diffY) * 1.2 && elapsedTime < 1200) {
-        gestureProcessedRef.current = true;
-        if (diffX < 0) {
-          handleNextPage();
-        } else {
-          handlePrevPage();
-        }
-      }
-
-      pointerStartXRef.current = null;
-      pointerStartYRef.current = null;
-    }
-  };
-
-  const handlePointerCancel = () => {
-    pointerStartXRef.current = null;
-    pointerStartYRef.current = null;
-    gestureProcessedRef.current = false;
-  };
-
-  // Horizontal trackpad gesture support (two-finger horizontal scroll)
-  const handleWheel = (e: React.WheelEvent) => {
-    if (Math.abs(e.deltaX) > 40 && Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5) {
-      const now = Date.now();
-      if (now - lastWheelNavTimeRef.current > 400) {
-        lastWheelNavTimeRef.current = now;
-        if (e.deltaX > 0) {
-          handleNextPage();
-        } else {
-          handlePrevPage();
-        }
-      }
-    }
-  };
+  }, [scrollToPage, zoomLevel, onZoomChange]);
 
   // Toggle fullscreen
   const toggleFullscreen = () => {
@@ -380,6 +521,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
     return () => document.removeEventListener('fullscreenchange', handleFsChange);
   }, []);
 
+  // Metadata headers
   const selectedSurahObj = surahNumber ? getSurahByNumber(surahNumber) : null;
   const currentSurah =
     selectedSurahObj && selectedSurahObj.pageStart === currentPage
@@ -387,7 +529,11 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
       : getSurahByPage(currentPage);
   const currentJuz = getJuzByPage(currentPage);
   const printedLabel = getPrintedPageLabel(currentPage);
-  const isCover = isCoverPage(quranTextPageToPdfPage(currentPage));
+
+  // Generate array of 1 to 1124 page numbers
+  const allPageNumbers = useMemo(() => {
+    return Array.from({ length: TOTAL_MUSHAF_PDF_PAGES }, (_, i) => i + 1);
+  }, []);
 
   return (
     <div
@@ -458,7 +604,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
             type="button"
             onClick={() => onZoomChange(1.0)}
             className="mushaf-tool-btn"
-            title="Fit to View / Reset (100%)"
+            title="Fit to View (100%)"
             aria-label="Fit to View"
             style={{ padding: '0 8px' }}
           >
@@ -477,23 +623,24 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
         </div>
       </div>
 
-      {/* Main Canvas Podium Container with Touch Swipe & Pointer Gesture Support (Clean without Middle Floating Overlay Buttons) */}
+      {/* Main Continuous Vertical Scrolling Mushaf Container */}
       <div
-        className="mushaf-canvas-podium"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchCancel}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerCancel}
-        onWheel={handleWheel}
+        ref={scrollContainerRef}
+        className="mushaf-canvas-podium mushaf-continuous-scroll-viewport"
+        onScroll={handleScroll}
         style={{
           touchAction: 'pan-y',
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
+          WebkitOverflowScrolling: 'touch',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          width: '100%',
+          maxHeight: isFullscreen ? 'calc(100vh - 120px)' : '76vh',
+          height: isFullscreen ? 'calc(100vh - 120px)' : '720px',
+          padding: '16px 8px',
+          position: 'relative',
         }}
       >
-        {/* Loading overlay for PDF doc */}
+        {/* Loading overlay for initial PDF document parsing */}
         {isLoadingDoc && (
           <div
             style={{
@@ -504,7 +651,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: 'var(--bg-card)',
-              zIndex: 20,
+              zIndex: 30,
               gap: 'var(--space-3)',
               borderRadius: 'var(--radius-xl)',
             }}
@@ -514,7 +661,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
               Opening Holy Quran Mushaf...
             </p>
             <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-xs)' }}>
-              Loading authentic Zia-ul-Quran edition
+              Loading continuous 1124-page reader
             </p>
           </div>
         )}
@@ -524,6 +671,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
           <div
             style={{
               padding: 'var(--space-6)',
+              margin: 'auto',
               textAlign: 'center',
               color: 'var(--danger)',
               backgroundColor: 'var(--bg-surface)',
@@ -537,59 +685,59 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
           </div>
         )}
 
-        {/* Page rendering subtle spinner badge */}
-        {isRenderingPage && !isLoadingDoc && (
+        {/* Continuous Virtualized Pages List (1 to 1124) */}
+        {!isLoadingDoc && !loadError && (
           <div
+            className="mushaf-pages-vertical-stack"
             style={{
-              position: 'absolute',
-              top: '12px',
-              right: '12px',
-              zIndex: 10,
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-subtle)',
-              padding: '4px 10px',
-              borderRadius: 'var(--radius-full)',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--brand-primary)',
-              boxShadow: 'var(--shadow-sm)',
+              width: '100%',
+              minHeight: `${TOTAL_MUSHAF_PDF_PAGES * slotHeight}px`,
             }}
           >
-            <Loader2 size={12} className="animate-spin" />
-            <span>Rendering...</span>
+            {allPageNumbers.map((pageNum) => {
+              const shouldRender = pageNum >= renderedRange[0] && pageNum <= renderedRange[1];
+              return (
+                <MushafPageItem
+                  key={`page-slot-${pageNum}`}
+                  pageNumber={pageNum}
+                  pdfDoc={pdfDocRef.current}
+                  shouldRender={shouldRender}
+                  pageWidth={pageWidth}
+                  pageHeight={pageHeight}
+                  zoomLevel={zoomLevel}
+                  isCover={isCoverPage(pageNum)}
+                  isCurrentPage={pageNum === currentPage}
+                />
+              );
+            })}
           </div>
         )}
-
-        {/* Canvas Display with Crisp Styling (Clean Mushaf, No Overlay Buttons) */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <canvas
-            ref={canvasRef}
-            className={`mushaf-canvas-element ${isCover ? 'ring-2 ring-emerald-500' : ''}`}
-            style={{
-              opacity: isRenderingPage ? 0.88 : 1,
-            }}
-          />
-        </div>
       </div>
 
-      {/* Bottom Dedicated Navigation Bar */}
+      {/* Bottom Bar — Continuous Reader Controls with Direct Page Jump (No Next/Prev Buttons) */}
       <div className="mushaf-bottom-nav">
-        {/* Previous Page Button */}
+        {/* Quick Jump to Beginning (Page 1) */}
         <button
           type="button"
-          onClick={handlePrevPage}
+          onClick={() => {
+            onPageChange(1);
+            scrollToPage(1, true);
+          }}
           disabled={currentPage <= 1}
-          className="mushaf-nav-btn mushaf-nav-btn-primary"
-          aria-label="Previous Page"
+          className="mushaf-nav-btn mushaf-nav-btn-subtle"
+          title="Scroll to Beginning (Page 1)"
+          aria-label="Scroll to First Page"
         >
-          <ArrowLeft size={16} />
-          <span>Previous Page</span>
+          <ArrowUp size={15} />
+          <span>Top (Page 1)</span>
         </button>
 
-        {/* Direct Page Input & Jump Form */}
+        {/* Center Direct Page Input & Jump Form */}
         <form onSubmit={handlePageInputSubmit} className="mushaf-page-jump-container">
+          <Hash size={14} className="text-emerald-500" />
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
             Page
           </span>
@@ -601,7 +749,7 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
             onChange={(e) => setPageInputVal(e.target.value)}
             onBlur={handlePageInputSubmit}
             className="mushaf-page-input"
-            aria-label="Direct PDF Page Number"
+            aria-label={`Enter Quran PDF Page Number (1 to ${TOTAL_MUSHAF_PDF_PAGES})`}
           />
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
             / {TOTAL_MUSHAF_PDF_PAGES}
@@ -611,19 +759,22 @@ export const QuranPdfCanvasViewer: React.FC<QuranPdfCanvasViewerProps> = ({
           </button>
         </form>
 
-        {/* Next Page Button */}
+        {/* Quick Jump to End (Page 1124) */}
         <button
           type="button"
-          onClick={handleNextPage}
+          onClick={() => {
+            onPageChange(TOTAL_MUSHAF_PDF_PAGES);
+            scrollToPage(TOTAL_MUSHAF_PDF_PAGES, true);
+          }}
           disabled={currentPage >= TOTAL_MUSHAF_PDF_PAGES}
-          className="mushaf-nav-btn mushaf-nav-btn-primary"
-          aria-label="Next Page"
+          className="mushaf-nav-btn mushaf-nav-btn-subtle"
+          title="Scroll to End (Page 1124)"
+          aria-label="Scroll to Last Page"
         >
-          <span>Next Page</span>
-          <ArrowRight size={16} />
+          <span>End (Page 1124)</span>
+          <ArrowDown size={15} />
         </button>
       </div>
     </div>
   );
 };
-

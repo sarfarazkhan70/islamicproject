@@ -16,6 +16,12 @@ const envSchema = z.object({
     VAPID_PUBLIC_KEY: z.string().default('BPGNpd3iPMMs-tl95Yf2dMwkav4pTXsyslzgVsRUpVbs0wTNvlZ1JgZRSEN4ZumV_zpJ54ezngmV_MejLb603WY'),
     VAPID_PRIVATE_KEY: z.string().default('uySkCzjJdM4qLuUHm2eCGC5YLAQfuv85t0DU5fnnTLQ'),
     VAPID_SUBJECT: z.string().default('mailto:admin@islamicprayer.app'),
+    QURAN_API_CLIENT_ID: z.string().default('d20ae676-73f6-4498-98e0-beb0490fdbc3'),
+    QURAN_API_CLIENT_SECRET: z.string().default(''),
+    QURAN_API_BASE_URL: z.string().default('https://apis.quran.foundation/content/api/v4'),
+    QURAN_API_AUTH_URL: z.string().default('https://oauth2.quran.foundation/oauth2/token'),
+    QURAN_API_FALLBACK_URL: z.string().default('https://api.quran.com/api/v4'),
+    QURAN_API_ENV: z.enum(['production', 'prelive', 'test']).default('production'),
 });
 const parsedEnv = envSchema.safeParse(process.env);
 if (!parsedEnv.success) {

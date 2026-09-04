@@ -4,10 +4,11 @@ import { app } from '../src/app.js';
 import { User } from '../src/models/User.js';
 
 describe('Security & Isolation Tests', () => {
-  const userA = { email: 'userA@example.com', password: 'PasswordA123' };
-  const userB = { email: 'userB@example.com', password: 'PasswordB123' };
-
   it('should enforce user data isolation so User A cannot access or mutate User B data', async () => {
+    const timestamp = Date.now();
+    const userA = { email: `secUserA_${timestamp}@example.com`, password: 'PasswordA123' };
+    const userB = { email: `secUserB_${timestamp}@example.com`, password: 'PasswordB123' };
+
     // Register User A
     const resA = await request(app).post('/api/v1/auth/register').send(userA);
     const tokenA = resA.body.data.tokens.accessToken;
@@ -46,8 +47,9 @@ describe('Security & Isolation Tests', () => {
   });
 
   it('should never expose passwordHash in database queries without explicit select', async () => {
-    await request(app).post('/api/v1/auth/register').send(userA);
-    const userDoc = await User.findOne({ email: userA.email });
+    const testUser = { email: `secUserDoc_${Date.now()}@example.com`, password: 'PasswordA123' };
+    await request(app).post('/api/v1/auth/register').send(testUser);
+    const userDoc = await User.findOne({ email: testUser.email });
 
     expect(userDoc).toBeDefined();
     expect(userDoc?.passwordHash).toBeUndefined();

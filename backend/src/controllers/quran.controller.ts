@@ -117,4 +117,22 @@ export class QuranController {
       next(err);
     }
   }
+
+  static streamQuranPdf(_req: Request, res: Response, next: NextFunction): void {
+    try {
+      res.status(410).json(sendError('PDF_MIGRATED', 'Quran PDF has been migrated to the official Quran Foundation API. Please use /api/v1/quran-api endpoints.'));
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static getPdfStatus(_req: Request, res: Response): void {
+    res.status(200).json(sendSuccess({
+      provider: 'Quran Foundation API v4 (Official REST API)',
+      supportedMushafPages: 604,
+      status: 'active',
+      apiEndpoint: '/api/v1/quran-api',
+    }));
+  }
 }
+

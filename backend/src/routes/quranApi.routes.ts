@@ -1,10 +1,15 @@
 import { Router } from 'express';
 import { QuranApiController } from '../controllers/quranApi.controller.js';
+import { QuranController } from '../controllers/quran.controller.js';
 
 const router = Router();
 
 // Provider & Authentication Health / Status
 router.get('/status', QuranApiController.getStatus);
+
+// Pakistan Quran PDF Stream & Metadata
+router.get('/pdf', QuranController.streamQuranPdf);
+router.get('/pdf/status', QuranController.getPdfStatus);
 
 // Quran Content Endpoints
 router.get('/surahs', QuranApiController.getSurahs);

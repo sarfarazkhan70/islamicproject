@@ -9,6 +9,8 @@ router.get('/surahs', QuranController.getSurahs);
 router.get('/juz', QuranController.getJuzList);
 router.get('/surah/:number', QuranController.getSurahDetail);
 router.get('/search', QuranController.search);
+router.get('/pdf', QuranController.streamQuranPdf);
+router.get('/pdf/status', QuranController.getPdfStatus);
 // Authenticated bookmark routes
 router.get('/bookmarks', requireAuth, QuranController.getBookmarks);
 router.post('/bookmarks', requireAuth, validate(addBookmarkSchema), QuranController.addBookmark);

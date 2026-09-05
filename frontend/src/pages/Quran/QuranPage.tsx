@@ -7,11 +7,13 @@ import { useQuranStore } from '../../stores/useQuranStore';
 import {
   SURAHS_LIST,
   JUZ_LIST,
-  TOTAL_MUSHAF_PDF_PAGES,
+  MIN_MUSHAF_PAGE,
+  MAX_MUSHAF_PAGE,
   QURAN_COM_RECITERS,
   getSurahByNumber,
+  quranTextPageToApiPage,
 } from '../../data/quranData';
-import { QuranPdfCanvasViewer } from '../../components/quran/QuranPdfCanvasViewer';
+import { QuranApiPageViewer } from '../../components/quran/QuranApiPageViewer';
 import {
   Search,
   Bookmark,
@@ -28,7 +30,6 @@ import {
   Volume2,
   VolumeX,
   Compass,
-  Hash,
 } from 'lucide-react';
 
 export const QuranPage: React.FC = () => {
@@ -52,7 +53,6 @@ export const QuranPage: React.FC = () => {
     searchTerm,
     activeTab,
     setMode,
-    goToQuranPage,
     setMushafPage,
     jumpToSurahPage,
     jumpToJuzPage,
@@ -75,12 +75,6 @@ export const QuranPage: React.FC = () => {
 
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showAudioStrip, setShowAudioStrip] = useState<boolean>(false);
-  const [directPageInput, setDirectPageInput] = useState<string>(String(mushafPage));
-
-  // Sync direct page input with active mushaf page
-  useEffect(() => {
-    setDirectPageInput(String(mushafPage));
-  }, [mushafPage]);
 
   // Metadata for active audio
   const activeAudioSurahMeta = getSurahByNumber(activeAudioSurah);
@@ -103,6 +97,13 @@ export const QuranPage: React.FC = () => {
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
 
+  const [directPageInput, setDirectPageInput] = useState<string>(mushafPage.toString());
+
+  // Keep direct page input box synchronized when active page updates (via scroll or selectors)
+  useEffect(() => {
+    setDirectPageInput(mushafPage.toString());
+  }, [mushafPage]);
+
   const handleSurahSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const surahNum = parseInt(e.target.value, 10);
     if (!isNaN(surahNum)) {
@@ -119,13 +120,10 @@ export const QuranPage: React.FC = () => {
 
   const handleDirectPageSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const num = parseInt(directPageInput, 10);
-    if (!isNaN(num)) {
-      const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, num));
-      goToQuranPage(clamped);
-      setDirectPageInput(String(clamped));
-    } else {
-      setDirectPageInput(String(mushafPage));
+    const pageNum = parseInt(directPageInput, 10);
+    if (!isNaN(pageNum)) {
+      const validPage = quranTextPageToApiPage(pageNum);
+      setMushafPage(validPage);
     }
   };
 
@@ -418,83 +416,81 @@ export const QuranPage: React.FC = () => {
           MODE 1: MAIN QURAN MUSHAF READING MODE (ARABIC ONLY)
           ======================================================== */}
       {mode === 'read' && (
-        <div className="flex flex-col gap-4">
-          {/* Surah + Para + Direct Page Horizontal Selector Bar (3 Controls) */}
-          <div className="surah-para-selector-bar">
-            {/* 1. Surah Dropdown Box */}
-            <div className="selector-box-container">
-              <label className="selector-label" htmlFor="surah-select">
-                <BookOpen size={14} className="text-emerald-500" />
-                <span>Select Surah</span>
-              </label>
-              <select
-                id="surah-select"
-                className="selector-select-input"
-                value={currentSurahNumber}
-                onChange={handleSurahSelect}
-                aria-label="Select Surah"
-              >
-                {SURAHS_LIST.map((s) => (
-                  <option key={s.number} value={s.number}>
-                    {s.number}. {s.name} ({s.arabicName}) - Page {s.pageStart}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* 2. Para / Juz Dropdown Box */}
-            <div className="selector-box-container">
-              <label className="selector-label" htmlFor="para-select">
-                <Compass size={14} className="text-amber-500" />
-                <span>Select Para / Juz</span>
-              </label>
-              <select
-                id="para-select"
-                className="selector-select-input"
-                value={selectedPara}
-                onChange={handleParaSelect}
-                aria-label="Select Para / Juz"
-              >
-                {JUZ_LIST.map((j) => (
-                  <option key={j.number} value={j.number}>
-                    {j.number}. {j.name} ({j.arabicName}) - Page {j.pageStart}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* 3. Direct Page Jump Box */}
-            <div className="selector-box-container">
-              <label className="selector-label" htmlFor="top-page-jump-input">
-                <Hash size={14} className="text-blue-500" />
-                <span>Go to Page (1–{TOTAL_MUSHAF_PDF_PAGES})</span>
-              </label>
-              <form onSubmit={handleDirectPageSubmit} className="selector-page-form">
-                <input
-                  id="top-page-jump-input"
-                  type="number"
-                  min={1}
-                  max={TOTAL_MUSHAF_PDF_PAGES}
-                  value={directPageInput}
-                  onChange={(e) => setDirectPageInput(e.target.value)}
-                  placeholder={`1–${TOTAL_MUSHAF_PDF_PAGES}`}
-                  className="selector-page-input"
-                  aria-label={`Enter Quran PDF Page Number (1 to ${TOTAL_MUSHAF_PDF_PAGES})`}
-                />
-                <button
-                  type="submit"
-                  className="selector-page-go-btn"
-                  aria-label="Navigate to entered page"
+        <div className="flex flex-col gap-3">
+          {/* Sticky Surah + Para / Juz + Direct Page Horizontal Selector Bar (3 Controls) */}
+          <div className="quran-sticky-selector-wrapper">
+            <div className="surah-para-selector-bar">
+              {/* 1. Surah Dropdown Box */}
+              <div className="selector-box-container">
+                <label className="selector-label" htmlFor="surah-select">
+                  <BookOpen size={15} className="text-emerald-500" />
+                  <span>Select Surah</span>
+                </label>
+                <select
+                  id="surah-select"
+                  className="selector-select-input"
+                  value={currentSurahNumber}
+                  onChange={handleSurahSelect}
+                  aria-label="Select Surah"
                 >
-                  Go
-                </button>
-              </form>
+                  {SURAHS_LIST.map((s) => (
+                    <option key={s.number} value={s.number}>
+                      {s.number}. {s.name} ({s.arabicName}) — Page {s.pageStart}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 2. Para / Juz Dropdown Box */}
+              <div className="selector-box-container">
+                <label className="selector-label" htmlFor="para-select">
+                  <Compass size={15} className="text-amber-500" />
+                  <span>Select Para / Juz</span>
+                </label>
+                <select
+                  id="para-select"
+                  className="selector-select-input"
+                  value={selectedPara}
+                  onChange={handleParaSelect}
+                  aria-label="Select Para / Juz"
+                >
+                  {JUZ_LIST.map((j) => (
+                    <option key={j.number} value={j.number}>
+                      {j.number}. {j.name} ({j.arabicName}) — Page {j.pageStart}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 3. Direct Page Search / Jump Box */}
+              <div className="selector-box-container selector-box-page-jump">
+                <label className="selector-label" htmlFor="direct-page-search">
+                  <Search size={15} className="text-emerald-500" />
+                  <span>Go To Page ({MIN_MUSHAF_PAGE}–{MAX_MUSHAF_PAGE})</span>
+                </label>
+                <form onSubmit={handleDirectPageSubmit} className="selector-page-form">
+                  <input
+                    id="direct-page-search"
+                    type="number"
+                    min={MIN_MUSHAF_PAGE}
+                    max={MAX_MUSHAF_PAGE}
+                    value={directPageInput}
+                    onChange={(e) => setDirectPageInput(e.target.value)}
+                    placeholder={`Page (${MIN_MUSHAF_PAGE}-${MAX_MUSHAF_PAGE})`}
+                    className="selector-page-input"
+                    aria-label="Direct Page Search"
+                  />
+                  <button type="submit" className="selector-page-go-btn" title="Go to Page">
+                    Go
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 
-          {/* Main Mushaf PDF Canvas Viewer */}
+          {/* Main Mushaf API Page Viewer */}
           <div className="w-full">
-            <QuranPdfCanvasViewer
+            <QuranApiPageViewer
               currentPage={mushafPage}
               onPageChange={setMushafPage}
               zoomLevel={zoomLevel}

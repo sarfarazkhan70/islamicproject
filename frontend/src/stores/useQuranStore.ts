@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import {
   SURAHS_LIST,
   JUZ_LIST,
-  TOTAL_MUSHAF_PDF_PAGES,
+  TOTAL_MUSHAF_PAGES,
   SurahMeta,
   JuzMeta,
   getSurahByPage,
@@ -138,6 +138,8 @@ interface QuranState {
   // Ayah Audio
   setPlayingAyahKey: (key: string | null) => void;
   setIsAyahAudioPlaying: (playing: boolean) => void;
+  playAyahAudio: (verseKey: string) => Promise<void>;
+  toggleAyahAudio: (verseKey: string) => void;
 
   // Bookmarks & Progress
   toggleBookmark: (bookmark: Omit<QuranBookmark, 'createdAt'>) => void;
@@ -233,7 +235,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   showTranslation: true,
   selectedTranslationIds: loadInitialTranslations(),
 
-  mushafPage: 3,
+  mushafPage: 2,
   selectedPara: 1,
   zoomLevel: 1.0,
 
@@ -351,9 +353,9 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     }
   },
 
-  // Central 1-based PDF page navigation function (1 to 1124)
+  // Central Quran page navigation function (1 to 604)
   goToQuranPage: (pageNumber: number) => {
-    const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PDF_PAGES, Math.floor(pageNumber) || 1));
+    const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, Math.floor(pageNumber) || 1));
     const meta = getSurahByPage(clamped);
     const juz = getJuzByPage(clamped);
     set({
@@ -390,7 +392,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
 
   nextMushafPage: () => {
     const { mushafPage } = get();
-    if (mushafPage < TOTAL_MUSHAF_PDF_PAGES) {
+    if (mushafPage < TOTAL_MUSHAF_PAGES) {
       get().goToQuranPage(mushafPage + 1);
     }
   },
@@ -474,6 +476,32 @@ export const useQuranStore = create<QuranState>((set, get) => ({
 
   setPlayingAyahKey: (key) => set({ playingAyahKey: key }),
   setIsAyahAudioPlaying: (playing) => set({ isAyahAudioPlaying: playing }),
+
+  playAyahAudio: async (verseKey: string) => {
+    set({ playingAyahKey: verseKey, isAyahAudioPlaying: true });
+    try {
+      const audioUrl = QuranApiService.getAyahAudioUrl(verseKey);
+      const audio = new Audio(audioUrl);
+      audio.onended = () => {
+        set({ playingAyahKey: null, isAyahAudioPlaying: false });
+      };
+      audio.onerror = () => {
+        set({ playingAyahKey: null, isAyahAudioPlaying: false });
+      };
+      await audio.play();
+    } catch {
+      set({ playingAyahKey: null, isAyahAudioPlaying: false });
+    }
+  },
+
+  toggleAyahAudio: (verseKey: string) => {
+    const { playingAyahKey, isAyahAudioPlaying } = get();
+    if (isAyahAudioPlaying && playingAyahKey === verseKey) {
+      set({ playingAyahKey: null, isAyahAudioPlaying: false });
+    } else {
+      get().playAyahAudio(verseKey);
+    }
+  },
 
   // Bookmarks
   toggleBookmark: (bm) => {

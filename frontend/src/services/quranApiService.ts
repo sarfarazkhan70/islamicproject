@@ -53,6 +53,29 @@ export interface QuranChapterInfo {
   text: string;
 }
 
+export interface QuranWordApi {
+  id: number;
+  position: number;
+  audio_url?: string | null;
+  char_type_name: 'word' | 'end';
+  text_uthmani?: string;
+  text_indopak?: string;
+  text_imlaei?: string;
+  code_v1?: string;
+  code_v2?: string;
+  line_number: number;
+  page_number: number;
+  text?: string;
+  translation?: {
+    text: string;
+    language_name: string;
+  };
+  transliteration?: {
+    text: string | null;
+    language_name: string;
+  };
+}
+
 export interface QuranVerseTranslation {
   id: number;
   resource_id: number;
@@ -78,6 +101,7 @@ export interface QuranVerseApi {
   text_uthmani_tajweed?: string;
   text_uthmani_simple?: string;
   text_imlaei?: string;
+  words?: QuranWordApi[];
   translations?: QuranVerseTranslation[];
   audio?: {
     url: string;
@@ -247,8 +271,9 @@ export const QuranApiService = {
     if (cached) return cached;
 
     try {
-      const fields = 'text_uthmani,text_indopak,text_imlaei,text_uthmani_simple,chapter_id,verse_number,verse_key,page_number,juz_number';
-      const url = `${BASE_URL}/verses/by_page/${pageNumber}?per_page=50&fields=${fields}&translations=${translationsQuery}&language=en`;
+      const fields = 'text_uthmani,text_indopak,text_imlaei,text_uthmani_simple,chapter_id,verse_number,verse_key,page_number,juz_number,hizb_number,rub_el_hizb_number,ruku_number,manzil_number,sajdah_number';
+      const wordFields = 'text_uthmani,text_indopak,text_imlaei,line_number,page_number,char_type_name,code_v1,code_v2,translation,transliteration';
+      const url = `${BASE_URL}/verses/by_page/${pageNumber}?words=true&per_page=50&fields=${fields}&word_fields=${wordFields}&translations=${translationsQuery}&language=en`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Failed to fetch page ${pageNumber}: ${res.statusText}`);
       const data = await res.json();
@@ -325,5 +350,47 @@ export const QuranApiService = {
     const paddedChapter = String(chapterNum).padStart(3, '0');
     const paddedVerse = String(verseNum).padStart(3, '0');
     return `https://verses.quran.com/${reciterSlug}/mp3/${paddedChapter}${paddedVerse}.mp3`;
+  },
+
+  /**
+   * Get authentic optimized Pakistan / Subcontinent 16-Line Mushaf page image URL (2-549)
+   * Standard Taj Company Hafizi / Tajweedi print format (002.webp to 549.webp)
+   * With global CDN edge compression & responsive width optimization:
+   * - Desktop: width=1200px (crystal-clear text)
+   * - Mobile: width=600px (bandwidth-saving fast load)
+   */
+  getMushafPageImageUrl(
+    pageNumber: number,
+    size: 'desktop' | 'mobile' | 'full' = 'desktop'
+  ): string {
+    const clamped = Math.max(2, Math.min(549, Math.floor(pageNumber) || 2));
+    const padded = String(clamped).padStart(3, '0');
+    const rawUrl = `https://github.com/vincenzoh-gh/16-Line-Quran/releases/download/v2/${padded}.webp`;
+
+    if (size === 'mobile') {
+      return `https://images.weserv.nl/?url=${encodeURIComponent(rawUrl)}&w=600&output=webp&q=80`;
+    }
+    if (size === 'desktop') {
+      return `https://images.weserv.nl/?url=${encodeURIComponent(rawUrl)}&w=1200&output=webp&q=85`;
+    }
+    return rawUrl;
+  },
+
+  /**
+   * Responsive srcSet string for standard Mushaf <img> elements
+   */
+  getMushafPageSrcSet(pageNumber: number): string {
+    const mobileUrl = this.getMushafPageImageUrl(pageNumber, 'mobile');
+    const desktopUrl = this.getMushafPageImageUrl(pageNumber, 'desktop');
+    return `${mobileUrl} 600w, ${desktopUrl} 1200w`;
+  },
+
+  /**
+   * Fallback direct high-resolution Mushaf page image URL
+   */
+  getMushafPageImageFallbackUrl(pageNumber: number): string {
+    const clamped = Math.max(2, Math.min(549, Math.floor(pageNumber) || 2));
+    const padded = String(clamped).padStart(3, '0');
+    return `https://github.com/vincenzoh-gh/16-Line-Quran/releases/download/v2/${padded}.webp`;
   },
 };

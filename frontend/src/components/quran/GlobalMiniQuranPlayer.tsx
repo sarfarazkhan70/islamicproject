@@ -10,6 +10,7 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
   const {
     activeAudioSurah,
     selectedReciterId,
+    audioPlaybackPhase,
     isPlaying,
     playbackTime,
     playbackDuration,
@@ -81,7 +82,13 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
             <span className="mini-player-arabic" dir="rtl">{surahMeta.arabicName}</span>
           </div>
           <div className="mini-player-subtitle">
-            <span className="mini-player-reciter">{reciterObj.name}</span>
+            <span className="mini-player-reciter">
+              {audioPlaybackPhase === 'taawwuz'
+                ? `Ta'awwuz • ${reciterObj.name}`
+                : audioPlaybackPhase === 'bismillah'
+                ? `Bismillah • ${reciterObj.name}`
+                : reciterObj.name}
+            </span>
             <span className="mini-player-time">
               {formatTime(playbackTime)} / {formatTime(playbackDuration)}
             </span>

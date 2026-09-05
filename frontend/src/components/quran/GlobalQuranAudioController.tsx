@@ -1,5 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { useQuranStore, getAudioUrl } from '../../stores/useQuranStore';
+import {
+  useQuranStore,
+  getAudioUrl,
+  getTaawwuzAudioUrl,
+  getBismillahAudioUrl,
+} from '../../stores/useQuranStore';
 
 export const GlobalQuranAudioController: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -8,6 +13,7 @@ export const GlobalQuranAudioController: React.FC = () => {
     activeAudioSurah,
     selectedReciterId,
     audioRecitationUrl,
+    audioPlaybackPhase,
     isPlaying,
     audioVolume,
     playbackSpeed,
@@ -17,14 +23,26 @@ export const GlobalQuranAudioController: React.FC = () => {
     setPlaybackTime,
     setPlaybackDuration,
     setIsPlaying,
+    setAudioPlaybackPhase,
     clearSeekTarget,
     playSurahAudio,
     pauseAudio,
   } = useQuranStore();
 
-  const audioUrl = audioRecitationUrl || getAudioUrl(activeAudioSurah, selectedReciterId);
+  // Determine active audio URL based on current playback phase (Ta'awwuz -> Bismillah -> Surah)
+  const getPhaseAudioUrl = (): string => {
+    if (audioPlaybackPhase === 'taawwuz') {
+      return getTaawwuzAudioUrl(selectedReciterId);
+    }
+    if (audioPlaybackPhase === 'bismillah') {
+      return getBismillahAudioUrl(selectedReciterId);
+    }
+    return audioRecitationUrl || getAudioUrl(activeAudioSurah, selectedReciterId);
+  };
 
-  // Sync audio source when Surah or reciter changes
+  const audioUrl = getPhaseAudioUrl();
+
+  // Sync audio source when phase, Surah, or reciter changes
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -37,7 +55,8 @@ export const GlobalQuranAudioController: React.FC = () => {
       audio.load();
 
       if (isPlaying) {
-        audio.play().catch(() => {
+        audio.play().catch((err) => {
+          console.warn('Audio play error:', err);
           setIsPlaying(false);
         });
       }
@@ -78,30 +97,34 @@ export const GlobalQuranAudioController: React.FC = () => {
     }
   }, [playbackSpeed]);
 
-  // Sync looping
+  // Sync looping (only for main surah phase)
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.loop = isLooping;
+      audioRef.current.loop = isLooping && audioPlaybackPhase === 'surah';
     }
-  }, [isLooping]);
+  }, [isLooping, audioPlaybackPhase]);
 
   // Handle explicit seek requests
   useEffect(() => {
     if (seekTarget !== null && audioRef.current) {
+      if (audioPlaybackPhase !== 'surah') {
+        // If user seeks during intro, jump immediately into the main surah
+        setAudioPlaybackPhase('surah');
+      }
       audioRef.current.currentTime = seekTarget;
       clearSeekTarget();
     }
-  }, [seekTarget, clearSeekTarget]);
+  }, [seekTarget, audioPlaybackPhase, setAudioPlaybackPhase, clearSeekTarget]);
 
   // Audio event listeners
   const handleTimeUpdate = () => {
-    if (audioRef.current) {
+    if (audioRef.current && audioPlaybackPhase === 'surah') {
       setPlaybackTime(audioRef.current.currentTime);
     }
   };
 
   const handleLoadedMetadata = () => {
-    if (audioRef.current) {
+    if (audioRef.current && audioPlaybackPhase === 'surah') {
       const dur = audioRef.current.duration;
       if (!isNaN(dur) && isFinite(dur)) {
         setPlaybackDuration(dur);
@@ -110,9 +133,34 @@ export const GlobalQuranAudioController: React.FC = () => {
   };
 
   const handleEnded = () => {
-    if (isLooping) {
-      return; // Handled by audio.loop
+    // 1. If Ta'awwuz just finished
+    if (audioPlaybackPhase === 'taawwuz') {
+      // Surah 1 (Al-Fatihah) has Bismillah as Ayah 1:1 -> transition directly to Surah without duplicate Bismillah
+      // Surah 9 (At-Tawbah) has no Bismillah -> transition directly to Surah
+      if (activeAudioSurah === 1 || activeAudioSurah === 9) {
+        setAudioPlaybackPhase('surah');
+      } else {
+        // All other Surahs (2-8, 10-114) play Bismillah next
+        setAudioPlaybackPhase('bismillah');
+      }
+      return;
     }
+
+    // 2. If Bismillah just finished
+    if (audioPlaybackPhase === 'bismillah') {
+      setAudioPlaybackPhase('surah');
+      return;
+    }
+
+    // 3. Main Surah finished
+    if (isLooping) {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
+      return;
+    }
+
     if (autoPlayNext && activeAudioSurah < 114) {
       playSurahAudio(activeAudioSurah + 1, selectedReciterId);
     } else {
@@ -137,7 +185,7 @@ export const GlobalQuranAudioController: React.FC = () => {
       ref={audioRef}
       id="global-quran-audio-element"
       style={{ display: 'none' }}
-      preload="metadata"
+      preload="auto"
       onTimeUpdate={handleTimeUpdate}
       onLoadedMetadata={handleLoadedMetadata}
       onEnded={handleEnded}

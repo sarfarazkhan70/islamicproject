@@ -41,6 +41,7 @@ export const QuranPage: React.FC = () => {
     zoomLevel,
     activeAudioSurah,
     selectedReciterId,
+    audioPlaybackPhase,
     isPlaying,
     playbackTime,
     playbackDuration,
@@ -260,8 +261,18 @@ export const QuranPage: React.FC = () => {
                 <Headphones size={18} />
               </div>
               <div>
-                <div style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)' }}>
-                  🎧 Surah {activeAudioSurahMeta.number}. {activeAudioSurahMeta.name} ({activeAudioSurahMeta.arabicName})
+                <div style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>🎧 Surah {activeAudioSurahMeta.number}. {activeAudioSurahMeta.name} ({activeAudioSurahMeta.arabicName})</span>
+                  {isPlaying && audioPlaybackPhase === 'taawwuz' && (
+                    <span className="badge badge-sm" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', color: 'var(--brand-gold)', fontSize: '11px', padding: '2px 8px', borderRadius: '12px' }}>
+                      Ta'awwuz (أَعُوذُ بِاللَّهِ)
+                    </span>
+                  )}
+                  {isPlaying && audioPlaybackPhase === 'bismillah' && (
+                    <span className="badge badge-sm" style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: 'var(--brand-primary)', fontSize: '11px', padding: '2px 8px', borderRadius: '12px' }}>
+                      Bismillah (بِسْمِ اللَّهِ)
+                    </span>
+                  )}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
                   Reciter: {activeReciterObj.name} • {activeAudioSurahMeta.versesCount} Verses
@@ -527,11 +538,21 @@ export const QuranPage: React.FC = () => {
                     <Headphones size={30} className="text-emerald-400" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', margin: 0 }}>
                         {activeAudioSurahMeta.number}. {activeAudioSurahMeta.name}
                       </h2>
                       <Badge variant="gold">{activeAudioSurahMeta.revelationType}</Badge>
+                      {isPlaying && audioPlaybackPhase === 'taawwuz' && (
+                        <span className="badge" style={{ backgroundColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--brand-gold)', fontSize: '12px', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>
+                          Ta'awwuz • أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ
+                        </span>
+                      )}
+                      {isPlaying && audioPlaybackPhase === 'bismillah' && (
+                        <span className="badge" style={{ backgroundColor: 'rgba(16, 185, 129, 0.25)', color: 'var(--brand-primary)', fontSize: '12px', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>
+                          Bismillah • بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                        </span>
+                      )}
                     </div>
                     <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
                       {activeAudioSurahMeta.meaning} • {activeAudioSurahMeta.versesCount} Verses • Juz{' '}

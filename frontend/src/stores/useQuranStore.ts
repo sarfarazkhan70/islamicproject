@@ -69,6 +69,7 @@ interface QuranState {
   activeAudioSurah: number;
   selectedReciterId: number; // Quran.com Reciter ID (default 7 Mishary Rashid)
   audioRecitationUrl: string | null;
+  audioPlaybackPhase: 'idle' | 'taawwuz' | 'bismillah' | 'surah';
   isPlaying: boolean;
   playbackTime: number;
   playbackDuration: number;
@@ -132,6 +133,7 @@ interface QuranState {
   setAudioVolume: (volume: number) => void;
   setPlaybackSpeed: (speed: number) => void;
   setIsPlaying: (playing: boolean) => void;
+  setAudioPlaybackPhase: (phase: 'idle' | 'taawwuz' | 'bismillah' | 'surah') => void;
   setIsLooping: (loop: boolean) => void;
   setAutoPlayNext: (auto: boolean) => void;
 
@@ -242,6 +244,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   activeAudioSurah: 1,
   selectedReciterId: 7, // Mishary Rashid Alafasy
   audioRecitationUrl: null,
+  audioPlaybackPhase: 'idle',
   isPlaying: false,
   playbackTime: 0,
   playbackDuration: 0,
@@ -417,6 +420,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     set({
       activeAudioSurah: targetSurah,
       selectedReciterId: targetReciter,
+      audioPlaybackPhase: 'taawwuz',
       hasUserStartedAudio: true,
       isPlaying: true,
       playbackTime: 0,
@@ -454,8 +458,8 @@ export const useQuranStore = create<QuranState>((set, get) => ({
 
   pauseAudio: () => set({ isPlaying: false }),
   resumeAudio: () => set({ isPlaying: true, hasUserStartedAudio: true }),
-  stopAudio: () => set({ isPlaying: false, playbackTime: 0 }),
-  seekAudio: (seconds) => set({ seekTarget: seconds, playbackTime: seconds }),
+  stopAudio: () => set({ isPlaying: false, playbackTime: 0, audioPlaybackPhase: 'idle' }),
+  seekAudio: (seconds) => set({ seekTarget: seconds, playbackTime: seconds, audioPlaybackPhase: 'surah' }),
   clearSeekTarget: () => set({ seekTarget: null }),
 
   setSelectedReciterId: (reciterId) => {
@@ -471,6 +475,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   setAudioVolume: (volume) => set({ audioVolume: Math.max(0, Math.min(1, volume)) }),
   setPlaybackSpeed: (speed) => set({ playbackSpeed: speed }),
   setIsPlaying: (playing) => set({ isPlaying: playing }),
+  setAudioPlaybackPhase: (phase) => set({ audioPlaybackPhase: phase }),
   setIsLooping: (loop) => set({ isLooping: loop }),
   setAutoPlayNext: (auto) => set({ autoPlayNext: auto }),
 
@@ -575,4 +580,35 @@ export function getAudioUrl(surahNumber: number, reciterId: number = 7): string 
     return `https://server8.mp3quran.net/rifai/${padded}.mp3`;
   }
   return `https://server8.mp3quran.net/afs/${padded}.mp3`;
+}
+
+// Helper function to get authentic Ta'awwuz audio for reciters
+export function getTaawwuzAudioUrl(reciterId: number = 7): string {
+  if (reciterId === 6 || reciterId === 12) {
+    return '/audio/quran/taawwuz_husary.mp3';
+  }
+  if (reciterId === 4) {
+    return '/audio/quran/taawwuz_shatri.mp3';
+  }
+  return '/audio/quran/taawwuz_alafasy.mp3';
+}
+
+// Helper function to get authentic Bismillah audio for reciters
+export function getBismillahAudioUrl(reciterId: number = 7): string {
+  if (reciterId === 6 || reciterId === 12) {
+    return '/audio/quran/bismillah_husary.mp3';
+  }
+  if (reciterId === 2 || reciterId === 1) {
+    return '/audio/quran/bismillah_abdulbasit.mp3';
+  }
+  if (reciterId === 4) {
+    return '/audio/quran/bismillah_shatri.mp3';
+  }
+  if (reciterId === 5) {
+    return '/audio/quran/bismillah_rifai.mp3';
+  }
+  if (reciterId === 3) {
+    return '/audio/quran/bismillah_sudais.mp3';
+  }
+  return '/audio/quran/bismillah_alafasy.mp3';
 }

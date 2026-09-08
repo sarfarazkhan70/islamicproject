@@ -18,10 +18,16 @@ import {
 } from '../services/quranApiService';
 
 export interface QuranBookmark {
-  surahNumber: number;
-  ayahNumber: number;
-  verseKey: string;
-  surahName: string;
+  type?: 'page' | 'surah' | 'juz' | 'ayah';
+  pageNumber?: number;
+  juzNumber?: number;
+  juzName?: string;
+  juzArabicName?: string;
+  surahNumber?: number;
+  ayahNumber?: number;
+  verseKey?: string;
+  surahName?: string;
+  surahArabicName?: string;
   arabicText?: string;
   translationText?: string;
   createdAt: string;
@@ -153,6 +159,7 @@ interface QuranState {
   // Bookmarks & Progress
   toggleBookmark: (bookmark: Omit<QuranBookmark, 'createdAt'>) => void;
   removeBookmark: (surahNumber: number, ayahNumber: number) => void;
+  removeBookmarkItem: (bm: QuranBookmark) => void;
   updateReadingProgress: (
     surahNumber: number,
     ayahNumber: number,
@@ -646,14 +653,28 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   // Bookmarks
   toggleBookmark: (bm) => {
     const { bookmarks } = get();
-    const exists = bookmarks.some(
-      (b) => b.surahNumber === bm.surahNumber && b.ayahNumber === bm.ayahNumber
-    );
+    const isMatch = (b: QuranBookmark) => {
+      const bType = b.type || (b.ayahNumber ? 'ayah' : 'surah');
+      const bmType = bm.type || (bm.ayahNumber ? 'ayah' : 'surah');
+      if (bmType === 'page') {
+        return bType === 'page' && b.pageNumber === bm.pageNumber;
+      }
+      if (bmType === 'juz') {
+        return bType === 'juz' && b.juzNumber === bm.juzNumber;
+      }
+      if (bmType === 'surah') {
+        return bType === 'surah' && b.surahNumber === bm.surahNumber;
+      }
+      if (bmType === 'ayah') {
+        return bType === 'ayah' && b.surahNumber === bm.surahNumber && b.ayahNumber === bm.ayahNumber;
+      }
+      return false;
+    };
+
+    const exists = bookmarks.some(isMatch);
     let updated: QuranBookmark[];
     if (exists) {
-      updated = bookmarks.filter(
-        (b) => !(b.surahNumber === bm.surahNumber && b.ayahNumber === bm.ayahNumber)
-      );
+      updated = bookmarks.filter((b) => !isMatch(b));
     } else {
       updated = [{ ...bm, createdAt: new Date().toISOString() }, ...bookmarks];
     }
@@ -668,6 +689,24 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     const updated = bookmarks.filter(
       (b) => !(b.surahNumber === surahNumber && b.ayahNumber === ayahNumber)
     );
+    try {
+      localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(updated));
+    } catch {}
+    set({ bookmarks: updated });
+  },
+
+  removeBookmarkItem: (bm) => {
+    const { bookmarks } = get();
+    const isMatch = (b: QuranBookmark) => {
+      const bType = b.type || (b.ayahNumber ? 'ayah' : 'surah');
+      const bmType = bm.type || (bm.ayahNumber ? 'ayah' : 'surah');
+      if (bmType === 'page') return bType === 'page' && b.pageNumber === bm.pageNumber;
+      if (bmType === 'juz') return bType === 'juz' && b.juzNumber === bm.juzNumber;
+      if (bmType === 'surah') return bType === 'surah' && b.surahNumber === bm.surahNumber;
+      if (bmType === 'ayah') return bType === 'ayah' && b.surahNumber === bm.surahNumber && b.ayahNumber === bm.ayahNumber;
+      return false;
+    };
+    const updated = bookmarks.filter((b) => !isMatch(b));
     try {
       localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(updated));
     } catch {}

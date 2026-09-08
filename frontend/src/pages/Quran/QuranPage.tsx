@@ -10,6 +10,8 @@ import {
   QURAN_COM_RECITERS,
   getSurahByNumber,
   getJuzByNumber,
+  getSurahByPage,
+  getJuzByPage,
   quranTextPageToApiPage,
 } from '../../data/quranData';
 import { QuranApiPageViewer } from '../../components/quran/QuranApiPageViewer';
@@ -72,7 +74,8 @@ export const QuranPage: React.FC = () => {
     setIsLooping,
     setAutoPlayNext,
     setSelectedReciterId,
-    removeBookmark,
+    toggleBookmark,
+    removeBookmarkItem,
     setSearchTerm,
     setActiveTab,
   } = useQuranStore();
@@ -162,6 +165,78 @@ export const QuranPage: React.FC = () => {
     }
   };
 
+  // Active bookmark status checks
+  const isPageBookmarked = bookmarks.some(
+    (b) => (b.type === 'page' ? b.pageNumber === mushafPage : b.pageNumber === mushafPage && !b.ayahNumber)
+  );
+  const isParaBookmarked = bookmarks.some(
+    (b) => (b.type === 'juz' && b.juzNumber === selectedPara)
+  );
+  const isSurahBookmarked = bookmarks.some(
+    (b) => (b.type === 'surah' ? b.surahNumber === currentSurahNumber : (!b.type && !b.ayahNumber && b.surahNumber === currentSurahNumber))
+  );
+
+  const handleTogglePageBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const surah = getSurahByPage(mushafPage);
+    const juz = getJuzByPage(mushafPage);
+    toggleBookmark({
+      type: 'page',
+      pageNumber: mushafPage,
+      surahNumber: surah.number,
+      surahName: surah.name,
+      surahArabicName: surah.arabicName,
+      juzNumber: juz.number,
+      juzName: juz.name,
+      juzArabicName: juz.arabicName,
+    });
+  };
+
+  const handleToggleParaBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const juz = getJuzByNumber(selectedPara);
+    toggleBookmark({
+      type: 'juz',
+      juzNumber: juz.number,
+      juzName: juz.name,
+      juzArabicName: juz.arabicName,
+      pageNumber: juz.pageStart,
+      surahNumber: juz.startSurah,
+      surahName: juz.startSurahName,
+    });
+  };
+
+  const handleToggleSurahBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const surah = getSurahByNumber(currentSurahNumber);
+    toggleBookmark({
+      type: 'surah',
+      surahNumber: surah.number,
+      surahName: surah.name,
+      surahArabicName: surah.arabicName,
+      pageNumber: surah.pageStart,
+      juzNumber: surah.juzStart,
+    });
+  };
+
+  const handleOpenBookmark = (bm: any) => {
+    if (bm.type === 'page' && bm.pageNumber) {
+      goToQuranPage(bm.pageNumber);
+    } else if (bm.type === 'juz' && bm.juzNumber) {
+      jumpToJuzPage(bm.juzNumber);
+    } else if (bm.type === 'surah' && bm.surahNumber) {
+      jumpToSurahPage(bm.surahNumber);
+    } else if (bm.pageNumber) {
+      goToQuranPage(bm.pageNumber);
+    } else if (bm.surahNumber) {
+      jumpToSurahPage(bm.surahNumber);
+    }
+    setMode('read');
+  };
+
   return (
     <div className="quran-page" style={{ maxWidth: '1100px', margin: '0 auto', paddingBottom: '80px' }}>
       {/* Clean Header */}
@@ -192,7 +267,7 @@ export const QuranPage: React.FC = () => {
               </div>
             </button>
 
-            {/* Mode Switcher: Read | Listen */}
+            {/* Mode Switcher: Read | Listen | Bookmarks */}
             <div
               style={{
                 display: 'flex',
@@ -201,6 +276,7 @@ export const QuranPage: React.FC = () => {
                 border: '1px solid var(--border-default)',
                 padding: '3px',
                 gap: '3px',
+                flexWrap: 'wrap',
               }}
             >
               <button
@@ -220,8 +296,11 @@ export const QuranPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                className={`tab-btn ${mode === 'listen' ? 'active' : ''}`}
-                onClick={() => setMode('listen')}
+                className={`tab-btn ${mode === 'listen' && activeTab !== 'bookmarks' ? 'active' : ''}`}
+                onClick={() => {
+                  setMode('listen');
+                  if (activeTab === 'bookmarks') setActiveTab('surahs');
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -232,6 +311,25 @@ export const QuranPage: React.FC = () => {
               >
                 <Headphones size={15} />
                 <span>Audio Studio</span>
+              </button>
+              <button
+                type="button"
+                className={`tab-btn ${mode === 'listen' && activeTab === 'bookmarks' ? 'active' : ''}`}
+                onClick={() => {
+                  setMode('listen');
+                  setActiveTab('bookmarks');
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-lg)',
+                }}
+                title="View Saved Bookmarks"
+              >
+                <Bookmark size={15} className={bookmarks.length > 0 ? 'text-amber-400' : ''} />
+                <span>Bookmarks ({bookmarks.length})</span>
               </button>
             </div>
           </div>
@@ -470,8 +568,20 @@ export const QuranPage: React.FC = () => {
               {/* 1. Surah Dropdown Slot */}
               <div className="selector-control-slot">
                 <div className="selector-slot-header">
-                  <BookOpen size={13} className="text-emerald-500" />
-                  <label htmlFor="surah-select" className="selector-slot-label">Select Surah</label>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <BookOpen size={13} className="text-emerald-500" />
+                    <label htmlFor="surah-select" className="selector-slot-label">Select Surah</label>
+                  </div>
+                  <button
+                    type="button"
+                    className={`selector-bookmark-action-btn ${isSurahBookmarked ? 'is-active' : ''}`}
+                    onClick={handleToggleSurahBookmark}
+                    title={isSurahBookmarked ? 'Bookmarked Surah (Click to remove)' : 'Bookmark This Surah'}
+                    aria-label={isSurahBookmarked ? 'Bookmarked Surah' : 'Bookmark Surah'}
+                  >
+                    <Bookmark size={13} fill={isSurahBookmarked ? 'var(--brand-gold)' : 'none'} className={isSurahBookmarked ? 'text-amber-400' : 'text-amber-400/80'} />
+                    <span>{isSurahBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                  </button>
                 </div>
                 <select
                   id="surah-select"
@@ -497,8 +607,20 @@ export const QuranPage: React.FC = () => {
               {/* 2. Para / Juz Dropdown Slot */}
               <div className="selector-control-slot">
                 <div className="selector-slot-header">
-                  <Compass size={13} className="text-amber-500" />
-                  <label htmlFor="para-select" className="selector-slot-label">Select Para / Juz</label>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <Compass size={13} className="text-amber-500" />
+                    <label htmlFor="para-select" className="selector-slot-label">Select Para / Juz</label>
+                  </div>
+                  <button
+                    type="button"
+                    className={`selector-bookmark-action-btn ${isParaBookmarked ? 'is-active' : ''}`}
+                    onClick={handleToggleParaBookmark}
+                    title={isParaBookmarked ? 'Bookmarked Para (Click to remove)' : 'Bookmark This Para'}
+                    aria-label={isParaBookmarked ? 'Bookmarked Para' : 'Bookmark Para'}
+                  >
+                    <Bookmark size={13} fill={isParaBookmarked ? 'var(--brand-gold)' : 'none'} className={isParaBookmarked ? 'text-amber-400' : 'text-amber-400/80'} />
+                    <span>{isParaBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                  </button>
                 </div>
                 <select
                   id="para-select"
@@ -518,10 +640,22 @@ export const QuranPage: React.FC = () => {
               {/* 3. Direct Page Search / Jump Slot */}
               <div className="selector-control-slot selector-page-jump-slot">
                 <div className="selector-slot-header">
-                  <Search size={13} className="text-emerald-500" />
-                  <label htmlFor="direct-page-search" className="selector-slot-label">
-                    Go To Page <span className="selector-range-hint">(1–{MAX_MUSHAF_PAGE})</span>
-                  </label>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <Search size={13} className="text-emerald-500" />
+                    <label htmlFor="direct-page-search" className="selector-slot-label">
+                      Go To Page <span className="selector-range-hint">(1–{MAX_MUSHAF_PAGE})</span>
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    className={`selector-bookmark-action-btn ${isPageBookmarked ? 'is-active' : ''}`}
+                    onClick={handleTogglePageBookmark}
+                    title={isPageBookmarked ? `Page ${mushafPage} Bookmarked (Click to remove)` : `Bookmark Page ${mushafPage}`}
+                    aria-label={isPageBookmarked ? 'Bookmarked Page' : 'Bookmark Page'}
+                  >
+                    <Bookmark size={13} fill={isPageBookmarked ? 'var(--brand-gold)' : 'none'} className={isPageBookmarked ? 'text-amber-400' : 'text-amber-400/80'} />
+                    <span>{isPageBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                  </button>
                 </div>
                 <form onSubmit={handleDirectPageSubmit} className="selector-page-form">
                   <input
@@ -713,11 +847,11 @@ export const QuranPage: React.FC = () => {
                 </select>
               </div>
 
-              {/* Dedicated Clean Audio Player Box (Separated with 16px balanced gap) */}
+              {/* Dedicated Clean Audio Player Box */}
               <div className="quran-player-box studio-player-box">
-                {/* Audio Scrubber Slider */}
+                {/* 1. Audio Scrubber & Timers at TOP */}
                 <div className="player-box-scrubber flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-xs text-secondary font-mono">
+                  <div className="player-time-row flex items-center justify-between text-xs text-secondary font-mono">
                     <span>{formatTime(playbackTime, (playbackDuration >= 3600 || playbackTime >= 3600))}</span>
                     <span>{formatTime(playbackDuration, (playbackDuration >= 3600 || playbackTime >= 3600))}</span>
                   </div>
@@ -736,13 +870,78 @@ export const QuranPage: React.FC = () => {
                   />
                 </div>
 
-                {/* Playback Controls Row */}
-                <div className="player-box-controls-row flex items-center justify-between flex-wrap gap-4">
-                  {/* Left: Repeat, Auto-next & Speed in a single, same-line row */}
-                  <div className="player-aux-left flex items-center gap-2">
+                {/* 2. Main Playback Controls: DIRECTLY BELOW Progress Bar */}
+                <div className="studio-main-playback-container">
+                  <div className="player-playback-group studio-playback-row">
                     <button
                       type="button"
-                      className={`btn btn-sm ${isLooping ? 'btn-primary' : 'btn-outline-secondary'}`}
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={playPrevSurahAudio}
+                      title="Previous Surah"
+                      aria-label="Previous Surah"
+                    >
+                      <SkipBack size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={() => seekAudio(Math.max(0, playbackTime - 10))}
+                      title="Rewind 10 seconds"
+                      aria-label="Rewind 10 seconds"
+                    >
+                      <RotateCcw size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-primary studio-main-play-btn"
+                      onClick={toggleAudioPlay}
+                      title={isPlaying ? 'Pause' : 'Play'}
+                      aria-label={isPlaying ? 'Pause' : 'Play'}
+                    >
+                      {isPlaying ? <Pause size={24} /> : <Play size={24} style={{ marginLeft: '3px' }} />}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={stopAudio}
+                      title="Stop Recitation"
+                      aria-label="Stop Recitation"
+                    >
+                      <Square size={16} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={() => seekAudio(Math.min(playbackDuration, playbackTime + 10))}
+                      title="Forward 10 seconds"
+                      aria-label="Forward 10 seconds"
+                    >
+                      <RotateCw size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={playNextSurahAudio}
+                      title="Next Surah"
+                      aria-label="Next Surah"
+                    >
+                      <SkipForward size={18} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. Secondary Controls & Volume: BELOW Main Playback Row */}
+                <div className="studio-bottom-controls-row">
+                  {/* Left / Center: Repeat, Auto-Next, Speed */}
+                  <div className="player-aux-left studio-aux-group">
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${isLooping ? 'btn-primary' : 'btn-outline-secondary'} studio-aux-btn`}
                       onClick={() => setIsLooping(!isLooping)}
                       title={isLooping ? 'Looping Enabled' : 'Enable Repeat Surah'}
                     >
@@ -751,7 +950,7 @@ export const QuranPage: React.FC = () => {
                     </button>
                     <button
                       type="button"
-                      className={`btn btn-sm ${autoPlayNext ? 'btn-primary' : 'btn-outline-secondary'}`}
+                      className={`btn btn-sm ${autoPlayNext ? 'btn-primary' : 'btn-outline-secondary'} studio-aux-btn`}
                       onClick={() => setAutoPlayNext(!autoPlayNext)}
                       title={autoPlayNext ? 'Auto-play Next Surah Enabled' : 'Enable Auto-play Next'}
                     >
@@ -763,13 +962,6 @@ export const QuranPage: React.FC = () => {
                       className="mushaf-select-dropdown player-speed-select"
                       value={playbackSpeed}
                       onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
-                      style={{
-                        marginLeft: '8px',
-                        padding: '5px 10px',
-                        fontSize: '0.8rem',
-                        minWidth: '70px',
-                        borderRadius: 'var(--radius-md)',
-                      }}
                       aria-label="Playback Speed"
                     >
                       <option value={0.75}>0.75x</option>
@@ -779,65 +971,8 @@ export const QuranPage: React.FC = () => {
                     </select>
                   </div>
 
-                  {/* Center: Prev Surah, Rewind 10s, Play/Pause, Stop, Forward 10s, Next Surah */}
-                  <div className="player-playback-group flex items-center gap-2 sm:gap-3">
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary studio-circle-btn"
-                      onClick={playPrevSurahAudio}
-                      title="Previous Surah"
-                    >
-                      <SkipBack size={18} />
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary studio-circle-btn"
-                      onClick={() => seekAudio(Math.max(0, playbackTime - 10))}
-                      title="Rewind 10 seconds"
-                    >
-                      <RotateCcw size={18} />
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-primary studio-main-play-btn"
-                      onClick={toggleAudioPlay}
-                      title={isPlaying ? 'Pause' : 'Play'}
-                    >
-                      {isPlaying ? <Pause size={24} /> : <Play size={24} style={{ marginLeft: '3px' }} />}
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary studio-circle-btn"
-                      onClick={stopAudio}
-                      title="Stop Recitation"
-                    >
-                      <Square size={16} />
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary studio-circle-btn"
-                      onClick={() => seekAudio(Math.min(playbackDuration, playbackTime + 10))}
-                      title="Forward 10 seconds"
-                    >
-                      <RotateCw size={18} />
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary studio-circle-btn"
-                      onClick={playNextSurahAudio}
-                      title="Next Surah"
-                    >
-                      <SkipForward size={18} />
-                    </button>
-                  </div>
-
-                  {/* Right: Sound / Volume Control Box */}
-                  <div className="player-volume-control-box">
+                  {/* Right / Side: Sound / Volume Control Box */}
+                  <div className="player-volume-control-box studio-volume-box">
                     <button
                       type="button"
                       className="volume-icon-btn"
@@ -1093,59 +1228,140 @@ export const QuranPage: React.FC = () => {
               {activeTab === 'bookmarks' && (
                 <div className="flex flex-col gap-3">
                   {bookmarks.length === 0 ? (
-                    <div style={{ padding: 'var(--space-6)', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                      No bookmarks saved yet.
+                    <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                      <Bookmark size={32} style={{ margin: '0 auto 12px', opacity: 0.35, color: 'var(--brand-gold)' }} />
+                      <p style={{ fontWeight: 'bold', fontSize: 'var(--text-base)', marginBottom: '4px' }}>No bookmarks saved yet.</p>
+                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                        Save any Page, Para, or Surah while reading to quickly return to it here.
+                      </p>
                     </div>
                   ) : (
-                    bookmarks.map((bm, index) => (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          jumpToSurahPage(bm.surahNumber);
-                          setMode('read');
-                        }}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '12px 16px',
-                          backgroundColor: 'var(--bg-surface-elevated)',
-                          border: '1px solid var(--border-default)',
-                          borderRadius: 'var(--radius-lg)',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <div style={{ flex: 1 }}>
-                          <strong>
-                            Surah {bm.surahName} ({bm.surahNumber}:{bm.ayahNumber})
-                          </strong>
-                          {bm.arabicText && (
+                    bookmarks.map((bm, index) => {
+                      const isPage = bm.type === 'page';
+                      const isJuz = bm.type === 'juz';
+                      const isSurah = bm.type === 'surah' || (!bm.type && !bm.ayahNumber);
+
+                      let title = '';
+                      let badge = '';
+                      let subtitle = '';
+                      let arabic = '';
+
+                      if (isPage) {
+                        title = `Page ${bm.pageNumber}`;
+                        badge = 'Page';
+                        const sMeta = bm.surahName ? bm.surahName : (bm.surahNumber ? SURAHS_LIST[bm.surahNumber - 1]?.name : '');
+                        subtitle = sMeta ? `Surah ${sMeta} • Hafiz Mushaf` : `Hafiz Quran Page ${bm.pageNumber}`;
+                        arabic = bm.surahArabicName || '';
+                      } else if (isJuz) {
+                        title = `Para: ${bm.juzName || `Juz ${bm.juzNumber}`}`;
+                        badge = 'Para';
+                        subtitle = `Starts at Page ${bm.pageNumber || (bm.juzNumber ? JUZ_LIST[bm.juzNumber - 1]?.pageStart : '')}`;
+                        arabic = bm.juzArabicName || '';
+                      } else if (isSurah) {
+                        title = `Surah: ${bm.surahName || (bm.surahNumber ? SURAHS_LIST[bm.surahNumber - 1]?.name : '')}`;
+                        badge = 'Surah';
+                        subtitle = `Starts at Page ${bm.pageNumber || (bm.surahNumber ? SURAHS_LIST[bm.surahNumber - 1]?.pageStart : '')}`;
+                        arabic = bm.surahArabicName || '';
+                      } else {
+                        title = `Ayah: Surah ${bm.surahName} (${bm.surahNumber}:${bm.ayahNumber})`;
+                        badge = 'Ayah';
+                        subtitle = `Page ${bm.pageNumber || (bm.surahNumber ? SURAHS_LIST[bm.surahNumber - 1]?.pageStart : '')}`;
+                        arabic = bm.arabicText || '';
+                      }
+
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => handleOpenBookmark(bm)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '12px 16px',
+                            backgroundColor: 'var(--bg-surface-elevated)',
+                            border: '1px solid var(--border-default)',
+                            borderRadius: 'var(--radius-lg)',
+                            cursor: 'pointer',
+                            transition: 'all var(--transition-fast)',
+                            gap: '12px',
+                          }}
+                          className="bookmark-item-row"
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
                             <div
-                              className="mushaf-text"
-                              dir="rtl"
-                              style={{ fontSize: '1rem', color: 'var(--brand-gold)', margin: '4px 0' }}
+                              style={{
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: 'var(--radius-md)',
+                                backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                                color: 'var(--brand-gold)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                              }}
                             >
-                              {bm.arabicText.slice(0, 80)}...
+                              <Bookmark size={18} fill="currentColor" />
                             </div>
-                          )}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                <strong style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+                                  {title}
+                                </strong>
+                                <span
+                                  style={{
+                                    fontSize: '10px',
+                                    fontWeight: 'bold',
+                                    padding: '2px 8px',
+                                    borderRadius: 'var(--radius-full)',
+                                    backgroundColor: isPage ? 'rgba(16, 185, 129, 0.2)' : isJuz ? 'rgba(245, 158, 11, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+                                    color: isPage ? 'var(--brand-primary)' : isJuz ? 'var(--brand-gold)' : '#60a5fa',
+                                    textTransform: 'uppercase',
+                                  }}
+                                >
+                                  {badge}
+                                </span>
+                              </div>
+                              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                                {subtitle}
+                              </div>
+                            </div>
+                            {arabic && (
+                              <div
+                                className="mushaf-text"
+                                dir="rtl"
+                                style={{
+                                  fontSize: '1.15rem',
+                                  color: 'var(--brand-gold)',
+                                  marginLeft: 'auto',
+                                  flexShrink: 0,
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {arabic}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2" style={{ flexShrink: 0 }}>
+                            <Button size="sm" variant="outline" style={{ borderRadius: 'var(--radius-md)' }}>
+                              Open Reader
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              style={{ color: 'var(--text-muted)' }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeBookmarkItem(bm);
+                              }}
+                              title="Delete bookmark"
+                            >
+                              Delete
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline">
-                            Open Reader
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeBookmark(bm.surahNumber, bm.ayahNumber);
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               )}

@@ -25,22 +25,56 @@ const MushafPageViewerComponent: React.FC<QuranApiPageViewerProps> = ({
   const activePageRef = useRef<number>(currentPage);
   const isProgrammaticScrollRef = useRef<boolean>(false);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const preloadedPagesRef = useRef<Set<number>>(new Set());
 
-  // Preload nearby pages around the active reading position
+  // High-speed device-aware preloader for current and adjacent pages
   useEffect(() => {
-    const pagesToPreload = [
-      currentPage,
-      currentPage + 1,
-      currentPage - 1,
-      currentPage + 2,
-      currentPage - 2,
-    ].filter((p) => p >= MIN_MUSHAF_PAGE && p <= MAX_MUSHAF_PAGE);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
+    const targetSize: 'mobile' | 'desktop' = isMobile ? 'mobile' : 'desktop';
 
-    pagesToPreload.forEach((p) => {
-      const url = QuranApiService.getMushafPageImageUrl(p, 'desktop');
+    // 1. Immediately preload active page image if not already cached
+    const preloadPage = (page: number, highPriority = false) => {
+      if (page < MIN_MUSHAF_PAGE || page > MAX_MUSHAF_PAGE) return;
+      if (preloadedPagesRef.current.has(page)) return;
+      preloadedPagesRef.current.add(page);
+
+      const url = QuranApiService.getMushafPageImageUrl(page, targetSize);
       const img = new Image();
+      if (highPriority && 'fetchPriority' in img) {
+        (img as any).fetchPriority = 'high';
+      }
+      img.decoding = 'async';
       img.src = url;
-    });
+
+      // Also warm up mobile fallback/desktop in Cache API if supported
+      if ('caches' in window) {
+        caches.open('quran-mushaf-images-v1').then((cache) => {
+          cache.match(url).then((match) => {
+            if (!match) {
+              fetch(url, { mode: 'no-cors' }).then((res) => {
+                if (res) cache.put(url, res).catch(() => {});
+              }).catch(() => {});
+            }
+          });
+        }).catch(() => {});
+      }
+    };
+
+    // Preload current page immediately with highest priority
+    preloadPage(currentPage, true);
+
+    // 2. Preload adjacent reading pages during idle time so they don't block current page
+    const timer = setTimeout(() => {
+      const adjacentPages = [
+        currentPage + 1,
+        currentPage - 1,
+        currentPage + 2,
+        currentPage - 2,
+      ];
+      adjacentPages.forEach((p) => preloadPage(p, false));
+    }, 60);
+
+    return () => clearTimeout(timer);
   }, [currentPage]);
 
   // Jump to target page when currentPage changes via Search (Page / Para / Surah / Bookmark)
@@ -134,10 +168,11 @@ const MushafPageViewerComponent: React.FC<QuranApiPageViewerProps> = ({
       {/* Continuous Vertical Scroll Stream of Pakistani 15-Line Mushaf Pages */}
       <div className="mushaf-page-frame-container w-full max-w-[620px] mx-auto flex flex-col items-center gap-6 py-2 pb-24">
         {ALL_MUSHAF_PAGES.map((pageNum) => {
+          const isCurrent = pageNum === currentPage;
+          const isNearby = Math.abs(pageNum - currentPage) <= 2;
           const primaryUrl = QuranApiService.getMushafPageImageUrl(pageNum, 'desktop');
           const fallbackUrl = QuranApiService.getMushafPageImageFallbackUrl(pageNum);
           const srcSet = QuranApiService.getMushafPageSrcSet(pageNum);
-          const isNearby = Math.abs(pageNum - currentPage) <= 2;
 
           return (
             <div
@@ -155,6 +190,7 @@ const MushafPageViewerComponent: React.FC<QuranApiPageViewerProps> = ({
                   alt={`Pakistani Hafiz Quran Mushaf Page ${pageNum}`}
                   loading={isNearby ? 'eager' : 'lazy'}
                   decoding="async"
+                  fetchPriority={isCurrent ? 'high' : isNearby ? 'auto' : 'low'}
                   onError={(e) => {
                     const img = e.currentTarget;
                     if (img.src !== fallbackUrl) {

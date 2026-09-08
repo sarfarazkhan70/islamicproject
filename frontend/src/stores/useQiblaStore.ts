@@ -5,6 +5,8 @@ import {
   getRelativeQiblaAngle,
   isAlignedWithQibla,
   unwrapAngle,
+  smoothAngle,
+  getCompassHeadingFromEvent,
 } from '../utils/qibla.js';
 import { useLocationStore } from './useLocationStore.js';
 
@@ -15,12 +17,14 @@ export type HeadingSource = 'webkitCompass' | 'deviceOrientationAbsolute' | 'dev
 interface QiblaState {
   qiblaInfo: QiblaResult | null;
   deviceHeading: number | null;
+  rawHeading: number | null;
   headingSource: HeadingSource;
   relativeQiblaAngle: number;
   unwrappedDialRotation: number;
   unwrappedNeedleRotation: number;
   sensorPermission: SensorPermissionStatus;
   sensorStatus: SensorState;
+  isCompassAvailable: boolean;
   isAligned: boolean;
   accuracyMeters: number | null;
   isLowLocationAccuracy: boolean;
@@ -38,51 +42,18 @@ interface QiblaState {
 
 let orientationHandler: ((e: DeviceOrientationEvent) => void) | null = null;
 let absoluteOrientationHandler: ((e: DeviceOrientationEvent) => void) | null = null;
-let sensorTimeoutId: number | null = null;
+let sensorTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let smoothedHeadingRef: number | null = null;
 
-/**
- * Tilt-compensated compass heading from 3D Euler angles (alpha, beta, gamma)
- */
-function computeCompassHeading(
-  alpha: number | null,
-  beta: number | null,
-  gamma: number | null,
-  webkitHeading?: number
-): number | null {
-  if (webkitHeading !== undefined && !isNaN(webkitHeading)) {
-    return ((webkitHeading % 360) + 360) % 360;
+function getScreenOrientationAngle(): number {
+  if (typeof window === 'undefined') return 0;
+  if (window.screen && window.screen.orientation && typeof window.screen.orientation.angle === 'number') {
+    return window.screen.orientation.angle;
   }
-
-  if (alpha === null || isNaN(alpha)) {
-    return null;
+  if (typeof window.orientation === 'number') {
+    return window.orientation;
   }
-
-  const degToRad = Math.PI / 180;
-  const a = alpha * degToRad;
-  const b = (beta || 0) * degToRad;
-  const g = (gamma || 0) * degToRad;
-
-  const cA = Math.cos(a);
-  const sA = Math.sin(a);
-  const sB = Math.sin(b);
-  const cG = Math.cos(g);
-  const sG = Math.sin(g);
-
-  // Unit vector of device top (Y-axis) in Earth reference frame (East, North, Up)
-  const rA = -cA * sG - sA * sB * cG;
-  const rB = -sA * sG + cA * sB * cG;
-
-  let heading: number;
-  if (Math.abs(rA) < 1e-4 && Math.abs(rB) < 1e-4) {
-    // When held flat or pitch only
-    heading = (360 - alpha) % 360;
-  } else {
-    let headingRad = Math.atan2(-rA, rB);
-    if (headingRad < 0) headingRad += 2 * Math.PI;
-    heading = headingRad * (180 / Math.PI);
-  }
-
-  return Math.round((((heading % 360) + 360) % 360) * 10) / 10;
+  return 0;
 }
 
 const centralInitial = useLocationStore.getState();
@@ -93,6 +64,7 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
   return {
     qiblaInfo: initialInfo,
     deviceHeading: null,
+    rawHeading: null,
     headingSource: null,
     relativeQiblaAngle: initialInfo.bearing,
     unwrappedDialRotation: 0,
@@ -102,6 +74,7 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
         ? 'prompt'
         : 'unsupported',
     sensorStatus: 'idle',
+    isCompassAvailable: false,
     isAligned: false,
     accuracyMeters: centralInitial.accuracy,
     isLowLocationAccuracy: centralInitial.isLowAccuracy,
@@ -129,17 +102,17 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
 
     requestDeviceOrientation: async () => {
       if (typeof window === 'undefined' || !('DeviceOrientationEvent' in window)) {
-        set({ sensorPermission: 'unsupported', sensorStatus: 'unavailable' });
+        set({ sensorPermission: 'unsupported', sensorStatus: 'unavailable', isCompassAvailable: false });
         return false;
       }
 
       try {
-        // Handle iOS 13+ permission request
+        // Handle iOS 13+ permission request directly in user action callback
         const DOE = DeviceOrientationEvent as any;
         if (typeof DOE.requestPermission === 'function') {
           const response = await DOE.requestPermission();
           if (response !== 'granted') {
-            set({ sensorPermission: 'denied', sensorStatus: 'unavailable' });
+            set({ sensorPermission: 'denied', sensorStatus: 'unavailable', isCompassAvailable: false });
             return false;
           }
         }
@@ -151,57 +124,67 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
 
         let receivedValidEvent = false;
 
-        const handleOrientationUpdate = (
+        const processOrientationUpdate = (
           e: DeviceOrientationEvent,
-          source: HeadingSource
+          defaultSource: HeadingSource
         ) => {
-          const webkitHeading = (e as any).webkitCompassHeading;
-          const webkitAccuracy = (e as any).webkitCompassAccuracy;
+          const screenAngle = getScreenOrientationAngle();
+          const parsed = getCompassHeadingFromEvent(e, screenAngle);
 
-          const heading = computeCompassHeading(
-            e.alpha,
-            e.beta,
-            e.gamma,
-            webkitHeading
-          );
-
-          if (heading !== null) {
+          if (parsed && typeof parsed.heading === 'number' && !isNaN(parsed.heading)) {
             receivedValidEvent = true;
             if (sensorTimeoutId !== null) {
               clearTimeout(sensorTimeoutId);
               sensorTimeoutId = null;
             }
 
-            const qiblaBearing = get().qiblaInfo?.bearing || 0;
-            const relativeAngle = getRelativeQiblaAngle(qiblaBearing, heading);
-            const aligned = isAlignedWithQibla(qiblaBearing, heading, 3);
+            // Apply exponential moving average to filter sensor noise/jitter
+            const rawHeading = parsed.heading;
+            let finalHeading: number;
+            if (smoothedHeadingRef === null) {
+              smoothedHeadingRef = rawHeading;
+              finalHeading = rawHeading;
+            } else {
+              smoothedHeadingRef = smoothAngle(smoothedHeadingRef, rawHeading, 0.3);
+              finalHeading = Math.round(smoothedHeadingRef * 10) / 10;
+            }
+
+            const qiblaBearing = get().qiblaInfo?.bearing ?? 0;
+            const relativeAngle = getRelativeQiblaAngle(qiblaBearing, finalHeading);
+            const aligned = isAlignedWithQibla(qiblaBearing, finalHeading, 3);
 
             const prevDial = get().unwrappedDialRotation;
             const prevNeedle = get().unwrappedNeedleRotation;
 
-            const newDial = unwrapAngle(-heading, prevDial);
+            const newDial = unwrapAngle(-finalHeading, prevDial);
             const newNeedle = unwrapAngle(relativeAngle, prevNeedle);
 
+            // Optional subtle haptic buzz on alignment
+            if (aligned && !get().isAligned && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+              try {
+                navigator.vibrate(40);
+              } catch {}
+            }
+
             set({
-              deviceHeading: heading,
-              headingSource: source,
+              deviceHeading: finalHeading,
+              rawHeading,
+              headingSource: parsed.source || defaultSource,
               relativeQiblaAngle: relativeAngle,
               unwrappedDialRotation: newDial,
               unwrappedNeedleRotation: newNeedle,
               isAligned: aligned,
               sensorStatus: 'active',
-              compassAccuracyDeg:
-                webkitAccuracy !== undefined && webkitAccuracy >= 0
-                  ? Math.round(webkitAccuracy)
-                  : null,
+              isCompassAvailable: true,
+              compassAccuracyDeg: parsed.accuracy,
             });
           }
         };
 
-        // 1. Listen to Android Absolute orientation if available
+        // 1. Android Absolute orientation listener
         if ('ondeviceorientationabsolute' in window) {
           absoluteOrientationHandler = (e: DeviceOrientationEvent) => {
-            handleOrientationUpdate(e, 'deviceOrientationAbsolute');
+            processOrientationUpdate(e, 'deviceOrientationAbsolute');
           };
           window.addEventListener(
             'deviceorientationabsolute',
@@ -210,10 +193,10 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
           );
         }
 
-        // 2. Standard device orientation listener (for iOS and fallback)
+        // 2. Standard orientation listener (iOS and generic fallback)
         orientationHandler = (e: DeviceOrientationEvent) => {
           if (get().headingSource === 'deviceOrientationAbsolute') return;
-          handleOrientationUpdate(
+          processOrientationUpdate(
             e,
             (e as any).webkitCompassHeading !== undefined
               ? 'webkitCompass'
@@ -222,16 +205,21 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
         };
         window.addEventListener('deviceorientation', orientationHandler, true);
 
-        // Liveness watchdog: if no valid orientation events are received after 2.5s (e.g. desktop), mark unavailable
-        sensorTimeoutId = window.setTimeout(() => {
+        // Liveness watchdog: if no valid events received in 1.8s (e.g. laptop/desktop), mark sensor unavailable
+        sensorTimeoutId = setTimeout(() => {
           if (!receivedValidEvent) {
-            set({ sensorStatus: 'unavailable', deviceHeading: null });
+            set({
+              sensorStatus: 'unavailable',
+              isCompassAvailable: false,
+              deviceHeading: null,
+            });
           }
-        }, 2500);
+        }, 1800);
 
         return true;
-      } catch {
-        set({ sensorPermission: 'denied', sensorStatus: 'unavailable' });
+      } catch (err) {
+        console.warn('Compass permission/init error:', err);
+        set({ sensorPermission: 'denied', sensorStatus: 'unavailable', isCompassAvailable: false });
         return false;
       }
     },
@@ -255,6 +243,7 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
           sensorTimeoutId = null;
         }
       }
+      smoothedHeadingRef = null;
       set({ sensorStatus: 'idle' });
     },
 
@@ -277,7 +266,7 @@ export const useQiblaStore = create<QiblaState>((set, get) => {
   };
 });
 
-// Automatically sync when central location changes
+// Automatically sync when central location updates
 useLocationStore.subscribe((loc) => {
   useQiblaStore.getState().calculateForCoordinates(loc.latitude, loc.longitude);
   useQiblaStore.setState({
@@ -286,5 +275,3 @@ useLocationStore.subscribe((loc) => {
     isDetectingLocation: loc.status === 'detecting',
   });
 });
-
-

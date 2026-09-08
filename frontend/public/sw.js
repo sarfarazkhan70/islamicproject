@@ -1,6 +1,7 @@
 // Islamic Prayer Service Worker (Phase 5 — Web Push & PWA Offline Support)
 
 const CACHE_NAME = 'islamic-prayer-v5';
+const QURAN_IMAGE_CACHE = 'quran-mushaf-images-v1';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -22,7 +23,9 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        keys
+          .filter((key) => key !== CACHE_NAME && key !== QURAN_IMAGE_CACHE)
+          .map((key) => caches.delete(key))
       );
     })
   );
@@ -31,6 +34,35 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+
+  // Fast Cache-First strategy for Quran Mushaf page images (Pages 2-611)
+  if (
+    (url.hostname.includes('archive.org') && url.pathname.includes('QuranMajeed-15Lines-PakistaniPrint')) ||
+    url.pathname.startsWith('/quran/')
+  ) {
+    event.respondWith(
+      caches.open(QURAN_IMAGE_CACHE).then(async (cache) => {
+        const cachedResponse = await cache.match(event.request);
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        try {
+          const networkResponse = await fetch(event.request);
+          if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
+            cache.put(event.request, networkResponse.clone());
+          }
+          return networkResponse;
+        } catch (err) {
+          return cachedResponse || Promise.reject(err);
+        }
+      })
+    );
+    return;
+  }
+
+  // Default app shell fallback
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );

@@ -145,6 +145,89 @@ export function unwrapAngle(targetAngle: number, currentAngle: number): number {
 }
 
 /**
+ * Exponential Moving Average (EMA) angular smoothing to eliminate sensor jitter
+ */
+export function smoothAngle(currentAngle: number, targetAngle: number, alpha = 0.28): number {
+  let diff = ((targetAngle - currentAngle + 540) % 360) - 180;
+  const smoothed = currentAngle + alpha * diff;
+  return ((smoothed % 360) + 360) % 360;
+}
+
+/**
+ * Extracts normalized True North compass heading from DeviceOrientationEvent across iOS/Android
+ */
+export function getCompassHeadingFromEvent(
+  e: DeviceOrientationEvent,
+  screenAngle = 0
+): {
+  heading: number;
+  accuracy: number | null;
+  source: 'webkitCompass' | 'deviceOrientationAbsolute' | 'deviceOrientation';
+} | null {
+  // 1. iOS Safari webkitCompassHeading (direct 0-360° True Heading)
+  const webkitHeading = (e as any).webkitCompassHeading;
+  const webkitAccuracy = (e as any).webkitCompassAccuracy;
+  if (typeof webkitHeading === 'number' && !isNaN(webkitHeading)) {
+    const raw = ((webkitHeading % 360) + 360) % 360;
+    const finalHeading = ((raw + screenAngle) % 360 + 360) % 360;
+    return {
+      heading: Math.round(finalHeading * 10) / 10,
+      accuracy: typeof webkitAccuracy === 'number' && webkitAccuracy >= 0 ? Math.round(webkitAccuracy) : null,
+      source: 'webkitCompass',
+    };
+  }
+
+  // 2. Android absolute or standard orientation event
+  if (typeof e.alpha === 'number' && !isNaN(e.alpha)) {
+    const alpha = e.alpha;
+    const beta = e.beta || 0;
+    const gamma = e.gamma || 0;
+
+    let heading: number;
+
+    // Check if device is held roughly flat (tilt < 45 degrees)
+    if (Math.abs(beta) < 45 && Math.abs(gamma) < 45) {
+      // Direct alpha conversion: alpha runs counter-clockwise, so North heading = (360 - alpha)
+      heading = (360 - alpha) % 360;
+    } else {
+      // 3D Euler tilt compensation
+      const degToRad = Math.PI / 180;
+      const a = alpha * degToRad;
+      const b = beta * degToRad;
+      const g = gamma * degToRad;
+
+      const cA = Math.cos(a);
+      const sA = Math.sin(a);
+      const sB = Math.sin(b);
+      const cG = Math.cos(g);
+      const sG = Math.sin(g);
+
+      const rA = -cA * sG - sA * sB * cG;
+      const rB = -sA * sG + cA * sB * cG;
+
+      if (Math.abs(rA) < 1e-4 && Math.abs(rB) < 1e-4) {
+        heading = (360 - alpha) % 360;
+      } else {
+        let headingRad = Math.atan2(-rA, rB);
+        if (headingRad < 0) headingRad += 2 * Math.PI;
+        heading = headingRad * (180 / Math.PI);
+      }
+    }
+
+    const finalHeading = ((heading + screenAngle) % 360 + 360) % 360;
+    const isAbsolute = (e as any).absolute === true;
+
+    return {
+      heading: Math.round(finalHeading * 10) / 10,
+      accuracy: null,
+      source: isAbsolute ? 'deviceOrientationAbsolute' : 'deviceOrientation',
+    };
+  }
+
+  return null;
+}
+
+/**
  * Computes complete Qibla calculation bundle
  */
 export function getQiblaInfo(latitude: number, longitude: number): QiblaResult {
@@ -163,4 +246,3 @@ export function getQiblaInfo(latitude: number, longitude: number): QiblaResult {
     kaabaCoordinates: KAABA_COORDINATES,
   };
 }
-

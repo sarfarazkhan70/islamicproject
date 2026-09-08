@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
@@ -90,25 +90,33 @@ export const QuranPage: React.FC = () => {
     QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
 
   // Search filtered surahs and juz for listen tab
-  const filteredSurahs = SURAHS_LIST.filter(
-    (s) =>
-      s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `surah ${s.name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.meaning.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.number.toString() === searchTerm ||
-      s.arabicName.includes(searchTerm) ||
-      `سورۃ ${s.arabicName}`.includes(searchTerm) ||
-      `سورة ${s.arabicName}`.includes(searchTerm)
+  const filteredSurahs = useMemo(
+    () =>
+      SURAHS_LIST.filter(
+        (s) =>
+          s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          `surah ${s.name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          s.meaning.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          s.number.toString() === searchTerm ||
+          s.arabicName.includes(searchTerm) ||
+          `سورۃ ${s.arabicName}`.includes(searchTerm) ||
+          `سورة ${s.arabicName}`.includes(searchTerm)
+      ),
+    [searchTerm]
   );
 
-  const filteredJuz = JUZ_LIST.filter(
-    (j) =>
-      j.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      j.startSurahName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      j.number.toString() === searchTerm ||
-      j.arabicName.includes(searchTerm) ||
-      `para ${j.number}`.includes(searchTerm.toLowerCase()) ||
-      `juz ${j.number}`.includes(searchTerm.toLowerCase())
+  const filteredJuz = useMemo(
+    () =>
+      JUZ_LIST.filter(
+        (j) =>
+          j.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          j.startSurahName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          j.number.toString() === searchTerm ||
+          j.arabicName.includes(searchTerm) ||
+          `para ${j.number}`.includes(searchTerm.toLowerCase()) ||
+          `juz ${j.number}`.includes(searchTerm.toLowerCase())
+      ),
+    [searchTerm]
   );
 
   const formatTime = (sec: number, forceHours: boolean = false) => {

@@ -353,27 +353,27 @@ export const QuranApiService = {
   },
 
   /**
-   * Get authentic optimized Pakistan / Subcontinent 16-Line Mushaf page image URL (2-549)
-   * Standard Taj Company Hafizi / Tajweedi print format (002.webp to 549.webp)
-   * With global CDN edge compression & responsive width optimization:
-   * - Desktop: width=1200px (crystal-clear text)
-   * - Mobile: width=600px (bandwidth-saving fast load)
+   * Get authentic Pakistani / Hafiz 15-Line Mushaf page image URL (Pages 2-611)
+   * Standard Pakistani Hafizi print format (Qudrat Ullah Company / Taj Company print)
+   * Leaf index = pageNumber - 1 (Page 2 = n1, Page 3 = n2, ..., Page 611 = n610)
+   * With responsive width optimization:
+   * - Desktop: width=1200px (crystal-clear 15-line text)
+   * - Mobile: width=800px (bandwidth-saving fast load)
    */
   getMushafPageImageUrl(
     pageNumber: number,
     size: 'desktop' | 'mobile' | 'full' = 'desktop'
   ): string {
-    const clamped = Math.max(2, Math.min(549, Math.floor(pageNumber) || 2));
-    const padded = String(clamped).padStart(3, '0');
-    const rawUrl = `https://github.com/vincenzoh-gh/16-Line-Quran/releases/download/v2/${padded}.webp`;
+    const clamped = Math.max(2, Math.min(611, Math.floor(pageNumber) || 2));
+    const leafIndex = clamped - 1;
 
     if (size === 'mobile') {
-      return `https://images.weserv.nl/?url=${encodeURIComponent(rawUrl)}&w=600&output=webp&q=80`;
+      return `https://archive.org/download/QuranMajeed-15Lines-PakistaniPrint/page/n${leafIndex}_w800.jpg`;
     }
     if (size === 'desktop') {
-      return `https://images.weserv.nl/?url=${encodeURIComponent(rawUrl)}&w=1200&output=webp&q=85`;
+      return `https://archive.org/download/QuranMajeed-15Lines-PakistaniPrint/page/n${leafIndex}_w1200.jpg`;
     }
-    return rawUrl;
+    return `https://archive.org/download/QuranMajeed-15Lines-PakistaniPrint/page/n${leafIndex}.jpg`;
   },
 
   /**
@@ -382,15 +382,16 @@ export const QuranApiService = {
   getMushafPageSrcSet(pageNumber: number): string {
     const mobileUrl = this.getMushafPageImageUrl(pageNumber, 'mobile');
     const desktopUrl = this.getMushafPageImageUrl(pageNumber, 'desktop');
-    return `${mobileUrl} 600w, ${desktopUrl} 1200w`;
+    return `${mobileUrl} 800w, ${desktopUrl} 1200w`;
   },
 
   /**
    * Fallback direct high-resolution Mushaf page image URL
    */
   getMushafPageImageFallbackUrl(pageNumber: number): string {
-    const clamped = Math.max(2, Math.min(549, Math.floor(pageNumber) || 2));
-    const padded = String(clamped).padStart(3, '0');
-    return `https://github.com/vincenzoh-gh/16-Line-Quran/releases/download/v2/${padded}.webp`;
+    const clamped = Math.max(2, Math.min(611, Math.floor(pageNumber) || 2));
+    const leafIndex = clamped - 1;
+    const padded = String(leafIndex).padStart(4, '0');
+    return `https://ia600607.us.archive.org/BookReader/BookReaderImages.php?zip=/28/items/QuranMajeed-15Lines-PakistaniPrint/QuranMajeed-15Lines-PakistaniPrint_jp2.zip&file=QuranMajeed-15Lines-PakistaniPrint_jp2/QuranMajeed-15Lines-PakistaniPrint_${padded}.jp2&id=QuranMajeed-15Lines-PakistaniPrint&scale=2&rotate=0`;
   },
 };

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
-import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { useQuranStore } from '../../stores/useQuranStore';
 import {
   SURAHS_LIST,
   JUZ_LIST,
-  MIN_MUSHAF_PAGE,
   MAX_MUSHAF_PAGE,
   QURAN_COM_RECITERS,
   getSurahByNumber,
+  getJuzByNumber,
   quranTextPageToApiPage,
 } from '../../data/quranData';
 import { QuranApiPageViewer } from '../../components/quran/QuranApiPageViewer';
@@ -38,11 +37,14 @@ export const QuranPage: React.FC = () => {
     mushafPage,
     currentSurahNumber,
     selectedPara,
-    zoomLevel,
+    playbackType,
+    activeAudioJuz,
     activeAudioSurah,
+    activeAudioAyah,
     selectedReciterId,
     audioPlaybackPhase,
     isPlaying,
+    hasUserStartedAudio,
     playbackTime,
     playbackDuration,
     audioVolume,
@@ -54,11 +56,12 @@ export const QuranPage: React.FC = () => {
     searchTerm,
     activeTab,
     setMode,
+    goToQuranPage,
     setMushafPage,
     jumpToSurahPage,
     jumpToJuzPage,
-    setZoomLevel,
     playSurahAudio,
+    playJuzAudio,
     playNextSurahAudio,
     playPrevSurahAudio,
     toggleAudioPlay,
@@ -79,23 +82,44 @@ export const QuranPage: React.FC = () => {
 
   // Metadata for active audio
   const activeAudioSurahMeta = getSurahByNumber(activeAudioSurah);
+  const activeAudioJuzMeta = activeAudioJuz ? getJuzByNumber(activeAudioJuz) : null;
   const activeReciterObj =
     QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
 
-  // Search filtered surahs for listen tab
+  // Search filtered surahs and juz for listen tab
   const filteredSurahs = SURAHS_LIST.filter(
     (s) =>
       s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `surah ${s.name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.meaning.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.number.toString() === searchTerm ||
-      s.arabicName.includes(searchTerm)
+      s.arabicName.includes(searchTerm) ||
+      `سورۃ ${s.arabicName}`.includes(searchTerm) ||
+      `سورة ${s.arabicName}`.includes(searchTerm)
   );
 
-  const formatTime = (sec: number) => {
-    if (isNaN(sec) || !isFinite(sec) || sec < 0) return '00:00';
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  const filteredJuz = JUZ_LIST.filter(
+    (j) =>
+      j.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      j.startSurahName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      j.number.toString() === searchTerm ||
+      j.arabicName.includes(searchTerm) ||
+      `para ${j.number}`.includes(searchTerm.toLowerCase()) ||
+      `juz ${j.number}`.includes(searchTerm.toLowerCase())
+  );
+
+  const formatTime = (sec: number, forceHours: boolean = false) => {
+    if (isNaN(sec) || !isFinite(sec) || sec < 0) {
+      return forceHours ? '00:00:00' : '00:00';
+    }
+    const totalSeconds = Math.floor(sec);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (forceHours || hours > 0) {
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   };
 
   const [directPageInput, setDirectPageInput] = useState<string>(mushafPage.toString());
@@ -124,7 +148,7 @@ export const QuranPage: React.FC = () => {
     const pageNum = parseInt(directPageInput, 10);
     if (!isNaN(pageNum)) {
       const validPage = quranTextPageToApiPage(pageNum);
-      setMushafPage(validPage);
+      goToQuranPage(validPage);
     }
   };
 
@@ -146,17 +170,26 @@ export const QuranPage: React.FC = () => {
         arabicTitle="القرآن الكريم"
         subtitle="Read • Listen • Reflect"
         actions={
-          <div className="flex items-center gap-2">
-            {/* Audio Toggle Quick Button */}
+          <div className="quran-header-actions flex items-center gap-3">
+            {/* Audio Recitation Toggle Card Box */}
             <button
               type="button"
-              className={`btn btn-sm ${isPlaying ? 'btn-primary' : 'btn-outline-secondary'}`}
+              className={`audio-recitation-card-box ${isPlaying ? 'is-playing' : ''} ${showAudioStrip ? 'is-active' : ''}`}
               onClick={() => setShowAudioStrip(!showAudioStrip)}
-              title="Toggle Quran Audio Player"
+              title={showAudioStrip ? 'Hide Quran Audio Player' : 'Open Quran Audio Player'}
+              aria-label="Toggle Quran Audio Recitation"
             >
-              <Headphones size={15} />
-              <span className="hidden sm:inline">Audio Recitation</span>
-              {isPlaying && <span className="animate-pulse text-xs ml-1">● Live</span>}
+              <div className="audio-recitation-icon-badge">
+                <Headphones size={15} />
+              </div>
+              <div className="audio-recitation-label-group">
+                <span className="audio-recitation-title">Audio Recitation</span>
+                {isPlaying && (
+                  <span className="audio-recitation-status">
+                    <span className="live-dot animate-pulse">●</span> Live
+                  </span>
+                )}
+              </div>
             </button>
 
             {/* Mode Switcher: Read | Listen */}
@@ -240,203 +273,206 @@ export const QuranPage: React.FC = () => {
       )}
 
       {/* ========================================================
-          POLISHED NON-INTRUSIVE QURAN AUDIO PLAYER STRIP
-          ======================================================== */}
-      {(showAudioStrip || isPlaying) && (
-        <div className="quran-audio-strip">
-          <div className="quran-audio-strip-header">
-            <div className="flex items-center gap-3">
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: 'var(--radius-lg)',
-                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                  color: 'var(--brand-primary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Headphones size={18} />
-              </div>
-              <div>
-                <div style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🎧 Surah {activeAudioSurahMeta.number}. {activeAudioSurahMeta.name} ({activeAudioSurahMeta.arabicName})</span>
-                  {isPlaying && audioPlaybackPhase === 'taawwuz' && (
-                    <span className="badge badge-sm" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', color: 'var(--brand-gold)', fontSize: '11px', padding: '2px 8px', borderRadius: '12px' }}>
-                      Ta'awwuz (أَعُوذُ بِاللَّهِ)
-                    </span>
-                  )}
-                  {isPlaying && audioPlaybackPhase === 'bismillah' && (
-                    <span className="badge badge-sm" style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: 'var(--brand-primary)', fontSize: '11px', padding: '2px 8px', borderRadius: '12px' }}>
-                      Bismillah (بِسْمِ اللَّهِ)
-                    </span>
-                  )}
-                </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                  Reciter: {activeReciterObj.name} • {activeAudioSurahMeta.versesCount} Verses
-                </div>
-              </div>
-            </div>
-
-            {/* Reciter Dropdown */}
-            <div className="flex items-center gap-2">
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
-                Qari:
-              </span>
-              <select
-                className="mushaf-select-dropdown"
-                value={selectedReciterId}
-                onChange={(e) => setSelectedReciterId(parseInt(e.target.value, 10))}
-                style={{ minWidth: '180px', padding: '4px 8px', fontSize: 'var(--text-xs)' }}
-                aria-label="Select Reciter"
-              >
-                {QURAN_COM_RECITERS.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Scrubber timeline */}
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between text-xs text-secondary font-mono">
-              <span>{formatTime(playbackTime)}</span>
-              <span>{formatTime(playbackDuration)}</span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={playbackDuration || 100}
-              step={0.5}
-              value={playbackTime}
-              onChange={(e) => seekAudio(parseFloat(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--brand-primary)', cursor: 'pointer' }}
-              aria-label="Audio Timeline"
-            />
-          </div>
-
-          {/* Controls Row */}
-          <div className="quran-audio-controls-row">
-            {/* Prev / Play / Stop / Next */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-secondary"
-                onClick={playPrevSurahAudio}
-                title="Previous Surah"
-              >
-                <SkipBack size={14} />
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-sm btn-primary"
-                onClick={toggleAudioPlay}
-                style={{ minWidth: '90px' }}
-                title={isPlaying ? 'Pause Recitation' : 'Play Recitation'}
-              >
-                {isPlaying ? (
-                  <>
-                    <Pause size={14} /> <span>Pause</span>
-                  </>
-                ) : (
-                  <>
-                    <Play size={14} /> <span>Play</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-secondary"
-                onClick={stopAudio}
-                title="Stop Recitation"
-              >
-                <Square size={14} /> <span>Stop</span>
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-secondary"
-                onClick={playNextSurahAudio}
-                title="Next Surah"
-              >
-                <SkipForward size={14} />
-              </button>
-            </div>
-
-            {/* Loop, Speed & Volume */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <button
-                type="button"
-                className={`btn btn-xs ${isLooping ? 'btn-primary' : 'btn-outline-secondary'}`}
-                onClick={() => setIsLooping(!isLooping)}
-                title={isLooping ? 'Repeat Enabled' : 'Repeat Surah'}
-              >
-                <Repeat size={12} />
-                <span>Repeat</span>
-              </button>
-
-              <select
-                className="mushaf-select-dropdown"
-                value={playbackSpeed}
-                onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
-                style={{ padding: '2px 6px', fontSize: '0.75rem', minWidth: '60px' }}
-                aria-label="Speed"
-              >
-                <option value={0.75}>0.75x</option>
-                <option value={1.0}>1.0x</option>
-                <option value={1.25}>1.25x</option>
-                <option value={1.5}>1.5x</option>
-              </select>
-
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  className="btn btn-xs btn-ghost"
-                  onClick={handleToggleMute}
-                  title={isMuted ? 'Unmute' : 'Mute'}
-                >
-                  {isMuted || audioVolume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
-                </button>
-                <input
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  value={isMuted ? 0 : audioVolume}
-                  onChange={(e) => {
-                    const v = parseFloat(e.target.value);
-                    setAudioVolume(v);
-                    if (v > 0 && isMuted) setIsMuted(false);
-                  }}
-                  style={{ width: '60px', accentColor: 'var(--brand-primary)' }}
-                  aria-label="Volume Slider"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================
           MODE 1: MAIN QURAN MUSHAF READING MODE (ARABIC ONLY)
           ======================================================== */}
       {mode === 'read' && (
         <div className="flex flex-col gap-3">
+          {/* Polished Non-Intrusive Quran Audio Player Strip (Active when listening in Reading Mode) */}
+          {(showAudioStrip || hasUserStartedAudio || isPlaying || playbackTime > 0) && (
+            <div className="quran-audio-strip">
+              {/* Header Info: Surah metadata + Qari Selector */}
+              <div className="quran-audio-strip-header">
+                <div className="flex items-center gap-3">
+                  <div className="quran-audio-avatar">
+                    <Headphones size={18} />
+                  </div>
+                  <div>
+                    <div className="quran-audio-title-row">
+                      {playbackType === 'juz' && activeAudioJuzMeta ? (
+                        <span>🎧 {activeAudioJuzMeta.name} — Surah {activeAudioSurahMeta.name} ({activeAudioSurahMeta.number}:{activeAudioAyah || activeAudioJuzMeta.startAyah})</span>
+                      ) : (
+                        <span>🎧 Surah {activeAudioSurahMeta.number}. {activeAudioSurahMeta.name} ({activeAudioSurahMeta.arabicName.startsWith('سورۃ') || activeAudioSurahMeta.arabicName.startsWith('سورة') || activeAudioSurahMeta.arabicName.startsWith('سُورَةُ') ? activeAudioSurahMeta.arabicName : `سورۃ ${activeAudioSurahMeta.arabicName}`})</span>
+                      )}
+                      {isPlaying && audioPlaybackPhase === 'taawwuz' && (
+                        <span className="phase-badge phase-badge-gold">
+                          Ta'awwuz (أَعُوذُ بِاللَّهِ)
+                        </span>
+                      )}
+                      {isPlaying && audioPlaybackPhase === 'bismillah' && (
+                        <span className="phase-badge phase-badge-emerald">
+                          Bismillah (بِسْمِ اللَّهِ)
+                        </span>
+                      )}
+                    </div>
+                    <div className="quran-audio-subtitle">
+                      {playbackType === 'juz' && activeAudioJuzMeta ? (
+                        <>Reciter: {activeReciterObj.name}</>
+                      ) : (
+                        <>Reciter: {activeReciterObj.name} • {activeAudioSurahMeta.versesCount} Verses</>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reciter Dropdown */}
+                <div className="quran-audio-reciter-select-group flex items-center gap-3">
+                  <span className="qari-label">
+                    Select Voice:
+                  </span>
+                  <select
+                    className="mushaf-select-dropdown"
+                    value={selectedReciterId}
+                    onChange={(e) => setSelectedReciterId(parseInt(e.target.value, 10))}
+                    style={{ minWidth: '180px', padding: '5px 10px', fontSize: 'var(--text-xs)' }}
+                    aria-label="Select Voice"
+                  >
+                    {QURAN_COM_RECITERS.map((r) => (
+                      <option key={r.id} value={r.id}>
+                        {r.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Dedicated Clean Audio Player Box */}
+              <div className="quran-player-box">
+                {/* Scrubber timeline */}
+                <div className="player-box-scrubber flex flex-col gap-1">
+                  <div className="flex items-center justify-between text-xs text-secondary font-mono">
+                    <span>{formatTime(playbackTime, (playbackDuration >= 3600 || playbackTime >= 3600))}</span>
+                    <span>{formatTime(playbackDuration, (playbackDuration >= 3600 || playbackTime >= 3600))}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={playbackDuration || 100}
+                    step={0.5}
+                    value={playbackTime}
+                    onChange={(e) => seekAudio(parseFloat(e.target.value))}
+                    className="quran-scrubber-slider"
+                    style={{
+                      background: `linear-gradient(to right, var(--brand-primary) 0%, var(--brand-primary) ${playbackDuration > 0 ? Math.min(100, Math.max(0, (playbackTime / playbackDuration) * 100)) : 0}%, var(--border-default) ${playbackDuration > 0 ? Math.min(100, Math.max(0, (playbackTime / playbackDuration) * 100)) : 0}%, var(--border-default) 100%)`,
+                    }}
+                    aria-label="Audio Timeline"
+                  />
+                </div>
+
+                {/* Controls Bar inside the Player Box */}
+                <div className="player-box-controls-row">
+                  {/* Playback Controls Group: Prev, Play/Pause, Stop, Next */}
+                  <div className="player-playback-group">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary player-nav-btn"
+                      onClick={playPrevSurahAudio}
+                      title="Previous Surah"
+                    >
+                      <SkipBack size={15} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-primary player-main-play-btn"
+                      onClick={toggleAudioPlay}
+                      title={isPlaying ? 'Pause Recitation' : 'Play Recitation'}
+                    >
+                      {isPlaying ? (
+                        <>
+                          <Pause size={16} /> <span>Pause</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play size={16} /> <span>Play</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary player-stop-btn"
+                      onClick={stopAudio}
+                      title="Stop Recitation"
+                    >
+                      <Square size={14} /> <span>Stop</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary player-nav-btn"
+                      onClick={playNextSurahAudio}
+                      title="Next Surah"
+                    >
+                      <SkipForward size={15} />
+                    </button>
+                  </div>
+
+                  {/* Auxiliary Controls Group: Repeat, Speed, Sound / Volume */}
+                  <div className="player-aux-group">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        className={`btn btn-xs ${isLooping ? 'btn-primary' : 'btn-outline-secondary'}`}
+                        onClick={() => setIsLooping(!isLooping)}
+                        title={isLooping ? 'Repeat Enabled' : 'Repeat Surah'}
+                      >
+                        <Repeat size={13} />
+                        <span>Repeat</span>
+                      </button>
+
+                      <select
+                        className="mushaf-select-dropdown player-speed-select"
+                        value={playbackSpeed}
+                        onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
+                        aria-label="Speed"
+                      >
+                        <option value={0.75}>0.75x</option>
+                        <option value={1.0}>1.0x</option>
+                        <option value={1.25}>1.25x</option>
+                        <option value={1.5}>1.5x</option>
+                      </select>
+                    </div>
+
+                    {/* Sound / Volume Control Box */}
+                    <div className="player-volume-control-box">
+                      <button
+                        type="button"
+                        className="volume-icon-btn"
+                        onClick={handleToggleMute}
+                        title={isMuted ? 'Unmute' : 'Mute'}
+                        aria-label={isMuted ? 'Unmute' : 'Mute'}
+                      >
+                        {isMuted || audioVolume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                      </button>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        value={isMuted ? 0 : audioVolume}
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value);
+                          setAudioVolume(v);
+                          if (v > 0 && isMuted) setIsMuted(false);
+                        }}
+                        className="player-volume-slider"
+                        aria-label="Volume Slider"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Sticky Surah + Para / Juz + Direct Page Horizontal Selector Bar (3 Controls) */}
           <div className="quran-sticky-selector-wrapper">
             <div className="surah-para-selector-bar">
-              {/* 1. Surah Dropdown Box */}
-              <div className="selector-box-container">
-                <label className="selector-label" htmlFor="surah-select">
-                  <BookOpen size={15} className="text-emerald-500" />
-                  <span>Select Surah</span>
-                </label>
+              {/* 1. Surah Dropdown Slot */}
+              <div className="selector-control-slot">
+                <div className="selector-slot-header">
+                  <BookOpen size={13} className="text-emerald-500" />
+                  <label htmlFor="surah-select" className="selector-slot-label">Select Surah</label>
+                </div>
                 <select
                   id="surah-select"
                   className="selector-select-input"
@@ -444,20 +480,26 @@ export const QuranPage: React.FC = () => {
                   onChange={handleSurahSelect}
                   aria-label="Select Surah"
                 >
-                  {SURAHS_LIST.map((s) => (
-                    <option key={s.number} value={s.number}>
-                      {s.number}. {s.name} ({s.arabicName}) — Page {s.pageStart}
-                    </option>
-                  ))}
+                  {SURAHS_LIST.map((s) => {
+                    const arabicName = s.arabicName.startsWith('سورۃ') || s.arabicName.startsWith('سورة') || s.arabicName.startsWith('سُورَةُ')
+                      ? s.arabicName
+                      : `سورۃ ${s.arabicName}`;
+                    const englishName = s.name.startsWith('Surah ') ? s.name : `Surah ${s.name}`;
+                    return (
+                      <option key={s.number} value={s.number}>
+                        {arabicName} — {englishName}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
-              {/* 2. Para / Juz Dropdown Box */}
-              <div className="selector-box-container">
-                <label className="selector-label" htmlFor="para-select">
-                  <Compass size={15} className="text-amber-500" />
-                  <span>Select Para / Juz</span>
-                </label>
+              {/* 2. Para / Juz Dropdown Slot */}
+              <div className="selector-control-slot">
+                <div className="selector-slot-header">
+                  <Compass size={13} className="text-amber-500" />
+                  <label htmlFor="para-select" className="selector-slot-label">Select Para / Juz</label>
+                </div>
                 <select
                   id="para-select"
                   className="selector-select-input"
@@ -467,31 +509,33 @@ export const QuranPage: React.FC = () => {
                 >
                   {JUZ_LIST.map((j) => (
                     <option key={j.number} value={j.number}>
-                      {j.number}. {j.name} ({j.arabicName}) — Page {j.pageStart}
+                      {j.number}   {j.arabicName} — {j.name}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* 3. Direct Page Search / Jump Box */}
-              <div className="selector-box-container selector-box-page-jump">
-                <label className="selector-label" htmlFor="direct-page-search">
-                  <Search size={15} className="text-emerald-500" />
-                  <span>Go To Page ({MIN_MUSHAF_PAGE}–{MAX_MUSHAF_PAGE})</span>
-                </label>
+              {/* 3. Direct Page Search / Jump Slot */}
+              <div className="selector-control-slot selector-page-jump-slot">
+                <div className="selector-slot-header">
+                  <Search size={13} className="text-emerald-500" />
+                  <label htmlFor="direct-page-search" className="selector-slot-label">
+                    Go To Page <span className="selector-range-hint">(1–{MAX_MUSHAF_PAGE})</span>
+                  </label>
+                </div>
                 <form onSubmit={handleDirectPageSubmit} className="selector-page-form">
                   <input
                     id="direct-page-search"
                     type="number"
-                    min={MIN_MUSHAF_PAGE}
+                    min={1}
                     max={MAX_MUSHAF_PAGE}
                     value={directPageInput}
                     onChange={(e) => setDirectPageInput(e.target.value)}
-                    placeholder={`Page (${MIN_MUSHAF_PAGE}-${MAX_MUSHAF_PAGE})`}
+                    placeholder="Page No."
                     className="selector-page-input"
                     aria-label="Direct Page Search"
                   />
-                  <button type="submit" className="selector-page-go-btn" title="Go to Page">
+                  <button type="submit" className="selector-page-go-btn" title="Jump to Page">
                     Go
                   </button>
                 </form>
@@ -504,8 +548,6 @@ export const QuranPage: React.FC = () => {
             <QuranApiPageViewer
               currentPage={mushafPage}
               onPageChange={setMushafPage}
-              zoomLevel={zoomLevel}
-              onZoomChange={setZoomLevel}
               surahNumber={currentSurahNumber}
             />
           </div>
@@ -519,60 +561,112 @@ export const QuranPage: React.FC = () => {
         <div className="quran-listen-container flex flex-col gap-6">
           {/* Main Audio Player Card */}
           <Card className="audio-studio-hero-card" style={{ padding: 'var(--space-6)', position: 'relative' }}>
-            <div className="audio-studio-layout flex flex-col gap-5">
-              {/* Surah and Reciter Header */}
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div
-                    style={{
-                      width: '64px',
-                      height: '64px',
-                      borderRadius: 'var(--radius-xl)',
-                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.4))',
-                      border: '1px solid rgba(16, 185, 129, 0.4)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Headphones size={30} className="text-emerald-400" />
+            <div className="audio-studio-layout flex flex-col gap-6">
+              {/* Selected Surah Showcase Header (Centered, Generous Spacing, No Overlap) */}
+              <div
+                className="surah-audio-showcase"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: 'var(--space-2)',
+                  padding: 'var(--space-1) var(--space-2) 0',
+                  width: '100%',
+                }}
+              >
+                {/* Intro Phase Badge (Ta'awwuz / Bismillah) only when active */}
+                {isPlaying && (audioPlaybackPhase === 'taawwuz' || audioPlaybackPhase === 'bismillah') && (
+                  <div className="flex items-center justify-center gap-2 flex-wrap" style={{ width: '100%', marginBottom: 'var(--space-1)' }}>
+                    {audioPlaybackPhase === 'taawwuz' && (
+                      <span
+                        className="badge"
+                        style={{
+                          backgroundColor: 'rgba(245, 158, 11, 0.25)',
+                          color: 'var(--brand-gold)',
+                          fontSize: '12px',
+                          padding: '3px 12px',
+                          borderRadius: 'var(--radius-full)',
+                          fontWeight: 'bold',
+                          border: '1px solid rgba(245, 158, 11, 0.4)',
+                        }}
+                      >
+                        Ta'awwuz • أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ
+                      </span>
+                    )}
+                    {audioPlaybackPhase === 'bismillah' && (
+                      <span
+                        className="badge"
+                        style={{
+                          backgroundColor: 'rgba(16, 185, 129, 0.25)',
+                          color: 'var(--brand-primary)',
+                          fontSize: '12px',
+                          padding: '3px 12px',
+                          borderRadius: 'var(--radius-full)',
+                          fontWeight: 'bold',
+                          border: '1px solid rgba(16, 185, 129, 0.4)',
+                        }}
+                      >
+                        Bismillah • بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                      </span>
+                    )}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', margin: 0 }}>
-                        {activeAudioSurahMeta.number}. {activeAudioSurahMeta.name}
-                      </h2>
-                      <Badge variant="gold">{activeAudioSurahMeta.revelationType}</Badge>
-                      {isPlaying && audioPlaybackPhase === 'taawwuz' && (
-                        <span className="badge" style={{ backgroundColor: 'rgba(245, 158, 11, 0.25)', color: 'var(--brand-gold)', fontSize: '12px', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>
-                          Ta'awwuz • أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ
-                        </span>
-                      )}
-                      {isPlaying && audioPlaybackPhase === 'bismillah' && (
-                        <span className="badge" style={{ backgroundColor: 'rgba(16, 185, 129, 0.25)', color: 'var(--brand-primary)', fontSize: '12px', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>
-                          Bismillah • بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-                        </span>
-                      )}
-                    </div>
-                    <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                      {activeAudioSurahMeta.meaning} • {activeAudioSurahMeta.versesCount} Verses • Juz{' '}
-                      {activeAudioSurahMeta.juzStart}
-                    </p>
-                  </div>
+                )}
+
+                {/* Main Arabic Calligraphy Surah / Juz Name */}
+                <div
+                  className="mushaf-text"
+                  dir="rtl"
+                  style={{
+                    fontSize: 'clamp(2rem, 4.5vw, 2.75rem)',
+                    color: 'var(--brand-gold)',
+                    lineHeight: 1.35,
+                    padding: '0',
+                    margin: '0 0 18px 0',
+                    textShadow: '0 2px 14px rgba(245, 158, 11, 0.2)',
+                    overflow: 'visible',
+                    maxWidth: '100%',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {playbackType === 'juz' && activeAudioJuzMeta
+                    ? activeAudioJuzMeta.arabicName
+                    : (activeAudioSurahMeta.arabicName.startsWith('سورۃ') || activeAudioSurahMeta.arabicName.startsWith('سورة') || activeAudioSurahMeta.arabicName.startsWith('سُورَةُ')
+                        ? activeAudioSurahMeta.arabicName
+                        : `سورۃ ${activeAudioSurahMeta.arabicName}`)}
                 </div>
 
-                <div style={{ textAlign: 'right' }}>
-                  <div
-                    className="mushaf-text"
-                    dir="rtl"
-                    style={{ fontSize: '2rem', color: 'var(--brand-gold)', lineHeight: 1.2 }}
+                {/* English Surah/Juz Title & Details */}
+                <div style={{ maxWidth: '100%', marginTop: '6px' }}>
+                  <h2
+                    style={{
+                      fontSize: 'clamp(1.2rem, 2.5vw, 1.5rem)',
+                      fontWeight: 'bold',
+                      color: 'var(--text-primary)',
+                      margin: '0 0 4px 0',
+                      lineHeight: 1.3,
+                    }}
                   >
-                    سُورَةُ {activeAudioSurahMeta.arabicName}
-                  </div>
+                    {playbackType === 'juz' && activeAudioJuzMeta
+                      ? `${activeAudioJuzMeta.name} — Surah ${activeAudioSurahMeta.name}`
+                      : (activeAudioSurahMeta.name.startsWith('Surah ') ? activeAudioSurahMeta.name : `Surah ${activeAudioSurahMeta.name}`)}
+                  </h2>
+                  {playbackType !== 'juz' && (
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 'var(--text-sm)',
+                        color: 'var(--text-secondary)',
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {activeAudioSurahMeta.versesCount} Ayahs • Para {activeAudioSurahMeta.juzStart}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* Reciter Selector */}
+              {/* Reciter Selector Box */}
               <div
                 style={{
                   display: 'flex',
@@ -584,11 +678,23 @@ export const QuranPage: React.FC = () => {
                   backgroundColor: 'var(--bg-surface-elevated)',
                   borderRadius: 'var(--radius-lg)',
                   border: '1px solid var(--border-default)',
+                  marginTop: 'var(--space-1)',
+                  width: '100%',
                 }}
               >
-                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
-                  SELECT QARI / RECITER:
-                </span>
+                <div className="flex items-center gap-2">
+                  <Headphones size={18} className="text-emerald-400" />
+                  <span
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-secondary)',
+                      fontWeight: 'bold',
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    SELECT QARI / RECITER:
+                  </span>
+                </div>
                 <select
                   className="mushaf-select-dropdown"
                   value={selectedReciterId}
@@ -596,7 +702,8 @@ export const QuranPage: React.FC = () => {
                     const recId = parseInt(e.target.value, 10);
                     setSelectedReciterId(recId);
                   }}
-                  style={{ minWidth: '260px' }}
+                  style={{ minWidth: '260px', flex: '1 1 260px', maxWidth: '100%' }}
+                  aria-label="Select Qari / Reciter"
                 >
                   {QURAN_COM_RECITERS.map((r) => (
                     <option key={r.id} value={r.id}>
@@ -606,148 +713,155 @@ export const QuranPage: React.FC = () => {
                 </select>
               </div>
 
-              {/* Audio Scrubber Slider */}
-              <div className="audio-scrubber-group flex flex-col gap-2">
-                <div className="flex items-center justify-between text-xs text-secondary font-mono">
-                  <span>{formatTime(playbackTime)}</span>
-                  <span>{formatTime(playbackDuration)}</span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={playbackDuration || 100}
-                  step={0.5}
-                  value={playbackTime}
-                  onChange={(e) => seekAudio(parseFloat(e.target.value))}
-                  style={{
-                    width: '100%',
-                    accentColor: 'var(--brand-primary)',
-                    cursor: 'pointer',
-                  }}
-                  aria-label="Audio Playback Progress"
-                />
-              </div>
-
-              {/* Playback Controls Row */}
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                {/* Left: Auto-next & Loop & Speed buttons */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    className={`btn btn-sm ${isLooping ? 'btn-primary' : 'btn-outline-secondary'}`}
-                    onClick={() => setIsLooping(!isLooping)}
-                    title={isLooping ? 'Looping Enabled' : 'Enable Repeat Surah'}
-                  >
-                    <Repeat size={16} />
-                    <span>Repeat</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`btn btn-sm ${autoPlayNext ? 'btn-primary' : 'btn-outline-secondary'}`}
-                    onClick={() => setAutoPlayNext(!autoPlayNext)}
-                    title={autoPlayNext ? 'Auto-play Next Surah Enabled' : 'Enable Auto-play Next'}
-                  >
-                    <span>Auto-Next</span>
-                  </button>
-
-                  {/* Playback Speed Switcher */}
-                  <select
-                    className="mushaf-select-dropdown"
-                    value={playbackSpeed}
-                    onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
-                    style={{ padding: '4px 8px', fontSize: '0.8rem', minWidth: '70px' }}
-                    aria-label="Playback Speed"
-                  >
-                    <option value={0.75}>0.75x</option>
-                    <option value={1.0}>1.0x</option>
-                    <option value={1.25}>1.25x</option>
-                    <option value={1.5}>1.5x</option>
-                  </select>
-                </div>
-
-                {/* Center: Prev Surah, Rewind 10s, Play/Pause, Forward 10s, Next Surah */}
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={playPrevSurahAudio}
-                    title="Previous Surah"
-                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
-                  >
-                    <SkipBack size={18} />
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => seekAudio(Math.max(0, playbackTime - 10))}
-                    title="Rewind 10 seconds"
-                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
-                  >
-                    <RotateCcw size={18} />
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={toggleAudioPlay}
-                    style={{
-                      borderRadius: '50%',
-                      width: '56px',
-                      height: '56px',
-                      padding: 0,
-                      boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)',
-                    }}
-                    title={isPlaying ? 'Pause' : 'Play'}
-                  >
-                    {isPlaying ? <Pause size={24} /> : <Play size={24} style={{ marginLeft: '3px' }} />}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => seekAudio(Math.min(playbackDuration, playbackTime + 10))}
-                    title="Forward 10 seconds"
-                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
-                  >
-                    <RotateCw size={18} />
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={playNextSurahAudio}
-                    title="Next Surah"
-                    style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0 }}
-                  >
-                    <SkipForward size={18} />
-                  </button>
-                </div>
-
-                {/* Right: Volume & Mute */}
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-outline-secondary"
-                    onClick={handleToggleMute}
-                    title={isMuted ? 'Unmute' : 'Mute'}
-                  >
-                    {isMuted || audioVolume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                  </button>
+              {/* Dedicated Clean Audio Player Box (Separated with 16px balanced gap) */}
+              <div className="quran-player-box studio-player-box">
+                {/* Audio Scrubber Slider */}
+                <div className="player-box-scrubber flex flex-col gap-2">
+                  <div className="flex items-center justify-between text-xs text-secondary font-mono">
+                    <span>{formatTime(playbackTime, (playbackDuration >= 3600 || playbackTime >= 3600))}</span>
+                    <span>{formatTime(playbackDuration, (playbackDuration >= 3600 || playbackTime >= 3600))}</span>
+                  </div>
                   <input
                     type="range"
                     min={0}
-                    max={1}
-                    step={0.05}
-                    value={isMuted ? 0 : audioVolume}
-                    onChange={(e) => {
-                      const v = parseFloat(e.target.value);
-                      setAudioVolume(v);
-                      if (v > 0 && isMuted) setIsMuted(false);
+                    max={playbackDuration || 100}
+                    step={0.5}
+                    value={playbackTime}
+                    onChange={(e) => seekAudio(parseFloat(e.target.value))}
+                    className="quran-scrubber-slider"
+                    style={{
+                      background: `linear-gradient(to right, var(--brand-primary) 0%, var(--brand-primary) ${playbackDuration > 0 ? Math.min(100, Math.max(0, (playbackTime / playbackDuration) * 100)) : 0}%, var(--border-default) ${playbackDuration > 0 ? Math.min(100, Math.max(0, (playbackTime / playbackDuration) * 100)) : 0}%, var(--border-default) 100%)`,
                     }}
-                    style={{ width: '80px', accentColor: 'var(--brand-primary)' }}
-                    aria-label="Volume"
+                    aria-label="Audio Playback Progress"
                   />
+                </div>
+
+                {/* Playback Controls Row */}
+                <div className="player-box-controls-row flex items-center justify-between flex-wrap gap-4">
+                  {/* Left: Repeat, Auto-next & Speed in a single, same-line row */}
+                  <div className="player-aux-left flex items-center gap-2">
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${isLooping ? 'btn-primary' : 'btn-outline-secondary'}`}
+                      onClick={() => setIsLooping(!isLooping)}
+                      title={isLooping ? 'Looping Enabled' : 'Enable Repeat Surah'}
+                    >
+                      <Repeat size={14} />
+                      <span>Repeat</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-sm ${autoPlayNext ? 'btn-primary' : 'btn-outline-secondary'}`}
+                      onClick={() => setAutoPlayNext(!autoPlayNext)}
+                      title={autoPlayNext ? 'Auto-play Next Surah Enabled' : 'Enable Auto-play Next'}
+                    >
+                      <span>Auto-Next</span>
+                    </button>
+
+                    {/* Playback Speed Switcher */}
+                    <select
+                      className="mushaf-select-dropdown player-speed-select"
+                      value={playbackSpeed}
+                      onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
+                      style={{
+                        marginLeft: '8px',
+                        padding: '5px 10px',
+                        fontSize: '0.8rem',
+                        minWidth: '70px',
+                        borderRadius: 'var(--radius-md)',
+                      }}
+                      aria-label="Playback Speed"
+                    >
+                      <option value={0.75}>0.75x</option>
+                      <option value={1.0}>1.0x</option>
+                      <option value={1.25}>1.25x</option>
+                      <option value={1.5}>1.5x</option>
+                    </select>
+                  </div>
+
+                  {/* Center: Prev Surah, Rewind 10s, Play/Pause, Stop, Forward 10s, Next Surah */}
+                  <div className="player-playback-group flex items-center gap-2 sm:gap-3">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={playPrevSurahAudio}
+                      title="Previous Surah"
+                    >
+                      <SkipBack size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={() => seekAudio(Math.max(0, playbackTime - 10))}
+                      title="Rewind 10 seconds"
+                    >
+                      <RotateCcw size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-primary studio-main-play-btn"
+                      onClick={toggleAudioPlay}
+                      title={isPlaying ? 'Pause' : 'Play'}
+                    >
+                      {isPlaying ? <Pause size={24} /> : <Play size={24} style={{ marginLeft: '3px' }} />}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={stopAudio}
+                      title="Stop Recitation"
+                    >
+                      <Square size={16} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={() => seekAudio(Math.min(playbackDuration, playbackTime + 10))}
+                      title="Forward 10 seconds"
+                    >
+                      <RotateCw size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary studio-circle-btn"
+                      onClick={playNextSurahAudio}
+                      title="Next Surah"
+                    >
+                      <SkipForward size={18} />
+                    </button>
+                  </div>
+
+                  {/* Right: Sound / Volume Control Box */}
+                  <div className="player-volume-control-box">
+                    <button
+                      type="button"
+                      className="volume-icon-btn"
+                      onClick={handleToggleMute}
+                      title={isMuted ? 'Unmute' : 'Mute'}
+                      aria-label={isMuted ? 'Unmute' : 'Mute'}
+                    >
+                      {isMuted || audioVolume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </button>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      value={isMuted ? 0 : audioVolume}
+                      onChange={(e) => {
+                        const v = parseFloat(e.target.value);
+                        setAudioVolume(v);
+                        if (v > 0 && isMuted) setIsMuted(false);
+                      }}
+                      className="player-volume-slider"
+                      aria-label="Volume Slider"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -823,7 +937,7 @@ export const QuranPage: React.FC = () => {
                   }}
                 >
                   {filteredSurahs.map((s) => {
-                    const isSelected = s.number === activeAudioSurah;
+                    const isSelected = playbackType === 'surah' && s.number === activeAudioSurah;
                     return (
                       <div
                         key={s.number}
@@ -840,11 +954,12 @@ export const QuranPage: React.FC = () => {
                           transition: 'all var(--transition-fast)',
                         }}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3" style={{ minWidth: 0 }}>
                           <span
                             style={{
                               width: '32px',
                               height: '32px',
+                              minWidth: '32px',
                               borderRadius: 'var(--radius-md)',
                               backgroundColor: isSelected ? 'var(--brand-primary)' : 'var(--bg-surface)',
                               color: isSelected ? '#061c14' : 'var(--brand-primary)',
@@ -854,43 +969,41 @@ export const QuranPage: React.FC = () => {
                               fontWeight: 'bold',
                               fontSize: '0.8rem',
                               fontFamily: 'var(--font-mono)',
+                              flexShrink: 0,
                             }}
                           >
                             {s.number}
                           </span>
-                          <div>
-                            <div style={{ fontWeight: 'var(--weight-semibold)', fontSize: 'var(--text-sm)' }}>
-                              {s.name}
-                            </div>
-                            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                              {s.meaning} • {s.versesCount} Ayahs
-                            </div>
+                          <div
+                            style={{
+                              fontWeight: 'var(--weight-semibold)',
+                              fontSize: 'var(--text-sm)',
+                              color: isSelected ? 'var(--brand-primary)' : 'var(--text-primary)',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              minWidth: 0,
+                            }}
+                          >
+                            {s.name.startsWith('Surah ') ? s.name : `Surah ${s.name}`}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                          <button
-                            type="button"
-                            className="btn btn-xs btn-outline-primary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              jumpToSurahPage(s.number);
-                              setMode('read');
+                        <div style={{ textAlign: 'right', flexShrink: 0, paddingLeft: '8px' }}>
+                          <span
+                            className="mushaf-text"
+                            dir="rtl"
+                            style={{
+                              fontSize: '1.25rem',
+                              color: isSelected ? 'var(--brand-gold)' : 'var(--text-secondary)',
+                              lineHeight: 1.2,
+                              display: 'block',
                             }}
-                            title={`Read Surah ${s.name} on Page ${s.pageStart}`}
                           >
-                            <BookOpen size={12} />
-                            <span>Page {s.pageStart}</span>
-                          </button>
-                          <div style={{ textAlign: 'right' }}>
-                            <span
-                              className="mushaf-text"
-                              dir="rtl"
-                              style={{ fontSize: '1.2rem', color: isSelected ? 'var(--brand-gold)' : 'var(--text-secondary)' }}
-                            >
-                              {s.arabicName}
-                            </span>
-                          </div>
+                            {s.arabicName.startsWith('سورۃ') || s.arabicName.startsWith('سورة') || s.arabicName.startsWith('سُورَةُ')
+                              ? s.arabicName
+                              : `سورۃ ${s.arabicName}`}
+                          </span>
                         </div>
                       </div>
                     );
@@ -898,67 +1011,81 @@ export const QuranPage: React.FC = () => {
                 </div>
               )}
 
-              {/* Juz List */}
+              {/* Juz List (Clean Para Cards with Fixed Number Box & Visible Arabic Text) */}
               {activeTab === 'juz' && (
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
                     gap: 'var(--space-3)',
                     maxHeight: '520px',
                     overflowY: 'auto',
+                    paddingRight: '4px',
                   }}
                 >
-                  {JUZ_LIST.map((j) => (
-                    <div
-                      key={j.number}
-                      onClick={() => {
-                        jumpToJuzPage(j.number);
-                        setMode('read');
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '12px 14px',
-                        backgroundColor: 'var(--bg-surface-elevated)',
-                        border: '1px solid var(--border-default)',
-                        borderRadius: 'var(--radius-lg)',
-                        cursor: 'pointer',
-                        transition: 'all var(--transition-fast)',
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
+                  {filteredJuz.map((j) => {
+                    const isSelected = playbackType === 'juz' && selectedPara === j.number;
+                    return (
+                      <div
+                        key={j.number}
+                        onClick={() => playJuzAudio(j.number, selectedReciterId)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          minHeight: '54px',
+                          padding: '8px 14px',
+                          backgroundColor: isSelected ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-surface-elevated)',
+                          border: `1px solid ${isSelected ? 'var(--brand-primary)' : 'var(--border-default)'}`,
+                          borderRadius: 'var(--radius-lg)',
+                          cursor: 'pointer',
+                          transition: 'all var(--transition-fast)',
+                          boxSizing: 'border-box',
+                          gap: '10px',
+                        }}
+                      >
+                        {/* Fixed Equal-Sized Number Box */}
                         <span
                           style={{
-                            width: '32px',
-                            height: '32px',
+                            width: '36px',
+                            minWidth: '36px',
+                            maxWidth: '36px',
+                            height: '36px',
                             borderRadius: 'var(--radius-md)',
-                            backgroundColor: 'var(--bg-surface)',
-                            color: 'var(--brand-gold)',
+                            backgroundColor: isSelected ? 'var(--brand-primary)' : 'var(--bg-surface)',
+                            color: isSelected ? '#061c14' : 'var(--brand-primary)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: 'bold',
-                            fontSize: '0.8rem',
+                            fontSize: '0.9rem',
+                            fontFamily: 'var(--font-mono)',
+                            flexShrink: 0,
                           }}
                         >
                           {j.number}
                         </span>
-                        <div>
-                          <div style={{ fontWeight: 'var(--weight-semibold)', fontSize: 'var(--text-sm)' }}>
-                            {j.name}
-                          </div>
-                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                            Starts: {j.startSurahName} (Page {j.pageStart})
-                          </div>
-                        </div>
+
+                        {/* Arabic Para/Juz Name on the Right (Completely visible, no clipping) */}
+                        <span
+                          className="mushaf-text"
+                          dir="rtl"
+                          style={{
+                            fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+                            color: isSelected ? 'var(--brand-gold)' : 'var(--brand-gold)',
+                            lineHeight: 1.4,
+                            textAlign: 'right',
+                            flex: 1,
+                            overflow: 'visible',
+                            whiteSpace: 'normal',
+                            wordBreak: 'normal',
+                          }}
+                        >
+                          {j.arabicName}
+                        </span>
                       </div>
-                      <span className="mushaf-text" dir="rtl" style={{ fontSize: '1.1rem', color: 'var(--brand-gold)' }}>
-                        {j.arabicName}
-                      </span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
 

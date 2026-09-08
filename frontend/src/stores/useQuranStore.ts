@@ -2,12 +2,14 @@ import { create } from 'zustand';
 import {
   SURAHS_LIST,
   JUZ_LIST,
+  MIN_MUSHAF_PAGE,
   TOTAL_MUSHAF_PAGES,
   SurahMeta,
   JuzMeta,
   getSurahByPage,
   getJuzByPage,
   getSurahByNumber,
+  getJuzByNumber,
 } from '../data/quranData';
 import {
   QuranApiService,
@@ -66,7 +68,10 @@ interface QuranState {
   zoomLevel: number;
 
   // Audio Playback State
+  playbackType: 'surah' | 'juz';
+  activeAudioJuz: number | null;
   activeAudioSurah: number;
+  activeAudioAyah: number | null;
   selectedReciterId: number; // Quran.com Reciter ID (default 7 Mishary Rashid)
   audioRecitationUrl: string | null;
   audioPlaybackPhase: 'idle' | 'taawwuz' | 'bismillah' | 'surah';
@@ -108,8 +113,8 @@ interface QuranState {
   // Mushaf navigation
   goToQuranPage: (page: number) => void;
   setMushafPage: (page: number) => void;
-  jumpToSurahPage: (surahNumber: number) => void;
-  jumpToJuzPage: (juzNumber: number) => void;
+  jumpToSurahPage: (surahNumber: number, autoPlay?: boolean) => void;
+  jumpToJuzPage: (juzNumber: number, autoPlay?: boolean) => void;
   nextMushafPage: () => void;
   prevMushafPage: () => void;
   setZoomLevel: (zoom: number) => void;
@@ -119,6 +124,7 @@ interface QuranState {
 
   // Audio actions
   playSurahAudio: (surahNumber?: number, reciterId?: number) => Promise<void>;
+  playJuzAudio: (juzNumber?: number, reciterId?: number) => Promise<void>;
   playNextSurahAudio: () => void;
   playPrevSurahAudio: () => void;
   toggleAudioPlay: () => void;
@@ -136,6 +142,7 @@ interface QuranState {
   setAudioPlaybackPhase: (phase: 'idle' | 'taawwuz' | 'bismillah' | 'surah') => void;
   setIsLooping: (loop: boolean) => void;
   setAutoPlayNext: (auto: boolean) => void;
+  advanceJuzAyah: () => void;
 
   // Ayah Audio
   setPlayingAyahKey: (key: string | null) => void;
@@ -237,11 +244,14 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   showTranslation: true,
   selectedTranslationIds: loadInitialTranslations(),
 
-  mushafPage: 2,
+  mushafPage: MIN_MUSHAF_PAGE,
   selectedPara: 1,
   zoomLevel: 1.0,
 
+  playbackType: 'surah',
+  activeAudioJuz: null,
   activeAudioSurah: 1,
+  activeAudioAyah: 1,
   selectedReciterId: 7, // Mishary Rashid Alafasy
   audioRecitationUrl: null,
   audioPlaybackPhase: 'idle',
@@ -356,10 +366,21 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     }
   },
 
-  // Central Quran page navigation function (1 to 604)
+  // Central Quran page navigation function (Pages 1 to 604)
   goToQuranPage: (pageNumber: number) => {
-    const clamped = Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, Math.floor(pageNumber) || 1));
-    const meta = getSurahByPage(clamped);
+    const clamped = Math.max(MIN_MUSHAF_PAGE, Math.min(TOTAL_MUSHAF_PAGES, Math.floor(pageNumber) || MIN_MUSHAF_PAGE));
+    const { currentSurahNumber } = get();
+
+    // Check if the currently selected Surah is active on this page
+    let meta = getSurahByNumber(currentSurahNumber);
+    const nextSurah = getSurahByNumber(Math.min(114, currentSurahNumber + 1));
+    const isCurrentSurahOnThisPage =
+      meta.pageStart <= clamped && (currentSurahNumber === 114 || nextSurah.pageStart > clamped || meta.pageStart === clamped);
+
+    if (!isCurrentSurahOnThisPage) {
+      meta = getSurahByPage(clamped);
+    }
+
     const juz = getJuzByPage(clamped);
     set({
       mushafPage: clamped,
@@ -373,24 +394,116 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     get().goToQuranPage(page);
   },
 
-  jumpToSurahPage: (surahNumber) => {
+  jumpToSurahPage: (surahNumber, autoPlay = false) => {
     const validNumber = Math.max(1, Math.min(114, surahNumber));
     const meta = getSurahByNumber(validNumber);
-    get().goToQuranPage(meta.pageStart);
-    // Explicitly set the selected Surah in case multiple surahs start on this page (e.g. 112, 113, 114)
+    const clampedPage = meta.pageStart;
+    const juz = getJuzByPage(clampedPage);
     set({
+      mushafPage: clampedPage,
       currentSurahNumber: validNumber,
       currentSurahMeta: meta,
+      selectedPara: juz.number,
+      activeAudioSurah: validNumber,
+    });
+    if (autoPlay || get().isPlaying) {
+      get().playSurahAudio(validNumber, get().selectedReciterId);
+    }
+  },
+
+  jumpToJuzPage: (juzNumber, autoPlay = false) => {
+    const clampedJuz = Math.max(1, Math.min(30, juzNumber));
+    const juz = getJuzByNumber(clampedJuz);
+    const clampedPage = juz.pageStart;
+    const surahMeta = getSurahByNumber(juz.startSurah);
+    set({
+      mushafPage: clampedPage,
+      currentSurahNumber: juz.startSurah,
+      currentSurahMeta: surahMeta,
+      selectedPara: clampedJuz,
+      activeAudioSurah: juz.startSurah,
+      activeAudioJuz: clampedJuz,
+      activeAudioAyah: juz.startAyah,
+    });
+    if (autoPlay || get().isPlaying) {
+      get().playSurahAudio(juz.startSurah, get().selectedReciterId);
+    }
+  },
+
+  playJuzAudio: async (juzNumber, reciterId) => {
+    const targetJuz = juzNumber || get().selectedPara;
+    const clamped = Math.max(1, Math.min(30, targetJuz));
+    const juz = getJuzByNumber(clamped);
+    const targetReciter = reciterId || get().selectedReciterId;
+    const startSurahMeta = getSurahByNumber(juz.startSurah);
+
+    set({
+      playbackType: 'juz',
+      selectedPara: clamped,
+      activeAudioJuz: clamped,
+      activeAudioSurah: juz.startSurah,
+      activeAudioAyah: juz.startAyah,
+      mushafPage: juz.pageStart,
+      currentSurahNumber: juz.startSurah,
+      currentSurahMeta: startSurahMeta,
+      selectedReciterId: targetReciter,
+      audioPlaybackPhase: 'taawwuz',
+      hasUserStartedAudio: true,
+      isPlaying: true,
+      playbackTime: 0,
     });
   },
 
-  jumpToJuzPage: (juzNumber) => {
-    const clamped = Math.max(1, Math.min(30, juzNumber));
-    const juz = JUZ_LIST.find((j) => j.number === clamped) || JUZ_LIST[0];
-    get().goToQuranPage(juz.pageStart);
+  advanceJuzAyah: () => {
+    const { activeAudioJuz, activeAudioSurah, activeAudioAyah, autoPlayNext, selectedReciterId } = get();
+    if (!activeAudioJuz) return;
+    const juz = getJuzByNumber(activeAudioJuz);
+    const currentAyah = activeAudioAyah || juz.startAyah;
+
+    // Check if the completed Ayah was the absolute end of the entire Juz
+    const isEndJuz = juz.endSurah && juz.endAyah
+      ? (activeAudioSurah === juz.endSurah && currentAyah === juz.endAyah)
+      : (activeAudioSurah === 114 && currentAyah === 6);
+
+    if (isEndJuz) {
+      if (autoPlayNext && activeAudioJuz < 30) {
+        get().playJuzAudio(activeAudioJuz + 1, selectedReciterId);
+      } else {
+        get().pauseAudio();
+        set({ audioPlaybackPhase: 'idle', playbackTime: 0 });
+      }
+      return;
+    }
+
+    const surahMeta = getSurahByNumber(activeAudioSurah);
+
+    // If there are more Ayahs in the current Surah
+    if (currentAyah < surahMeta.versesCount) {
+      set({
+        activeAudioAyah: currentAyah + 1,
+        audioPlaybackPhase: 'surah',
+        playbackTime: 0,
+      });
+      return;
+    }
+
+    // If current Surah is completed, advance to the next Surah in this Juz
+    const nextSurah = activeAudioSurah + 1;
+    const nextSurahMeta = getSurahByNumber(nextSurah);
     set({
-      selectedPara: clamped,
+      activeAudioSurah: nextSurah,
+      activeAudioAyah: 1,
+      currentSurahNumber: nextSurah,
+      currentSurahMeta: nextSurahMeta,
+      playbackTime: 0,
     });
+
+    // Play Bismillah before starting the new Surah (except for Surah 9 At-Tawbah)
+    if (nextSurah !== 9) {
+      set({ audioPlaybackPhase: 'bismillah' });
+    } else {
+      set({ audioPlaybackPhase: 'surah' });
+    }
   },
 
   nextMushafPage: () => {
@@ -418,8 +531,12 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     const targetReciter = reciterId || get().selectedReciterId;
 
     set({
+      playbackType: 'surah',
+      activeAudioJuz: null,
       activeAudioSurah: targetSurah,
+      activeAudioAyah: 1,
       selectedReciterId: targetReciter,
+      audioRecitationUrl: getAudioUrl(targetSurah, targetReciter),
       audioPlaybackPhase: 'taawwuz',
       hasUserStartedAudio: true,
       isPlaying: true,
@@ -428,29 +545,47 @@ export const useQuranStore = create<QuranState>((set, get) => ({
 
     try {
       const audioUrl = await QuranApiService.getChapterRecitationAudio(targetReciter, targetSurah);
-      set({ audioRecitationUrl: audioUrl });
+      if (get().activeAudioSurah === targetSurah && get().selectedReciterId === targetReciter) {
+        set({ audioRecitationUrl: audioUrl });
+      }
     } catch {
       const padded = String(targetSurah).padStart(3, '0');
-      set({ audioRecitationUrl: `https://server8.mp3quran.net/afs/${padded}.mp3` });
+      if (get().activeAudioSurah === targetSurah) {
+        set({ audioRecitationUrl: `https://server8.mp3quran.net/afs/${padded}.mp3` });
+      }
     }
   },
 
   playNextSurahAudio: () => {
-    const { activeAudioSurah, selectedReciterId } = get();
+    const { playbackType, activeAudioJuz, activeAudioSurah, selectedReciterId } = get();
+    if (playbackType === 'juz' && activeAudioJuz) {
+      const nextJuz = activeAudioJuz < 30 ? activeAudioJuz + 1 : 1;
+      get().playJuzAudio(nextJuz, selectedReciterId);
+      return;
+    }
     const nextSurah = activeAudioSurah < 114 ? activeAudioSurah + 1 : 1;
     get().playSurahAudio(nextSurah, selectedReciterId);
   },
 
   playPrevSurahAudio: () => {
-    const { activeAudioSurah, selectedReciterId } = get();
+    const { playbackType, activeAudioJuz, activeAudioSurah, selectedReciterId } = get();
+    if (playbackType === 'juz' && activeAudioJuz) {
+      const prevJuz = activeAudioJuz > 1 ? activeAudioJuz - 1 : 30;
+      get().playJuzAudio(prevJuz, selectedReciterId);
+      return;
+    }
     const prevSurah = activeAudioSurah > 1 ? activeAudioSurah - 1 : 114;
     get().playSurahAudio(prevSurah, selectedReciterId);
   },
 
   toggleAudioPlay: () => {
-    const { isPlaying, audioRecitationUrl, activeAudioSurah, selectedReciterId } = get();
-    if (!audioRecitationUrl) {
-      get().playSurahAudio(activeAudioSurah, selectedReciterId);
+    const { isPlaying, playbackType, activeAudioJuz, activeAudioSurah, selectedReciterId, audioPlaybackPhase } = get();
+    if (audioPlaybackPhase === 'idle') {
+      if (playbackType === 'juz' && activeAudioJuz) {
+        get().playJuzAudio(activeAudioJuz, selectedReciterId);
+      } else {
+        get().playSurahAudio(activeAudioSurah, selectedReciterId);
+      }
       return;
     }
     set({ isPlaying: !isPlaying, hasUserStartedAudio: true });

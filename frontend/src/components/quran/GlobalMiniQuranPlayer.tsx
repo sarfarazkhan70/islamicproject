@@ -1,14 +1,17 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuranStore } from '../../stores/useQuranStore';
-import { SURAHS_LIST, QURAN_COM_RECITERS } from '../../data/quranData';
+import { SURAHS_LIST, QURAN_COM_RECITERS, getJuzByNumber } from '../../data/quranData';
 
 export const GlobalMiniQuranPlayer: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const {
+    playbackType,
+    activeAudioJuz,
     activeAudioSurah,
+    activeAudioAyah,
     selectedReciterId,
     audioPlaybackPhase,
     isPlaying,
@@ -27,14 +30,22 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
   }
 
   const surahMeta = SURAHS_LIST.find((s) => s.number === activeAudioSurah) || SURAHS_LIST[0];
+  const juzMeta = activeAudioJuz ? getJuzByNumber(activeAudioJuz) : null;
   const reciterObj =
     QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
 
-  const formatTime = (sec: number) => {
-    if (isNaN(sec) || !isFinite(sec) || sec < 0) return '00:00';
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  const formatTime = (sec: number, forceHours: boolean = false) => {
+    if (isNaN(sec) || !isFinite(sec) || sec < 0) {
+      return forceHours ? '00:00:00' : '00:00';
+    }
+    const totalSeconds = Math.floor(sec);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (forceHours || hours > 0) {
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -46,6 +57,7 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
   };
 
   const progressPercent = playbackDuration > 0 ? (playbackTime / playbackDuration) * 100 : 0;
+  const hasHours = playbackDuration >= 3600 || playbackTime >= 3600;
 
   return (
     <div
@@ -63,9 +75,11 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
       </div>
 
       <div className="mini-player-content">
-        {/* Surah Icon & Badge */}
+        {/* Surah/Juz Icon & Badge */}
         <div className="mini-player-badge">
-          <span className="mini-player-surah-num">{surahMeta.number}</span>
+          <span className="mini-player-surah-num">
+            {playbackType === 'juz' && juzMeta ? `J${juzMeta.number}` : surahMeta.number}
+          </span>
           {isPlaying && (
             <div className="mini-sound-wave" aria-hidden="true">
               <span className="wave-bar"></span>
@@ -75,11 +89,15 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
           )}
         </div>
 
-        {/* Surah Info */}
+        {/* Surah/Juz Info */}
         <div className="mini-player-info">
           <div className="mini-player-title-row">
-            <span className="mini-player-name">{surahMeta.name}</span>
-            <span className="mini-player-arabic" dir="rtl">{surahMeta.arabicName}</span>
+            <span className="mini-player-name">
+              {playbackType === 'juz' && juzMeta ? `${juzMeta.name} (${surahMeta.name})` : surahMeta.name}
+            </span>
+            <span className="mini-player-arabic" dir="rtl">
+              {playbackType === 'juz' && juzMeta ? juzMeta.arabicName : surahMeta.arabicName}
+            </span>
           </div>
           <div className="mini-player-subtitle">
             <span className="mini-player-reciter">
@@ -87,10 +105,12 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
                 ? `Ta'awwuz • ${reciterObj.name}`
                 : audioPlaybackPhase === 'bismillah'
                 ? `Bismillah • ${reciterObj.name}`
+                : playbackType === 'juz' && juzMeta
+                ? `${reciterObj.name} (${activeAudioSurah}:${activeAudioAyah || juzMeta.startAyah})`
                 : reciterObj.name}
             </span>
             <span className="mini-player-time">
-              {formatTime(playbackTime)} / {formatTime(playbackDuration)}
+              {formatTime(playbackTime, hasHours)} / {formatTime(playbackDuration, hasHours)}
             </span>
           </div>
         </div>

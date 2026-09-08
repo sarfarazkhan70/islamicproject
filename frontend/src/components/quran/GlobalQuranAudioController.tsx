@@ -5,12 +5,16 @@ import {
   getTaawwuzAudioUrl,
   getBismillahAudioUrl,
 } from '../../stores/useQuranStore';
+import { QURAN_COM_RECITERS } from '../../data/quranData';
+import { QuranApiService } from '../../services/quranApiService';
 
 export const GlobalQuranAudioController: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const {
+    playbackType,
     activeAudioSurah,
+    activeAudioAyah,
     selectedReciterId,
     audioRecitationUrl,
     audioPlaybackPhase,
@@ -20,16 +24,17 @@ export const GlobalQuranAudioController: React.FC = () => {
     isLooping,
     autoPlayNext,
     seekTarget,
+    playbackDuration,
     setPlaybackTime,
     setPlaybackDuration,
-    setIsPlaying,
     setAudioPlaybackPhase,
     clearSeekTarget,
     playSurahAudio,
+    advanceJuzAyah,
     pauseAudio,
   } = useQuranStore();
 
-  // Determine active audio URL based on current playback phase (Ta'awwuz -> Bismillah -> Surah)
+  // Determine active audio URL based on current playback phase (Ta'awwuz -> Bismillah -> Surah/Ayah)
   const getPhaseAudioUrl = (): string => {
     if (audioPlaybackPhase === 'taawwuz') {
       return getTaawwuzAudioUrl(selectedReciterId);
@@ -37,51 +42,69 @@ export const GlobalQuranAudioController: React.FC = () => {
     if (audioPlaybackPhase === 'bismillah') {
       return getBismillahAudioUrl(selectedReciterId);
     }
-    return audioRecitationUrl || getAudioUrl(activeAudioSurah, selectedReciterId);
+    if (audioPlaybackPhase === 'surah') {
+      if (playbackType === 'juz') {
+        const reciterObj =
+          QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
+        const reciterSlug = reciterObj.reciterSlug || 'Alafasy';
+        return QuranApiService.getAyahAudioUrl(
+          `${activeAudioSurah}:${activeAudioAyah || 1}`,
+          reciterSlug
+        );
+      }
+      return audioRecitationUrl || getAudioUrl(activeAudioSurah, selectedReciterId);
+    }
+    return '';
   };
 
   const audioUrl = getPhaseAudioUrl();
 
-  // Sync audio source when phase, Surah, or reciter changes
+  // Sync audio source when phase, Surah, Ayah, or reciter changes
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !audioUrl) return;
 
     const currentSrc = audio.getAttribute('data-src');
     if (currentSrc !== audioUrl) {
       audio.setAttribute('data-src', audioUrl);
       audio.src = audioUrl;
       audio.playbackRate = playbackSpeed || 1.0;
-      audio.load();
 
       if (isPlaying) {
-        audio.play().catch((err) => {
-          console.warn('Audio play error:', err);
-          setIsPlaying(false);
-        });
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            if (err.name !== 'AbortError') {
+              console.warn('Audio play request interrupted or prevented:', err);
+            }
+          });
+        }
       }
     }
-  }, [audioUrl, isPlaying, setIsPlaying, playbackSpeed]);
+  }, [audioUrl, isPlaying, playbackSpeed]);
 
   // Sync play / pause state
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !audioUrl) return;
 
     if (isPlaying) {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn('Audio play request prevented by browser policy or network:', err);
-          setIsPlaying(false);
-        });
+      if (audio.paused) {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            if (err.name !== 'AbortError') {
+              console.warn('Audio play request failed:', err);
+            }
+          });
+        }
       }
     } else {
       if (!audio.paused) {
         audio.pause();
       }
     }
-  }, [isPlaying, setIsPlaying]);
+  }, [isPlaying, audioUrl]);
 
   // Sync volume
   useEffect(() => {
@@ -97,12 +120,12 @@ export const GlobalQuranAudioController: React.FC = () => {
     }
   }, [playbackSpeed]);
 
-  // Sync looping (only for main surah phase)
+  // Sync looping (only for main surah phase in surah mode)
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.loop = isLooping && audioPlaybackPhase === 'surah';
+      audioRef.current.loop = isLooping && audioPlaybackPhase === 'surah' && playbackType === 'surah';
     }
-  }, [isLooping, audioPlaybackPhase]);
+  }, [isLooping, audioPlaybackPhase, playbackType]);
 
   // Handle explicit seek requests
   useEffect(() => {
@@ -112,21 +135,50 @@ export const GlobalQuranAudioController: React.FC = () => {
         setAudioPlaybackPhase('surah');
       }
       audioRef.current.currentTime = seekTarget;
+      setPlaybackTime(seekTarget);
       clearSeekTarget();
     }
-  }, [seekTarget, audioPlaybackPhase, setAudioPlaybackPhase, clearSeekTarget]);
+  }, [seekTarget, audioPlaybackPhase, setAudioPlaybackPhase, clearSeekTarget, setPlaybackTime]);
+
+  // Pre-load Surah audio duration whenever active Surah or Reciter changes
+  useEffect(() => {
+    if (playbackType === 'surah' && activeAudioSurah) {
+      const url = audioRecitationUrl || getAudioUrl(activeAudioSurah, selectedReciterId);
+      if (url) {
+        const temp = new Audio(url);
+        temp.preload = 'metadata';
+        const onMeta = () => {
+          if (!isNaN(temp.duration) && isFinite(temp.duration) && temp.duration > 0) {
+            setPlaybackDuration(temp.duration);
+          }
+        };
+        temp.addEventListener('loadedmetadata', onMeta);
+        temp.addEventListener('durationchange', onMeta);
+        return () => {
+          temp.removeEventListener('loadedmetadata', onMeta);
+          temp.removeEventListener('durationchange', onMeta);
+          temp.src = '';
+        };
+      }
+    }
+  }, [activeAudioSurah, selectedReciterId, audioRecitationUrl, playbackType, setPlaybackDuration]);
 
   // Audio event listeners
   const handleTimeUpdate = () => {
     if (audioRef.current && audioPlaybackPhase === 'surah') {
-      setPlaybackTime(audioRef.current.currentTime);
+      const cur = audioRef.current.currentTime;
+      setPlaybackTime(cur);
+      const dur = audioRef.current.duration;
+      if (!isNaN(dur) && isFinite(dur) && dur > 0 && Math.abs(dur - playbackDuration) > 1) {
+        setPlaybackDuration(dur);
+      }
     }
   };
 
   const handleLoadedMetadata = () => {
     if (audioRef.current && audioPlaybackPhase === 'surah') {
       const dur = audioRef.current.duration;
-      if (!isNaN(dur) && isFinite(dur)) {
+      if (!isNaN(dur) && isFinite(dur) && dur > 0) {
         setPlaybackDuration(dur);
       }
     }
@@ -137,10 +189,10 @@ export const GlobalQuranAudioController: React.FC = () => {
     if (audioPlaybackPhase === 'taawwuz') {
       // Surah 1 (Al-Fatihah) has Bismillah as Ayah 1:1 -> transition directly to Surah without duplicate Bismillah
       // Surah 9 (At-Tawbah) has no Bismillah -> transition directly to Surah
-      if (activeAudioSurah === 1 || activeAudioSurah === 9) {
+      if ((activeAudioSurah === 1 && (!activeAudioAyah || activeAudioAyah === 1)) || activeAudioSurah === 9) {
         setAudioPlaybackPhase('surah');
       } else {
-        // All other Surahs (2-8, 10-114) play Bismillah next
+        // All other starting points play Bismillah next
         setAudioPlaybackPhase('bismillah');
       }
       return;
@@ -152,31 +204,47 @@ export const GlobalQuranAudioController: React.FC = () => {
       return;
     }
 
-    // 3. Main Surah finished
-    if (isLooping) {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
+    // 3. Main Surah / Ayah finished
+    if (audioPlaybackPhase === 'surah') {
+      if (playbackType === 'juz') {
+        advanceJuzAyah();
+        return;
       }
-      return;
-    }
 
-    if (autoPlayNext && activeAudioSurah < 114) {
-      playSurahAudio(activeAudioSurah + 1, selectedReciterId);
-    } else {
-      pauseAudio();
+      if (isLooping) {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(() => {});
+        }
+        return;
+      }
+
+      if (autoPlayNext && activeAudioSurah < 114) {
+        playSurahAudio(activeAudioSurah + 1, selectedReciterId);
+      } else {
+        const finalDur = audioRef.current && !isNaN(audioRef.current.duration) && audioRef.current.duration > 0
+          ? audioRef.current.duration
+          : playbackDuration;
+        setPlaybackTime(finalDur);
+        pauseAudio();
+        setAudioPlaybackPhase('idle');
+      }
     }
   };
 
-  const handlePlay = () => {
-    if (!isPlaying) {
-      setIsPlaying(true);
-    }
-  };
-
-  const handlePause = () => {
-    if (isPlaying) {
-      setIsPlaying(false);
+  const handleError = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    // If failed during surah phase, fallback to standard high-availability server
+    if (audioPlaybackPhase === 'surah' && activeAudioSurah) {
+      const fallbackUrl = getAudioUrl(activeAudioSurah, selectedReciterId);
+      if (audio.getAttribute('data-src') !== fallbackUrl) {
+        audio.setAttribute('data-src', fallbackUrl);
+        audio.src = fallbackUrl;
+        if (isPlaying) {
+          audio.play().catch(() => {});
+        }
+      }
     }
   };
 
@@ -188,9 +256,9 @@ export const GlobalQuranAudioController: React.FC = () => {
       preload="auto"
       onTimeUpdate={handleTimeUpdate}
       onLoadedMetadata={handleLoadedMetadata}
+      onDurationChange={handleLoadedMetadata}
       onEnded={handleEnded}
-      onPlay={handlePlay}
-      onPause={handlePause}
+      onError={handleError}
     />
   );
 };

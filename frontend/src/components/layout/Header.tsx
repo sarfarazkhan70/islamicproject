@@ -50,66 +50,32 @@ export const Header: React.FC = () => {
           {/* Central Live Hijri Date Pill */}
           <Link
             to="/calendar"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-2)',
-              padding: '5px 12px',
-              backgroundColor: 'var(--bg-surface-elevated)',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid var(--border-subtle)',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--text-primary)',
-              textDecoration: 'none',
-              transition: 'all 0.15s ease',
-            }}
+            className="header-date-pill"
             title="View Islamic Calendar"
           >
-            <Calendar size={12} style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
-            <span style={{ fontWeight: 'var(--weight-semibold)', color: 'var(--text-gold)', whiteSpace: 'nowrap' }}>
+            <Calendar size={13} className="header-pill-icon text-gold" style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
+            <span className="header-date-text">
               {hijriDateStr}
             </span>
           </Link>
 
           {/* Location & Madhhab Pill */}
           <button
-
+            className="header-location-pill"
             onClick={() => setIsModalOpen(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-2)',
-              padding: '5px 12px',
-              backgroundColor: 'var(--bg-surface-elevated)',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid var(--border-subtle)',
-              fontSize: 'var(--text-xs)',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-              maxWidth: 320,
-              transition: 'all 0.15s ease',
-            }}
             title="Click to change or refresh your location"
           >
             {isDetecting ? (
-              <RefreshCw size={12} className="animate-spin" style={{ color: 'var(--brand-primary)' }} />
+              <RefreshCw size={13} className="animate-spin header-pill-icon" style={{ color: 'var(--brand-primary)', flexShrink: 0 }} />
             ) : (
-              <MapPin size={12} style={{ color: 'var(--brand-primary)', flexShrink: 0 }} />
+              <MapPin size={13} className="header-pill-icon" style={{ color: 'var(--brand-primary)', flexShrink: 0 }} />
             )}
-            <span
-              style={{
-                fontWeight: 'var(--weight-medium)',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: 180,
-              }}
-            >
+            <span className="header-location-text">
               {locationDisplayText}
             </span>
-            <span style={{ color: 'var(--text-muted)' }}>•</span>
-            <Compass size={12} style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
-            <span style={{ textTransform: 'capitalize', color: 'var(--text-gold)', flexShrink: 0 }}>
+            <span className="header-pill-divider" style={{ color: 'var(--text-muted)' }}>•</span>
+            <Compass size={13} className="header-pill-icon header-madhhab-icon" style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
+            <span className="header-madhhab-text" style={{ textTransform: 'capitalize', color: 'var(--text-gold)', flexShrink: 0 }}>
               {madhhab}
             </span>
           </button>

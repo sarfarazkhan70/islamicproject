@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { MadhhabSelector } from '../../components/prayer/MadhhabSelector';
 import { NextPrayerHero } from '../../components/prayer/NextPrayerHero';
+import { PrayerCalendarView } from '../../components/prayer/PrayerCalendarView';
 import { LocationPermissionBanner } from '../../components/common/LocationPermissionBanner.js';
 import { LocationPickerModal } from '../../components/common/LocationPickerModal.js';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes.js';
@@ -16,9 +17,11 @@ import {
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   AlertCircle,
   Compass,
   Search,
+  RefreshCw,
 } from 'lucide-react';
 
 export const PrayerTimesPage: React.FC = () => {
@@ -30,26 +33,54 @@ export const PrayerTimesPage: React.FC = () => {
     isDetectingLocation,
     locationError,
     detectLocation,
-    getMonthlyTimetable,
   } = usePrayerTimes();
 
   const {
     accuracy,
     isLowAccuracy,
+    latitude,
+    longitude,
+    timezone,
   } = useLocationStore();
-
 
   const {
     madhhab,
     setMadhhab,
     calculationMethod,
     setCalculationMethod,
+    highLatitudeRule,
     timeFormat,
     setTimeFormat,
   } = useSettingsStore();
 
   const [viewMode, setViewMode] = useState<'daily' | 'monthly'>('daily');
   const [showCityModal, setShowCityModal] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close Date Picker popover on click outside or Escape key
+  useEffect(() => {
+    if (!isDatePickerOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(e.target as Node)) {
+        setIsDatePickerOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsDatePickerOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isDatePickerOpen]);
 
   // Date Navigation Helpers
   const handlePrevDay = () => {
@@ -68,10 +99,7 @@ export const PrayerTimesPage: React.FC = () => {
     setSelectedDate(new Date());
   };
 
-  // Monthly timetable calculation for monthly view
-  const currentYear = selectedDate.getFullYear();
-  const currentMonth = selectedDate.getMonth() + 1;
-  const monthlyData = viewMode === 'monthly' ? getMonthlyTimetable(currentYear, currentMonth) : [];
+  const effectiveLocationName = displayName || `${timetable.location.city}, ${timetable.location.country}`;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
@@ -92,9 +120,10 @@ export const PrayerTimesPage: React.FC = () => {
             <Button
               variant={viewMode === 'monthly' ? 'primary' : 'outline'}
               size="sm"
-              onClick={() => setViewMode('monthly')}
+              onClick={() => setViewMode((prev) => (prev === 'monthly' ? 'daily' : 'monthly'))}
+              title={viewMode === 'monthly' ? 'Click to close calendar' : 'Click to view calendar'}
             >
-              <CalendarIcon size={16} /> Monthly Grid
+              <CalendarIcon size={16} /> {viewMode === 'monthly' ? 'Close Calendar' : 'Calendar View'}
             </Button>
           </div>
         }
@@ -124,7 +153,7 @@ export const PrayerTimesPage: React.FC = () => {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
                 <h3 style={{ fontSize: 'var(--text-base)', margin: 0, fontWeight: 'var(--weight-bold)' }}>
-                  {displayName || `${timetable.location.city}, ${timetable.location.country}`}
+                  {effectiveLocationName}
                 </h3>
                 {timetable.location.isAutoDetected ? (
                   <Badge variant="emerald">GPS Detected</Badge>
@@ -158,7 +187,15 @@ export const PrayerTimesPage: React.FC = () => {
               isLoading={isDetectingLocation}
               onClick={detectLocation}
             >
-              <Compass size={14} /> {isDetectingLocation ? 'Locating...' : 'GPS Locate'}
+              {isDetectingLocation ? (
+                <>
+                  <RefreshCw size={14} className="animate-spin" /> Locating...
+                </>
+              ) : (
+                <>
+                  <Compass size={14} /> GPS Locate
+                </>
+              )}
             </Button>
           </div>
         </div>
@@ -178,12 +215,12 @@ export const PrayerTimesPage: React.FC = () => {
             }}
           >
             <AlertCircle size={14} />
-            {locationError}
+            <span>{locationError}</span>
           </div>
         )}
       </Card>
 
-      {/* Date Navigation & Settings Strip */}
+      {/* Sunni Madhhab Selector (Recalculates Asr) & Method Selector */}
       <div
         style={{
           display: 'grid',
@@ -191,40 +228,11 @@ export const PrayerTimesPage: React.FC = () => {
           gap: 'var(--space-4)',
         }}
       >
-        {/* Date Navigator Card */}
         <Card>
-          <div className="flex-between">
-            <div>
-              <span className="text-xs text-muted" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Selected Date
-              </span>
-              <div style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-base)' }}>
-                {timetable.dateFormatted}
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
-              <button
-                className="btn-icon btn-icon-sm"
-                onClick={handlePrevDay}
-                aria-label="Previous day"
-                title="Previous day"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <Button variant="ghost" size="sm" onClick={handleToday}>
-                Today
-              </Button>
-              <button
-                className="btn-icon btn-icon-sm"
-                onClick={handleNextDay}
-                aria-label="Next day"
-                title="Next day"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
+          <MadhhabSelector
+            selected={madhhab}
+            onChange={(m: SunniMadhhab) => setMadhhab(m)}
+          />
         </Card>
 
         {/* Calculation Convention Selector Card */}
@@ -258,167 +266,194 @@ export const PrayerTimesPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Sunni Madhhab Selector (Recalculates Asr) */}
-      <Card>
-        <MadhhabSelector
-          selected={madhhab}
-          onChange={(m: SunniMadhhab) => setMadhhab(m)}
-        />
-      </Card>
-
-      {/* Hero Countdown for Active/Next Prayer */}
-      <NextPrayerHero
-        timetable={timetable}
-        locationName={displayName || `${timetable.location.city}, ${timetable.location.country}`}
-        onOpenLocationPicker={() => setShowCityModal(true)}
-      />
-
-      {/* Daily Timetable Display */}
+      {/* Main View Mode Content */}
       {viewMode === 'daily' ? (
-        <Card>
-          <div style={{ marginBottom: 'var(--space-4)' }}>
-            <h3 className="heading-3" style={{ margin: 0 }}>Complete 12-Slot Daily Timetable</h3>
-            <p className="text-secondary text-xs" style={{ margin: 0 }}>
-              Fard prayers, astronomical boundaries, and voluntary windows
-            </p>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-            {timetable.prayers.map((prayer) => {
-              const isNext = timetable.nextPrayer?.key === prayer.key;
-              const isCurrent = timetable.currentPrayer?.key === prayer.key;
-              const isProhibited = prayer.isProhibited;
-
-              return (
-                <div
-                  key={prayer.key}
-                  className={`prayer-time-row ${isCurrent ? 'active' : ''} ${isProhibited ? 'prohibited' : ''}`}
+        <>
+          {/* Date Navigation Strip with Interactive Calendar Toggle */}
+          <Card className="date-navigation-card">
+            <div className="flex-between" style={{ flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+              <div ref={datePickerRef} className="date-picker-toggle-wrapper" style={{ position: 'relative' }}>
+                <span className="text-xs text-muted" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '2px' }}>
+                  Selected Date
+                </span>
+                {/* Interactive Clickable Date Field / Dropdown Toggle Button */}
+                <button
+                  type="button"
+                  className={`date-picker-toggle-btn ${isDatePickerOpen ? 'active' : ''}`}
+                  onClick={() => setIsDatePickerOpen((prev) => !prev)}
+                  aria-expanded={isDatePickerOpen}
+                  aria-label="Toggle Date Calendar Picker"
+                  title={isDatePickerOpen ? 'Click to close calendar' : 'Click to choose date from calendar'}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                    <div
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: 'var(--radius-lg)',
-                        backgroundColor: isCurrent
-                          ? 'var(--brand-primary)'
-                          : isProhibited
-                          ? 'rgba(239, 68, 68, 0.15)'
-                          : 'var(--bg-surface-elevated)',
-                        color: isCurrent
-                          ? '#fff'
-                          : isProhibited
-                          ? 'var(--brand-danger)'
-                          : 'var(--text-secondary)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: 'var(--text-xs)',
-                        fontWeight: 'var(--weight-bold)',
+                  <CalendarIcon size={16} className="date-icon" style={{ color: 'var(--brand-primary)' }} />
+                  <span className="date-text" style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-base)' }}>
+                    {timetable.dateFormatted}
+                  </span>
+                  <ChevronDown
+                    size={15}
+                    style={{
+                      transition: 'transform var(--transition-fast)',
+                      transform: isDatePickerOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      color: 'var(--text-muted)',
+                      marginLeft: '2px',
+                    }}
+                  />
+                </button>
+
+                {/* Calendar Dropdown Popover */}
+                {isDatePickerOpen && (
+                  <div className="calendar-dropdown-popover">
+                    <PrayerCalendarView
+                      selectedDate={selectedDate}
+                      onSelectDate={(newDate) => {
+                        setSelectedDate(newDate);
                       }}
-                    >
-                      {prayer.key.slice(0, 3).toUpperCase()}
-                    </div>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                        <span style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)' }}>
-                          {prayer.name}
-                        </span>
-                        {isNext && <Badge variant="gold">NEXT</Badge>}
-                        {isCurrent && <Badge variant="emerald">CURRENT</Badge>}
-                        {isProhibited && <Badge variant="red">PROHIBITED</Badge>}
+                      onClose={() => setIsDatePickerOpen(false)}
+                      isCompact={true}
+                      locationName={effectiveLocationName}
+                      latitude={latitude ?? timetable.location.latitude}
+                      longitude={longitude ?? timetable.location.longitude}
+                      timezone={timezone || timetable.location.timezone}
+                      madhhab={madhhab}
+                      calculationMethod={calculationMethod}
+                      highLatitudeRule={highLatitudeRule}
+                      timeFormat={timeFormat}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: 'var(--space-1)', alignItems: 'center' }}>
+                <button
+                  className="btn-icon btn-icon-sm"
+                  onClick={handlePrevDay}
+                  aria-label="Previous day"
+                  title="Previous day"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <Button variant="ghost" size="sm" onClick={handleToday}>
+                  Today
+                </Button>
+                <button
+                  className="btn-icon btn-icon-sm"
+                  onClick={handleNextDay}
+                  aria-label="Next day"
+                  title="Next day"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Hero Countdown for Active/Next Prayer */}
+          <NextPrayerHero
+            timetable={timetable}
+            locationName={effectiveLocationName}
+            onOpenLocationPicker={() => setShowCityModal(true)}
+          />
+
+          {/* Daily Timetable Display */}
+          <Card>
+            <div style={{ marginBottom: 'var(--space-4)' }}>
+              <h3 className="heading-3" style={{ margin: 0 }}>Complete 12-Slot Daily Timetable</h3>
+              <p className="text-secondary text-xs" style={{ margin: 0 }}>
+                Fard prayers, astronomical boundaries, and voluntary windows for {timetable.dateFormatted}
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+              {timetable.prayers.map((prayer) => {
+                const isNext = timetable.nextPrayer?.key === prayer.key;
+                const isCurrent = timetable.currentPrayer?.key === prayer.key;
+                const isProhibited = prayer.isProhibited;
+
+                return (
+                  <div
+                    key={prayer.key}
+                    className={`prayer-time-row ${isCurrent ? 'active' : ''} ${isProhibited ? 'prohibited' : ''}`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                      <div
+                        style={{
+                          width: 38,
+                          height: 38,
+                          borderRadius: 'var(--radius-lg)',
+                          backgroundColor: isCurrent
+                            ? 'var(--brand-primary)'
+                            : isProhibited
+                            ? 'rgba(239, 68, 68, 0.15)'
+                            : 'var(--bg-surface-elevated)',
+                          color: isCurrent
+                            ? '#fff'
+                            : isProhibited
+                            ? 'var(--brand-danger)'
+                            : 'var(--text-secondary)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 'var(--weight-bold)',
+                        }}
+                      >
+                        {prayer.key.slice(0, 3).toUpperCase()}
                       </div>
-                      <span className="text-xs text-muted font-arabic">{prayer.arabicName}</span>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                          <span style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)' }}>
+                            {prayer.name}
+                          </span>
+                          {isNext && <Badge variant="gold">NEXT</Badge>}
+                          {isCurrent && <Badge variant="emerald">CURRENT</Badge>}
+                          {isProhibited && <Badge variant="red">PROHIBITED</Badge>}
+                        </div>
+                        <span className="text-xs text-muted font-arabic">{prayer.arabicName}</span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div style={{ textAlign: 'right' }}>
-                    <div
-                      style={{
-                        fontSize: 'var(--text-base)',
-                        fontWeight: 'var(--weight-extrabold)',
-                        fontFamily: 'var(--font-sans)',
-                        color: isCurrent
-                          ? 'var(--brand-primary)'
-                          : isProhibited
-                          ? 'var(--brand-danger)'
-                          : 'var(--text-primary)',
-                      }}
-                    >
-                      {prayer.timeFormatted}
+                    <div style={{ textAlign: 'right' }}>
+                      <div
+                        style={{
+                          fontSize: 'var(--text-base)',
+                          fontWeight: 'var(--weight-extrabold)',
+                          fontFamily: 'var(--font-sans)',
+                          color: isCurrent
+                            ? 'var(--brand-primary)'
+                            : isProhibited
+                            ? 'var(--brand-danger)'
+                            : 'var(--text-primary)',
+                        }}
+                      >
+                        {prayer.timeFormatted}
+                      </div>
+                      {prayer.windowEnd && (
+                        <span className="text-xs text-muted">
+                          until {prayer.windowEnd.timeFormatted}
+                        </span>
+                      )}
                     </div>
-                    {prayer.windowEnd && (
-                      <span className="text-xs text-muted">
-                        until {prayer.windowEnd.timeFormatted}
-                      </span>
-                    )}
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
+                );
+              })}
+            </div>
+          </Card>
+        </>
       ) : (
-        /* Monthly Timetable View */
-        <Card>
-          <div style={{ marginBottom: 'var(--space-4)' }}>
-            <h3 className="heading-3" style={{ margin: 0 }}>
-              Monthly Prayer Timetable — {new Date(currentYear, currentMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
-            </h3>
-            <p className="text-secondary text-xs" style={{ margin: 0 }}>
-              Full 30-day astronomical schedule for {displayName || `${timetable.location.city}, ${timetable.location.country}`}
-            </p>
-          </div>
-
-          <div style={{ overflowX: 'auto' }}>
-            <table className="table" style={{ width: '100%', fontSize: 'var(--text-xs)' }}>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Fajr</th>
-                  <th>Sunrise</th>
-                  <th>Ishraq</th>
-                  <th>Zuhr</th>
-                  <th>Asr ({madhhab.toUpperCase()})</th>
-                  <th>Maghrib</th>
-                  <th>Isha</th>
-                  <th>Tahajjud</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monthlyData.map((day, idx) => {
-                  const isCurrentDay = day.date.toDateString() === new Date().toDateString();
-                  const getSlot = (key: string) => day.prayers.find((p) => p.key === key)?.timeFormatted || '--:--';
-
-                  return (
-                    <tr
-                      key={idx}
-                      style={{
-                        backgroundColor: isCurrentDay ? 'rgba(16, 185, 129, 0.08)' : undefined,
-                        fontWeight: isCurrentDay ? 'var(--weight-bold)' : undefined,
-                      }}
-                    >
-                      <td>
-                        {day.date.toLocaleDateString(undefined, {
-                          day: '2-digit',
-                          weekday: 'short',
-                        })}
-                      </td>
-                      <td>{getSlot('fajr')}</td>
-                      <td>{getSlot('sunrise')}</td>
-                      <td>{getSlot('ishraq')}</td>
-                      <td>{getSlot('zuhr')}</td>
-                      <td style={{ color: 'var(--brand-primary)' }}>{getSlot('asr')}</td>
-                      <td>{getSlot('maghrib')}</td>
-                      <td>{getSlot('isha')}</td>
-                      <td style={{ color: 'var(--brand-gold)' }}>{getSlot('tahajjud')}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+        /* Calendar Date Selector & Selected Date Timetable View */
+        <PrayerCalendarView
+          selectedDate={selectedDate}
+          onSelectDate={setSelectedDate}
+          locationName={effectiveLocationName}
+          latitude={latitude ?? timetable.location.latitude}
+          longitude={longitude ?? timetable.location.longitude}
+          timezone={timezone || timetable.location.timezone}
+          madhhab={madhhab}
+          calculationMethod={calculationMethod}
+          highLatitudeRule={highLatitudeRule}
+          timeFormat={timeFormat}
+        />
       )}
+
 
       {/* Global Location Picker Modal */}
       <LocationPickerModal
@@ -428,3 +463,5 @@ export const PrayerTimesPage: React.FC = () => {
     </div>
   );
 };
+
+

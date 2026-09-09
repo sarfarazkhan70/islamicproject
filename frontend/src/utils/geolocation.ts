@@ -55,7 +55,7 @@ export async function checkGeolocationPermission(): Promise<
 }
 
 /**
- * Requests fresh, high-accuracy GPS position with reverse geocoded human name
+ * Requests fresh, high-accuracy GPS position with robust fallback and reverse geocoded human name
  */
 export async function requestCurrentAutoLocation(options?: {
   enableHighAccuracy?: boolean;
@@ -70,91 +70,114 @@ export async function requestCurrentAutoLocation(options?: {
     };
   }
 
-  const highAccuracy = options?.enableHighAccuracy ?? true;
-  const timeout = options?.timeout ?? 12000;
-  const maxAge = options?.maximumAge ?? 0;
+  const timeout = options?.timeout ?? 10000;
+  const maxAge = options?.maximumAge ?? 60000;
 
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        const accuracy = position.coords.accuracy
-          ? Math.round(position.coords.accuracy)
-          : null;
-        const isLow = accuracy !== null && accuracy > 200;
-
-        // Perform multi-tier reverse geocoding
-        const geocode = await reverseGeocodeCoordinates(lat, lng);
-        const tz = geocode.timezone || getSystemTimezone() || 'UTC';
-
-        const centralData: CentralLocationData = {
-          city: geocode.city,
-          country: geocode.country,
-          locality: geocode.locality,
-          district: geocode.district,
-          state: geocode.state,
-          displayName: geocode.displayName,
-          latitude: lat,
-          longitude: lng,
-          accuracy,
-          timezone: tz,
-          timestamp: Date.now(),
-          isAutoDetected: true,
-          isLowAccuracy: isLow,
-        };
-
-        resolve({
-          success: true,
-          data: centralData,
-          location: {
-            city: geocode.city,
-            country: geocode.country,
-            latitude: lat,
-            longitude: lng,
-            timezone: tz,
-            isAutoDetected: true,
-          },
-          accuracyMeters: accuracy || undefined,
-          isLowAccuracy: isLow,
-        });
-      },
-      (error) => {
-        let code: GeolocationResult['errorCode'] = 'POSITION_UNAVAILABLE';
-        let msg = 'Unable to determine your location.';
-
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            code = 'PERMISSION_DENIED';
-            msg = 'Location permission was denied. You can select your city manually.';
-            break;
-          case error.POSITION_UNAVAILABLE:
-            code = 'POSITION_UNAVAILABLE';
-            msg = 'Location information is currently unavailable.';
-            break;
-          case error.TIMEOUT:
-            code = 'TIMEOUT';
-            msg = 'Location request timed out. Please try again or select manually.';
-            break;
-        }
-
-        resolve({
-          success: false,
-          errorCode: code,
-          errorMessage: msg,
-        });
-      },
-      {
+  // Helper to run getCurrentPosition as a promise
+  const tryGetPosition = (highAccuracy: boolean, t: number): Promise<GeolocationPosition> => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: highAccuracy,
-        timeout,
+        timeout: t,
         maximumAge: maxAge,
+      });
+    });
+  };
+
+  let position: GeolocationPosition | null = null;
+  let isPermissionDenied = false;
+
+  // Tier 1: Attempt with high accuracy (GPS)
+  try {
+    position = await tryGetPosition(true, timeout);
+  } catch (err: any) {
+    if (err && err.code === 1) {
+      // PERMISSION_DENIED
+      isPermissionDenied = true;
+    } else {
+      // If high-accuracy timed out or hardware unavailable, fallback to standard Wi-Fi/IP location
+      try {
+        position = await tryGetPosition(false, 10000);
+      } catch (fallbackErr: any) {
+        if (fallbackErr && fallbackErr.code === 1) {
+          isPermissionDenied = true;
+        }
       }
-    );
-  });
+    }
+  }
+
+  if (isPermissionDenied) {
+    return {
+      success: false,
+      errorCode: 'PERMISSION_DENIED',
+      errorMessage: 'Location permission was denied. Please allow location access in your browser or select your city manually.',
+    };
+  }
+
+  if (!position) {
+    return {
+      success: false,
+      errorCode: 'TIMEOUT',
+      errorMessage: 'Unable to acquire GPS location. Please check your connection and click to retry, or select manually.',
+    };
+  }
+
+  const lat = position.coords.latitude;
+  const lng = position.coords.longitude;
+  const accuracy = position.coords.accuracy ? Math.round(position.coords.accuracy) : null;
+  const isLow = accuracy !== null && accuracy > 200;
+
+  // Perform reverse geocoding with graceful fallback
+  let geocode;
+  try {
+    geocode = await reverseGeocodeCoordinates(lat, lng);
+  } catch {
+    const nearest = findNearestKnownCity(lat, lng);
+    geocode = {
+      city: nearest?.city || 'Current Location',
+      country: nearest?.country || '',
+      displayName: nearest ? `${nearest.city}, ${nearest.country}` : `Location (${lat.toFixed(2)}°, ${lng.toFixed(2)}°)`,
+      timezone: getSystemTimezone() || 'UTC',
+      source: 'fallback' as const,
+    };
+  }
+
+  const tz = geocode.timezone || getSystemTimezone() || 'UTC';
+
+  const centralData: CentralLocationData = {
+    city: geocode.city || 'Current Location',
+    country: geocode.country || '',
+    locality: geocode.locality,
+    district: geocode.district,
+    state: geocode.state,
+    displayName: geocode.displayName || `${geocode.city}, ${geocode.country}`,
+    latitude: lat,
+    longitude: lng,
+    accuracy,
+    timezone: tz,
+    timestamp: Date.now(),
+    isAutoDetected: true,
+    isLowAccuracy: isLow,
+  };
+
+  return {
+    success: true,
+    data: centralData,
+    location: {
+      city: geocode.city,
+      country: geocode.country,
+      latitude: lat,
+      longitude: lng,
+      timezone: tz,
+      isAutoDetected: true,
+    },
+    accuracyMeters: accuracy || undefined,
+    isLowAccuracy: isLow,
+  };
 }
 
 /**
- * Backward compatibility wrapper
+ * Backward compatibility wrappers
  */
 export async function requestCurrentLocation(options?: {
   enableHighAccuracy?: boolean;
@@ -167,11 +190,12 @@ export async function requestCurrentLocation(options?: {
 export async function requestHighAccuracyLocation(): Promise<GeolocationResult> {
   return requestCurrentAutoLocation({
     enableHighAccuracy: true,
-    timeout: 15000,
+    timeout: 12000,
     maximumAge: 0,
   });
 }
 
 export { findNearestKnownCity };
+
 
 

@@ -142,3 +142,132 @@ h1, h2, h3, h4, h5, h6,
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ==============================================================================
+ * Dedicated Quran & Kanz-ul-Iman Reader Enhanced Typography & Layout
+ * ============================================================================== */
+
+.bismillah-box {
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.bismillah-arabic {
+  font-family: var(--font-mushaf);
+  font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+  color: #ffffff;
+  direction: rtl;
+  text-align: center;
+  line-height: 2.1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bismillah-urdu {
+  font-family: var(--font-urdu);
+  font-size: clamp(0.98rem, 2vw, 1.15rem);
+  color: #fbbf24;
+  direction: rtl;
+  text-align: center;
+  line-height: 2.0;
+  margin-top: 6px;
+}
+
+.bismillah-english {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.muqattaat-box {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.muqattaat-arabic {
+  font-family: var(--font-mushaf);
+  font-size: clamp(2rem, 4.5vw, 2.85rem);
+  color: #fbbf24;
+  direction: rtl;
+  text-align: center;
+  line-height: 2.2;
+  letter-spacing: 0.08em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.muqattaat-transliteration {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+.muqattaat-urdu {
+  font-family: var(--font-urdu);
+  font-size: 1.05rem;
+  color: #fde68a;
+  direction: rtl;
+  text-align: center;
+  line-height: 1.9;
+  margin-top: 2px;
+}
+
+.quran-ayah-card {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.quran-ayah-card.active-playback {
+  border: 2px solid var(--brand-gold) !important;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.25) !important;
+}
+
+.quran-ayah-arabic {
+  font-family: var(--font-mushaf);
+  color: #ffffff;
+  direction: rtl;
+  text-align: right;
+  line-height: 2.4;
+  word-spacing: 0.12em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.quran-ayah-urdu {
+  font-family: var(--font-urdu);
+  color: #fbbf24;
+  direction: rtl;
+  text-align: right;
+  line-height: 2.25;
+  word-spacing: 0.04em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.quran-ayah-english {
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  line-height: 1.68;
+  word-spacing: 0.02em;
+}
+

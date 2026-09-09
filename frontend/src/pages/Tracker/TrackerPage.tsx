@@ -1,17 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
 import { ProgressBar } from '../../components/common/ProgressBar';
 import { PrayerStatusToggle } from '../../components/prayer/PrayerStatusToggle';
+import { PrayerCalendarView } from '../../components/prayer/PrayerCalendarView';
 import { useTrackerStore, TrackerStatus } from '../../stores/useTrackerStore.js';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes.js';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
+import { useLocationStore } from '../../stores/useLocationStore.js';
+import { useSettingsStore } from '../../stores/useSettingsStore.js';
+import { ChevronLeft, ChevronRight, ChevronDown, Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 
 export const TrackerPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { timetable } = usePrayerTimes(selectedDate);
   const { getPrayerStatus, setPrayerStatus } = useTrackerStore();
+  const { latitude, longitude, timezone, displayName } = useLocationStore();
+  const { madhhab, calculationMethod, highLatitudeRule, timeFormat } = useSettingsStore();
+
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isDatePickerOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(e.target as Node)) {
+        setIsDatePickerOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsDatePickerOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isDatePickerOpen]);
 
   const localDateStr = selectedDate.toISOString().split('T')[0];
 
@@ -60,6 +91,7 @@ export const TrackerPage: React.FC = () => {
   const progressPercent = (completedTotal / obligatoryPrayers.length) * 100;
 
   const isToday = new Date().toISOString().split('T')[0] === localDateStr;
+  const effectiveLocationName = displayName || `${timetable.location.city}, ${timetable.location.country}`;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
@@ -72,24 +104,59 @@ export const TrackerPage: React.FC = () => {
       {/* Date Navigation Strip */}
       <Card>
         <div className="flex-between" style={{ flexWrap: 'wrap', gap: 'var(--space-3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <div
-              className="btn-icon btn-icon-md"
-              style={{ backgroundColor: 'var(--brand-primary-light)', color: 'var(--brand-primary)' }}
+          <div ref={datePickerRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              className={`date-picker-toggle-btn ${isDatePickerOpen ? 'active' : ''}`}
+              onClick={() => setIsDatePickerOpen((prev) => !prev)}
+              aria-expanded={isDatePickerOpen}
+              aria-label="Toggle Calendar Date Picker"
+              title={isDatePickerOpen ? 'Click to close calendar' : 'Click to choose date from calendar'}
             >
-              <CalendarIcon size={20} />
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                <h3 style={{ fontSize: 'var(--text-base)', margin: 0, fontWeight: 'var(--weight-bold)' }}>
-                  {new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(selectedDate)}
-                </h3>
-                {isToday && <span className="badge badge-emerald">Today</span>}
+              <CalendarIcon size={18} style={{ color: 'var(--brand-primary)', flexShrink: 0 }} />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                  <span style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--weight-bold)' }}>
+                    {new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(selectedDate)}
+                  </span>
+                  {isToday && <span className="badge badge-emerald">Today</span>}
+                  <ChevronDown
+                    size={15}
+                    style={{
+                      transition: 'transform var(--transition-fast)',
+                      transform: isDatePickerOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      color: 'var(--text-muted)',
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-muted" style={{ margin: 0 }}>
+                  {effectiveLocationName} • Madhhab: {madhhab.toUpperCase()}
+                </p>
               </div>
-              <p className="text-xs text-muted" style={{ margin: 0 }}>
-                {timetable.location.city} • Madhhab: {timetable.madhhab.toUpperCase()}
-              </p>
-            </div>
+            </button>
+
+            {/* Calendar Dropdown Popover */}
+            {isDatePickerOpen && (
+              <div className="calendar-dropdown-popover">
+                <PrayerCalendarView
+                  selectedDate={selectedDate}
+                  onSelectDate={(newDate) => {
+                    setSelectedDate(newDate);
+                  }}
+                  onClose={() => setIsDatePickerOpen(false)}
+                  isCompact={true}
+                  locationName={effectiveLocationName}
+                  latitude={latitude ?? timetable.location.latitude}
+                  longitude={longitude ?? timetable.location.longitude}
+                  timezone={timezone || timetable.location.timezone}
+                  madhhab={madhhab}
+                  calculationMethod={calculationMethod}
+                  highLatitudeRule={highLatitudeRule}
+                  timeFormat={timeFormat}
+                />
+              </div>
+            )}
+
           </div>
 
           <div style={{ display: 'flex', gap: 'var(--space-1)', alignItems: 'center' }}>
@@ -115,6 +182,7 @@ export const TrackerPage: React.FC = () => {
           </div>
         </div>
       </Card>
+
 
       {/* Progress Summary Card */}
       <Card

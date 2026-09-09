@@ -42,7 +42,7 @@ export interface QuranReadingProgress {
   updatedAt: string;
 }
 
-export type QuranMode = 'read' | 'listen';
+export type QuranMode = 'read' | 'kanzul-iman-read' | 'kanzul-iman-audio' | 'listen';
 export type QuranReadViewType = 'surah' | 'mushaf';
 
 interface QuranState {

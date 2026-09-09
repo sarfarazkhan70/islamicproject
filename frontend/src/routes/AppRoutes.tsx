@@ -19,6 +19,9 @@ import { JumuahPage } from '../pages/Jumuah/JumuahPage';
 import { AsmaUlHusnaPage } from '../pages/Names/AsmaUlHusnaPage';
 import { AsmaEMustafaPage } from '../pages/Names/AsmaEMustafaPage';
 import { SettingsPage } from '../pages/Settings/SettingsPage';
+import { LibraryPage } from '../pages/Library/LibraryPage';
+import { BookDetailPage } from '../pages/Library/BookDetailPage';
+import { BookReaderPage } from '../pages/Library/BookReaderPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -29,6 +32,11 @@ export const AppRoutes: React.FC = () => {
         <Route path="/prayer-times" element={<PrayerTimesPage />} />
         <Route path="/tracker" element={<TrackerPage />} />
         <Route path="/quran" element={<QuranPage />} />
+        <Route path="/library" element={<LibraryPage />} />
+        <Route path="/library/:bookId" element={<BookDetailPage />} />
+        <Route path="/library/:bookId/read" element={<BookReaderPage />} />
+        <Route path="/books" element={<Navigate to="/library" replace />} />
+        <Route path="/hadith" element={<Navigate to="/library" replace />} />
         <Route path="/azkar" element={<AzkarPage />} />
         <Route path="/duas" element={<Navigate to="/azkar" replace />} />
         <Route path="/dua" element={<Navigate to="/azkar" replace />} />

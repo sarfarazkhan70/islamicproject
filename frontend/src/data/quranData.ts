@@ -113,10 +113,10 @@ export const SUPPORTED_TRANSLATIONS: QuranTranslationOption[] = [
   },
   {
     id: 151,
-    name: 'Kanz-ul-Iman (Ahmed Raza Khan)',
-    author: 'Ahmed Raza Khan Barelvi',
+    name: 'Tafsir-e-Usmani (Mahmud al-Hasan)',
+    author: 'Shaykh al-Hind Mahmud al-Hasan',
     language: 'urdu',
-    languageLabel: 'اردو (کنز الایمان)',
+    languageLabel: 'اردو (تفسیر عثمانی)',
   },
   {
     id: 156,

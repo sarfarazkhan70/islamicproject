@@ -5,6 +5,7 @@ import {
   Clock,
   CheckSquare,
   BookOpen,
+  Library,
   Heart,
   Compass,
   RotateCcw,
@@ -27,6 +28,7 @@ export const Sidebar: React.FC = () => {
     { path: '/prayer-times', label: 'Prayer Times', icon: Clock },
     { path: '/tracker', label: 'Namaz Tracker', icon: CheckSquare },
     { path: '/quran', label: 'Quran', icon: BookOpen },
+    { path: '/library', label: 'Islamic Library', icon: Library, badge: 'Hadith & Fiqh' },
     { path: '/azkar', label: 'Azkar & Duas', icon: Heart },
     { path: '/qibla', label: 'Qibla Finder', icon: Compass },
   ];

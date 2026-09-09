@@ -17,6 +17,7 @@ import {
   Settings,
   Heart,
   Compass,
+  Library,
 } from 'lucide-react';
 
 export const MobileNavigation: React.FC = () => {
@@ -31,6 +32,7 @@ export const MobileNavigation: React.FC = () => {
   ];
 
   const secondaryTabs = [
+    { path: '/library', label: 'Islamic Library', icon: Library, desc: 'Hadith, Fiqh & Alahazrat Books' },
     { path: '/allah-names', label: 'Asma-ul-Husna', icon: Sparkles, desc: '99 Names of Allah Ta’ala' },
     { path: '/prophet-names', label: 'Asma-e-Mustafa ﷺ', icon: Heart, desc: 'Verified Prophetic Names' },
     { path: '/azkar', label: 'Azkar & Duas', icon: Heart, desc: 'Daily authentic prayers' },

@@ -1,4 +1,4 @@
-import { IslamicBook, CategoryMeta, LibraryCategory } from '../types/library.types';
+import { IslamicBook, CategoryMeta, LibraryCategory, BookVolume } from '../types/library.types';
 
 export const LIBRARY_CATEGORIES: CategoryMeta[] = [
   {
@@ -171,7 +171,7 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tradition: 'Classical Sunni Hadith',
     primaryLanguage: 'Arabic',
     languagesAvailable: ['Arabic', 'Urdu', 'English'],
-    volumeCount: 9,
+    volumeCount: 1,
     era: 'Classical (194-256 AH / 810-870 CE)',
     isFeatured: true,
     isAvailable: true,
@@ -184,108 +184,7 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tags: ['Hadith', 'Sahih', 'Sihah Sittah', 'Bukhari', 'Sunnah'],
     source: 'Verified Classical Musnad Standard Edition',
     volumes: [
-      { id: 'bukhari-vol-1', volumeNumber: 1, title: 'Volume 1: Revelation, Faith & Knowledge', isAvailable: true, chaptersCount: 10 },
-      { id: 'bukhari-vol-2', volumeNumber: 2, title: 'Volume 2: Prayer (Salah) & Call to Prayer (Adhan)', isAvailable: true, chaptersCount: 8 },
-      { id: 'bukhari-vol-3', volumeNumber: 3, title: 'Volume 3: Funerals, Zakat & Hajj', isAvailable: true, chaptersCount: 9 },
-      { id: 'bukhari-vol-4', volumeNumber: 4, title: 'Volume 4: Fasting, Sales & Transactions', isAvailable: true, chaptersCount: 12 },
-      { id: 'bukhari-vol-5', volumeNumber: 5, title: 'Volume 5: Jihad, Creation & Prophets', isAvailable: true, chaptersCount: 11 },
-      { id: 'bukhari-vol-6', volumeNumber: 6, title: 'Volume 6: Virtues of Sahaba & Military Expeditions', isAvailable: true, chaptersCount: 10 },
-      { id: 'bukhari-vol-7', volumeNumber: 7, title: 'Volume 7: Tafseer & Virtues of Quran', isAvailable: true, chaptersCount: 8 },
-      { id: 'bukhari-vol-8', volumeNumber: 8, title: 'Volume 8: Wedlock (Nikah), Divorce & Food', isAvailable: true, chaptersCount: 14 },
-      { id: 'bukhari-vol-9', volumeNumber: 9, title: 'Volume 9: Medicine, Dress, Good Manners & Tawheed', isAvailable: true, chaptersCount: 15 },
-    ],
-    sampleChapters: [
-      {
-        id: 'bukhari-ch-1',
-        volumeNumber: 1,
-        chapterNumber: 1,
-        title: 'Book of Revelation (Bad’ al-Wahy)',
-        arabicTitle: 'كتاب بدء الوحي',
-        urduTitle: 'کتاب وحی کا بیان',
-        description: 'How the Divine Inspiration started being revealed to Allah’s Messenger ﷺ.',
-        hadithCount: 7,
-        sections: [
-          {
-            id: 'bukhari-1',
-            hadithNumber: 1,
-            title: 'Actions are by intentions',
-            arabicTitle: 'إنما الأعمال بالنيات',
-            urduTitle: 'اعمال کا دارومدار نیتوں پر ہے',
-            arabicText:
-              'عَنْ عَلْقَمَةَ بْنِ وَقَّاصٍ اللَّيْثِيِّ، قَالَ سَمِعْتُ عُمَرَ بْنَ الْخَطَّابِ ـ رضى الله عنه ـ عَلَى الْمِنْبَرِ قَالَ سَمِعْتُ رَسُولَ اللَّهِ ﷺ يَقُولُ: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى، فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى دُنْيَا يُصِيبُهَا أَوْ إِلَى امْرَأَةٍ يَنْكِحُهَا فَهِجْرَتُهُ إِلَى مَا هَاجَرَ إِلَيْهِ".',
-            urduText:
-              'حضرت علقمہ بن وقاص لیثی سے روایت ہے کہ میں نے حضرت عمر بن خطاب رضی اللہ عنہ کو منبر پر فرماتے ہوئے سنا کہ میں نے رسول اللہ ﷺ کو فرماتے ہوئے سنا: "اعمال کا دارومدار صرف نیتوں پر ہے اور ہر شخص کے لیے وہی ہے جس کی اس نے نیت کی۔ پس جس کی ہجرت دنیا کے لیے ہو جسے وہ پانا چاہتا ہے یا کسی عورت کے لیے جس سے وہ نکاح کرنا چاہتا ہے تو اس کی ہجرت اسی مقصد کے لیے شمار ہوگی جس کے لیے اس نے ہجرت کی ہے۔"',
-            englishText:
-              'Narrated ‘Umar bin Al-Khattab (RA): I heard Allah’s Messenger (ﷺ) saying on the pulpit, "The reward of deeds depends upon the intentions and every person will get the reward according to what he has intended. So whoever emigrated for worldly benefits or for a woman to marry, his emigration was for what he emigrated for."',
-            narrator: 'Sayyiduna Umar ibn al-Khattab (RA)',
-            reference: 'Sahih al-Bukhari 1 (Book 1, Hadith 1)',
-            grade: 'Sahih (Muttafaq Alayh)',
-            explanation:
-              'This foundational Hadith is regarded by Imam Shafi’i, Imam Ahmad, and the classical Sunni masters as one third of all Islamic knowledge, establishing sincerity (Ikhlas) as the condition for acceptance of all deeds.',
-          },
-          {
-            id: 'bukhari-2',
-            hadithNumber: 2,
-            title: 'Manner of Divine Inspiration',
-            arabicTitle: 'كيفية نزول الوحي',
-            urduTitle: 'وحی کے نزول کی کیفیات',
-            arabicText:
-              'عَنْ عَائِشَةَ أُمِّ الْمُؤْمِنِينَ ـ رضى الله عنها ـ أَنَّ الْحَارِثَ بْنَ هِشَامٍ ـ رضى الله عنه ـ سَأَلَ رَسُولَ اللَّهِ ﷺ فَقَالَ يَا رَسُولَ اللَّهِ كَيْفَ يَأْتِيكَ الْوَحْىُ؟ فَقَالَ رَسُولُ اللَّهِ ﷺ: "أَحْيَانًا يَأْتِينِي مِثْلَ صَلْصَلَةِ الْجَرَسِ وَهُوَ أَشَدُّهُ عَلَىَّ فَيُفْصَمُ عَنِّي وَقَدْ وَعَيْتُ عَنْهُ مَا قَالَ، وَأَحْيَانًا يَتَمَثَّلُ لِيَ الْمَلَكُ رَجُلاً فَيُكَلِّمُنِي فَأَعِي مَا يَقُولُ".',
-            urduText:
-              'ام المؤمنین سیدتنا عائشہ صدیقہ رضی اللہ عنہا سے روایت ہے کہ حضرت حارث بن ہشام رضی اللہ عنہ نے رسول اللہ ﷺ سے دریافت کیا: یا رسول اللہ! آپ پر وحی کس طرح آتی ہے؟ رسول اللہ ﷺ نے فرمایا: "کبھی گھنٹی کی جھنکار کی طرح آتی ہے اور یہ مجھ پر سب سے زیادہ سخت ہوتی ہے، پھر جب یہ کیفیت ختم ہوتی ہے تو جو کچھ فرشتے نے کہا ہوتا ہے مجھے یاد ہوچکا ہوتا ہے۔ اور کبھی فرشتہ میرے سامنے آدمی کی صورت میں متشکل ہوکر آتا ہے اور مجھ سے کلام کرتا ہے اور جو کچھ وہ کہتا ہے میں اسے یاد کرلیتا ہوں۔"',
-            englishText:
-              'Narrated Aisha (RA): Al-Harith bin Hisham asked Allah’s Messenger (ﷺ) "O Allah’s Messenger! How is the Divine Inspiration revealed to you?" Allah’s Messenger (ﷺ) replied, "Sometimes it is revealed like the ringing of a bell, this form of Inspiration is the hardest of all and then this state passes off after I have grasped what is inspired. Sometimes the Angel comes in the form of a man and talks to me and I grasp whatever he says."',
-            narrator: 'Umm al-Mu’minin Sayyidatuna Aisha Siddiqa (RA)',
-            reference: 'Sahih al-Bukhari 2 (Book 1, Hadith 2)',
-            grade: 'Sahih',
-          },
-        ],
-      },
-      {
-        id: 'bukhari-ch-2',
-        volumeNumber: 1,
-        chapterNumber: 2,
-        title: 'Book of Faith (Kitab al-Iman)',
-        arabicTitle: 'كتاب الإيمان',
-        urduTitle: 'کتاب ایمان کا بیان',
-        description: 'Pillars of Islam, branches of faith, and signs of a true believer.',
-        hadithCount: 43,
-        sections: [
-          {
-            id: 'bukhari-8',
-            hadithNumber: 8,
-            title: 'Islam is based on five pillars',
-            arabicTitle: 'بني الإسلام على خمس',
-            urduTitle: 'اسلام کی بنیاد پانچ ارکان پر ہے',
-            arabicText:
-              'عَنِ ابْنِ عُمَرَ ـ رضى الله عنهما ـ قَالَ قَالَ رَسُولُ اللَّهِ ﷺ: "بُنِيَ الإِسْلاَمُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللَّهِ، وَإِقَامِ الصَّلاَةِ، وَإِيتَاءِ الزَّكَاةِ، وَالْحَجِّ، وَصَوْمِ رَمَضَانَ".',
-            urduText:
-              'حضرت عبداللہ بن عمر رضی اللہ عنہما سے روایت ہے کہ رسول اللہ ﷺ نے فرمایا: "اسلام کی بنیاد پانچ ستونوں پر رکھی گئی ہے: اس بات کی گواہی دینا کہ اللہ کے سوا کوئی معبود برحق نہیں اور محمد ﷺ اللہ کے سچے رسول ہیں، نماز قائم کرنا، زکوٰۃ ادا کرنا، حج کرنا، اور رمضان کے روزے رکھنا۔"',
-            englishText:
-              'Narrated Ibn ‘Umar (RA): Allah’s Messenger (ﷺ) said: "Islam is based on five (principles): To testify that none has the right to be worshipped but Allah and Muhammad is Allah’s Messenger; to establish Salah; to pay Zakah; to perform Hajj; and to observe Sawm (fasting) during Ramadan."',
-            narrator: 'Sayyiduna Abdullah ibn Umar (RA)',
-            reference: 'Sahih al-Bukhari 8 (Book 2, Hadith 1)',
-            grade: 'Sahih (Muttafaq Alayh)',
-          },
-          {
-            id: 'bukhari-13',
-            hadithNumber: 15,
-            title: 'Love of the Prophet ﷺ is of the completeness of Faith',
-            arabicTitle: 'حب الرسول ﷺ من الإيمان',
-            urduTitle: 'نبی کریم ﷺ سے محبت ایمان کی شرط ہے',
-            arabicText:
-              'عَنْ أَنَسٍ ـ رضى الله عنه ـ قَالَ: قَالَ النَّبِيُّ ﷺ: "لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى أَكُونَ أَحَبَّ إِلَيْهِ مِنْ وَالِدِهِ وَوَلَدِهِ وَالنَّاسِ أَجْمَعِينَ".',
-            urduText:
-              'حضرت انس بن مالک رضی اللہ عنہ سے روایت ہے کہ نبی کریم ﷺ نے ارشاد فرمایا: "تم میں سے کوئی شخص اس وقت تک مومن (کامل) نہیں ہوسکتا جب تک کہ میں اس کے نزدیک اس کے والد، اس کی اولاد اور تمام انسانوں سے زیادہ محبوب نہ ہوجاؤں۔"',
-            englishText:
-              'Narrated Anas (RA): The Prophet (ﷺ) said: "None of you will have complete faith until I am dearer to him than his father, his children, and all mankind."',
-            narrator: 'Sayyiduna Anas ibn Malik (RA)',
-            reference: 'Sahih al-Bukhari 15 (Book 2, Hadith 8)',
-            grade: 'Sahih',
-            faida: 'Essential proof in Ahl-e-Sunnat theology that love of the Prophet ﷺ is the soul and crown of true Iman.',
-          },
-        ],
-      },
+      { id: 'bukhari-vol-1', volumeNumber: 1, title: 'Sahih al-Bukhari', isAvailable: true, chaptersCount: 1 },
     ],
   },
   {
@@ -350,6 +249,14 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Essential foundation connecting Sunni Hadith science directly with Fiqh methodology.',
     tags: ['Hadith', 'Tirmidhi', 'Sihah Sittah', 'Fiqh Hadith'],
     source: 'Verified Standard Edition with Juristic Notes',
+    volumes: [
+      { id: 'tirmidhi-vol-1', volumeNumber: 1, title: 'Volume 1: Purification, Prayer & Witr', urduTitle: 'جلد ۱ (ابواب الطہارۃ والصلاۃ والوتر)', isAvailable: true, chaptersCount: 6 },
+      { id: 'tirmidhi-vol-2', volumeNumber: 2, title: 'Volume 2: Zakat, Fasting, Hajj & Funerals', urduTitle: 'جلد ۲ (ابواب الزکاۃ والصوم والحج والجنائز)', isAvailable: true, chaptersCount: 6 },
+      { id: 'tirmidhi-vol-3', volumeNumber: 3, title: 'Volume 3: Marriage, Divorce, Business & Judgments', urduTitle: 'جلد ۳ (ابواب النکاح والرضاع والطلاق والبیوع والاحکام)', isAvailable: true, chaptersCount: 8 },
+      { id: 'tirmidhi-vol-4', volumeNumber: 4, title: 'Volume 4: Blood Money, Legal Penalties & Jihad', urduTitle: 'جلد ۴ (ابواب الدیات والحدود والصید والاضاحی والنذور والسیر)', isAvailable: true, chaptersCount: 7 },
+      { id: 'tirmidhi-vol-5', volumeNumber: 5, title: 'Volume 5: Virtues of Jihad, Dress, Food & Medicine', urduTitle: 'جلد ۵ (ابواب فضائل الجہاد واللباس والاطعمۃ والاشربۃ والبر والطب)', isAvailable: true, chaptersCount: 9 },
+      { id: 'tirmidhi-vol-6', volumeNumber: 6, title: 'Volume 6: Inheritance, Destiny, Trials & Supplications', urduTitle: 'جلد ۶ (ابواب الفرائض والوصایا والقدر والفتن والرؤیا والمناقب والدعوات)', isAvailable: true, chaptersCount: 10 },
+    ],
   },
   {
     id: 'sunan-abi-dawud',
@@ -377,6 +284,13 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Imam al-Ghazali stated that Sunan Abi Dawud alone is sufficient for a Mujtahid in legal texts.',
     tags: ['Hadith', 'Abu Dawud', 'Sihah Sittah', 'Legal Traditions'],
     source: 'Verified Canonical Sunni Text',
+    volumes: [
+      { id: 'abudawud-vol-1', volumeNumber: 1, title: 'Volume 1: Purification & Prayer Rulings', urduTitle: 'جلد ۱ (کتاب الطہارۃ والصلاۃ)', isAvailable: true, chaptersCount: 5 },
+      { id: 'abudawud-vol-2', volumeNumber: 2, title: 'Volume 2: Zakat, Pilgrimage, Marriage & Divorce', urduTitle: 'جلد ۲ (کتاب الزکاۃ واللقطۃ والمناسک والنکاح والطلاق)', isAvailable: true, chaptersCount: 7 },
+      { id: 'abudawud-vol-3', volumeNumber: 3, title: 'Volume 3: Fasting, Jihad, Sacrifices & Wills', urduTitle: 'جلد ۳ (کتاب الصوم والجہاد والضحایا والصید والوصایا والفرائض)', isAvailable: true, chaptersCount: 8 },
+      { id: 'abudawud-vol-4', volumeNumber: 4, title: 'Volume 4: Commercial Transactions & Legal Decrees', urduTitle: 'جلد ۴ (کتاب الخراج والامارۃ والجنائز والایمان والبیوع والاقضیۃ)', isAvailable: true, chaptersCount: 7 },
+      { id: 'abudawud-vol-5', volumeNumber: 5, title: 'Volume 5: Medicine, Clothing, Manners & Trials', urduTitle: 'جلد ۵ (کتاب الطب واللباس والترجل والادب والسنۃ والملاحم)', isAvailable: true, chaptersCount: 9 },
+    ],
   },
   {
     id: 'sunan-an-nasai',
@@ -404,6 +318,14 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Considered by many scholars to possess the fewest weak narrations among the Sunan books.',
     tags: ['Hadith', 'Nasai', 'Sihah Sittah'],
     source: 'Verified Canonical Sunni Text',
+    volumes: [
+      { id: 'nasai-vol-1', volumeNumber: 1, title: 'Volume 1: Purification, Water & Prayer Essentials', urduTitle: 'جلد ۱ (کتاب الطہارۃ، المیاہ، الحیض، الغسل، الوضوء، الصلاۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'nasai-vol-2', volumeNumber: 2, title: 'Volume 2: Call to Prayer, Mosques, Imamat & Jumu’ah', urduTitle: 'جلد ۲ (کتاب الاذان، المساجد، القبلۃ، الامامۃ، الافتتاح، السہو، الجمعۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'nasai-vol-3', volumeNumber: 3, title: 'Volume 3: Night Prayer, Funerals, Fasting & Zakat', urduTitle: 'جلد ۳ (کتاب قیام اللیل، الجنائز، الصیام، الزکاۃ، الحج)', isAvailable: true, chaptersCount: 7 },
+      { id: 'nasai-vol-4', volumeNumber: 4, title: 'Volume 4: Jihad, Marriage, Divorce & Endowments', urduTitle: 'جلد ۴ (کتاب الجہاد، النکاح، الطلاق، الخیل، الاحباس، الوصایا)', isAvailable: true, chaptersCount: 9 },
+      { id: 'nasai-vol-5', volumeNumber: 5, title: 'Volume 5: Gifts, Pledges, Oaths & Allegiance', urduTitle: 'جلد ۵ (کتاب النحل، الہبۃ، الرقبی، العمرى، الایمان والنذور، البیعۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'nasai-vol-6', volumeNumber: 6, title: 'Volume 6: Judiciary, Conditions, Sacrifices & Drinks', urduTitle: 'جلد ۶ (کتاب القضاء، الشروط، العقیقۃ، الفرع، العتیرۃ، الصید، الاشربۃ، القسامۃ)', isAvailable: true, chaptersCount: 10 },
+    ],
   },
   {
     id: 'sunan-ibn-majah',
@@ -430,6 +352,13 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Completes the classical Six Books (Kutub al-Sittah) of Sunni Islam.',
     tags: ['Hadith', 'Ibn Majah', 'Sihah Sittah'],
     source: 'Verified Canonical Sunni Text',
+    volumes: [
+      { id: 'ibnmajah-vol-1', volumeNumber: 1, title: 'Volume 1: Sunnah Principles, Purification & Prayer', urduTitle: 'جلد ۱ (المقدمۃ، کتاب الطہارۃ وسنن الصلاۃ)', isAvailable: true, chaptersCount: 6 },
+      { id: 'ibnmajah-vol-2', volumeNumber: 2, title: 'Volume 2: Adhan, Mosques, Funerals & Fasting', urduTitle: 'جلد ۲ (کتاب الاذان والمساجد والجنائز والصیام والزکاۃ)', isAvailable: true, chaptersCount: 6 },
+      { id: 'ibnmajah-vol-3', volumeNumber: 3, title: 'Volume 3: Marriage, Divorce, Commerce & Rulings', urduTitle: 'جلد ۳ (کتاب النکاح والطلاق والکفارات والتجارات والاحکام)', isAvailable: true, chaptersCount: 8 },
+      { id: 'ibnmajah-vol-4', volumeNumber: 4, title: 'Volume 4: Pawning, Lost Property, Legal Penalties', urduTitle: 'جلد ۴ (کتاب الہبات والرہون والشفاعۃ واللقطۃ والعتق والحدود والدیات)', isAvailable: true, chaptersCount: 8 },
+      { id: 'ibnmajah-vol-5', volumeNumber: 5, title: 'Volume 5: Inheritance, Jihad, Food, Medicine & Asceticism', urduTitle: 'جلد ۵ (کتاب الوصایا والفرائض والجہاد والاطعمۃ واللباس والطب والفتن والزہد)', isAvailable: true, chaptersCount: 10 },
+    ],
   },
   {
     id: 'muwatta-imam-malik',
@@ -457,6 +386,10 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Imam al-Shafi’i remarked: "There has never appeared on earth a book in Islam closer to the Quran than the Muwatta of Malik."',
     tags: ['Hadith', 'Muwatta', 'Imam Malik', 'Madinah'],
     source: 'Verified Classical Musnad Standard Edition',
+    volumes: [
+      { id: 'muwatta-vol-1', volumeNumber: 1, title: 'Volume 1: Prayer Times, Purification, Ramadan & Hajj', urduTitle: 'جلد ۱ (وقوت الصلاۃ، الطہارۃ، الجمعۃ، رمضان، الاعتکاف، الزکاۃ، الحج)', isAvailable: true, chaptersCount: 15 },
+      { id: 'muwatta-vol-2', volumeNumber: 2, title: 'Volume 2: Jihad, Nikah, Business, Judgments & Comprehensive Hadith', urduTitle: 'جلد ۲ (الجہاد، النذور، الضحایا، النکاح، الطلاق، البیوع، القضاء، الوصایا، الجامع)', isAvailable: true, chaptersCount: 18 },
+    ],
   },
   {
     id: 'musnad-ahmad',
@@ -484,6 +417,14 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'One of the largest authentic Hadith repositories preserved in Islamic history.',
     tags: ['Hadith', 'Musnad', 'Ahmad ibn Hanbal'],
     source: 'Verified Classical Musnad Standard Edition',
+    volumes: [
+      { id: 'musnad-vol-1', volumeNumber: 1, title: 'Volume 1: Musnad of the Ten Promised Paradise & Senior Sahaba', urduTitle: 'جلد ۱ (مسند العشرۃ المبشرین بالجنۃ ومساند کبار الصحابۃ)', isAvailable: true, chaptersCount: 10 },
+      { id: 'musnad-vol-2', volumeNumber: 2, title: 'Volume 2: Musnad of Ibn Umar, Amr ibn al-Aas & Abu Hurairah', urduTitle: 'جلد ۲ (مسند عبد اللہ بن عمر وعبد اللہ بن عمرو وابی ہریرۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'musnad-vol-3', volumeNumber: 3, title: 'Volume 3: Musnad of Anas ibn Malik, Jabir & Makkan Sahaba', urduTitle: 'جلد ۳ (مسند انس بن مالک وجابر بن عبد اللہ ومسند المکیین)', isAvailable: true, chaptersCount: 9 },
+      { id: 'musnad-vol-4', volumeNumber: 4, title: 'Volume 4: Musnad of Sham, Kufah & Basra Companions', urduTitle: 'جلد ۴ (مسند الشامیین والکوفیین والبصریین)', isAvailable: true, chaptersCount: 8 },
+      { id: 'musnad-vol-5', volumeNumber: 5, title: 'Volume 5: Musnad of the Ansar & Arab Tribes', urduTitle: 'جلد ۵ (مسند الانصار والقبائل العربیۃ)', isAvailable: true, chaptersCount: 9 },
+      { id: 'musnad-vol-6', volumeNumber: 6, title: 'Volume 6: Musnad of the Mothers of the Believers & Women Sahaba', urduTitle: 'جلد ۶ (مسند امہات المؤمنین والنساء والغرائب)', isAvailable: true, chaptersCount: 11 },
+    ],
   },
   {
     id: 'mishkat-al-masabih',
@@ -510,6 +451,11 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Central curriculum standard across thousands of Sunni Islamic institutions worldwide.',
     tags: ['Hadith', 'Mishkat', 'Dars-e-Nizami'],
     source: 'Verified Curriculum Edition with Urdu Commentary',
+    volumes: [
+      { id: 'mishkat-vol-1', volumeNumber: 1, title: 'Volume 1: Faith, Knowledge, Purification, Prayer, Zakat & Fasting', urduTitle: 'جلد ۱ (کتاب الایمان، العلم، الطہارۃ، الصلاۃ، الجنائز، الزکاۃ، الصوم)', isAvailable: true, chaptersCount: 12 },
+      { id: 'mishkat-vol-2', volumeNumber: 2, title: 'Volume 2: Virtues of Quran, Invocations, Hajj, Business & Marriage', urduTitle: 'جلد ۲ (کتاب فضائل القرآن، الدعوات، المناسک، البیوع، النکاح، العتق، القصاص)', isAvailable: true, chaptersCount: 14 },
+      { id: 'mishkat-vol-3', volumeNumber: 3, title: 'Volume 3: Legal Rulings, Governance, Jihad, Manners & Virtues', urduTitle: 'جلد ۳ (کتاب الحدود، الامارۃ، الجہاد، الصید، اللباس، الطب، الرؤیا، الادب، الرقاق، الفتن، المناقب)', isAvailable: true, chaptersCount: 16 },
+    ],
   },
   {
     id: 'riyad-as-salihin',
@@ -537,6 +483,10 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Read daily across homes and mosques worldwide for spiritual elevation.',
     tags: ['Hadith', 'Nawawi', 'Ethics', 'Virtues', 'Adab'],
     source: 'Verified Classical Standard Edition',
+    volumes: [
+      { id: 'riyad-vol-1', volumeNumber: 1, title: 'Volume 1: Sincerity, Repentance, Patience, Truthfulness & Piety', urduTitle: 'جلد ۱ (ابواب الاخلاص والتوبۃ والصبر والصدق والمراقبۃ والتقویٰ والیقین والاستقامۃ)', isAvailable: true, chaptersCount: 14 },
+      { id: 'riyad-vol-2', volumeNumber: 2, title: 'Volume 2: Etiquettes, Greeting, Visiting the Sick & Invocations', urduTitle: 'جلد ۲ (ابواب الادب واللباس والنوم والسلام وعیادۃ المریض والفضائل والذکر والاستغفار)', isAvailable: true, chaptersCount: 16 },
+    ],
   },
 
   // =========================================================================
@@ -569,18 +519,36 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tags: ['Alahazrat', 'Fatawa Razawiyya', 'Hanafi Fiqh', 'Ahl-e-Sunnat', 'Fatwa'],
     source: 'Maktaba-tul-Madina / Raza Academy Verified 30-Volume Edition',
     volumes: [
-      { id: 'razawiyya-vol-1', volumeNumber: 1, title: 'Volume 1: Kitab at-Taharah (Water & Purification)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-2', volumeNumber: 2, title: 'Volume 2: Wudu, Ghusl & Tayammum Masail', isAvailable: true, chaptersCount: 6 },
-      { id: 'razawiyya-vol-3', volumeNumber: 3, title: 'Volume 3: Impurities & Sanitation Rulings', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-4', volumeNumber: 4, title: 'Volume 4: Kitab as-Salah (Prayer Times & Azan)', isAvailable: true, chaptersCount: 10 },
-      { id: 'razawiyya-vol-5', volumeNumber: 5, title: 'Volume 5: Conditions of Salah & Qibla Verification', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-6', volumeNumber: 6, title: 'Volume 6: Congregational Prayer & Imamat Standards', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-7', volumeNumber: 7, title: 'Volume 7: Jumu’ah, Eidain & Sajdah Sahw', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-8', volumeNumber: 8, title: 'Volume 8: Traveler’s Prayer (Qasr) & Sunnah Prayers', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-9', volumeNumber: 9, title: 'Volume 9: Funerals (Janaiz) & Visitation of Graves', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-10', volumeNumber: 10, title: 'Volume 10: Kitab az-Zakat (Charity & Wealth Rulings)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-11', volumeNumber: 11, title: 'Volume 11: Kitab as-Sawm (Fasting & Moon Sighting)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-12', volumeNumber: 12, title: 'Volume 12: Kitab al-Hajj (Pilgrimage & Sacred Sites)', isAvailable: true, chaptersCount: 10 },
+      { id: 'razawiyya-vol-1', volumeNumber: 1, title: 'Volume 1: Kitab at-Taharah (Water & Purification)', urduTitle: 'جلد ۱ (کتاب الطہارۃ — میاہ، حوض، وضوء)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-2', volumeNumber: 2, title: 'Volume 2: Wudu, Ghusl & Tayammum Masail', urduTitle: 'جلد ۲ (کتاب الطہارۃ — غسل، تیمم، نجاسات)', isAvailable: true, chaptersCount: 6 },
+      { id: 'razawiyya-vol-3', volumeNumber: 3, title: 'Volume 3: Impurities & Sanitation Rulings', urduTitle: 'جلد ۳ (کتاب الطہارۃ — ازالۃ النجاسۃ، استنجاء)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-4', volumeNumber: 4, title: 'Volume 4: Kitab as-Salah (Prayer Times & Azan)', urduTitle: 'جلد ۴ (کتاب الصلاۃ — اوقات نماز، فلکیاتی تحقیق)', isAvailable: true, chaptersCount: 10 },
+      { id: 'razawiyya-vol-5', volumeNumber: 5, title: 'Volume 5: Conditions of Salah & Qibla Verification', urduTitle: 'جلد ۵ (کتاب الصلاۃ — شروط صلاۃ، سمت قبلہ)', isAvailable: true, chaptersCount: 9 },
+      { id: 'razawiyya-vol-6', volumeNumber: 6, title: 'Volume 6: Congregational Prayer & Imamat Standards', urduTitle: 'جلد ۶ (کتاب الصلاۃ — ارکان صلاۃ، قراءت، اذان، امامت)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-7', volumeNumber: 7, title: 'Volume 7: Jumu’ah, Eidain & Sajdah Sahw', urduTitle: 'جلد ۷ (کتاب الصلاۃ — جماعت، جمعہ، عیدین)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-8', volumeNumber: 8, title: 'Volume 8: Traveler’s Prayer (Qasr) & Sunnah Prayers', urduTitle: 'جلد ۸ (کتاب الصلاۃ — صلاۃ مسافر، قضاء نمازیں، سجدہ سہو)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-9', volumeNumber: 9, title: 'Volume 9: Funerals (Janaiz) & Visitation of Graves', urduTitle: 'جلد ۹ (کتاب الجنائز — زیارت قبور، ایصال ثواب)', isAvailable: true, chaptersCount: 9 },
+      { id: 'razawiyya-vol-10', volumeNumber: 10, title: 'Volume 10: Kitab az-Zakat (Charity & Wealth Rulings)', urduTitle: 'جلد ۱۰ (کتاب الزکاۃ — مصارف زکاۃ، صدقہ فطر)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-11', volumeNumber: 11, title: 'Volume 11: Kitab as-Sawm (Fasting & Moon Sighting)', urduTitle: 'جلد ۱۱ (کتاب الصوم — رویت ہلال، اعتکاف)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-12', volumeNumber: 12, title: 'Volume 12: Kitab al-Hajj (Pilgrimage & Sacred Sites)', urduTitle: 'جلد ۱۲ (کتاب الحج — مناسک حج، زیارت مدینہ منورہ)', isAvailable: true, chaptersCount: 10 },
+      { id: 'razawiyya-vol-13', volumeNumber: 13, title: 'Volume 13: Kitab an-Nikah (Marriage & Dowry)', urduTitle: 'جلد ۱۳ (کتاب النکاح — ولایت، کفاءت، مہر)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-14', volumeNumber: 14, title: 'Volume 14: Fosterage & Spousal Rights', urduTitle: 'جلد ۱۴ (کتاب النکاح — محرمات، رضاعت، حقوق زوجین)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-15', volumeNumber: 15, title: 'Volume 15: Kitab at-Talaq (Divorce Rulings)', urduTitle: 'جلد ۱۵ (کتاب الطلاق — ایقاع طلاق، الفاظ کنایات)', isAvailable: true, chaptersCount: 9 },
+      { id: 'razawiyya-vol-16', volumeNumber: 16, title: 'Volume 16: Waiting Period (Iddah) & Maintenance', urduTitle: 'جلد ۱۶ (کتاب الطلاق — عدت، نفقہ، خلع، ظہار)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-17', volumeNumber: 17, title: 'Volume 17: Oaths & Vows (Ayman wa Nudhur)', urduTitle: 'جلد ۱۷ (کتاب العتاق والایمان والنذور)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-18', volumeNumber: 18, title: 'Volume 18: Legal Punishments & Jihad', urduTitle: 'جلد ۱۸ (کتاب الحدود والسرقۃ والجہاد)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-19', volumeNumber: 19, title: 'Volume 19: Lost Property & Public Assets', urduTitle: 'جلد ۱۹ (کتاب الجزیۃ واللقطۃ والاموال الضائعۃ)', isAvailable: true, chaptersCount: 6 },
+      { id: 'razawiyya-vol-20', volumeNumber: 20, title: 'Volume 20: Trusts & Usurpation (Ghasb)', urduTitle: 'جلد ۲۰ (کتاب الغصب والودیعۃ والعاریۃ)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-21', volumeNumber: 21, title: 'Volume 21: Kitab al-Buyu’ (Commerce & Contracts)', urduTitle: 'جلد ۲۱ (کتاب البیوع — شرائط بیع، خیارات)', isAvailable: true, chaptersCount: 9 },
+      { id: 'razawiyya-vol-22', volumeNumber: 22, title: 'Volume 22: Riba (Interest) & Invalid Sales', urduTitle: 'جلد ۲۲ (کتاب البیوع — بیع فاسد، اقالہ، ربا و سود)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-23', volumeNumber: 23, title: 'Volume 23: Leasing, Guarantee & Agency', urduTitle: 'جلد ۲۳ (کتاب الاجارۃ والکفالۃ والوکالۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-24', volumeNumber: 24, title: 'Volume 24: Preemption & Partnerships', urduTitle: 'جلد ۲۴ (کتاب الشفعۃ والقسمۃ والمزارعۃ)', isAvailable: true, chaptersCount: 7 },
+      { id: 'razawiyya-vol-25', volumeNumber: 25, title: 'Volume 25: Slaughtering, Hunting & Sacrifices', urduTitle: 'جلد ۲۵ (کتاب الشرب والذبائح والصید والاضحیۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'razawiyya-vol-26', volumeNumber: 26, title: 'Volume 26: Etiquettes & Disliked Matters', urduTitle: 'جلد ۲۶ (کتاب الکراہیۃ والاستحسان والادب)', isAvailable: true, chaptersCount: 9 },
+      { id: 'razawiyya-vol-27', volumeNumber: 27, title: 'Volume 27: Inheritance, Estates & Wills', urduTitle: 'جلد ۲۷ (کتاب احیاء الموات والفرائض والوصایا)', isAvailable: true, chaptersCount: 9 },
+      { id: 'razawiyya-vol-28', volumeNumber: 28, title: 'Volume 28: Islamic Beliefs & Refutations', urduTitle: 'جلد ۲۸ (رسائل و عقائد — رد بدعات و منکرات)', isAvailable: true, chaptersCount: 10 },
+      { id: 'razawiyya-vol-29', volumeNumber: 29, title: 'Volume 29: Research Monographs & Tasawwuf', urduTitle: 'جلد ۲۹ (رسائل علمیہ و فقہیہ — تصوف و احکام)', isAvailable: true, chaptersCount: 11 },
+      { id: 'razawiyya-vol-30', volumeNumber: 30, title: 'Volume 30: Comprehensive Indices & Addenda', urduTitle: 'جلد ۳۰ (فہارس جامعہ و رسائل متفرقہ)', isAvailable: true, chaptersCount: 8 },
     ],
     sampleChapters: [
       {
@@ -635,9 +603,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tags: ['Bahar-e-Shariat', 'Hanafi Fiqh', 'Masail', 'Ahl-e-Sunnat', 'Amjad Ali Azmi'],
     source: 'Maktaba-tul-Madina Complete Authenticated 20-Part Edition',
     volumes: [
-      { id: 'bahar-vol-1', volumeNumber: 1, title: 'Volume 1 (Parts 1-6): Aqeedah, Purification, Prayer, Funerals & Zakat', isAvailable: true, chaptersCount: 16 },
-      { id: 'bahar-vol-2', volumeNumber: 2, title: 'Volume 2 (Parts 7-12): Fasting, Hajj, Nikah, Divorce, Oaths & Business', isAvailable: true, chaptersCount: 18 },
-      { id: 'bahar-vol-3', volumeNumber: 3, title: 'Volume 3 (Parts 13-20): Partnerships, Waqf, Halal/Haram, Adab & Inheritance', isAvailable: true, chaptersCount: 20 },
+      { id: 'bahar-vol-1', volumeNumber: 1, title: 'Jild 1 (Parts 1-6): Aqeedah, Purification, Prayer, Funerals & Zakat', urduTitle: 'جلد ۱ (حصہ ۱ تا ۶ — عقائد، طہارت، وضو، غسل، نماز، جنازہ، زکوٰۃ)', isAvailable: true, chaptersCount: 6 },
+      { id: 'bahar-vol-2', volumeNumber: 2, title: 'Jild 2 (Parts 7-12): Fasting, Hajj, Nikah, Divorce, Oaths & Business', urduTitle: 'جلد ۲ (حصہ ۷ تا ۱۲ — روزہ، اعتکاف، حج، نکاح، طلاق، نفقہ، قسمیں، تجارت)', isAvailable: true, chaptersCount: 6 },
+      { id: 'bahar-vol-3', volumeNumber: 3, title: 'Jild 3 (Parts 13-20): Partnerships, Waqf, Halal/Haram, Adab & Inheritance', urduTitle: 'جلد ۳ (حصہ ۱۳ تا ۲۰ — شراکت، وقف، حلال و حرام، ادب و اخلاق، میراث)', isAvailable: true, chaptersCount: 8 },
     ],
     sampleChapters: [
       {
@@ -659,6 +627,61 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
             englishText:
               'Sadrush Shariah explains that there are four obligatory acts (Faraiz) in Wudu:\n1. Washing the entire face once from the hairline to below the chin and from one earlobe to the other.\n2. Washing both arms including the elbows.\n3. Performing Masah (wiping) over at least one-fourth of the head.\n4. Washing both feet including the ankles.\nIf even a single hair’s breadth remains dry, the Wudu is not fulfilled.',
             ruling: 'Essential conditions for validity of prayer.',
+          },
+          {
+            id: 'bahar-s-2',
+            title: 'Sunnahs and Etiquettes of Wudu',
+            urduTitle: 'وضو کی سنتیں اور مستحبات',
+            arabicText: 'السنة في الوضوء التسمية وغسل اليدين والمضمضة والاستنشاق والسواك وتثليث الغسل ومسح الأذنين وتخليل اللحية والأصابع',
+            urduText:
+              'وضو کی اہم سنتیں:\n۱. نیت کرنا اور بسم اللہ پڑھنا\n۲. دونوں ہاتھ پہنچوں تک تین بار دھونا\n۳. مسواک کرنا\n۴. تین بار کلی کرنا اور ناک میں پانی چڑھانا\n۵. ہر عضو کو تین تین بار دھونا\n۶. پورے سر کا ایک بار مسح کرنا اور کانوں کا مسح کرنا\n۷. داڑھی اور انگلیوں کا خلال کرنا۔',
+            englishText:
+              'Important Sunnahs of Wudu include: making the intention and beginning with Bismillah; washing both hands up to the wrists thrice; using the Miswak; rinsing the mouth and cleansing nostrils thrice; washing each limb thrice; wiping the entire head once and wiping the ears; combing the beard and interweaving between fingers and toes.',
+            ruling: 'Performing all Sunnahs ensures full spiritual reward and perfection of prayer.',
+          },
+        ],
+      },
+      {
+        id: 'bahar-ch-2',
+        volumeNumber: 2,
+        chapterNumber: 7,
+        title: 'Part 7: Fasting & Ramadan (Roze Ka Bayan)',
+        arabicTitle: 'كتاب الصوم وأحكامه',
+        urduTitle: 'روزے کا بیان اور شرائط و مفسدات',
+        description: 'Conditions, intentions, invalidators, and dispensations of Islamic fasting.',
+        sections: [
+          {
+            id: 'bahar-s-3',
+            title: 'Definition and Essential Condition of Fasting',
+            urduTitle: 'روزے کی تعریف اور نیت کا وقت',
+            arabicText: 'الصوم هو الإمساك عن الأكل والشرب والجماع بنية من طلوع الفجر الصادق إلى غروب الشمس',
+            urduText:
+              'روزہ کی شرعی تعریف: صبح صادق سے غروب آفتاب تک عبادت کی نیت سے کھانے، پینے اور نفسانی خواہش سے رکے رہنے کا نام روزہ ہے۔ رمضان کے روزے کی نیت رات سے کرنا مستحب ہے اور نصف نہار شرعی (ضحوہ کبریٰ) سے پہلے پہلے تک نیت کرلینا بھی جائز ہے۔',
+            englishText:
+              'Fasting (Sawm) in Islamic law means abstaining from eating, drinking, and marital relations with the intention of worship from true dawn (Fajr) until sunset. Making the intention before dawn is preferable, but for Ramadan fasts, an intention made before the Islamic midday (Dahwa Kubra) is also valid.',
+            ruling: 'Fasting in Ramadan is one of the five obligatory pillars of Islam.',
+          },
+        ],
+      },
+      {
+        id: 'bahar-ch-3',
+        volumeNumber: 3,
+        chapterNumber: 16,
+        title: 'Part 16: Halal & Haram Rulings (Halal o Haram Ka Bayan)',
+        arabicTitle: 'كتاب الحظر والإباحة والمكاسب',
+        urduTitle: 'حلال و حرام، جائز و ناجائز کا بیان',
+        description: 'Guidelines on permissible food, earnings, clothing, interactions, and prohibited practices.',
+        sections: [
+          {
+            id: 'bahar-s-4',
+            title: 'Seeking Pure and Halal Livelihood',
+            urduTitle: 'طلبِ حلال اور روزی کی طہارت',
+            arabicText: 'طلب الحلال فريضة بعد الفريضة',
+            urduText:
+              'صدر الشریعہ فرماتے ہیں: بنیادی فرائض (نماز، روزہ وغیرہ) کے بعد حلال روزی کمانا ہر مسلمان پر فرض ہے۔ سود، رشوت، دھوکہ دہی، حرام اشیاء کی تجارت اور چوری سے حاصل کردہ مال قطعی حرام ہے اور اس سے صدقہ بھی قبول نہیں ہوتا۔',
+            englishText:
+              'Sadrush Shariah emphasizes that seeking lawful (Halal) sustenance is an obligation after the foundational duties. Wealth obtained through interest (Riba), bribery, deception, trade in prohibited goods, or theft is strictly unlawful (Haram), and charity given from such wealth is rejected.',
+            ruling: 'Halal income is essential for the acceptance of all prayers and supplications.',
           },
         ],
       },
@@ -689,6 +712,11 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'The preeminent standard of authentic, Shariah-compliant devotional literature expressing sincere love for the Prophet ﷺ.',
     tags: ['Hadaiq-e-Bakhshish', 'Naat', 'Salam', 'Mustafa Jane Rahmat', 'Alahazrat'],
     source: 'Verified 3-Part Standard Diwan Edition',
+    volumes: [
+      { id: 'hadaiq-vol-1', volumeNumber: 1, title: 'Volume 1: Praise of Allah (Hamd) & Naats of the Prophet ﷺ', urduTitle: 'جلد ۱ (حمد باری تعالیٰ و نعت سرور کائنات ﷺ)', isAvailable: true, chaptersCount: 30 },
+      { id: 'hadaiq-vol-2', volumeNumber: 2, title: 'Volume 2: Naat Sharif, Manqabat Ghaus-e-Azam & Awliya', urduTitle: 'جلد ۲ (نعت رسول ﷺ و مناقب غوث اعظم و اولیاء کرام)', isAvailable: true, chaptersCount: 35 },
+      { id: 'hadaiq-vol-3', volumeNumber: 3, title: 'Volume 3: Salam Mustafa Jaan-e-Rahmat, Rubaiyat & Mukhammas', urduTitle: 'جلد ۳ (سلام مصطفیٰ جان رحمت پہ لاکھوں سلام، رباعیات و قطعات)', isAvailable: true, chaptersCount: 20 },
+    ],
     sampleChapters: [
       {
         id: 'hadaiq-ch-1',
@@ -736,6 +764,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'A cornerstone document verifying the universal endorsement of Alahazrat by the Ulama of the Haramayn Sharifayn.',
     tags: ['Husam-ul-Haramain', 'Aqeedah', 'Haramayn', 'Alahazrat', 'Ahl-e-Sunnat'],
     source: 'Verified Bilingual Arabic-Urdu Standard Edition',
+    volumes: [
+      { id: 'husam-vol-1', volumeNumber: 1, title: 'Complete Monograph & Declarations of the Ulama of Haramayn', urduTitle: 'جلد ۱ (حسام الحرمین علی منحر الکفر والمین — تصدیقات علمائے حرمین شریفین)', isAvailable: true, chaptersCount: 5 },
+    ],
   },
   {
     id: 'al-amn-wal-ula',
@@ -762,6 +793,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Standard reference work on Tawassul, Istighatha, and the vast authority granted to the Beloved Prophet ﷺ by Allah Almighty.',
     tags: ['Al-Amn wal Ula', 'Alahazrat', 'Aqeedah', 'Tawassul', 'Prophetic Station'],
     source: 'Verified Classical Monograph Standard Edition',
+    volumes: [
+      { id: 'amn-vol-1', volumeNumber: 1, title: 'Complete Monograph: Citing 60 Quranic Verses and 300 Ahadith', urduTitle: 'جلد ۱ (الامن والعلیٰ لناعتی المصطفیٰ بدافع البلاء)', isAvailable: true, chaptersCount: 6 },
+    ],
   },
   {
     id: 'fatawa-mustafawiya',
@@ -788,6 +822,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Authoritative second-generation compilation in the Bareilly juristic tradition.',
     tags: ['Fatawa Mustafawiya', 'Mufti-e-Azam', 'Mustafa Raza Khan', 'Hanafi Fiqh'],
     source: 'Verified Standard Edition',
+    volumes: [
+      { id: 'mustafawiya-vol-1', volumeNumber: 1, title: 'Complete Juristic Verdicts of Mufti-e-Azam Hind', urduTitle: 'جلد ۱ (فتاویٰ مصطفویہ از مفتی اعظم ہند قدس سرہ)', isAvailable: true, chaptersCount: 10 },
+    ],
   },
   {
     id: 'fatawa-amjadiya',
@@ -814,6 +851,12 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Vital companion to Bahar-e-Shariat providing case-specific applications of Hanafi principles.',
     tags: ['Fatawa Amjadiya', 'Sadrush Shariah', 'Hanafi Fatawa'],
     source: 'Verified 4-Volume Standard Edition',
+    volumes: [
+      { id: 'amjadiya-vol-1', volumeNumber: 1, title: 'Volume 1: Kitab at-Taharah & Kitab as-Salah', urduTitle: 'جلد ۱ (کتاب الطہارۃ والصلاۃ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'amjadiya-vol-2', volumeNumber: 2, title: 'Volume 2: Kitab az-Zakat, Sawm & Hajj', urduTitle: 'جلد ۲ (کتاب الزکاۃ والصوم والحج)', isAvailable: true, chaptersCount: 6 },
+      { id: 'amjadiya-vol-3', volumeNumber: 3, title: 'Volume 3: Kitab an-Nikah, Talaq & Maintenance', urduTitle: 'جلد ۳ (کتاب النکاح والطلاق والنفقات)', isAvailable: true, chaptersCount: 7 },
+      { id: 'amjadiya-vol-4', volumeNumber: 4, title: 'Volume 4: Commerce, Endowments & Inheritance', urduTitle: 'جلد ۴ (کتاب البیوع والاجارۃ والوقف والمواریث)', isAvailable: true, chaptersCount: 9 },
+    ],
   },
   {
     id: 'jannati-zewar',
@@ -840,6 +883,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'The premier textbook for Muslim households, madrasas, and families.',
     tags: ['Jannati Zewar', 'Abdul Mustafa Azmi', 'Fiqh', 'Masail', 'Ethics'],
     source: 'Verified Authenticated Standard Edition',
+    volumes: [
+      { id: 'zewar-vol-1', volumeNumber: 1, title: 'Complete Comprehensive Guide to Beliefs, Rulings & Ethics', urduTitle: 'جلد ۱ (مکمل جنتی زیور — عقائد، نماز، مسائل و اخلاق)', isAvailable: true, chaptersCount: 12 },
+    ],
   },
   {
     id: 'sirat-e-mustafa',
@@ -866,6 +912,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'One of the most loved Seerat books in the Urdu language for cultivating sincere love for the Prophet ﷺ.',
     tags: ['Sirat-e-Mustafa', 'Seerat', 'Biography', 'Abdul Mustafa Azmi', 'Prophet Muhammad'],
     source: 'Verified Standard Edition',
+    volumes: [
+      { id: 'sirat-vol-1', volumeNumber: 1, title: 'The Sublime Biography of the Holy Prophet Muhammad ﷺ', urduTitle: 'جلد ۱ (سیرتِ مصطفیٰ ﷺ — ولادت، شمائل، معجزات و غزوات)', isAvailable: true, chaptersCount: 15 },
+    ],
   },
   {
     id: 'al-malfooz',
@@ -892,6 +941,12 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Provides unprecedented insight into Alahazrat’s vast encyclopedic memory and pastoral guidance.',
     tags: ['Al-Malfooz', 'Alahazrat', 'Discourses', 'Spiritual Wisdom'],
     source: 'Verified 4-Part Standard Edition',
+    volumes: [
+      { id: 'malfooz-vol-1', volumeNumber: 1, title: 'Volume 1: Discourses & Gatherings of 1330 AH', urduTitle: 'جلد ۱ (الملفوظ شریف حصہ اول)', isAvailable: true, chaptersCount: 5 },
+      { id: 'malfooz-vol-2', volumeNumber: 2, title: 'Volume 2: Juristic Pearls & Theological Answers', urduTitle: 'جلد ۲ (الملفوظ شریف حصہ دوم)', isAvailable: true, chaptersCount: 5 },
+      { id: 'malfooz-vol-3', volumeNumber: 3, title: 'Volume 3: Spiritual Guidance & Sufic Insights', urduTitle: 'جلد ۳ (الملفوظ شریف حصہ سوم)', isAvailable: true, chaptersCount: 5 },
+      { id: 'malfooz-vol-4', volumeNumber: 4, title: 'Volume 4: Adab, Awrad & Historical Incidents', urduTitle: 'جلد ۴ (الملفوظ شریف حصہ چہارم)', isAvailable: true, chaptersCount: 5 },
+    ],
   },
   {
     id: 'dalail-al-khayrat',
@@ -918,6 +973,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Traditional daily liturgy of Sunni scholars, Awliya, and lovers of the Prophet ﷺ across centuries.',
     tags: ['Dalail al-Khayrat', 'Durood', 'Salawat', 'Imam Jazuli'],
     source: 'Verified Classical Standard Manuscript',
+    volumes: [
+      { id: 'dalail-vol-1', volumeNumber: 1, title: 'Daily Hizb Liturgies (Monday to Sunday) & Asma an-Nabi ﷺ', urduTitle: 'جلد ۱ (دلائل الخیرات شریف — احزاب ایام الاسبوع و اسماء النبی ﷺ)', isAvailable: true, chaptersCount: 8 },
+    ],
   },
   {
     id: 'qasida-al-burdah',
@@ -944,6 +1002,9 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'The most recited and commented poem in the history of the Arabic language.',
     tags: ['Burdah', 'Qasida', 'Busiri', 'Salawat', 'Praise of Prophet'],
     source: 'Verified Classical Text with Manzūm Urdu & English',
+    volumes: [
+      { id: 'burdah-vol-1', volumeNumber: 1, title: 'Ten Blessed Chapters with Urdu & English Versified Meanings', urduTitle: 'جلد ۱ (قصیدہ بردہ شریف — دس فصول مبارکہ مع اردو و انگریزی ترجمہ)', isAvailable: true, chaptersCount: 10 },
+    ],
   },
   {
     id: 'khazain-al-irfan',
@@ -970,11 +1031,49 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     significance: 'Standard companion commentary printed alongside Kanzul Iman across the globe.',
     tags: ['Khazain al-Irfan', 'Tafseer', 'Kanzul Iman', 'Naeemuddin Muradabadi'],
     source: 'Verified Standard Edition',
+    volumes: [
+      { id: 'khazain-vol-1', volumeNumber: 1, title: 'Complete Commentary on 30 Paras of the Holy Quran', urduTitle: 'جلد ۱ (خزائن العرفان فی تفسیر القرآن — حاشیہ تیس پارے)', isAvailable: true, chaptersCount: 30 },
+    ],
   },
 ];
 
 export function getBookById(id: string): IslamicBook | undefined {
   return ISLAMIC_BOOKS.find((book) => book.id === id);
+}
+
+export function getBookVolumes(book: IslamicBook): BookVolume[] {
+  let vols: BookVolume[] = [];
+  if (book.volumes && book.volumes.length > 0) {
+    vols = book.volumes.map((v) => {
+      const volChapters =
+        v.chapters ||
+        (book.sampleChapters ? book.sampleChapters.filter((c) => c.volumeNumber === v.volumeNumber) : []);
+      return {
+        ...v,
+        chapters: volChapters.length > 0 ? volChapters : v.chapters,
+      };
+    });
+    return vols;
+  }
+  const count = Math.max(1, book.volumeCount || 1);
+  const urduDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+  const toUrdu = (n: number) => String(n).split('').map((d) => urduDigits[parseInt(d, 10)] || d).join('');
+
+  const list: BookVolume[] = [];
+  for (let i = 1; i <= count; i++) {
+    const volChapters = book.sampleChapters ? book.sampleChapters.filter((c) => c.volumeNumber === i) : [];
+    list.push({
+      id: `${book.id}-vol-${i}`,
+      volumeNumber: i,
+      title: `Jild ${i}`,
+      urduTitle: `جلد ${toUrdu(i)}`,
+      arabicTitle: `المجلد ${i}`,
+      isAvailable: true,
+      chaptersCount: volChapters.length || 1,
+      chapters: volChapters.length > 0 ? volChapters : undefined,
+    });
+  }
+  return list;
 }
 
 export function getBooksByCategory(category: LibraryCategory): IslamicBook[] {

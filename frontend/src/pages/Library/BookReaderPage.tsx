@@ -13,10 +13,11 @@ import {
   Copy,
   Check,
 } from 'lucide-react';
-import { getBookById } from '../../data/libraryData';
+import { getBookById, getBookVolumes } from '../../data/libraryData';
 import { useLibraryStore, ReaderFontSize } from '../../stores/useLibraryStore';
 import { BookChapter, BookSection } from '../../types/library.types';
 import { KanzulImanReader } from '../../components/library/KanzulImanReader';
+import { BukhariReader } from '../../components/library/BukhariReader';
 
 export const BookReaderPage: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
@@ -26,6 +27,11 @@ export const BookReaderPage: React.FC = () => {
   // If Kanzul Iman, render the dedicated Quran + Kanzul Iman Reader
   if (bookId === 'kanzul-iman') {
     return <KanzulImanReader />;
+  }
+
+  // If Sahih al-Bukhari, render the dedicated authentic 9-volume PDF-style reader
+  if (bookId === 'sahih-al-bukhari') {
+    return <BukhariReader />;
   }
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -55,22 +61,28 @@ export const BookReaderPage: React.FC = () => {
   const chParam = searchParams.get('ch');
 
   const activeVolNum = volParam ? parseInt(volParam, 10) : 1;
+  const bookVolumes = useMemo(() => (book ? getBookVolumes(book) : []), [book]);
 
-  // Collect all available chapters for this book
-  const allChapters = useMemo(() => {
+  // Collect all available chapters for this volume
+  const allChapters: BookChapter[] = useMemo(() => {
     if (!book) return [];
-    if (book.volumes && book.volumes.length > 0) {
-      const vol = book.volumes.find((v) => v.volumeNumber === activeVolNum) || book.volumes[0];
-      return vol?.chapters || [];
+    const vol = bookVolumes.find((v) => v.volumeNumber === activeVolNum) || bookVolumes[0];
+    if (vol?.chapters && vol.chapters.length > 0) {
+      return vol.chapters;
     }
-    return book.sampleChapters || [];
-  }, [book, activeVolNum]);
+    if (book.sampleChapters && book.sampleChapters.length > 0) {
+      const volChapters = book.sampleChapters.filter((c: BookChapter) => c.volumeNumber === activeVolNum);
+      if (volChapters.length > 0) return volChapters;
+      return book.sampleChapters;
+    }
+    return [];
+  }, [book, bookVolumes, activeVolNum]);
 
   // Current active chapter
   const activeChapter: BookChapter | undefined = useMemo(() => {
     if (!allChapters || allChapters.length === 0) return undefined;
     if (chParam) {
-      const found = allChapters.find((c) => c.id === chParam);
+      const found = allChapters.find((c: BookChapter) => c.id === chParam);
       if (found) return found;
     }
     return allChapters[0];
@@ -86,7 +98,7 @@ export const BookReaderPage: React.FC = () => {
   // Current chapter index for Prev/Next
   const currentChapterIndex = useMemo(() => {
     if (!activeChapter || !allChapters) return -1;
-    return allChapters.findIndex((c) => c.id === activeChapter.id);
+    return allChapters.findIndex((c: BookChapter) => c.id === activeChapter.id);
   }, [allChapters, activeChapter]);
 
   const hasPrev = currentChapterIndex > 0;
@@ -363,7 +375,7 @@ export const BookReaderPage: React.FC = () => {
                 maxWidth: 150,
               }}
             >
-              {allChapters.map((ch) => (
+              {allChapters.map((ch: BookChapter) => (
                 <option key={ch.id} value={ch.id}>
                   Ch {ch.chapterNumber}: {ch.title}
                 </option>
@@ -548,6 +560,75 @@ export const BookReaderPage: React.FC = () => {
       {/* Main Chapter Content View */}
       {activeChapter ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          {/* Multi-Volume Quick Switcher Pills */}
+          {bookVolumes.length > 1 && (
+            <div
+              className="card"
+              style={{
+                padding: 'var(--space-3) var(--space-4)',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-2)',
+                overflowX: 'auto',
+                scrollbarWidth: 'thin',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '0.78rem',
+                  fontWeight: 'var(--weight-bold)',
+                  color: 'var(--text-muted)',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  textTransform: 'uppercase',
+                  letterSpacing: 0.5,
+                }}
+              >
+                Select Jild:
+              </span>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap' }}>
+                {bookVolumes.map((vol) => {
+                  const isCurrent = vol.volumeNumber === activeVolNum;
+                  return (
+                    <button
+                      key={vol.id}
+                      type="button"
+                      onClick={() => handleVolumeChange(vol.volumeNumber)}
+                      style={{
+                        padding: '5px 14px',
+                        borderRadius: 'var(--radius-full)',
+                        border: isCurrent
+                          ? isAlahazrat
+                            ? '1px solid var(--brand-gold)'
+                            : '1px solid var(--brand-primary)'
+                          : '1px solid var(--border-subtle)',
+                        backgroundColor: isCurrent
+                          ? isAlahazrat
+                            ? 'rgba(245, 158, 11, 0.18)'
+                            : 'rgba(16, 185, 129, 0.18)'
+                          : 'var(--bg-surface-elevated)',
+                        color: isCurrent
+                          ? isAlahazrat
+                            ? 'var(--brand-gold)'
+                            : 'var(--brand-primary)'
+                          : 'var(--text-secondary)',
+                        fontSize: '0.8rem',
+                        fontWeight: isCurrent ? 'var(--weight-bold)' : 'var(--weight-normal)',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        transition: 'all var(--transition-fast)',
+                      }}
+                    >
+                      Jild {vol.volumeNumber}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Chapter Header Banner */}
           <div
             className="card"

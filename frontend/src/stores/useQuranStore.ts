@@ -16,6 +16,7 @@ import {
   QuranVerseApi,
   QuranChapterInfo,
 } from '../services/quranApiService';
+import { getKanzulImanSurahAudioUrl } from '../data/kanzulImanAudioData';
 
 export interface QuranBookmark {
   type?: 'page' | 'surah' | 'juz' | 'ayah';
@@ -149,6 +150,9 @@ interface QuranState {
   setIsLooping: (loop: boolean) => void;
   setAutoPlayNext: (auto: boolean) => void;
   advanceJuzAyah: () => void;
+  nextAyah: () => void;
+  prevAyah: () => void;
+  playAyah: (surahNumber: number, ayahNumber: number) => void;
 
   // Ayah Audio
   setPlayingAyahKey: (key: string | null) => void;
@@ -502,15 +506,9 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       activeAudioAyah: 1,
       currentSurahNumber: nextSurah,
       currentSurahMeta: nextSurahMeta,
+      audioPlaybackPhase: 'taawwuz',
       playbackTime: 0,
     });
-
-    // Play Bismillah before starting the new Surah (except for Surah 9 At-Tawbah)
-    if (nextSurah !== 9) {
-      set({ audioPlaybackPhase: 'bismillah' });
-    } else {
-      set({ audioPlaybackPhase: 'surah' });
-    }
   },
 
   nextMushafPage: () => {
@@ -536,19 +534,28 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   playSurahAudio: async (surahNumber, reciterId) => {
     const targetSurah = surahNumber || get().currentSurahNumber;
     const targetReciter = reciterId || get().selectedReciterId;
+    const initialAudioUrl = getAudioUrl(targetSurah, targetReciter);
+    const surahMeta = getSurahByNumber(targetSurah);
 
     set({
       playbackType: 'surah',
       activeAudioJuz: null,
       activeAudioSurah: targetSurah,
       activeAudioAyah: 1,
+      currentSurahNumber: targetSurah,
+      currentSurahMeta: surahMeta,
       selectedReciterId: targetReciter,
-      audioRecitationUrl: getAudioUrl(targetSurah, targetReciter),
+      audioRecitationUrl: initialAudioUrl,
       audioPlaybackPhase: 'taawwuz',
       hasUserStartedAudio: true,
       isPlaying: true,
       playbackTime: 0,
     });
+
+    if (targetReciter === 99) {
+      // Kanz-ul-Iman uses direct Archive.org audio
+      return;
+    }
 
     try {
       const audioUrl = await QuranApiService.getChapterRecitationAudio(targetReciter, targetSurah);
@@ -556,9 +563,8 @@ export const useQuranStore = create<QuranState>((set, get) => ({
         set({ audioRecitationUrl: audioUrl });
       }
     } catch {
-      const padded = String(targetSurah).padStart(3, '0');
       if (get().activeAudioSurah === targetSurah) {
-        set({ audioRecitationUrl: `https://server8.mp3quran.net/afs/${padded}.mp3` });
+        set({ audioRecitationUrl: initialAudioUrl });
       }
     }
   },
@@ -583,6 +589,64 @@ export const useQuranStore = create<QuranState>((set, get) => ({
     }
     const prevSurah = activeAudioSurah > 1 ? activeAudioSurah - 1 : 114;
     get().playSurahAudio(prevSurah, selectedReciterId);
+  },
+
+  nextAyah: () => {
+    const { activeAudioSurah, activeAudioAyah, playbackType, selectedReciterId } = get();
+    if (playbackType === 'juz') {
+      get().advanceJuzAyah();
+      return;
+    }
+    const surahMeta = getSurahByNumber(activeAudioSurah);
+    const curAyah = activeAudioAyah || 1;
+    if (curAyah < surahMeta.versesCount) {
+      set({
+        activeAudioAyah: curAyah + 1,
+        audioPlaybackPhase: 'surah',
+        isPlaying: true,
+      });
+    } else if (activeAudioSurah < 114) {
+      get().playSurahAudio(activeAudioSurah + 1, selectedReciterId);
+    }
+  },
+
+  prevAyah: () => {
+    const { activeAudioSurah, activeAudioAyah, selectedReciterId } = get();
+    const curAyah = activeAudioAyah || 1;
+    if (curAyah > 1) {
+      set({
+        activeAudioAyah: curAyah - 1,
+        audioPlaybackPhase: 'surah',
+        isPlaying: true,
+      });
+    } else if (activeAudioSurah > 1) {
+      const prevSurah = activeAudioSurah - 1;
+      const prevMeta = getSurahByNumber(prevSurah);
+      set({
+        activeAudioSurah: prevSurah,
+        activeAudioAyah: prevMeta.versesCount,
+        audioPlaybackPhase: 'surah',
+        isPlaying: true,
+      });
+      get().playSurahAudio(prevSurah, selectedReciterId);
+    }
+  },
+
+  playAyah: (surahNumber: number, ayahNumber: number) => {
+    const targetSurah = surahNumber || get().currentSurahNumber;
+    const surahMeta = getSurahByNumber(targetSurah);
+    const targetAyah = Math.max(1, Math.min(surahMeta.versesCount, ayahNumber));
+    set({
+      playbackType: 'juz',
+      activeAudioSurah: targetSurah,
+      activeAudioAyah: targetAyah,
+      currentSurahNumber: targetSurah,
+      currentSurahMeta: surahMeta,
+      audioPlaybackPhase: 'surah',
+      hasUserStartedAudio: true,
+      isPlaying: true,
+      playbackTime: 0,
+    });
   },
 
   toggleAudioPlay: () => {
@@ -734,26 +798,42 @@ export const useQuranStore = create<QuranState>((set, get) => ({
 
 // Helper function to get audio URL for reciters
 export function getAudioUrl(surahNumber: number, reciterId: number = 7): string {
-  const padded = String(surahNumber).padStart(3, '0');
-  if (reciterId === 2 || reciterId === 1) {
-    return `https://server7.mp3quran.net/basit/${padded}.mp3`;
+  if (reciterId === 99) {
+    return getKanzulImanSurahAudioUrl(surahNumber, 0);
   }
-  if (reciterId === 6 || reciterId === 12) {
-    return `https://server13.mp3quran.net/husr/${padded}.mp3`;
+  const padded = String(surahNumber).padStart(3, '0');
+  if (reciterId === 1) {
+    return `https://download.quranicaudio.com/qdc/abdul_baset/mujawwad/${surahNumber}.mp3`;
+  }
+  if (reciterId === 2) {
+    return `https://download.quranicaudio.com/qdc/abdul_baset/murattal/${surahNumber}.mp3`;
   }
   if (reciterId === 3) {
-    return `https://server11.mp3quran.net/sds/${padded}.mp3`;
-  }
-  if (reciterId === 9 || reciterId === 8) {
-    return `https://server10.mp3quran.net/minsh/${padded}.mp3`;
+    return `https://download.quranicaudio.com/qdc/abdurrahmaan_as_sudais/murattal/${surahNumber}.mp3`;
   }
   if (reciterId === 4) {
-    return `https://server7.mp3quran.net/shatri/${padded}.mp3`;
+    return `https://download.quranicaudio.com/qdc/abu_bakr_shatri/murattal/${surahNumber}.mp3`;
   }
   if (reciterId === 5) {
-    return `https://server8.mp3quran.net/rifai/${padded}.mp3`;
+    return `https://download.quranicaudio.com/qdc/hani_ar_rifai/murattal/${surahNumber}.mp3`;
   }
-  return `https://server8.mp3quran.net/afs/${padded}.mp3`;
+  if (reciterId === 6) {
+    return `https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/${surahNumber}.mp3`;
+  }
+  if (reciterId === 9) {
+    return `https://download.quranicaudio.com/qdc/siddiq_minshawi/murattal/${surahNumber}.mp3`;
+  }
+  if (reciterId === 10) {
+    return `https://download.quranicaudio.com/qdc/saud_ash-shuraym/murattal/${padded}.mp3`;
+  }
+  if (reciterId === 12) {
+    return `https://download.quranicaudio.com/qdc/khalil_al_husary/muallim/${surahNumber}.mp3`;
+  }
+  if (reciterId === 13) {
+    return `https://download.quranicaudio.com/quran/sa3d_al-ghaamidi/complete/${padded}.mp3`;
+  }
+  // Default: Reciter 7 Mishary Rashid Alafasy
+  return `https://download.quranicaudio.com/qdc/mishari_al_afasy/murattal/${surahNumber}.mp3`;
 }
 
 // Helper function to get authentic Ta'awwuz audio for reciters

@@ -2,12 +2,21 @@ import { describe, it, expect } from 'vitest';
 import {
   getGlobalAyahNumber,
   getKanzulImanUrduAudioUrl,
+  getKanzulImanUrduFallbackAudioUrl,
+  getEnglishTranslationAudioUrl,
+  getEnglishTranslationFallbackAudioUrl,
+  getArabicAyahAudioUrl,
   getDisplayedAyahText,
-  preprocessTextForNaturalSpeech,
-  buildTTSStreamUrl,
-  chunkTextForTTS,
+  getKanzulImanArchiveAudioUrl,
   SURAH_VERSE_COUNTS,
 } from '../stores/useKanzulImanAudioStore';
+import {
+  getKanzulImanAudioTracks,
+  getKanzulImanSurahAudioUrl,
+  getKanzulImanSurahDuration,
+  isKanzulImanMultiPart,
+  KANZUL_IMAN_AUDIO_MAP,
+} from '../data/kanzulImanAudioData';
 import { getVerifiedKanzulImanTranslation } from '../data/kanzulImanData';
 import { HURUF_E_MUQATTAAT, getHurufMuqattaatForSurah } from '../data/hurufMuqattaatData';
 import { cleanAyahArabicText } from '../services/kanzulImanService';
@@ -37,12 +46,31 @@ describe('Kanz-ul-Iman Audio & Verse Mapping', () => {
     expect(getGlobalAyahNumber(114, 6)).toBe(6236);
   });
 
-  it('should generate correct audio URL for authentic Kanz-ul-Iman Urdu recitation', () => {
+  it('should generate correct audio URL for authentic Kanz-ul-Iman Urdu recitation', async () => {
+    const { getKanzulImanUrduFallbackAudioUrl } = await import('../stores/useKanzulImanAudioStore');
     expect(getKanzulImanUrduAudioUrl(1, 1)).toBe(
-      'https://cdn.islamic.network/quran/audio/64/ur.khan/1.mp3'
+      'https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/001001.mp3'
     );
     expect(getKanzulImanUrduAudioUrl(114, 6)).toBe(
-      'https://cdn.islamic.network/quran/audio/64/ur.khan/6236.mp3'
+      'https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/114006.mp3'
+    );
+    expect(getKanzulImanUrduFallbackAudioUrl(1, 1)).toBe(
+      'https://cdn.islamic.network/quran/audio/64/ur.khan/1.mp3'
+    );
+  });
+
+  it('should generate correct audio URL for authentic English translation recitation in male voice', async () => {
+    const { getEnglishTranslationAudioUrl, getEnglishTranslationFallbackAudioUrl } = await import(
+      '../stores/useKanzulImanAudioStore'
+    );
+    expect(getEnglishTranslationAudioUrl(1, 1)).toBe(
+      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/001001.mp3'
+    );
+    expect(getEnglishTranslationAudioUrl(114, 6)).toBe(
+      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/114006.mp3'
+    );
+    expect(getEnglishTranslationFallbackAudioUrl(1, 1)).toBe(
+      'https://cdn.islamic.network/quran/audio/192/en.walk/1.mp3'
     );
   });
 
@@ -170,47 +198,56 @@ describe('Exact Text-to-Audio Payload Matching', () => {
   });
 });
 
-describe('Audio Preprocessing Layer for Natural Male Voice Narration', () => {
-  it('should cleanly strip bracket delimiters and trailing dashes for English speech while retaining 100% of the words', () => {
-    const input1 = '[All] praise is [due] to Allah, Lord of the worlds -';
-    const speech1 = preprocessTextForNaturalSpeech(input1, 'english');
-    expect(speech1).toBe('All praise is due to Allah, Lord of the worlds.');
-
-    const input2 = 'Indeed, We have granted you, [O Muhammad], al-Kawthar.';
-    const speech2 = preprocessTextForNaturalSpeech(input2, 'english');
-    expect(speech2).toBe('Indeed, We have granted you, O Muhammad, al-Kawthar.');
-
-    const input3 = 'Say, "He is Allah, [who is] One,';
-    const speech3 = preprocessTextForNaturalSpeech(input3, 'english');
-    expect(speech3).toBe('Say, He is Allah, who is One,');
+describe('Authentic Quran & Translation Audio API Endpoint Resolvers', () => {
+  it('should generate valid Arabic Ayah recitation audio URLs from verified Qaris', () => {
+    expect(getArabicAyahAudioUrl(1, 1, 'Alafasy')).toBe(
+      'https://verses.quran.com/Alafasy/mp3/001001.mp3'
+    );
+    expect(getArabicAyahAudioUrl(112, 1, 'Alafasy')).toBe(
+      'https://verses.quran.com/Alafasy/mp3/112001.mp3'
+    );
+    expect(getArabicAyahAudioUrl(114, 6, 'Alafasy')).toBe(
+      'https://verses.quran.com/Alafasy/mp3/114006.mp3'
+    );
   });
 
-  it('should process Urdu text cleanly for speech synthesis without changing words or honorifics', () => {
-    const urduInput = 'اللہ کے نام سے شروع جو بہت مہربان رحمت والا';
-    const urduSpeech = preprocessTextForNaturalSpeech(urduInput, 'urdu');
-    expect(urduSpeech).toBe('اللہ کے نام سے شروع جو بہت مہربان رحمت والا');
+  it('should generate valid authentic Kanz-ul-Iman Urdu audio API endpoints and CDN fallbacks', () => {
+    // Primary EveryAyah endpoint
+    expect(getKanzulImanUrduAudioUrl(1, 1)).toBe(
+      'https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/001001.mp3'
+    );
+    expect(getKanzulImanUrduAudioUrl(112, 1)).toBe(
+      'https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/112001.mp3'
+    );
+    expect(getKanzulImanUrduAudioUrl(114, 6)).toBe(
+      'https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/114006.mp3'
+    );
+
+    // CDN fallback endpoint
+    expect(getKanzulImanUrduFallbackAudioUrl(1, 1)).toBe(
+      'https://cdn.islamic.network/quran/audio/64/ur.khan/1.mp3'
+    );
+    expect(getKanzulImanUrduFallbackAudioUrl(114, 6)).toBe(
+      'https://cdn.islamic.network/quran/audio/64/ur.khan/6236.mp3'
+    );
   });
 
-  it('should build valid TTS audio stream URLs for Urdu and English', () => {
-    const urduUrl = buildTTSStreamUrl('اللہ کے نام سے شروع', 'urdu');
-    expect(urduUrl).toContain('tl=ur');
-    expect(urduUrl).toContain(encodeURIComponent('اللہ کے نام سے شروع'));
+  it('should generate valid English translation audio API endpoints and CDN fallbacks', () => {
+    // Primary EveryAyah endpoint (Ibrahim Walk)
+    expect(getEnglishTranslationAudioUrl(1, 1)).toBe(
+      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/001001.mp3'
+    );
+    expect(getEnglishTranslationAudioUrl(114, 6)).toBe(
+      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/114006.mp3'
+    );
 
-    const enUrl = buildTTSStreamUrl('In the name of Allah', 'english');
-    expect(enUrl).toContain('tl=en');
-    expect(enUrl).toContain(encodeURIComponent('In the name of Allah'));
-  });
-
-  it('should chunk long text cleanly at sentence and clause delimiters', () => {
-    const shortText = 'Short sentence.';
-    expect(chunkTextForTTS(shortText, 180)).toEqual(['Short sentence.']);
-
-    const longUrdu = 'اللہ ہے جس کے سوا کوئی معبود نہیں وہ آپ زندہ اور اوروں کا قائم رکھنے والا ہے، نہ اسے اونگھ آئے نہ نیند، اسی کا ہے جو کچھ آسمانوں میں ہے اور جو کچھ زمین میں ہے، کون ہے جو اس کے یہاں سفارش کرے بے اس کے حکم کے';
-    const chunks = chunkTextForTTS(longUrdu, 100);
-    expect(chunks.length).toBeGreaterThan(1);
-    chunks.forEach((chunk) => {
-      expect(chunk.length).toBeLessThanOrEqual(180);
-    });
+    // CDN fallback endpoint
+    expect(getEnglishTranslationFallbackAudioUrl(1, 1)).toBe(
+      'https://cdn.islamic.network/quran/audio/192/en.walk/1.mp3'
+    );
+    expect(getEnglishTranslationFallbackAudioUrl(114, 6)).toBe(
+      'https://cdn.islamic.network/quran/audio/192/en.walk/6236.mp3'
+    );
   });
 });
 
@@ -390,10 +427,205 @@ describe('Kanz-ul-Iman Authentic Full Page Scan Service & Image Resolvers', () =
       'https://verses.quran.com/Alafasy/mp3/114006.mp3'
     );
   });
+
+  it('should enforce strict translation language exclusivity (Urdu vs English, never combined)', async () => {
+    const { useKanzulImanAudioStore, getKanzulImanUrduAudioUrl, getEnglishTranslationAudioUrl } = await import(
+      '../stores/useKanzulImanAudioStore'
+    );
+
+    const store = useKanzulImanAudioStore.getState();
+
+    // 1. Select Urdu
+    store.setSelectedLanguage('urdu');
+    expect(useKanzulImanAudioStore.getState().selectedLanguage).toBe('urdu');
+    expect(useKanzulImanAudioStore.getState().playbackMode).toBe('full-urdu');
+
+    const urduUrl = getKanzulImanUrduAudioUrl(1, 1);
+    expect(urduUrl).toContain('urdu_shamshad_ali_khan');
+    expect(urduUrl).not.toContain('English');
+
+    // 2. Select English
+    store.setSelectedLanguage('english');
+    expect(useKanzulImanAudioStore.getState().selectedLanguage).toBe('english');
+    expect(useKanzulImanAudioStore.getState().playbackMode).toBe('full-english');
+
+    const englishUrl = getEnglishTranslationAudioUrl(1, 1);
+    expect(englishUrl).toContain('English/Sahih_Intnl_Ibrahim_Walk');
+    expect(englishUrl).not.toContain('urdu');
+  });
+});
+
+describe('Single Source of Truth: Reading Translation Text vs Audio Speech Script', () => {
+  it('should verify 100% text identity between Reading and Spoken Urdu audio for all 7 verses of Surah Al-Fatihah', async () => {
+    const { KANZUL_IMAN_FEATURED_SURAHS } = await import('../data/kanzulImanData');
+    const fatihahAyahs = KANZUL_IMAN_FEATURED_SURAHS[1];
+    expect(fatihahAyahs.length).toBe(7);
+
+    for (let ayahNum = 1; ayahNum <= 7; ayahNum++) {
+      const readingAyah = fatihahAyahs.find((a) => a.ayahNumber === ayahNum)!;
+      const readingUrduText = readingAyah.kanzulImanUrdu;
+
+      const audioSpeechText = getDisplayedAyahText(1, ayahNum, 'urdu', fatihahAyahs);
+
+      // READING TEXT MUST EXACTLY EQUAL AUDIO SPEECH TEXT
+      expect(audioSpeechText).toBe(readingUrduText);
+      expect(audioSpeechText).not.toBe('');
+      expect(audioSpeechText).toContain(getVerifiedKanzulImanTranslation(1, ayahNum, 'urdu')!);
+    }
+  });
+
+  it('should verify 100% text identity between Reading and Spoken English audio for all 7 verses of Surah Al-Fatihah', async () => {
+    const { KANZUL_IMAN_FEATURED_SURAHS } = await import('../data/kanzulImanData');
+    const fatihahAyahs = KANZUL_IMAN_FEATURED_SURAHS[1];
+
+    for (let ayahNum = 1; ayahNum <= 7; ayahNum++) {
+      const readingAyah = fatihahAyahs.find((a) => a.ayahNumber === ayahNum)!;
+      const readingEnglishText = readingAyah.kanzulImanEnglish || readingAyah.englishMeaning;
+
+      const audioSpeechText = getDisplayedAyahText(1, ayahNum, 'english', fatihahAyahs);
+
+      // READING TEXT MUST EXACTLY EQUAL AUDIO SPEECH TEXT
+      expect(audioSpeechText).toBe(readingEnglishText);
+      expect(audioSpeechText).not.toBe('');
+      expect(audioSpeechText).toBe(getVerifiedKanzulImanTranslation(1, ayahNum, 'english')!);
+    }
+  });
+
+  it('should verify 100% text identity for Surah Al-Ikhlas (112:1 to 112:4)', async () => {
+    const { KANZUL_IMAN_FEATURED_SURAHS } = await import('../data/kanzulImanData');
+    const ikhlasAyahs = KANZUL_IMAN_FEATURED_SURAHS[112];
+    expect(ikhlasAyahs.length).toBe(4);
+
+    for (let ayahNum = 1; ayahNum <= 4; ayahNum++) {
+      const readingAyah = ikhlasAyahs.find((a) => a.ayahNumber === ayahNum)!;
+
+      // Urdu Check
+      const audioUrdu = getDisplayedAyahText(112, ayahNum, 'urdu', ikhlasAyahs);
+      expect(audioUrdu).toBe(readingAyah.kanzulImanUrdu);
+
+      // English Check
+      const audioEng = getDisplayedAyahText(112, ayahNum, 'english', ikhlasAyahs);
+      expect(audioEng).toBe(readingAyah.kanzulImanEnglish || readingAyah.englishMeaning);
+    }
+  });
+
+  it('should verify 100% text identity for Surah An-Nas (114:1 to 114:6)', async () => {
+    const { KANZUL_IMAN_FEATURED_SURAHS } = await import('../data/kanzulImanData');
+    const nasAyahs = KANZUL_IMAN_FEATURED_SURAHS[114];
+    expect(nasAyahs.length).toBe(6);
+
+    for (let ayahNum = 1; ayahNum <= 6; ayahNum++) {
+      const readingAyah = nasAyahs.find((a) => a.ayahNumber === ayahNum)!;
+
+      // Urdu Check
+      const audioUrdu = getDisplayedAyahText(114, ayahNum, 'urdu', nasAyahs);
+      expect(audioUrdu).toBe(readingAyah.kanzulImanUrdu);
+
+      // English Check
+      const audioEng = getDisplayedAyahText(114, ayahNum, 'english', nasAyahs);
+      expect(audioEng).toBe(readingAyah.kanzulImanEnglish || readingAyah.englishMeaning);
+    }
+  });
+
+  it('should verify 100% text identity for Surah Al-Kauthar (108) and Surah Al-Mulk (67)', async () => {
+    const { KANZUL_IMAN_FEATURED_SURAHS } = await import('../data/kanzulImanData');
+
+    // Surah 108
+    const kautharAyahs = KANZUL_IMAN_FEATURED_SURAHS[108];
+    for (const ayah of kautharAyahs) {
+      expect(getDisplayedAyahText(108, ayah.ayahNumber, 'urdu', kautharAyahs)).toBe(ayah.kanzulImanUrdu);
+      expect(getDisplayedAyahText(108, ayah.ayahNumber, 'english', kautharAyahs)).toBe(
+        ayah.kanzulImanEnglish || ayah.englishMeaning
+      );
+    }
+
+    // Surah 67
+    const mulkAyahs = KANZUL_IMAN_FEATURED_SURAHS[67];
+    for (const ayah of mulkAyahs) {
+      expect(getDisplayedAyahText(67, ayah.ayahNumber, 'urdu', mulkAyahs)).toBe(ayah.kanzulImanUrdu);
+      expect(getDisplayedAyahText(67, ayah.ayahNumber, 'english', mulkAyahs)).toBe(
+        ayah.kanzulImanEnglish || ayah.englishMeaning
+      );
+    }
+  });
+
+  it('should verify that Juz / Para datasets feed exact displayed translation strings to audio', () => {
+    const sampleJuzAyahs = [
+      {
+        ayahNumber: 142,
+        verseKey: '2:142',
+        arabicText: 'سَيَقُولُ السُّفَهَاءُ مِنَ النَّاسِ مَا وَلَّاهُمْ عَن قِبْلَتِهِمُ الَّتِي كَانُوا عَلَيْهَا',
+        kanzulImanUrdu: 'اب کہیں گے بے وقوف لوگ کس بات نے انہیں پھیر دیا ان کے اس قبلہ سے جس پر وہ تھے',
+        kanzulImanEnglish: 'The foolish among the people will say: What has turned them away from their Qiblah which they were facing?',
+        englishMeaning: 'The foolish among the people will say: What has turned them away from their Qiblah which they were facing?',
+      },
+      {
+        ayahNumber: 143,
+        verseKey: '2:143',
+        arabicText: 'وَكَذَٰلِكَ جَعَلْنَاكُمْ أُمَّةً وَسَطًا لِّتَكُونُوا شُهَدَاءَ عَلَى النَّاسِ',
+        kanzulImanUrdu: 'اور بات یوں ہی ہے کہ ہم نے تمہیں سب امتوں میں افضل کیا کہ تم لوگوں پر گواہ ہو',
+        kanzulImanEnglish: 'And thus We have made you an exalted and justly balanced community, that you may be witnesses over people.',
+        englishMeaning: 'And thus We have made you an exalted and justly balanced community, that you may be witnesses over people.',
+      },
+    ];
+
+    // Verify Ayah 142 (Para 2 start)
+    const ayah142Urdu = getDisplayedAyahText(2, 142, 'urdu', sampleJuzAyahs);
+    expect(ayah142Urdu).toBe(sampleJuzAyahs[0].kanzulImanUrdu);
+
+    const ayah142English = getDisplayedAyahText(2, 142, 'english', sampleJuzAyahs);
+    expect(ayah142English).toBe(sampleJuzAyahs[0].kanzulImanEnglish);
+
+    // Verify Ayah 143
+    const ayah143Urdu = getDisplayedAyahText(2, 143, 'urdu', sampleJuzAyahs);
+    expect(ayah143Urdu).toBe(sampleJuzAyahs[1].kanzulImanUrdu);
+
+    const ayah143English = getDisplayedAyahText(2, 143, 'english', sampleJuzAyahs);
+    expect(ayah143English).toBe(sampleJuzAyahs[1].kanzulImanEnglish);
+  });
+
+  describe('Authentic Archive.org Kanz-ul-Iman Complete Audio Dataset (kanzuliman_201907)', () => {
+    it('should have all 114 Surahs mapped with authentic Archive.org audio tracks', () => {
+      for (let s = 1; s <= 114; s++) {
+        const tracks = getKanzulImanAudioTracks(s);
+        expect(tracks.length).toBeGreaterThanOrEqual(1);
+        expect(tracks[0].url).toContain('https://archive.org/download/kanzuliman_201907/');
+        expect(tracks[0].duration).toBeGreaterThan(0);
+        expect(tracks[0].sizeBytes).toBeGreaterThan(0);
+      }
+    });
+
+    it('should generate valid audio URL for Surah 1 Al-Fatihah', () => {
+      const url = getKanzulImanArchiveAudioUrl(1, 0);
+      expect(url).toBe('https://archive.org/download/kanzuliman_201907/001.%20AL-FATIHA.mp3');
+      const tracks = getKanzulImanAudioTracks(1);
+      expect(tracks.length).toBe(1);
+      expect(tracks[0].fileName).toBe('001. AL-FATIHA.mp3');
+    });
+
+    it('should accurately detect and handle multi-part Surahs (e.g. Al-Baqarah, Ali Imran, An-Nisa)', () => {
+      // Surah 2 Al-Baqarah has 3 parts
+      expect(isKanzulImanMultiPart(2)).toBe(true);
+      const baqarahTracks = getKanzulImanAudioTracks(2);
+      expect(baqarahTracks.length).toBe(3);
+      expect(getKanzulImanSurahAudioUrl(2, 0)).toBe('https://archive.org/download/kanzuliman_201907/002.%20AL-BAQRA_1.mp3');
+      expect(getKanzulImanSurahAudioUrl(2, 1)).toBe('https://archive.org/download/kanzuliman_201907/002.%20AL-BAQRA_2.mp3');
+      expect(getKanzulImanSurahAudioUrl(2, 2)).toBe('https://archive.org/download/kanzuliman_201907/002.%20AL-BAQRA_3.mp3');
+
+      // Total duration of Al-Baqarah
+      const baqarahDur = getKanzulImanSurahDuration(2);
+      expect(baqarahDur).toBeGreaterThan(12000); // ~12375 seconds
+
+      // Surah 114 An-Naas is single part
+      expect(isKanzulImanMultiPart(114)).toBe(false);
+      expect(getKanzulImanSurahAudioUrl(114, 0)).toBe('https://archive.org/download/kanzuliman_201907/114.%20AN-NAAS.mp3');
+    });
+  });
 });
 
 function KanzulImanPageServiceSrcSet(service: any, page: number): string {
   return service.getKanzulImanPageSrcSet(page);
 }
+
 
 

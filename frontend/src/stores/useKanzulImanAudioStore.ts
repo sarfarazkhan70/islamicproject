@@ -1,16 +1,12 @@
 /**
  * Kanzul Iman Translation & Recitation Audio Store — Single Source of Truth Engine
  * ==============================================================================
- * Guarantees synchronized Ayah-by-Ayah playback:
- * 1. Arabic Ayah Recitation (Selected Qari e.g. Mishary Rashid Alafasy)
- * 2. Translation Audio (Urdu Kanz-ul-Iman / English) in MALE VOICE ONLY
- * 3. Next Arabic Ayah -> Next Translation Audio ...
- *
- * Strictly adheres to:
- * - Urdu: Authentic Kanz-ul-Iman by Imam Ahmad Raza Khan Ala Hazrat (رحمۃ اللہ علیہ)
- * - English: Verified English Translation (Saheeh International / Shah Farid-ul-Haque)
- * - Zero word substitutions, zero paraphrasing, zero missing or added words.
- * - Male Voice Only (strict keyword blocking of female voices across Web Speech & Streams)
+ * Guarantees authentic playback:
+ * 1. Urdu: Complete Authentic Kanz-ul-Iman (Ala Hazrat Imam Ahmad Raza Khan) from
+ *    Internet Archive (kanzuliman_201907 / Paigham-e-Raza) covering all 114 Surahs
+ *    with multi-part support (e.g., Al-Baqarah Parts 1-3).
+ * 2. English: Verified English Translation Recitation (Ibrahim Walk / Saheeh Intnl)
+ *    Ayah-by-Ayah with Arabic recitation (Selected Qari e.g. Mishary Rashid Alafasy).
  * ==============================================================================
  */
 
@@ -18,6 +14,15 @@ import { create } from 'zustand';
 import { SURAHS_LIST, JUZ_LIST, QURAN_COM_RECITERS } from '../data/quranData';
 import { getVerifiedKanzulImanTranslation } from '../data/kanzulImanData';
 import { KanzulImanService, KanzulImanAyah } from '../services/kanzulImanService';
+import {
+  KanzulImanAudioTrack,
+  getKanzulImanAudioTracks,
+  getKanzulImanSurahAudioUrl,
+  getKanzulImanSurahDuration,
+  isKanzulImanMultiPart,
+} from '../data/kanzulImanAudioData';
+
+export { getKanzulImanSurahDuration, isKanzulImanMultiPart, getKanzulImanAudioTracks };
 
 export const SURAH_VERSE_COUNTS: number[] = [
   7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128,
@@ -38,11 +43,50 @@ export function getGlobalAyahNumber(surahNumber: number, ayahNumberInSurah: numb
   return globalNum + ayahNumberInSurah;
 }
 
+/**
+ * Primary authentic Kanz-ul-Iman Urdu recitation audio URL by Shamshad Ali Khan (EveryAyah format)
+ */
 export function getKanzulImanUrduAudioUrl(surahNumber: number, ayahNumberInSurah: number): string {
+  const paddedSurah = String(surahNumber).padStart(3, '0');
+  const paddedAyah = String(ayahNumberInSurah).padStart(3, '0');
+  return `https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/${paddedSurah}${paddedAyah}.mp3`;
+}
+
+/**
+ * Secondary CDN fallback for authentic Kanz-ul-Iman Urdu recitation
+ */
+export function getKanzulImanUrduFallbackAudioUrl(surahNumber: number, ayahNumberInSurah: number): string {
   const globalAyahNum = getGlobalAyahNumber(surahNumber, ayahNumberInSurah);
   return `https://cdn.islamic.network/quran/audio/64/ur.khan/${globalAyahNum}.mp3`;
 }
 
+/**
+ * Direct Internet Archive Authentic Kanz-ul-Iman Surah Audio URL
+ */
+export function getKanzulImanArchiveAudioUrl(surahNumber: number, partIndex: number = 0): string {
+  return getKanzulImanSurahAudioUrl(surahNumber, partIndex);
+}
+
+/**
+ * Primary authentic English translation recitation audio URL by Ibrahim Walk (Male voice)
+ */
+export function getEnglishTranslationAudioUrl(surahNumber: number, ayahNumberInSurah: number): string {
+  const paddedSurah = String(surahNumber).padStart(3, '0');
+  const paddedAyah = String(ayahNumberInSurah).padStart(3, '0');
+  return `https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/${paddedSurah}${paddedAyah}.mp3`;
+}
+
+/**
+ * Secondary CDN fallback for English translation recitation
+ */
+export function getEnglishTranslationFallbackAudioUrl(surahNumber: number, ayahNumberInSurah: number): string {
+  const globalAyahNum = getGlobalAyahNumber(surahNumber, ayahNumberInSurah);
+  return `https://cdn.islamic.network/quran/audio/192/en.walk/${globalAyahNum}.mp3`;
+}
+
+/**
+ * Arabic Ayah recitation URL from verified Quran reciters (e.g. Alafasy)
+ */
 export function getArabicAyahAudioUrl(surahNumber: number, ayahNumberInSurah: number, reciterSlug: string = 'Alafasy'): string {
   const paddedSurah = String(surahNumber).padStart(3, '0');
   const paddedAyah = String(ayahNumberInSurah).padStart(3, '0');
@@ -72,11 +116,17 @@ interface KanzulImanAudioState {
   currentAyahs: KanzulImanAyah[];
   isLoadingAyahs: boolean;
 
+  // Multi-part Track State
+  currentPartIndex: number;
+  totalPartsInSurah: number;
+  currentTrackTitle: string;
+  currentTracks: KanzulImanAudioTrack[];
+
   // Active Playback State
   playingAyahKey: string | null; // e.g. "1:1"
   playingLanguage: TranslationLanguage | null;
   playbackPhase: PlaybackPhase;
-  playbackMode: 'single' | 'full-urdu' | 'full-english' | 'full-both';
+  playbackMode: 'single' | 'full-urdu' | 'full-english';
   selectedLanguage: TranslationLanguage;
   selectedReciterId: number;
   isPlaying: boolean;
@@ -97,11 +147,13 @@ interface KanzulImanAudioState {
   setAudioVolume: (volume: number) => void;
   setAutoPlay: (enabled: boolean) => void;
   toggleAutoPlay: () => void;
+  setPartIndex: (partIndex: number) => void;
 
   // Flow Triggers
   loadSurahData: (surahNumber: number) => Promise<void>;
   loadJuzData: (juzNumber: number) => Promise<void>;
   playSurah: (surahNumber: number, startAyah?: number, lang?: TranslationLanguage) => Promise<void>;
+  playKanzulImanSurah: (surahNumber: number, partIndex?: number) => void;
   playJuz: (juzNumber: number, startSurah?: number, startAyah?: number, lang?: TranslationLanguage) => Promise<void>;
   playAyah: (surahNumber: number, ayahNumber: number, startPhase?: PlaybackPhase) => void;
   togglePlay: () => void;
@@ -111,12 +163,15 @@ interface KanzulImanAudioState {
   stopAudio: () => void;
   nextAyah: () => void;
   prevAyah: () => void;
+  nextTrack: () => void;
+  prevTrack: () => void;
   seekAudio: (seconds: number) => void;
+  skipTime: (seconds: number) => void;
 
   // Backward compatibility methods
   playFullSurah: (
     surahNumber: number,
-    mode?: 'full-urdu' | 'full-english' | 'full-both',
+    mode?: 'full-urdu' | 'full-english',
     maxAyahs?: number,
     textAyahs?: any[]
   ) => void;
@@ -156,96 +211,11 @@ function getStoredLanguage(): TranslationLanguage {
   return 'urdu';
 }
 
-// Female voice keywords to strictly avoid across all OS & browsers
-const FEMALE_VOICE_KEYWORDS = [
-  'female', 'woman', 'girl', 'zira', 'heera', 'hazel', 'susan', 'linda', 'catherine',
-  'sara', 'sarah', 'aria', 'jenny', 'samantha', 'victoria', 'karen', 'moira', 'fiona',
-  'tessa', 'veena', 'neerja', 'swara', 'zarvox', 'kavya', 'priya', 'ananya', 'kalpana',
-  'gul', 'uzma', 'aisha', 'fatima', 'zehra', 'yasmin', 'shabnam', 'rabia', 'mariam',
-  'maryam', 'sana', 'hina', 'nida', 'fariha', 'zohra', 'pooja', 'lekha', 'chitra',
-  'meera', 'shruti', 'alva', 'kanya'
-];
-
-// Male voice indicators to prioritize
-const MALE_VOICE_KEYWORDS = [
-  'male', 'man', 'guy', 'david', 'christopher', 'mark', 'george', 'richard', 'james',
-  'brian', 'ryan', 'asad', 'salman', 'tariq', 'hamza', 'bilal', 'usman', 'hemant',
-  'madhav', 'ravi', 'shakir', 'hamed', 'naayf', 'natural (male)', 'male (natural)'
-];
-
-function isFemaleVoice(voice: SpeechSynthesisVoice): boolean {
-  const name = voice.name.toLowerCase();
-  return FEMALE_VOICE_KEYWORDS.some((kw) => name.includes(kw));
-}
-
-function isMaleVoice(voice: SpeechSynthesisVoice): boolean {
-  const name = voice.name.toLowerCase();
-  return MALE_VOICE_KEYWORDS.some((kw) => name.includes(kw)) && !isFemaleVoice(voice);
-}
-
-// Audio Element & Speech Synthesis Controllers
+// Audio Element Controller (Pure HTML5 Audio streaming from authentic audio endpoints)
 let activeHtmlAudio: HTMLAudioElement | null = null;
-let currentAudioChunks: string[] = [];
-let currentAudioChunkIndex = 0;
-
-let activeSpeechUtterance: SpeechSynthesisUtterance | null = null;
-let speechHeartbeatTimer: ReturnType<typeof setInterval> | null = null;
-let voicesLoaded = false;
-let cachedVoices: SpeechSynthesisVoice[] = [];
-
-function loadVoices() {
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    cachedVoices = window.speechSynthesis.getVoices();
-    if (cachedVoices.length > 0) {
-      voicesLoaded = true;
-    }
-  }
-}
-
-if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-  loadVoices();
-  window.speechSynthesis.onvoiceschanged = () => {
-    loadVoices();
-  };
-}
 
 /**
- * Builds direct high-quality audio stream URL for exact text translation
- */
-export function buildTTSStreamUrl(text: string, language: TranslationLanguage): string {
-  const langCode = language === 'urdu' ? 'ur' : 'en';
-  return `https://translate.google.com/translate_tts?ie=UTF-8&tl=${langCode}&client=tw-ob&q=${encodeURIComponent(text)}`;
-}
-
-/**
- * Chunks long text at natural sentence and clause boundaries
- */
-export function chunkTextForTTS(text: string, maxLen: number = 180): string[] {
-  if (!text) return [];
-  if (text.length <= maxLen) return [text.trim()];
-
-  const chunks: string[] = [];
-  let current = '';
-  const parts = text.split(/([،,۔.؛;!?\n]+)/);
-
-  for (const part of parts) {
-    if ((current + part).length > maxLen && current.trim()) {
-      chunks.push(current.trim());
-      current = part;
-    } else {
-      current += part;
-    }
-  }
-
-  if (current.trim()) {
-    chunks.push(current.trim());
-  }
-
-  return chunks.filter((c) => c.length > 0);
-}
-
-/**
- * Completely stops all audio (both HTML5 Audio and Web Speech synthesis)
+ * Completely stops any active HTML5 audio playback and cleans up event listeners
  */
 function stopAnyAudio() {
   if (activeHtmlAudio) {
@@ -260,97 +230,6 @@ function stopAnyAudio() {
       activeHtmlAudio.ontimeupdate = null;
       activeHtmlAudio.onloadedmetadata = null;
     } catch {}
-  }
-  currentAudioChunks = [];
-  currentAudioChunkIndex = 0;
-
-  if (speechHeartbeatTimer) {
-    clearInterval(speechHeartbeatTimer);
-    speechHeartbeatTimer = null;
-  }
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    try {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.resume();
-    } catch {}
-  }
-  if (activeSpeechUtterance) {
-    activeSpeechUtterance.onstart = null;
-    activeSpeechUtterance.onend = null;
-    activeSpeechUtterance.onerror = null;
-  }
-  activeSpeechUtterance = null;
-  if (typeof window !== 'undefined') {
-    (window as any).__activeUtterance = null;
-  }
-}
-
-/**
- * Returns a high-quality respectful MALE voice for the selected language.
- * Strictly avoids returning any female voice.
- */
-function getBestMaleVoiceForLanguage(language: TranslationLanguage): SpeechSynthesisVoice | null {
-  if (!voicesLoaded) {
-    loadVoices();
-  }
-  if (!cachedVoices || cachedVoices.length === 0) return null;
-
-  if (language === 'urdu') {
-    const maleUrduVoice = cachedVoices.find(
-      (v) => v.lang.toLowerCase().startsWith('ur') && isMaleVoice(v)
-    );
-    if (maleUrduVoice) return maleUrduVoice;
-
-    const nonFemaleUrdu = cachedVoices.find(
-      (v) => v.lang.toLowerCase().startsWith('ur') && !isFemaleVoice(v)
-    );
-    if (nonFemaleUrdu) return nonFemaleUrdu;
-
-    const maleHindiVoice = cachedVoices.find(
-      (v) => v.lang.toLowerCase().startsWith('hi') && isMaleVoice(v)
-    );
-    if (maleHindiVoice) return maleHindiVoice;
-
-    const nonFemaleHindi = cachedVoices.find(
-      (v) => v.lang.toLowerCase().startsWith('hi') && !isFemaleVoice(v)
-    );
-    if (nonFemaleHindi) return nonFemaleHindi;
-
-    return null;
-  } else {
-    const maleEnglishVoice = cachedVoices.find(
-      (v) => v.lang.toLowerCase().startsWith('en') && isMaleVoice(v)
-    );
-    if (maleEnglishVoice) return maleEnglishVoice;
-
-    const nonFemaleEnglish = cachedVoices.find(
-      (v) => v.lang.toLowerCase().startsWith('en') && !isFemaleVoice(v)
-    );
-    if (nonFemaleEnglish) return nonFemaleEnglish;
-
-    return null;
-  }
-}
-
-/**
- * Prepares displayed translation text for natural, dignified speech synthesis
- */
-export function preprocessTextForNaturalSpeech(rawText: string, language: TranslationLanguage): string {
-  if (!rawText) return '';
-  let text = rawText.trim();
-
-  if (language === 'english') {
-    text = text.replace(/\[\s*([^\]]+?)\s*\]/g, '$1');
-    text = text.replace(/[""“”]/g, '');
-    text = text.replace(/\s*[-—–]\s*$/g, '.');
-    text = text.replace(/\s+[-—–]\s+/g, ', ');
-    text = text.replace(/\s+/g, ' ').trim();
-    return text;
-  } else {
-    text = text.replace(/[\[\]]/g, '');
-    text = text.replace(/\s*[-—–]\s*$/g, '۔');
-    text = text.replace(/\s+/g, ' ').trim();
-    return text;
   }
 }
 
@@ -378,6 +257,8 @@ export function getDisplayedAyahText(
 }
 
 export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) => {
+  const initialSurahTracks = getKanzulImanAudioTracks(1);
+
   return {
     playbackScope: 'surah',
     currentSurahNumber: 1,
@@ -387,10 +268,15 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     currentAyahs: [],
     isLoadingAyahs: false,
 
+    currentPartIndex: 0,
+    totalPartsInSurah: initialSurahTracks.length,
+    currentTrackTitle: initialSurahTracks[0]?.title || 'AL-FATIHA',
+    currentTracks: initialSurahTracks,
+
     playingAyahKey: null,
     playingLanguage: getStoredLanguage(),
     playbackPhase: 'idle',
-    playbackMode: 'single',
+    playbackMode: getStoredLanguage() === 'english' ? 'full-english' : 'full-urdu',
     selectedLanguage: getStoredLanguage(),
     selectedReciterId: 7, // Mishary Rashid Alafasy
     isPlaying: false,
@@ -399,7 +285,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     playbackSpeed: 1.0,
     audioVolume: 0.9,
     playbackTime: 0,
-    playbackDuration: 0,
+    playbackDuration: initialSurahTracks[0]?.duration || 83.72,
     playbackProgress: 0,
     audioError: null,
 
@@ -425,18 +311,25 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       try {
         localStorage.setItem(LANG_STORAGE_KEY, lang);
       } catch {}
-      set({ selectedLanguage: lang });
-      // If currently playing translation, seamlessly restart with new language
-      const { isPlaying, playbackPhase, currentSurahNumber, currentAyahNumber } = get();
-      if (isPlaying && playbackPhase === 'translation') {
-        get().playAyah(currentSurahNumber, currentAyahNumber, 'translation');
+      set({
+        selectedLanguage: lang,
+        playingLanguage: lang,
+        playbackMode: lang === 'english' ? 'full-english' : 'full-urdu',
+      });
+      const { isPlaying, currentSurahNumber, currentPartIndex } = get();
+      if (isPlaying) {
+        if (lang === 'urdu') {
+          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex);
+        } else {
+          get().playAyah(currentSurahNumber, 1, 'arabic');
+        }
       }
     },
 
     setSelectedReciterId: (reciterId) => {
       set({ selectedReciterId: reciterId });
-      const { isPlaying, playbackPhase, currentSurahNumber, currentAyahNumber } = get();
-      if (isPlaying && playbackPhase === 'arabic') {
+      const { isPlaying, playbackPhase, currentSurahNumber, currentAyahNumber, selectedLanguage } = get();
+      if (isPlaying && selectedLanguage === 'english' && playbackPhase === 'arabic') {
         get().playAyah(currentSurahNumber, currentAyahNumber, 'arabic');
       }
     },
@@ -468,9 +361,20 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       get().setAutoPlay(next);
     },
 
+    setPartIndex: (partIndex) => {
+      const { currentSurahNumber } = get();
+      get().playKanzulImanSurah(currentSurahNumber, partIndex);
+    },
+
     loadSurahData: async (surahNumber) => {
       const validNum = Math.max(1, Math.min(114, surahNumber));
-      set({ isLoadingAyahs: true, currentSurahNumber: validNum });
+      const tracks = getKanzulImanAudioTracks(validNum);
+      set({
+        isLoadingAyahs: true,
+        currentSurahNumber: validNum,
+        currentTracks: tracks,
+        totalPartsInSurah: tracks.length,
+      });
       try {
         const res = await KanzulImanService.getSurah(validNum);
         set({
@@ -490,9 +394,12 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       try {
         const ayahs = await KanzulImanService.getJuz(validNum);
         const firstSurah = ayahs.length > 0 ? parseInt(ayahs[0].verseKey.split(':')[0], 10) : 1;
+        const tracks = getKanzulImanAudioTracks(firstSurah);
         set({
           currentAyahs: ayahs,
           currentSurahNumber: firstSurah,
+          currentTracks: tracks,
+          totalPartsInSurah: tracks.length,
           isLoadingAyahs: false,
         });
       } catch (err) {
@@ -503,18 +410,131 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
 
     playSurah: async (surahNumber, startAyah = 1, lang) => {
       const targetLang = lang || get().selectedLanguage;
+      const tracks = getKanzulImanAudioTracks(surahNumber);
       set({
         playbackScope: 'surah',
         currentSurahNumber: surahNumber,
         currentAyahNumber: startAyah,
         selectedLanguage: targetLang,
+        playingLanguage: targetLang,
+        currentTracks: tracks,
+        totalPartsInSurah: tracks.length,
+        currentPartIndex: 0,
       });
 
       if (get().currentAyahs.length === 0 || get().currentSurahNumber !== surahNumber) {
         await get().loadSurahData(surahNumber);
       }
 
-      get().playAyah(surahNumber, startAyah, 'arabic');
+      if (targetLang === 'urdu') {
+        get().playKanzulImanSurah(surahNumber, 0);
+      } else {
+        get().playAyah(surahNumber, startAyah, 'arabic');
+      }
+    },
+
+    playKanzulImanSurah: (surahNumber: number, partIndex: number = 0) => {
+      stopAnyAudio();
+      const validSurah = Math.max(1, Math.min(114, surahNumber));
+      const tracks = getKanzulImanAudioTracks(validSurah);
+      const validPart = Math.max(0, Math.min(tracks.length - 1, partIndex));
+      const track = tracks[validPart] || tracks[0];
+
+      if (!track) {
+        set({ audioError: 'Audio track not found.' });
+        return;
+      }
+
+      const surahMeta = SURAHS_LIST.find((s) => s.number === validSurah);
+      const totalAyahs = surahMeta?.versesCount || SURAH_VERSE_COUNTS[validSurah - 1] || 7;
+
+      set({
+        playbackScope: 'surah',
+        currentSurahNumber: validSurah,
+        currentPartIndex: validPart,
+        totalPartsInSurah: tracks.length,
+        currentTrackTitle: track.title,
+        currentTracks: tracks,
+        playingAyahKey: `${validSurah}:1`,
+        playingLanguage: 'urdu',
+        selectedLanguage: 'urdu',
+        maxAyahsInSurah: totalAyahs,
+        playbackPhase: 'translation',
+        isPlaying: true,
+        isLoading: true,
+        audioError: null,
+        playbackTime: 0,
+        playbackDuration: track.duration || 0,
+        playbackProgress: 0,
+      });
+
+      if (!activeHtmlAudio) {
+        activeHtmlAudio = new Audio();
+      }
+
+      activeHtmlAudio.src = track.url;
+      activeHtmlAudio.playbackRate = get().playbackSpeed || 1.0;
+      activeHtmlAudio.volume = get().audioVolume;
+
+      activeHtmlAudio.onplay = () => {
+        set({ isPlaying: true, isLoading: false, audioError: null });
+      };
+
+      activeHtmlAudio.onpause = () => {
+        if (activeHtmlAudio && !activeHtmlAudio.ended) {
+          set({ isPlaying: false });
+        }
+      };
+
+      activeHtmlAudio.ontimeupdate = () => {
+        if (activeHtmlAudio && activeHtmlAudio.duration) {
+          const cur = activeHtmlAudio.currentTime;
+          const dur = activeHtmlAudio.duration;
+          set({
+            playbackTime: cur,
+            playbackDuration: dur,
+            playbackProgress: dur > 0 ? cur / dur : 0,
+          });
+        }
+      };
+
+      activeHtmlAudio.onloadedmetadata = () => {
+        if (activeHtmlAudio && activeHtmlAudio.duration) {
+          set({ playbackDuration: activeHtmlAudio.duration });
+        }
+      };
+
+      activeHtmlAudio.onended = () => {
+        const { currentPartIndex, totalPartsInSurah, currentSurahNumber, isAutoPlay } = get();
+        // If there's another part for this Surah (e.g. Al-Baqarah Part 2), play it next
+        if (currentPartIndex + 1 < totalPartsInSurah) {
+          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
+        } else if (isAutoPlay && currentSurahNumber < 114) {
+          // Advance to next Surah
+          get().playSurah(currentSurahNumber + 1, 1, 'urdu');
+        } else {
+          set({ isPlaying: false, playbackProgress: 1, playbackTime: get().playbackDuration });
+        }
+      };
+
+      activeHtmlAudio.onerror = (e) => {
+        console.error('Kanzul Iman audio stream error:', e);
+        set({
+          isPlaying: false,
+          isLoading: false,
+          audioError: 'Kanz-ul-Iman audio stream failed to load. Please click retry.',
+        });
+      };
+
+      const playPromise = activeHtmlAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          if (err.name !== 'AbortError') {
+            console.warn('Audio play request failed or interrupted:', err);
+            set({ isPlaying: false, isLoading: false });
+          }
+        });
+      }
     },
 
     playJuz: async (juzNumber, startSurah, startAyah, lang) => {
@@ -522,6 +542,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       const juzMeta = JUZ_LIST[juzNumber - 1] || JUZ_LIST[0];
       const sNum = startSurah || juzMeta.startSurah;
       const aNum = startAyah || juzMeta.startAyah;
+      const tracks = getKanzulImanAudioTracks(sNum);
 
       set({
         playbackScope: 'juz',
@@ -529,10 +550,18 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         currentSurahNumber: sNum,
         currentAyahNumber: aNum,
         selectedLanguage: targetLang,
+        playingLanguage: targetLang,
+        currentTracks: tracks,
+        totalPartsInSurah: tracks.length,
+        currentPartIndex: 0,
       });
 
       await get().loadJuzData(juzNumber);
-      get().playAyah(sNum, aNum, 'arabic');
+      if (targetLang === 'urdu') {
+        get().playKanzulImanSurah(sNum, 0);
+      } else {
+        get().playAyah(sNum, aNum, 'arabic');
+      }
     },
 
     playAyah: (surahNumber, ayahNumber, startPhase = 'arabic') => {
@@ -541,9 +570,11 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       const surahMeta = SURAHS_LIST.find((s) => s.number === surahNumber);
       const totalAyahs = surahMeta?.versesCount || SURAH_VERSE_COUNTS[surahNumber - 1] || 7;
       const verseKey = `${surahNumber}:${ayahNumber}`;
+      const { selectedLanguage, playbackSpeed, audioVolume, selectedReciterId } = get();
 
       set({
         playingAyahKey: verseKey,
+        playingLanguage: selectedLanguage,
         currentSurahNumber: surahNumber,
         currentAyahNumber: ayahNumber,
         maxAyahsInSurah: totalAyahs,
@@ -556,9 +587,14 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playbackProgress: 0,
       });
 
-      // Phase 1: Play Arabic Recitation
+      // If Urdu is selected: Play the authentic Kanz-ul-Iman Surah Audio
+      if (selectedLanguage === 'urdu') {
+        get().playKanzulImanSurah(surahNumber, 0);
+        return;
+      }
+
+      // Phase 1: Play Arabic Recitation (Selected Qari e.g. Mishary Rashid Alafasy)
       if (startPhase === 'arabic') {
-        const { selectedReciterId, playbackSpeed, audioVolume } = get();
         const reciterObj =
           QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
         const reciterSlug = reciterObj.reciterSlug || 'Alafasy';
@@ -601,59 +637,66 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         };
 
         activeHtmlAudio.onended = () => {
-          // Transition to Phase 2: Translation Audio for this same Ayah
+          // Transition immediately to Phase 2: English Translation Audio for the same Ayah
           set({ playbackPhase: 'translation', playbackTime: 0, playbackProgress: 0 });
           get().playAyah(surahNumber, ayahNumber, 'translation');
         };
 
         activeHtmlAudio.onerror = (e) => {
-          console.warn('Arabic audio stream error, falling back to translation:', e);
-          set({ playbackPhase: 'translation' });
+          console.warn('Arabic audio stream error, transitioning to translation:', e);
+          set({ playbackPhase: 'translation', playbackTime: 0, playbackProgress: 0 });
           get().playAyah(surahNumber, ayahNumber, 'translation');
         };
 
         const playPromise = activeHtmlAudio.play();
         if (playPromise !== undefined) {
           playPromise.catch((err) => {
-            console.warn('Arabic play rejected:', err);
-            set({ playbackPhase: 'translation' });
-            get().playAyah(surahNumber, ayahNumber, 'translation');
+            if (err.name !== 'AbortError') {
+              console.warn('Arabic play interrupted:', err);
+              set({ playbackPhase: 'translation', playbackTime: 0, playbackProgress: 0 });
+              get().playAyah(surahNumber, ayahNumber, 'translation');
+            }
           });
         }
         return;
       }
 
-      // Phase 2: Play Translation Audio (Urdu / English) strictly from exact on-screen displayed text
-      const { selectedLanguage, currentAyahs } = get();
-      const rawDisplayedText = getDisplayedAyahText(surahNumber, ayahNumber, selectedLanguage, currentAyahs);
-      const textToSpeak = preprocessTextForNaturalSpeech(rawDisplayedText, selectedLanguage);
+      // English Translation Audio via Verified EveryAyah / Islamic Network CDN Endpoint
+      const primaryUrl = getEnglishTranslationAudioUrl(surahNumber, ayahNumber);
+      const fallbackUrl = getEnglishTranslationFallbackAudioUrl(surahNumber, ayahNumber);
 
-      if (!textToSpeak) {
-        handleSequencingNext(set, get);
-        return;
-      }
-
-      // Both Urdu (Kanzul Iman) and English translations are spoken using natural speech synthesis
-      // generated directly from the displayed translation string (guarantees 100% exact text-to-audio match)
-      playTranslationViaTTS(textToSpeak, selectedLanguage, set, get);
+      playTranslationAudioApi(primaryUrl, fallbackUrl, 'english', surahNumber, ayahNumber, set, get);
     },
 
     togglePlay: () => {
-      const { isPlaying, currentSurahNumber, currentAyahNumber, playbackPhase } = get();
+      const { isPlaying, currentSurahNumber, currentAyahNumber, playbackPhase, selectedLanguage, currentPartIndex } = get();
       if (isPlaying) {
         get().pauseAudio();
       } else {
-        if (playbackPhase === 'idle') {
-          get().playAyah(currentSurahNumber || 1, currentAyahNumber || 1, 'arabic');
+        if (selectedLanguage === 'urdu') {
+          if (activeHtmlAudio && activeHtmlAudio.src && activeHtmlAudio.paused) {
+            get().resumeAudio();
+          } else {
+            get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
+          }
         } else {
-          get().resumeAudio();
+          if (playbackPhase === 'idle') {
+            get().playAyah(currentSurahNumber || 1, currentAyahNumber || 1, 'arabic');
+          } else {
+            get().resumeAudio();
+          }
         }
       }
     },
 
     togglePlayAyahCard: (surahNumber, ayahNumber) => {
       const verseKey = `${surahNumber}:${ayahNumber}`;
-      const { playingAyahKey, isPlaying } = get();
+      const { playingAyahKey, isPlaying, selectedLanguage } = get();
+
+      if (selectedLanguage === 'urdu') {
+        get().playKanzulImanSurah(surahNumber, 0);
+        return;
+      }
 
       if (playingAyahKey === verseKey) {
         if (isPlaying) {
@@ -672,9 +715,6 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
           activeHtmlAudio.pause();
         } catch {}
       }
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window && window.speechSynthesis.speaking) {
-        window.speechSynthesis.pause();
-      }
       set({ isPlaying: false });
     },
 
@@ -685,13 +725,12 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         }).catch(() => {});
         return;
       }
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window && window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
-        set({ isPlaying: true });
-        return;
+      const { currentSurahNumber, currentAyahNumber, playbackPhase, selectedLanguage, currentPartIndex } = get();
+      if (selectedLanguage === 'urdu') {
+        get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
+      } else {
+        get().playAyah(currentSurahNumber || 1, currentAyahNumber || 1, playbackPhase === 'idle' ? 'arabic' : playbackPhase);
       }
-      const { currentSurahNumber, currentAyahNumber, playbackPhase } = get();
-      get().playAyah(currentSurahNumber || 1, currentAyahNumber || 1, playbackPhase === 'idle' ? 'arabic' : playbackPhase);
     },
 
     stopAudio: () => {
@@ -707,8 +746,41 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       });
     },
 
+    nextTrack: () => {
+      const { currentSurahNumber, currentPartIndex, totalPartsInSurah, selectedLanguage } = get();
+      if (selectedLanguage === 'urdu') {
+        if (currentPartIndex + 1 < totalPartsInSurah) {
+          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
+        } else if (currentSurahNumber < 114) {
+          get().playSurah(currentSurahNumber + 1, 1, 'urdu');
+        }
+      } else {
+        get().nextAyah();
+      }
+    },
+
+    prevTrack: () => {
+      const { currentSurahNumber, currentPartIndex, selectedLanguage } = get();
+      if (selectedLanguage === 'urdu') {
+        if (currentPartIndex > 0) {
+          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex - 1);
+        } else if (currentSurahNumber > 1) {
+          const prevSurah = currentSurahNumber - 1;
+          const prevTracks = getKanzulImanAudioTracks(prevSurah);
+          get().playKanzulImanSurah(prevSurah, Math.max(0, prevTracks.length - 1));
+        }
+      } else {
+        get().prevAyah();
+      }
+    },
+
     nextAyah: () => {
-      const { currentSurahNumber, currentAyahNumber, maxAyahsInSurah, playbackScope, currentJuzNumber } = get();
+      const { currentSurahNumber, currentAyahNumber, maxAyahsInSurah, playbackScope, currentJuzNumber, selectedLanguage } = get();
+      if (selectedLanguage === 'urdu') {
+        get().nextTrack();
+        return;
+      }
+
       if (playbackScope === 'juz' && currentJuzNumber) {
         const juzMeta = JUZ_LIST[currentJuzNumber - 1];
         if (juzMeta && juzMeta.endSurah && juzMeta.endAyah) {
@@ -726,7 +798,12 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     },
 
     prevAyah: () => {
-      const { currentSurahNumber, currentAyahNumber } = get();
+      const { currentSurahNumber, currentAyahNumber, selectedLanguage } = get();
+      if (selectedLanguage === 'urdu') {
+        get().prevTrack();
+        return;
+      }
+
       if (currentAyahNumber > 1) {
         get().playAyah(currentSurahNumber, currentAyahNumber - 1, 'arabic');
       } else if (currentSurahNumber > 1) {
@@ -740,137 +817,113 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       if (activeHtmlAudio && !isNaN(activeHtmlAudio.duration) && activeHtmlAudio.duration > 0) {
         const target = Math.max(0, Math.min(activeHtmlAudio.duration, seconds));
         activeHtmlAudio.currentTime = target;
-        set({ playbackTime: target });
+        set({ playbackTime: target, playbackProgress: target / activeHtmlAudio.duration });
+      }
+    },
+
+    skipTime: (seconds) => {
+      if (activeHtmlAudio && !isNaN(activeHtmlAudio.duration) && activeHtmlAudio.duration > 0) {
+        const target = Math.max(0, Math.min(activeHtmlAudio.duration, activeHtmlAudio.currentTime + seconds));
+        activeHtmlAudio.currentTime = target;
+        set({ playbackTime: target, playbackProgress: target / activeHtmlAudio.duration });
       }
     },
   };
 });
 
 /**
- * Plays translation text using Google TTS stream chunks with Web Speech API male fallback
+ * Plays translation audio using authentic per-ayah audio endpoints (HTMLAudioElement) for English.
  */
-function playTranslationViaTTS(textToSpeak: string, language: TranslationLanguage, set: any, get: any) {
-  currentAudioChunks = chunkTextForTTS(textToSpeak, 180);
-  currentAudioChunkIndex = 0;
+function playTranslationAudioApi(
+  primaryUrl: string,
+  fallbackUrl: string,
+  language: TranslationLanguage,
+  surahNumber: number,
+  ayahNumber: number,
+  set: any,
+  get: any
+) {
+  if (!activeHtmlAudio) {
+    activeHtmlAudio = new Audio();
+  }
 
-  const playNextChunk = () => {
-    if (currentAudioChunkIndex >= currentAudioChunks.length) {
-      handleSequencingNext(set, get);
-      return;
-    }
+  let triedFallback = false;
 
-    const chunkText = currentAudioChunks[currentAudioChunkIndex];
-    const streamUrl = buildTTSStreamUrl(chunkText, language);
+  const tryPlay = (url: string) => {
+    if (!activeHtmlAudio) return;
 
-    if (!activeHtmlAudio) {
-      activeHtmlAudio = new Audio();
-    }
-
-    activeHtmlAudio.src = streamUrl;
+    activeHtmlAudio.src = url;
     activeHtmlAudio.playbackRate = get().playbackSpeed || 1.0;
     activeHtmlAudio.volume = get().audioVolume;
 
     activeHtmlAudio.onplay = () => {
       set({ isPlaying: true, isLoading: false, audioError: null });
+      try {
+        localStorage.setItem(`kanzul_audio_url_${language}_${surahNumber}_${ayahNumber}`, url);
+      } catch {}
+    };
+
+    activeHtmlAudio.onpause = () => {
+      if (activeHtmlAudio && !activeHtmlAudio.ended) {
+        set({ isPlaying: false });
+      }
     };
 
     activeHtmlAudio.ontimeupdate = () => {
       if (activeHtmlAudio && activeHtmlAudio.duration) {
-        const chunkProgress = activeHtmlAudio.currentTime / activeHtmlAudio.duration;
-        const overall = (currentAudioChunkIndex + chunkProgress) / Math.max(1, currentAudioChunks.length);
+        const cur = activeHtmlAudio.currentTime;
+        const dur = activeHtmlAudio.duration;
         set({
-          playbackTime: activeHtmlAudio.currentTime,
-          playbackDuration: activeHtmlAudio.duration * currentAudioChunks.length,
-          playbackProgress: Math.min(1, Math.max(0, overall)),
+          playbackTime: cur,
+          playbackDuration: dur,
+          playbackProgress: dur > 0 ? cur / dur : 0,
         });
       }
     };
 
+    activeHtmlAudio.onloadedmetadata = () => {
+      if (activeHtmlAudio && activeHtmlAudio.duration) {
+        set({ playbackDuration: activeHtmlAudio.duration });
+      }
+    };
+
     activeHtmlAudio.onended = () => {
-      currentAudioChunkIndex++;
-      playNextChunk();
+      handleSequencingNext(set, get);
     };
 
     activeHtmlAudio.onerror = () => {
-      playViaWebSpeechMaleVoice(textToSpeak, language, set, get);
+      if (!triedFallback && fallbackUrl && fallbackUrl !== url) {
+        triedFallback = true;
+        tryPlay(fallbackUrl);
+      } else {
+        set({
+          isPlaying: false,
+          isLoading: false,
+          audioError: `${language === 'urdu' ? 'Kanz-ul-Iman' : 'English'} translation audio is currently unavailable.`,
+        });
+      }
     };
 
     const playPromise = activeHtmlAudio.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        playViaWebSpeechMaleVoice(textToSpeak, language, set, get);
+      playPromise.catch((err) => {
+        if (err.name !== 'AbortError') {
+          if (!triedFallback && fallbackUrl && fallbackUrl !== url) {
+            triedFallback = true;
+            tryPlay(fallbackUrl);
+          } else {
+            set({
+              isPlaying: false,
+              isLoading: false,
+              audioError: `${language === 'urdu' ? 'Kanz-ul-Iman' : 'English'} translation audio is currently unavailable.`,
+            });
+          }
+        }
       });
     }
   };
 
-  playNextChunk();
-}
-
-/**
- * Web Speech API fallback strictly utilizing confirmed MALE voice
- */
-function playViaWebSpeechMaleVoice(textToSpeak: string, language: TranslationLanguage, set: any, get: any) {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    handleSequencingNext(set, get);
-    return;
-  }
-
-  try {
-    if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = language === 'urdu' ? 'ur-PK' : 'en-US';
-    utterance.rate = language === 'urdu' ? 0.96 : 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = get().audioVolume;
-
-    const maleVoice = getBestMaleVoiceForLanguage(language);
-    if (maleVoice) {
-      utterance.voice = maleVoice;
-    }
-
-    utterance.onstart = () => {
-      set({ isPlaying: true, isLoading: false, audioError: null });
-    };
-
-    utterance.onend = () => {
-      if (speechHeartbeatTimer) {
-        clearInterval(speechHeartbeatTimer);
-        speechHeartbeatTimer = null;
-      }
-      activeSpeechUtterance = null;
-      handleSequencingNext(set, get);
-    };
-
-    utterance.onerror = () => {
-      if (speechHeartbeatTimer) {
-        clearInterval(speechHeartbeatTimer);
-        speechHeartbeatTimer = null;
-      }
-      activeSpeechUtterance = null;
-      handleSequencingNext(set, get);
-    };
-
-    activeSpeechUtterance = utterance;
-    if (typeof window !== 'undefined') {
-      (window as any).__activeUtterance = utterance;
-    }
-
-    speechHeartbeatTimer = setInterval(() => {
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-          window.speechSynthesis.pause();
-          window.speechSynthesis.resume();
-        }
-      }
-    }, 10000);
-
-    window.speechSynthesis.speak(utterance);
-  } catch {
-    handleSequencingNext(set, get);
-  }
+  tryPlay(primaryUrl);
 }
 
 /**
@@ -904,7 +957,7 @@ function handleSequencingNext(set: any, get: any) {
       if (currentJuzNumber < 30) {
         setTimeout(() => {
           get().playJuz(currentJuzNumber + 1);
-        }, 500);
+        }, 300);
       } else {
         set({ playbackPhase: 'idle', playingAyahKey: null });
       }
@@ -914,14 +967,13 @@ function handleSequencingNext(set: any, get: any) {
     if (currentAyahNumber < maxAyahsInSurah) {
       setTimeout(() => {
         get().playAyah(currentSurahNumber, currentAyahNumber + 1, 'arabic');
-      }, 400);
+      }, 250);
       return;
     } else {
-      // Advance to next Surah in this Juz
       const nextSurah = currentSurahNumber + 1;
       setTimeout(() => {
         get().playAyah(nextSurah, 1, 'arabic');
-      }, 500);
+      }, 300);
       return;
     }
   }
@@ -930,11 +982,11 @@ function handleSequencingNext(set: any, get: any) {
   if (currentAyahNumber < maxAyahsInSurah) {
     setTimeout(() => {
       get().playAyah(currentSurahNumber, currentAyahNumber + 1, 'arabic');
-    }, 400);
+    }, 250);
   } else if (currentSurahNumber < 114) {
     setTimeout(() => {
       get().playSurah(currentSurahNumber + 1, 1);
-    }, 600);
+    }, 400);
   } else {
     set({ playbackPhase: 'idle', playingAyahKey: null });
   }

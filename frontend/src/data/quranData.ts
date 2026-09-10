@@ -262,6 +262,12 @@ export const SUPPORTED_RECITERS: QuranReciterOption[] = [
     style: 'Mujawwad (Soulful Legendary)',
     reciterSlug: 'Minshawi/Mujawwad',
   },
+  {
+    id: 99,
+    name: 'Kanz-ul-Iman (Urdu Translation & Tilawat)',
+    style: 'Authentic Urdu - Ala Hazrat Imam Ahmad Raza Khan',
+    reciterSlug: 'kanzuliman',
+  },
 ];
 
 export const QURAN_COM_RECITERS = SUPPORTED_RECITERS;

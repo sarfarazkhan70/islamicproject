@@ -187,12 +187,11 @@ export const GlobalQuranAudioController: React.FC = () => {
   const handleEnded = () => {
     // 1. If Ta'awwuz just finished
     if (audioPlaybackPhase === 'taawwuz') {
-      // Surah 1 (Al-Fatihah) has Bismillah as Ayah 1:1 -> transition directly to Surah without duplicate Bismillah
-      // Surah 9 (At-Tawbah) has no Bismillah -> transition directly to Surah
-      if ((activeAudioSurah === 1 && (!activeAudioAyah || activeAudioAyah === 1)) || activeAudioSurah === 9) {
+      // Special case: Surah 9 (At-Tawbah) has NO Bismillah -> transition directly to Surah
+      if (activeAudioSurah === 9) {
         setAudioPlaybackPhase('surah');
       } else {
-        // All other starting points play Bismillah next
+        // All other Surahs (1..114 except 9) transition to Bismillah
         setAudioPlaybackPhase('bismillah');
       }
       return;
@@ -235,6 +234,23 @@ export const GlobalQuranAudioController: React.FC = () => {
   const handleError = () => {
     const audio = audioRef.current;
     if (!audio) return;
+    
+    // If failed during taawwuz phase, advance to next phase
+    if (audioPlaybackPhase === 'taawwuz') {
+      if (activeAudioSurah === 9) {
+        setAudioPlaybackPhase('surah');
+      } else {
+        setAudioPlaybackPhase('bismillah');
+      }
+      return;
+    }
+
+    // If failed during bismillah phase, advance to surah
+    if (audioPlaybackPhase === 'bismillah') {
+      setAudioPlaybackPhase('surah');
+      return;
+    }
+
     // If failed during surah phase, fallback to standard high-availability server
     if (audioPlaybackPhase === 'surah' && activeAudioSurah) {
       const fallbackUrl = getAudioUrl(activeAudioSurah, selectedReciterId);

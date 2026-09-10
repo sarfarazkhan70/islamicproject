@@ -58,4 +58,33 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     expect(typeof BukhariPdfService.getDocument).toBe('function');
     expect(typeof BukhariPdfService.renderPageToCanvas).toBe('function');
   });
+
+  it('should verify BukhariReader component has pure vertical scroll layout with no Next/Previous buttons', () => {
+    const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
+    expect(fs.existsSync(readerFilePath)).toBe(true);
+    const code = fs.readFileSync(readerFilePath, 'utf8');
+
+    // Verify complete removal of Previous Page and Next Page buttons
+    expect(code).not.toContain('Previous Page');
+    expect(code).not.toContain('Next Page');
+    expect(code).not.toContain('الصفحة السابقة');
+    expect(code).not.toContain('الصفحة التالية');
+    expect(code).not.toContain('Jump back 10');
+    expect(code).not.toContain('Jump forward 10');
+
+    // Verify vertical reading stream and page card structure
+    expect(code).toContain('bukhari-vertical-reading-stream');
+    expect(code).toContain('bukhari-page-card');
+    expect(code).toContain('scrollSnapType');
+    expect(code).toContain('scrollSnapAlign');
+    expect(code).toContain('bukhari-page-');
+
+    // Verify size presets and page search
+    expect(code).toContain('125%');
+    expect(code).toContain('150%');
+    expect(code).toContain('175%');
+    expect(code).toContain('200%');
+    expect(code).toContain('Fit Width');
+    expect(code).toContain('totalPages');
+  });
 });

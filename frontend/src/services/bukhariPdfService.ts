@@ -48,8 +48,10 @@ export class BukhariPdfService {
 
     canvas.width = Math.floor(viewport.width * dpr);
     canvas.height = Math.floor(viewport.height * dpr);
-    canvas.style.width = `${Math.floor(viewport.width)}px`;
-    canvas.style.height = `${Math.floor(viewport.height)}px`;
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    canvas.style.maxWidth = '100%';
+    canvas.style.display = 'block';
 
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) {

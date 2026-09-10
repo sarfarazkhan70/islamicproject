@@ -2,16 +2,14 @@
  * Kanzul Iman Translation & Recitation Audio Store — Single Source of Truth Engine
  * ==============================================================================
  * Guarantees authentic playback:
- * 1. Urdu: Complete Authentic Kanz-ul-Iman (Ala Hazrat Imam Ahmad Raza Khan) from
- *    Internet Archive (kanzuliman_201907 / Paigham-e-Raza) covering all 114 Surahs
- *    with multi-part support (e.g., Al-Baqarah Parts 1-3).
- * 2. English: Verified English Translation Recitation (Ibrahim Walk / Saheeh Intnl)
- *    Ayah-by-Ayah with Arabic recitation (Selected Qari e.g. Mishary Rashid Alafasy).
+ * Urdu: Complete Authentic Kanz-ul-Iman (Ala Hazrat Imam Ahmad Raza Khan) from
+ * Internet Archive (kanzuliman_201907 / Paigham-e-Raza) covering all 114 Surahs
+ * with multi-part support (e.g., Al-Baqarah Parts 1-3).
  * ==============================================================================
  */
 
 import { create } from 'zustand';
-import { SURAHS_LIST, JUZ_LIST, QURAN_COM_RECITERS } from '../data/quranData';
+import { SURAHS_LIST, JUZ_LIST } from '../data/quranData';
 import { getVerifiedKanzulImanTranslation } from '../data/kanzulImanData';
 import { KanzulImanService, KanzulImanAyah } from '../services/kanzulImanService';
 import {
@@ -68,23 +66,6 @@ export function getKanzulImanArchiveAudioUrl(surahNumber: number, partIndex: num
 }
 
 /**
- * Primary authentic English translation recitation audio URL by Ibrahim Walk (Male voice)
- */
-export function getEnglishTranslationAudioUrl(surahNumber: number, ayahNumberInSurah: number): string {
-  const paddedSurah = String(surahNumber).padStart(3, '0');
-  const paddedAyah = String(ayahNumberInSurah).padStart(3, '0');
-  return `https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/${paddedSurah}${paddedAyah}.mp3`;
-}
-
-/**
- * Secondary CDN fallback for English translation recitation
- */
-export function getEnglishTranslationFallbackAudioUrl(surahNumber: number, ayahNumberInSurah: number): string {
-  const globalAyahNum = getGlobalAyahNumber(surahNumber, ayahNumberInSurah);
-  return `https://cdn.islamic.network/quran/audio/192/en.walk/${globalAyahNum}.mp3`;
-}
-
-/**
  * Arabic Ayah recitation URL from verified Quran reciters (e.g. Alafasy)
  */
 export function getArabicAyahAudioUrl(surahNumber: number, ayahNumberInSurah: number, reciterSlug: string = 'Alafasy'): string {
@@ -93,8 +74,8 @@ export function getArabicAyahAudioUrl(surahNumber: number, ayahNumberInSurah: nu
   return `https://verses.quran.com/${reciterSlug}/mp3/${paddedSurah}${paddedAyah}.mp3`;
 }
 
-export type TranslationLanguage = 'urdu' | 'english';
-export type PlaybackPhase = 'idle' | 'arabic' | 'translation';
+export type TranslationLanguage = 'urdu';
+export type PlaybackPhase = 'idle' | 'translation';
 export type PlaybackScope = 'surah' | 'juz';
 
 export interface TextAyahData {
@@ -126,7 +107,7 @@ interface KanzulImanAudioState {
   playingAyahKey: string | null; // e.g. "1:1"
   playingLanguage: TranslationLanguage | null;
   playbackPhase: PlaybackPhase;
-  playbackMode: 'single' | 'full-urdu' | 'full-english';
+  playbackMode: 'single' | 'full-urdu';
   selectedLanguage: TranslationLanguage;
   selectedReciterId: number;
   isPlaying: boolean;
@@ -141,7 +122,7 @@ interface KanzulImanAudioState {
 
   // Actions
   setPlaybackScope: (scope: PlaybackScope) => void;
-  setSelectedLanguage: (lang: TranslationLanguage) => void;
+  setSelectedLanguage: (lang?: string) => void;
   setSelectedReciterId: (reciterId: number) => void;
   setPlaybackSpeed: (speed: number) => void;
   setAudioVolume: (volume: number) => void;
@@ -152,9 +133,9 @@ interface KanzulImanAudioState {
   // Flow Triggers
   loadSurahData: (surahNumber: number) => Promise<void>;
   loadJuzData: (juzNumber: number) => Promise<void>;
-  playSurah: (surahNumber: number, startAyah?: number, lang?: TranslationLanguage) => Promise<void>;
+  playSurah: (surahNumber: number, startAyah?: number, _lang?: string) => Promise<void>;
   playKanzulImanSurah: (surahNumber: number, partIndex?: number) => void;
-  playJuz: (juzNumber: number, startSurah?: number, startAyah?: number, lang?: TranslationLanguage) => Promise<void>;
+  playJuz: (juzNumber: number, startSurah?: number, startAyah?: number, _lang?: string) => Promise<void>;
   playAyah: (surahNumber: number, ayahNumber: number, startPhase?: PlaybackPhase) => void;
   togglePlay: () => void;
   togglePlayAyahCard: (surahNumber: number, ayahNumber: number) => void;
@@ -171,28 +152,27 @@ interface KanzulImanAudioState {
   // Backward compatibility methods
   playFullSurah: (
     surahNumber: number,
-    mode?: 'full-urdu' | 'full-english',
-    maxAyahs?: number,
-    textAyahs?: any[]
+    _mode?: string,
+    _maxAyahs?: number,
+    _textAyahs?: any[]
   ) => void;
   playAyahTranslation: (
     surahNumber: number,
     ayahNumber: number,
-    language: TranslationLanguage,
-    maxAyahs?: number,
-    textAyahs?: any[]
+    _language?: string,
+    _maxAyahs?: number,
+    _textAyahs?: any[]
   ) => void;
   togglePlayAyah: (
     surahNumber: number,
     ayahNumber: number,
-    language: TranslationLanguage,
-    maxAyahs?: number,
-    textAyahs?: any[]
+    _language?: string,
+    _maxAyahs?: number,
+    _textAyahs?: any[]
   ) => void;
 }
 
 const AUTOPLAY_STORAGE_KEY = 'islamic_prayer_kanzul_iman_autoplay';
-const LANG_STORAGE_KEY = 'islamic_prayer_kanzul_iman_lang';
 
 function getStoredAutoPlay(): boolean {
   try {
@@ -201,14 +181,6 @@ function getStoredAutoPlay(): boolean {
   } catch {
     return true;
   }
-}
-
-function getStoredLanguage(): TranslationLanguage {
-  try {
-    const raw = localStorage.getItem(LANG_STORAGE_KEY);
-    if (raw === 'urdu' || raw === 'english') return raw;
-  } catch {}
-  return 'urdu';
 }
 
 // Audio Element Controller (Pure HTML5 Audio streaming from authentic audio endpoints)
@@ -239,7 +211,7 @@ function stopAnyAudio() {
 export function getDisplayedAyahText(
   surahNumber: number,
   ayahNumber: number,
-  language: TranslationLanguage,
+  language: string,
   cachedAyahs: TextAyahData[]
 ): string {
   const matchingAyah = cachedAyahs.find((a) => a.ayahNumber === ayahNumber);
@@ -252,7 +224,7 @@ export function getDisplayedAyahText(
     }
   }
 
-  const verified = getVerifiedKanzulImanTranslation(surahNumber, ayahNumber, language);
+  const verified = getVerifiedKanzulImanTranslation(surahNumber, ayahNumber, language as any);
   return verified ? verified.trim() : '';
 }
 
@@ -274,10 +246,10 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     currentTracks: initialSurahTracks,
 
     playingAyahKey: null,
-    playingLanguage: getStoredLanguage(),
+    playingLanguage: 'urdu',
     playbackPhase: 'idle',
-    playbackMode: getStoredLanguage() === 'english' ? 'full-english' : 'full-urdu',
-    selectedLanguage: getStoredLanguage(),
+    playbackMode: 'full-urdu',
+    selectedLanguage: 'urdu',
     selectedReciterId: 7, // Mishary Rashid Alafasy
     isPlaying: false,
     isLoading: false,
@@ -289,49 +261,30 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     playbackProgress: 0,
     audioError: null,
 
-    playFullSurah: (surahNumber, mode, _maxAyahs, _textAyahs) => {
-      const lang: TranslationLanguage = mode === 'full-english' ? 'english' : 'urdu';
-      get().setSelectedLanguage(lang);
-      get().playSurah(surahNumber, 1, lang);
+    playFullSurah: (surahNumber, _mode, _maxAyahs, _textAyahs) => {
+      get().playSurah(surahNumber, 1);
     },
 
-    playAyahTranslation: (surahNumber, ayahNumber, language, _maxAyahs, _textAyahs) => {
-      get().setSelectedLanguage(language);
-      get().playAyah(surahNumber, ayahNumber, 'translation');
+    playAyahTranslation: (surahNumber, ayahNumber, _language, _maxAyahs, _textAyahs) => {
+      get().playAyah(surahNumber, ayahNumber);
     },
 
-    togglePlayAyah: (surahNumber, ayahNumber, language, _maxAyahs, _textAyahs) => {
-      get().setSelectedLanguage(language);
+    togglePlayAyah: (surahNumber, ayahNumber, _language, _maxAyahs, _textAyahs) => {
       get().togglePlayAyahCard(surahNumber, ayahNumber);
     },
 
     setPlaybackScope: (scope) => set({ playbackScope: scope }),
 
-    setSelectedLanguage: (lang) => {
-      try {
-        localStorage.setItem(LANG_STORAGE_KEY, lang);
-      } catch {}
+    setSelectedLanguage: (_lang) => {
       set({
-        selectedLanguage: lang,
-        playingLanguage: lang,
-        playbackMode: lang === 'english' ? 'full-english' : 'full-urdu',
+        selectedLanguage: 'urdu',
+        playingLanguage: 'urdu',
+        playbackMode: 'full-urdu',
       });
-      const { isPlaying, currentSurahNumber, currentPartIndex } = get();
-      if (isPlaying) {
-        if (lang === 'urdu') {
-          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex);
-        } else {
-          get().playAyah(currentSurahNumber, 1, 'arabic');
-        }
-      }
     },
 
     setSelectedReciterId: (reciterId) => {
       set({ selectedReciterId: reciterId });
-      const { isPlaying, playbackPhase, currentSurahNumber, currentAyahNumber, selectedLanguage } = get();
-      if (isPlaying && selectedLanguage === 'english' && playbackPhase === 'arabic') {
-        get().playAyah(currentSurahNumber, currentAyahNumber, 'arabic');
-      }
     },
 
     setPlaybackSpeed: (speed) => {
@@ -408,29 +361,25 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       }
     },
 
-    playSurah: async (surahNumber, startAyah = 1, lang) => {
-      const targetLang = lang || get().selectedLanguage;
-      const tracks = getKanzulImanAudioTracks(surahNumber);
+    playSurah: async (surahNumber, startAyah = 1, _lang) => {
+      const validSurah = Math.max(1, Math.min(114, surahNumber));
+      const tracks = getKanzulImanAudioTracks(validSurah);
       set({
         playbackScope: 'surah',
-        currentSurahNumber: surahNumber,
+        currentSurahNumber: validSurah,
         currentAyahNumber: startAyah,
-        selectedLanguage: targetLang,
-        playingLanguage: targetLang,
+        selectedLanguage: 'urdu',
+        playingLanguage: 'urdu',
         currentTracks: tracks,
         totalPartsInSurah: tracks.length,
         currentPartIndex: 0,
       });
 
-      if (get().currentAyahs.length === 0 || get().currentSurahNumber !== surahNumber) {
-        await get().loadSurahData(surahNumber);
+      if (get().currentAyahs.length === 0 || get().currentSurahNumber !== validSurah) {
+        await get().loadSurahData(validSurah);
       }
 
-      if (targetLang === 'urdu') {
-        get().playKanzulImanSurah(surahNumber, 0);
-      } else {
-        get().playAyah(surahNumber, startAyah, 'arabic');
-      }
+      get().playKanzulImanSurah(validSurah, 0);
     },
 
     playKanzulImanSurah: (surahNumber: number, partIndex: number = 0) => {
@@ -511,7 +460,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
           get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
         } else if (isAutoPlay && currentSurahNumber < 114) {
           // Advance to next Surah
-          get().playSurah(currentSurahNumber + 1, 1, 'urdu');
+          get().playSurah(currentSurahNumber + 1, 1);
         } else {
           set({ isPlaying: false, playbackProgress: 1, playbackTime: get().playbackDuration });
         }
@@ -537,176 +486,63 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       }
     },
 
-    playJuz: async (juzNumber, startSurah, startAyah, lang) => {
-      const targetLang = lang || get().selectedLanguage;
-      const juzMeta = JUZ_LIST[juzNumber - 1] || JUZ_LIST[0];
+    playJuz: async (juzNumber, startSurah, startAyah, _lang) => {
+      const validJuz = Math.max(1, Math.min(30, juzNumber));
+      const juzMeta = JUZ_LIST[validJuz - 1] || JUZ_LIST[0];
       const sNum = startSurah || juzMeta.startSurah;
       const aNum = startAyah || juzMeta.startAyah;
       const tracks = getKanzulImanAudioTracks(sNum);
 
       set({
         playbackScope: 'juz',
-        currentJuzNumber: juzNumber,
+        currentJuzNumber: validJuz,
         currentSurahNumber: sNum,
         currentAyahNumber: aNum,
-        selectedLanguage: targetLang,
-        playingLanguage: targetLang,
+        selectedLanguage: 'urdu',
+        playingLanguage: 'urdu',
         currentTracks: tracks,
         totalPartsInSurah: tracks.length,
         currentPartIndex: 0,
       });
 
-      await get().loadJuzData(juzNumber);
-      if (targetLang === 'urdu') {
-        get().playKanzulImanSurah(sNum, 0);
-      } else {
-        get().playAyah(sNum, aNum, 'arabic');
-      }
+      await get().loadJuzData(validJuz);
+      get().playKanzulImanSurah(sNum, 0);
     },
 
-    playAyah: (surahNumber, ayahNumber, startPhase = 'arabic') => {
-      stopAnyAudio();
-
-      const surahMeta = SURAHS_LIST.find((s) => s.number === surahNumber);
-      const totalAyahs = surahMeta?.versesCount || SURAH_VERSE_COUNTS[surahNumber - 1] || 7;
-      const verseKey = `${surahNumber}:${ayahNumber}`;
-      const { selectedLanguage, playbackSpeed, audioVolume, selectedReciterId } = get();
+    playAyah: (surahNumber, ayahNumber, _startPhase) => {
+      const validSurah = Math.max(1, Math.min(114, surahNumber));
+      const surahMeta = SURAHS_LIST.find((s) => s.number === validSurah);
+      const totalAyahs = surahMeta?.versesCount || SURAH_VERSE_COUNTS[validSurah - 1] || 7;
+      const verseKey = `${validSurah}:${ayahNumber}`;
 
       set({
         playingAyahKey: verseKey,
-        playingLanguage: selectedLanguage,
-        currentSurahNumber: surahNumber,
+        playingLanguage: 'urdu',
+        currentSurahNumber: validSurah,
         currentAyahNumber: ayahNumber,
         maxAyahsInSurah: totalAyahs,
-        playbackPhase: startPhase,
-        isPlaying: true,
-        isLoading: true,
-        audioError: null,
-        playbackTime: 0,
-        playbackDuration: 0,
-        playbackProgress: 0,
+        playbackPhase: 'translation',
       });
 
-      // If Urdu is selected: Play the authentic Kanz-ul-Iman Surah Audio
-      if (selectedLanguage === 'urdu') {
-        get().playKanzulImanSurah(surahNumber, 0);
-        return;
-      }
-
-      // Phase 1: Play Arabic Recitation (Selected Qari e.g. Mishary Rashid Alafasy)
-      if (startPhase === 'arabic') {
-        const reciterObj =
-          QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
-        const reciterSlug = reciterObj.reciterSlug || 'Alafasy';
-        const arabicUrl = getArabicAyahAudioUrl(surahNumber, ayahNumber, reciterSlug);
-
-        if (!activeHtmlAudio) {
-          activeHtmlAudio = new Audio();
-        }
-
-        activeHtmlAudio.src = arabicUrl;
-        activeHtmlAudio.playbackRate = playbackSpeed || 1.0;
-        activeHtmlAudio.volume = audioVolume;
-
-        activeHtmlAudio.onplay = () => {
-          set({ isPlaying: true, isLoading: false, audioError: null });
-        };
-
-        activeHtmlAudio.onpause = () => {
-          if (activeHtmlAudio && !activeHtmlAudio.ended) {
-            set({ isPlaying: false });
-          }
-        };
-
-        activeHtmlAudio.ontimeupdate = () => {
-          if (activeHtmlAudio && activeHtmlAudio.duration) {
-            const cur = activeHtmlAudio.currentTime;
-            const dur = activeHtmlAudio.duration;
-            set({
-              playbackTime: cur,
-              playbackDuration: dur,
-              playbackProgress: dur > 0 ? cur / dur : 0,
-            });
-          }
-        };
-
-        activeHtmlAudio.onloadedmetadata = () => {
-          if (activeHtmlAudio && activeHtmlAudio.duration) {
-            set({ playbackDuration: activeHtmlAudio.duration });
-          }
-        };
-
-        activeHtmlAudio.onended = () => {
-          // Transition immediately to Phase 2: English Translation Audio for the same Ayah
-          set({ playbackPhase: 'translation', playbackTime: 0, playbackProgress: 0 });
-          get().playAyah(surahNumber, ayahNumber, 'translation');
-        };
-
-        activeHtmlAudio.onerror = (e) => {
-          console.warn('Arabic audio stream error, transitioning to translation:', e);
-          set({ playbackPhase: 'translation', playbackTime: 0, playbackProgress: 0 });
-          get().playAyah(surahNumber, ayahNumber, 'translation');
-        };
-
-        const playPromise = activeHtmlAudio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((err) => {
-            if (err.name !== 'AbortError') {
-              console.warn('Arabic play interrupted:', err);
-              set({ playbackPhase: 'translation', playbackTime: 0, playbackProgress: 0 });
-              get().playAyah(surahNumber, ayahNumber, 'translation');
-            }
-          });
-        }
-        return;
-      }
-
-      // English Translation Audio via Verified EveryAyah / Islamic Network CDN Endpoint
-      const primaryUrl = getEnglishTranslationAudioUrl(surahNumber, ayahNumber);
-      const fallbackUrl = getEnglishTranslationFallbackAudioUrl(surahNumber, ayahNumber);
-
-      playTranslationAudioApi(primaryUrl, fallbackUrl, 'english', surahNumber, ayahNumber, set, get);
+      // Play authentic Kanz-ul-Iman Urdu Surah Audio
+      get().playKanzulImanSurah(validSurah, 0);
     },
 
     togglePlay: () => {
-      const { isPlaying, currentSurahNumber, currentAyahNumber, playbackPhase, selectedLanguage, currentPartIndex } = get();
+      const { isPlaying, currentSurahNumber, currentPartIndex } = get();
       if (isPlaying) {
         get().pauseAudio();
       } else {
-        if (selectedLanguage === 'urdu') {
-          if (activeHtmlAudio && activeHtmlAudio.src && activeHtmlAudio.paused) {
-            get().resumeAudio();
-          } else {
-            get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
-          }
+        if (activeHtmlAudio && activeHtmlAudio.src && activeHtmlAudio.paused) {
+          get().resumeAudio();
         } else {
-          if (playbackPhase === 'idle') {
-            get().playAyah(currentSurahNumber || 1, currentAyahNumber || 1, 'arabic');
-          } else {
-            get().resumeAudio();
-          }
+          get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
         }
       }
     },
 
-    togglePlayAyahCard: (surahNumber, ayahNumber) => {
-      const verseKey = `${surahNumber}:${ayahNumber}`;
-      const { playingAyahKey, isPlaying, selectedLanguage } = get();
-
-      if (selectedLanguage === 'urdu') {
-        get().playKanzulImanSurah(surahNumber, 0);
-        return;
-      }
-
-      if (playingAyahKey === verseKey) {
-        if (isPlaying) {
-          get().pauseAudio();
-        } else {
-          get().resumeAudio();
-        }
-      } else {
-        get().playAyah(surahNumber, ayahNumber, 'arabic');
-      }
+    togglePlayAyahCard: (surahNumber, _ayahNumber) => {
+      get().playKanzulImanSurah(surahNumber, 0);
     },
 
     pauseAudio: () => {
@@ -725,12 +561,8 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         }).catch(() => {});
         return;
       }
-      const { currentSurahNumber, currentAyahNumber, playbackPhase, selectedLanguage, currentPartIndex } = get();
-      if (selectedLanguage === 'urdu') {
-        get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
-      } else {
-        get().playAyah(currentSurahNumber || 1, currentAyahNumber || 1, playbackPhase === 'idle' ? 'arabic' : playbackPhase);
-      }
+      const { currentSurahNumber, currentPartIndex } = get();
+      get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
     },
 
     stopAudio: () => {
@@ -747,70 +579,31 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     },
 
     nextTrack: () => {
-      const { currentSurahNumber, currentPartIndex, totalPartsInSurah, selectedLanguage } = get();
-      if (selectedLanguage === 'urdu') {
-        if (currentPartIndex + 1 < totalPartsInSurah) {
-          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
-        } else if (currentSurahNumber < 114) {
-          get().playSurah(currentSurahNumber + 1, 1, 'urdu');
-        }
-      } else {
-        get().nextAyah();
-      }
-    },
-
-    prevTrack: () => {
-      const { currentSurahNumber, currentPartIndex, selectedLanguage } = get();
-      if (selectedLanguage === 'urdu') {
-        if (currentPartIndex > 0) {
-          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex - 1);
-        } else if (currentSurahNumber > 1) {
-          const prevSurah = currentSurahNumber - 1;
-          const prevTracks = getKanzulImanAudioTracks(prevSurah);
-          get().playKanzulImanSurah(prevSurah, Math.max(0, prevTracks.length - 1));
-        }
-      } else {
-        get().prevAyah();
-      }
-    },
-
-    nextAyah: () => {
-      const { currentSurahNumber, currentAyahNumber, maxAyahsInSurah, playbackScope, currentJuzNumber, selectedLanguage } = get();
-      if (selectedLanguage === 'urdu') {
-        get().nextTrack();
-        return;
-      }
-
-      if (playbackScope === 'juz' && currentJuzNumber) {
-        const juzMeta = JUZ_LIST[currentJuzNumber - 1];
-        if (juzMeta && juzMeta.endSurah && juzMeta.endAyah) {
-          if (currentSurahNumber === juzMeta.endSurah && currentAyahNumber >= juzMeta.endAyah) {
-            return; // end of juz
-          }
-        }
-      }
-
-      if (currentAyahNumber < maxAyahsInSurah) {
-        get().playAyah(currentSurahNumber, currentAyahNumber + 1, 'arabic');
+      const { currentSurahNumber, currentPartIndex, totalPartsInSurah } = get();
+      if (currentPartIndex + 1 < totalPartsInSurah) {
+        get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
       } else if (currentSurahNumber < 114) {
         get().playSurah(currentSurahNumber + 1, 1);
       }
     },
 
-    prevAyah: () => {
-      const { currentSurahNumber, currentAyahNumber, selectedLanguage } = get();
-      if (selectedLanguage === 'urdu') {
-        get().prevTrack();
-        return;
-      }
-
-      if (currentAyahNumber > 1) {
-        get().playAyah(currentSurahNumber, currentAyahNumber - 1, 'arabic');
+    prevTrack: () => {
+      const { currentSurahNumber, currentPartIndex } = get();
+      if (currentPartIndex > 0) {
+        get().playKanzulImanSurah(currentSurahNumber, currentPartIndex - 1);
       } else if (currentSurahNumber > 1) {
         const prevSurah = currentSurahNumber - 1;
-        const prevMax = SURAH_VERSE_COUNTS[prevSurah - 1] || 7;
-        get().playSurah(prevSurah, prevMax);
+        const prevTracks = getKanzulImanAudioTracks(prevSurah);
+        get().playKanzulImanSurah(prevSurah, Math.max(0, prevTracks.length - 1));
       }
+    },
+
+    nextAyah: () => {
+      get().nextTrack();
+    },
+
+    prevAyah: () => {
+      get().prevTrack();
     },
 
     seekAudio: (seconds) => {
@@ -830,164 +623,3 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     },
   };
 });
-
-/**
- * Plays translation audio using authentic per-ayah audio endpoints (HTMLAudioElement) for English.
- */
-function playTranslationAudioApi(
-  primaryUrl: string,
-  fallbackUrl: string,
-  language: TranslationLanguage,
-  surahNumber: number,
-  ayahNumber: number,
-  set: any,
-  get: any
-) {
-  if (!activeHtmlAudio) {
-    activeHtmlAudio = new Audio();
-  }
-
-  let triedFallback = false;
-
-  const tryPlay = (url: string) => {
-    if (!activeHtmlAudio) return;
-
-    activeHtmlAudio.src = url;
-    activeHtmlAudio.playbackRate = get().playbackSpeed || 1.0;
-    activeHtmlAudio.volume = get().audioVolume;
-
-    activeHtmlAudio.onplay = () => {
-      set({ isPlaying: true, isLoading: false, audioError: null });
-      try {
-        localStorage.setItem(`kanzul_audio_url_${language}_${surahNumber}_${ayahNumber}`, url);
-      } catch {}
-    };
-
-    activeHtmlAudio.onpause = () => {
-      if (activeHtmlAudio && !activeHtmlAudio.ended) {
-        set({ isPlaying: false });
-      }
-    };
-
-    activeHtmlAudio.ontimeupdate = () => {
-      if (activeHtmlAudio && activeHtmlAudio.duration) {
-        const cur = activeHtmlAudio.currentTime;
-        const dur = activeHtmlAudio.duration;
-        set({
-          playbackTime: cur,
-          playbackDuration: dur,
-          playbackProgress: dur > 0 ? cur / dur : 0,
-        });
-      }
-    };
-
-    activeHtmlAudio.onloadedmetadata = () => {
-      if (activeHtmlAudio && activeHtmlAudio.duration) {
-        set({ playbackDuration: activeHtmlAudio.duration });
-      }
-    };
-
-    activeHtmlAudio.onended = () => {
-      handleSequencingNext(set, get);
-    };
-
-    activeHtmlAudio.onerror = () => {
-      if (!triedFallback && fallbackUrl && fallbackUrl !== url) {
-        triedFallback = true;
-        tryPlay(fallbackUrl);
-      } else {
-        set({
-          isPlaying: false,
-          isLoading: false,
-          audioError: `${language === 'urdu' ? 'Kanz-ul-Iman' : 'English'} translation audio is currently unavailable.`,
-        });
-      }
-    };
-
-    const playPromise = activeHtmlAudio.play();
-    if (playPromise !== undefined) {
-      playPromise.catch((err) => {
-        if (err.name !== 'AbortError') {
-          if (!triedFallback && fallbackUrl && fallbackUrl !== url) {
-            triedFallback = true;
-            tryPlay(fallbackUrl);
-          } else {
-            set({
-              isPlaying: false,
-              isLoading: false,
-              audioError: `${language === 'urdu' ? 'Kanz-ul-Iman' : 'English'} translation audio is currently unavailable.`,
-            });
-          }
-        }
-      });
-    }
-  };
-
-  tryPlay(primaryUrl);
-}
-
-/**
- * Coordinates automatic advance to the next Arabic Ayah according to Auto-Play & Scope rules
- */
-function handleSequencingNext(set: any, get: any) {
-  const {
-    isAutoPlay,
-    playbackScope,
-    currentSurahNumber,
-    currentJuzNumber,
-    currentAyahNumber,
-    maxAyahsInSurah,
-  } = get();
-
-  set({ isPlaying: false, isLoading: false, playbackProgress: 0 });
-
-  if (!isAutoPlay) {
-    set({ playbackPhase: 'idle' });
-    return;
-  }
-
-  // Handle Juz Mode
-  if (playbackScope === 'juz' && currentJuzNumber) {
-    const juzMeta = JUZ_LIST[currentJuzNumber - 1];
-    const isJuzEnd = juzMeta && juzMeta.endSurah && juzMeta.endAyah
-      ? (currentSurahNumber === juzMeta.endSurah && currentAyahNumber >= juzMeta.endAyah)
-      : (currentSurahNumber === 114 && currentAyahNumber >= 6);
-
-    if (isJuzEnd) {
-      if (currentJuzNumber < 30) {
-        setTimeout(() => {
-          get().playJuz(currentJuzNumber + 1);
-        }, 300);
-      } else {
-        set({ playbackPhase: 'idle', playingAyahKey: null });
-      }
-      return;
-    }
-
-    if (currentAyahNumber < maxAyahsInSurah) {
-      setTimeout(() => {
-        get().playAyah(currentSurahNumber, currentAyahNumber + 1, 'arabic');
-      }, 250);
-      return;
-    } else {
-      const nextSurah = currentSurahNumber + 1;
-      setTimeout(() => {
-        get().playAyah(nextSurah, 1, 'arabic');
-      }, 300);
-      return;
-    }
-  }
-
-  // Handle Surah Mode
-  if (currentAyahNumber < maxAyahsInSurah) {
-    setTimeout(() => {
-      get().playAyah(currentSurahNumber, currentAyahNumber + 1, 'arabic');
-    }, 250);
-  } else if (currentSurahNumber < 114) {
-    setTimeout(() => {
-      get().playSurah(currentSurahNumber + 1, 1);
-    }, 400);
-  } else {
-    set({ playbackPhase: 'idle', playingAyahKey: null });
-  }
-}

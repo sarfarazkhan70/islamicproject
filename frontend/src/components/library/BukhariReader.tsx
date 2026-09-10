@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { BUKHARI_VOLUMES } from '../../data/bukhariData';
 import { BukhariPdfService } from '../../services/bukhariPdfService';
-import type { RenderTask } from 'pdfjs-dist';
 
 const ZOOM_PRESETS = [
   { label: '125%', scale: 1.25 },
@@ -73,7 +72,7 @@ export const BukhariReader: React.FC = () => {
 
       scrollTimeoutRef.current = setTimeout(() => {
         isProgrammaticScrollRef.current = false;
-      }, 500);
+      }, 600);
     },
     [totalPages, isFullscreen, setSearchParams]
   );
@@ -81,10 +80,9 @@ export const BukhariReader: React.FC = () => {
   // Initial scroll if URL specified a page > 1
   useEffect(() => {
     if (initialPage > 1) {
-      // Small timeout to allow page elements to mount in the DOM
       const timer = setTimeout(() => {
         scrollToPage(initialPage, 'auto');
-      }, 100);
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [initialPage, scrollToPage]);
@@ -115,7 +113,7 @@ export const BukhariReader: React.FC = () => {
           }
         }
 
-        if (bestEntry && maxRatio >= 0.2) {
+        if (bestEntry && maxRatio >= 0.15) {
           const pageAttr = (bestEntry as IntersectionObserverEntry).target.getAttribute('data-page');
           const p = parseInt(pageAttr || '', 10);
           if (!isNaN(p) && p !== activePageRef.current) {
@@ -126,7 +124,7 @@ export const BukhariReader: React.FC = () => {
       },
       {
         root: null,
-        rootMargin: '-10% 0px -30% 0px',
+        rootMargin: '-10% 0px -25% 0px',
         threshold: [0.1, 0.25, 0.5, 0.75],
       }
     );
@@ -315,7 +313,7 @@ export const BukhariReader: React.FC = () => {
             <ZoomIn size={13} />
           </button>
 
-          {/* Zoom Presets (Clean responsive buttons) */}
+          {/* Zoom Presets */}
           <div
             style={{
               display: 'flex',
@@ -462,10 +460,9 @@ export const BukhariReader: React.FC = () => {
             key={pageNum}
             pageNumber={pageNum}
             totalPages={totalPages}
-            scale={scale}
-            fitWidth={fitWidth}
             maxWidth={pageContainerMaxWidth}
             isCurrent={pageNum === currentPage}
+            initialPage={initialPage}
           />
         ))}
       </main>
@@ -474,129 +471,53 @@ export const BukhariReader: React.FC = () => {
 };
 
 // ============================================================================
-// SINGLE BUKHARI PAGE CARD COMPONENT (HIGH-DPI LAZY CANVAS RENDERING)
+// SINGLE BUKHARI PAGE CARD COMPONENT (HIGH-DPI AUTHENTIC BOOK RENDERING)
 // ============================================================================
 interface BukhariPageCardProps {
   pageNumber: number;
   totalPages: number;
-  scale: number;
-  fitWidth: boolean;
   maxWidth: string;
   isCurrent: boolean;
+  initialPage: number;
 }
 
 const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
-  ({ pageNumber, totalPages, scale, fitWidth, maxWidth, isCurrent }) => {
-    const cardRef = useRef<HTMLDivElement | null>(null);
+  ({ pageNumber, totalPages, maxWidth, isCurrent, initialPage }) => {
+    const isNearby = Math.abs(pageNumber - initialPage) <= 3 || isCurrent;
+    const [imgLoaded, setImgLoaded] = useState<boolean>(false);
+    const [useFallbackCanvas, setUseFallbackCanvas] = useState<boolean>(false);
+    const [canvasRendered, setCanvasRendered] = useState<boolean>(false);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const renderTaskRef = useRef<RenderTask | null>(null);
 
-    const [isNearViewport, setIsNearViewport] = useState<boolean>(false);
-    const [isRendered, setIsRendered] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [renderError, setRenderError] = useState<boolean>(false);
+    const imageUrl = BukhariPdfService.getPageImageUrl(pageNumber);
+    const fallbackUrl = BukhariPdfService.getPageFallbackUrl(pageNumber);
 
-    // Observe proximity to viewport for lazy canvas rendering
+    // Live canvas fallback rendering if image fails to load
     useEffect(() => {
-      const el = cardRef.current;
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setIsNearViewport(true);
-            } else {
-              // Only unload if far away (> 2500px)
-              if (entry.boundingClientRect.top > 2500 || entry.boundingClientRect.bottom < -2500) {
-                setIsNearViewport(false);
-                setIsRendered(false);
-              }
-            }
-          });
-        },
-        {
-          rootMargin: '1000px 0px 1000px 0px',
-          threshold: 0.01,
-        }
-      );
-
-      observer.observe(el);
-      return () => observer.disconnect();
-    }, []);
-
-    // Render page canvas when near viewport or when scale/fitWidth changes
-    useEffect(() => {
-      if (!isNearViewport || !canvasRef.current) return;
+      if (!useFallbackCanvas || canvasRendered || !canvasRef.current) return;
 
       let isCancelled = false;
-
       const render = async () => {
         try {
-          setIsLoading(true);
-          setRenderError(false);
-
-          if (renderTaskRef.current) {
-            try {
-              renderTaskRef.current.cancel();
-            } catch {
-              // Ignore cancellation error
-            }
-            renderTaskRef.current = null;
-          }
-
-          let effectiveScale = scale;
-          if (fitWidth && cardRef.current) {
-            const containerWidth = cardRef.current.clientWidth || 700;
-            // Standard scan width ~693px
-            effectiveScale = Math.max(1.0, Math.min(2.5, containerWidth / 693));
-          }
-
           if (canvasRef.current) {
-            await BukhariPdfService.renderPageToCanvas(
-              pageNumber,
-              canvasRef.current,
-              effectiveScale,
-              (task) => {
-                renderTaskRef.current = task;
-              }
-            );
-
+            await BukhariPdfService.renderPageToCanvas(pageNumber, canvasRef.current, 1.5);
             if (!isCancelled) {
-              setIsRendered(true);
-              setIsLoading(false);
+              setCanvasRendered(true);
             }
           }
-        } catch (err: unknown) {
-          const error = err as { name?: string };
-          if (error?.name === 'RenderingCancelledException') {
-            return;
-          }
-          if (!isCancelled) {
-            console.error(`Error rendering page ${pageNumber}:`, err);
-            setRenderError(true);
-            setIsLoading(false);
-          }
+        } catch (err) {
+          console.error(`Fallback canvas render failed for page ${pageNumber}:`, err);
         }
       };
 
       render();
-
       return () => {
         isCancelled = true;
-        if (renderTaskRef.current) {
-          try {
-            renderTaskRef.current.cancel();
-          } catch {
-            // Ignore cancellation
-          }
-        }
       };
-    }, [pageNumber, isNearViewport, scale, fitWidth]);
+    }, [useFallbackCanvas, canvasRendered, pageNumber]);
 
     return (
       <article
-        ref={cardRef}
         id={`bukhari-page-${pageNumber}`}
         data-page={pageNumber}
         className="bukhari-page-card card"
@@ -661,7 +582,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
           </span>
         </div>
 
-        {/* Complete Book Page Canvas Container (Preserving Natural Aspect Ratio) */}
+        {/* Complete Book Page Container (Preserving Natural Aspect Ratio: 693 / 1002) */}
         <div
           style={{
             width: '100%',
@@ -670,34 +591,61 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
             alignItems: 'center',
             backgroundColor: '#ffffff',
             position: 'relative',
-            minHeight: isRendered ? 'auto' : '360px',
-            aspectRatio: isRendered ? undefined : '1 / 1.414',
+            minHeight: '360px',
+            aspectRatio: '693 / 1002',
             boxSizing: 'border-box',
           }}
         >
-          <canvas
-            ref={canvasRef}
-            style={{
-              display: isRendered ? 'block' : 'none',
-              width: '100%',
-              maxWidth: '100%',
-              height: 'auto',
-              margin: '0 auto',
-            }}
-          />
+          {!useFallbackCanvas ? (
+            <img
+              src={imageUrl}
+              alt={`صحيح البخاري - الصفحة ${pageNumber}`}
+              loading={isNearby ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={isCurrent ? 'high' : isNearby ? 'auto' : 'low'}
+              onLoad={() => setImgLoaded(true)}
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (img.src !== fallbackUrl && !img.src.endsWith(fallbackUrl)) {
+                  img.src = fallbackUrl;
+                } else {
+                  setUseFallbackCanvas(true);
+                }
+              }}
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                maxWidth: '100%',
+                objectFit: 'contain',
+                opacity: imgLoaded ? 1 : 0.9,
+                transition: 'opacity 0.2s ease',
+              }}
+            />
+          ) : (
+            <canvas
+              ref={canvasRef}
+              style={{
+                display: 'block',
+                width: '100%',
+                maxWidth: '100%',
+                height: 'auto',
+                margin: '0 auto',
+              }}
+            />
+          )}
 
-          {/* Loading or Placeholder Skeleton */}
-          {(!isRendered || isLoading) && (
+          {/* Loading Skeleton */}
+          {!imgLoaded && !canvasRendered && (
             <div
               style={{
-                position: isRendered ? 'absolute' : 'relative',
+                position: 'absolute',
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
                 width: '100%',
                 height: '100%',
-                minHeight: '360px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -724,20 +672,6 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
               >
                 جاري تحميل الصفحة {pageNumber}...
               </span>
-            </div>
-          )}
-
-          {/* Render Error Fallback */}
-          {renderError && (
-            <div
-              style={{
-                padding: 'var(--space-4)',
-                textAlign: 'center',
-                color: '#ef4444',
-                fontSize: '0.82rem',
-              }}
-            >
-              تعذر تحميل الصفحة {pageNumber}. الرجاء إعادة المحاولة.
             </div>
           )}
         </div>

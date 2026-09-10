@@ -14,6 +14,10 @@ export class BukhariService {
     return getBukhariVolume(1);
   }
 
+  public static getTotalPages(): number {
+    return getBukhariVolume(1).totalPages;
+  }
+
   public static getGoogleDriveUrl(): string {
     return GOOGLE_DRIVE_BUKHARI_LINK;
   }
@@ -25,6 +29,14 @@ export class BukhariService {
 
   public static getLocalPdfUrl(): string {
     return LOCAL_BUKHARI_PDF_PATH;
+  }
+
+  public static getPageImageUrl(pageNumber: number): string {
+    return `/bukhari/pages/page_${pageNumber}.webp`;
+  }
+
+  public static getPageFallbackUrl(pageNumber: number): string {
+    return `/bukhari/pages/page_${pageNumber}.jpg`;
   }
 }
 

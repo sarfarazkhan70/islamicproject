@@ -54,12 +54,24 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     expect(vol.totalPages).toBe(699);
   });
 
-  it('should have BukhariPdfService exposing getDocument and renderPageToCanvas', () => {
+  it('should have BukhariPdfService exposing getDocument, getPage, renderPageToCanvas, and getPageImageUrl', () => {
     expect(typeof BukhariPdfService.getDocument).toBe('function');
+    expect(typeof BukhariPdfService.getPage).toBe('function');
     expect(typeof BukhariPdfService.renderPageToCanvas).toBe('function');
+    expect(typeof BukhariPdfService.getPageImageUrl).toBe('function');
+    expect(BukhariPdfService.getPageImageUrl(1)).toBe('/bukhari/pages/page_1.webp');
+    expect(BukhariPdfService.getPageImageUrl(20)).toBe('/bukhari/pages/page_20.webp');
+    expect(BukhariPdfService.getPageImageUrl(699)).toBe('/bukhari/pages/page_699.webp');
   });
 
-  it('should verify BukhariReader component has pure vertical scroll layout with no Next/Previous buttons', () => {
+  it('should have wasm decoders present in public/wasm for JBIG2 PDF decoding', () => {
+    const wasmDir = path.resolve(__dirname, '../../public/wasm');
+    expect(fs.existsSync(wasmDir)).toBe(true);
+    expect(fs.existsSync(path.join(wasmDir, 'jbig2.wasm'))).toBe(true);
+    expect(fs.existsSync(path.join(wasmDir, 'openjpeg.wasm'))).toBe(true);
+  });
+
+  it('should verify BukhariReader component has pure vertical scroll layout with all 699 pages rendering support', () => {
     const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
     expect(fs.existsSync(readerFilePath)).toBe(true);
     const code = fs.readFileSync(readerFilePath, 'utf8');
@@ -78,6 +90,7 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     expect(code).toContain('scrollSnapType');
     expect(code).toContain('scrollSnapAlign');
     expect(code).toContain('bukhari-page-');
+    expect(code).toContain('aspectRatio');
 
     // Verify size presets and page search
     expect(code).toContain('125%');

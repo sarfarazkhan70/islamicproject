@@ -3,8 +3,6 @@ import {
   getGlobalAyahNumber,
   getKanzulImanUrduAudioUrl,
   getKanzulImanUrduFallbackAudioUrl,
-  getEnglishTranslationAudioUrl,
-  getEnglishTranslationFallbackAudioUrl,
   getArabicAyahAudioUrl,
   getDisplayedAyahText,
   getKanzulImanArchiveAudioUrl,
@@ -59,20 +57,6 @@ describe('Kanz-ul-Iman Audio & Verse Mapping', () => {
     );
   });
 
-  it('should generate correct audio URL for authentic English translation recitation in male voice', async () => {
-    const { getEnglishTranslationAudioUrl, getEnglishTranslationFallbackAudioUrl } = await import(
-      '../stores/useKanzulImanAudioStore'
-    );
-    expect(getEnglishTranslationAudioUrl(1, 1)).toBe(
-      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/001001.mp3'
-    );
-    expect(getEnglishTranslationAudioUrl(114, 6)).toBe(
-      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/114006.mp3'
-    );
-    expect(getEnglishTranslationFallbackAudioUrl(1, 1)).toBe(
-      'https://cdn.islamic.network/quran/audio/192/en.walk/1.mp3'
-    );
-  });
 
   it('should provide authentic verified Kanz-ul-Iman Urdu and faithful English translation of Ala Hazrat Imam Ahmad Raza Khan', () => {
     // 1. Al-Fatihah 1:1
@@ -232,23 +216,6 @@ describe('Authentic Quran & Translation Audio API Endpoint Resolvers', () => {
     );
   });
 
-  it('should generate valid English translation audio API endpoints and CDN fallbacks', () => {
-    // Primary EveryAyah endpoint (Ibrahim Walk)
-    expect(getEnglishTranslationAudioUrl(1, 1)).toBe(
-      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/001001.mp3'
-    );
-    expect(getEnglishTranslationAudioUrl(114, 6)).toBe(
-      'https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/114006.mp3'
-    );
-
-    // CDN fallback endpoint
-    expect(getEnglishTranslationFallbackAudioUrl(1, 1)).toBe(
-      'https://cdn.islamic.network/quran/audio/192/en.walk/1.mp3'
-    );
-    expect(getEnglishTranslationFallbackAudioUrl(114, 6)).toBe(
-      'https://cdn.islamic.network/quran/audio/192/en.walk/6236.mp3'
-    );
-  });
 });
 
 describe('Kanz-ul-Iman Authentic Full Page Scan Service & Image Resolvers', () => {
@@ -428,30 +395,20 @@ describe('Kanz-ul-Iman Authentic Full Page Scan Service & Image Resolvers', () =
     );
   });
 
-  it('should enforce strict translation language exclusivity (Urdu vs English, never combined)', async () => {
-    const { useKanzulImanAudioStore, getKanzulImanUrduAudioUrl, getEnglishTranslationAudioUrl } = await import(
+  it('should enforce authentic Kanz-ul-Iman Urdu audio playback mode', async () => {
+    const { useKanzulImanAudioStore, getKanzulImanUrduAudioUrl } = await import(
       '../stores/useKanzulImanAudioStore'
     );
 
     const store = useKanzulImanAudioStore.getState();
 
-    // 1. Select Urdu
+    // Verify Urdu mode
     store.setSelectedLanguage('urdu');
     expect(useKanzulImanAudioStore.getState().selectedLanguage).toBe('urdu');
     expect(useKanzulImanAudioStore.getState().playbackMode).toBe('full-urdu');
 
     const urduUrl = getKanzulImanUrduAudioUrl(1, 1);
     expect(urduUrl).toContain('urdu_shamshad_ali_khan');
-    expect(urduUrl).not.toContain('English');
-
-    // 2. Select English
-    store.setSelectedLanguage('english');
-    expect(useKanzulImanAudioStore.getState().selectedLanguage).toBe('english');
-    expect(useKanzulImanAudioStore.getState().playbackMode).toBe('full-english');
-
-    const englishUrl = getEnglishTranslationAudioUrl(1, 1);
-    expect(englishUrl).toContain('English/Sahih_Intnl_Ibrahim_Walk');
-    expect(englishUrl).not.toContain('urdu');
   });
 });
 

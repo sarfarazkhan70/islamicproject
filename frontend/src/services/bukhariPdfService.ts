@@ -1,38 +1,116 @@
 // ============================================================================
-// BUKHARI PDF SERVICE: High-Resolution Page Canvas Engine
-// Renders the exact scanned pages of the Google Drive Bukhari Shareef PDF
-// at large scale (125%, 150%, 175%, 200%) with crisp High-DPI typography.
+// BUKHARI PDF SERVICE: High-Resolution Multi-Page Canvas Rendering Engine
+// Renders authentic scanned pages of the Google Drive Bukhari Shareef PDF
+// (All 699 Pages) with crisp High-DPI typography, caching & concurrency queue.
 // ============================================================================
 
 import * as pdfjsLib from 'pdfjs-dist';
 import { LOCAL_BUKHARI_PDF_PATH } from '../data/bukhariData';
 
-// Configure Web Worker in browser environment
+// Configure Web Worker in browser environment using static public worker file
 if (typeof window !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 }
 
 let cachedDocPromise: Promise<pdfjsLib.PDFDocumentProxy> | null = null;
+const pageCache = new Map<number, Promise<pdfjsLib.PDFPageProxy>>();
+
+// Concurrency queue to ensure orderly, high-performance canvas rendering across all 699 pages
+type RenderQueueItem = () => Promise<void>;
+const renderQueue: RenderQueueItem[] = [];
+let activeRendersCount = 0;
+const MAX_CONCURRENT_RENDERS = 3;
+
+function processQueue(): void {
+  while (activeRendersCount < MAX_CONCURRENT_RENDERS && renderQueue.length > 0) {
+    const nextTask = renderQueue.shift();
+    if (nextTask) {
+      activeRendersCount++;
+      nextTask().finally(() => {
+        activeRendersCount--;
+        processQueue();
+      });
+    }
+  }
+}
+
+function enqueueRender(task: () => Promise<void>): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    const wrappedTask = async () => {
+      try {
+        await task();
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    };
+
+    renderQueue.push(wrappedTask);
+    processQueue();
+  });
+}
 
 export class BukhariPdfService {
   /**
-   * Load and cache the PDF document instance
+   * Resolve high-resolution pre-rendered page image URL
+   */
+  public static getPageImageUrl(pageNumber: number): string {
+    return `/bukhari/pages/page_${pageNumber}.webp`;
+  }
+
+  /**
+   * Resolve secondary fallback page image URL
+   */
+  public static getPageFallbackUrl(pageNumber: number): string {
+    return `/bukhari/pages/page_${pageNumber}.jpg`;
+  }
+
+  /**
+   * Load and cache the PDF document instance with automatic retry on failure
    */
   public static getDocument(): Promise<pdfjsLib.PDFDocumentProxy> {
     if (!cachedDocPromise) {
       const loadingTask = pdfjsLib.getDocument({
         url: LOCAL_BUKHARI_PDF_PATH,
-        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/cmaps/',
+        wasmUrl: '/wasm/',
+        cMapUrl: '/cmaps/',
         cMapPacked: true,
+        standardFontDataUrl: '/standard_fonts/',
+        enableXfa: false,
       });
-      cachedDocPromise = loadingTask.promise;
+
+      cachedDocPromise = loadingTask.promise.catch((err) => {
+        // Clear cached promise on failure so subsequent requests can retry
+        cachedDocPromise = null;
+        pageCache.clear();
+        console.error('Failed to load Bukhari PDF document:', err);
+        throw err;
+      });
     }
     return cachedDocPromise;
   }
 
   /**
-   * Render a specific page to a canvas element with High-DPI and custom scale.
-   * Preserves exact proportions without distortion.
+   * Get cached PDFPageProxy for a specific page number (1 to 699)
+   */
+  public static async getPage(pageNumber: number): Promise<pdfjsLib.PDFPageProxy> {
+    if (pageCache.has(pageNumber)) {
+      return pageCache.get(pageNumber)!;
+    }
+
+    const doc = await this.getDocument();
+    const pagePromise = doc.getPage(pageNumber).catch((err) => {
+      pageCache.delete(pageNumber);
+      throw err;
+    });
+
+    pageCache.set(pageNumber, pagePromise);
+    return pagePromise;
+  }
+
+  /**
+   * Render a specific Bukhari page to a canvas element with High-DPI and custom scale.
+   * Uses concurrency queue for smooth, non-blocking scrolling across all 699 pages.
    */
   public static async renderPageToCanvas(
     pageNumber: number,
@@ -40,44 +118,68 @@ export class BukhariPdfService {
     scale: number = 1.5,
     onRenderTaskCreated?: (task: pdfjsLib.RenderTask) => void
   ): Promise<{ width: number; height: number }> {
-    const doc = await this.getDocument();
-    const page = await doc.getPage(pageNumber);
+    const page = await this.getPage(pageNumber);
 
-    const viewport = page.getViewport({ scale });
     const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2.5) : 1;
+    // Calculate viewport directly with DPR scale for crisp typography
+    const viewport = page.getViewport({ scale: scale * dpr });
 
-    canvas.width = Math.floor(viewport.width * dpr);
-    canvas.height = Math.floor(viewport.height * dpr);
-    canvas.style.width = '100%';
-    canvas.style.height = 'auto';
-    canvas.style.maxWidth = '100%';
-    canvas.style.display = 'block';
+    return new Promise<{ width: number; height: number }>((resolve, reject) => {
+      enqueueRender(async () => {
+        if (!canvas) {
+          resolve({ width: viewport.width, height: viewport.height });
+          return;
+        }
 
-    const ctx = canvas.getContext('2d', { alpha: false });
-    if (!ctx) {
-      throw new Error('Canvas 2D context not supported');
-    }
+        // Set internal canvas pixel dimensions for crisp rendering
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
 
-    // High quality crisp text rendering settings
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        // CSS display presentation
+        canvas.style.width = '100%';
+        canvas.style.height = 'auto';
+        canvas.style.maxWidth = '100%';
+        canvas.style.display = 'block';
 
-    // Clear background to clean white before rendering page
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, viewport.width, viewport.height);
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (!ctx) {
+          throw new Error('Canvas 2D context not supported');
+        }
 
-    const renderTask = page.render({
-      canvasContext: ctx,
-      viewport: viewport,
-      canvas: canvas,
+        // Crisp smoothing settings
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        // White background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const renderTask = page.render({
+          canvasContext: ctx,
+          canvas: canvas,
+          viewport: viewport,
+        });
+
+        if (onRenderTaskCreated) {
+          onRenderTaskCreated(renderTask);
+        }
+
+        try {
+          await renderTask.promise;
+          resolve({ width: viewport.width, height: viewport.height });
+        } catch (err: unknown) {
+          const error = err as { name?: string; message?: string };
+          if (
+            error?.name === 'RenderingCancelledException' ||
+            error?.message?.includes('cancelled')
+          ) {
+            // Cancellation is an expected flow during rapid scrolling/zooming
+            resolve({ width: viewport.width, height: viewport.height });
+            return;
+          }
+          reject(err);
+        }
+      }).catch(reject);
     });
-
-    if (onRenderTaskCreated) {
-      onRenderTaskCreated(renderTask);
-    }
-
-    await renderTask.promise;
-    return { width: viewport.width, height: viewport.height };
   }
 }

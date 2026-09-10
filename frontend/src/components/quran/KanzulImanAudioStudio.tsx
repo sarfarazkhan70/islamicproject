@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useKanzulImanAudioStore, TranslationLanguage } from '../../stores/useKanzulImanAudioStore';
+import { useKanzulImanAudioStore } from '../../stores/useKanzulImanAudioStore';
 import { SURAHS_LIST, JUZ_LIST } from '../../data/quranData';
 import {
   Play,
@@ -23,12 +23,9 @@ export const KanzulImanAudioStudio: React.FC = () => {
     playbackScope,
     currentSurahNumber,
     currentJuzNumber,
-    currentAyahNumber,
     currentAyahs,
     isLoadingAyahs,
     playingAyahKey,
-    playbackPhase,
-    selectedLanguage,
     currentPartIndex,
     totalPartsInSurah,
     currentTrackTitle,
@@ -40,7 +37,6 @@ export const KanzulImanAudioStudio: React.FC = () => {
     audioVolume,
     playbackTime,
     playbackDuration,
-    setSelectedLanguage,
     setPlaybackSpeed,
     setAudioVolume,
     toggleAutoPlay,
@@ -50,13 +46,10 @@ export const KanzulImanAudioStudio: React.FC = () => {
     playSurah,
     playKanzulImanSurah,
     playJuz,
-    playAyah,
     togglePlay,
     togglePlayAyahCard,
     nextTrack,
     prevTrack,
-    nextAyah,
-    prevAyah,
     seekAudio,
     skipTime,
   } = useKanzulImanAudioStore();
@@ -131,10 +124,6 @@ export const KanzulImanAudioStudio: React.FC = () => {
     seekAudio(seconds);
   };
 
-  const handleLanguageSelect = (lang: TranslationLanguage) => {
-    setSelectedLanguage(lang);
-  };
-
   const handleCopyAyah = (arabicText: string, urduTranslation: string, verseKey: string) => {
     const text = `${arabicText}\n\n${urduTranslation}\n[Kanz-ul-Iman — ${verseKey}]`;
     navigator.clipboard.writeText(text).then(() => {
@@ -173,7 +162,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
           }}
         />
 
-        {/* Section 1: Language Switcher & Authentic Source Banner */}
+        {/* Section 1: Authentic Urdu Audio Rendition Badge */}
         <div
           style={{
             display: 'flex',
@@ -195,57 +184,22 @@ export const KanzulImanAudioStudio: React.FC = () => {
             </span>
           </div>
 
-          {/* Language Buttons: [ Urdu (Kanz-ul-Iman) ] [ English ] */}
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              type="button"
-              id="lang-select-urdu"
-              onClick={() => handleLanguageSelect('urdu')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '6px 14px',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '0.84rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: selectedLanguage === 'urdu' ? '1px solid var(--brand-gold)' : '1px solid var(--border-default)',
-                backgroundColor: selectedLanguage === 'urdu' ? 'var(--brand-gold)' : 'var(--bg-surface)',
-                color: selectedLanguage === 'urdu' ? '#000' : 'var(--text-secondary)',
-                boxShadow: selectedLanguage === 'urdu' ? '0 2px 10px rgba(245, 158, 11, 0.3)' : 'none',
-                transition: 'all var(--transition-fast)',
-              }}
-              title="Select Authentic Urdu Kanz-ul-Iman Audio (Paigham-e-Raza)"
-            >
-              <span>{selectedLanguage === 'urdu' ? '●' : '○'}</span>
-              <span>Urdu (Kanz-ul-Iman)</span>
-            </button>
-
-            <button
-              type="button"
-              id="lang-select-english"
-              onClick={() => handleLanguageSelect('english')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '6px 14px',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '0.84rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: selectedLanguage === 'english' ? '1px solid var(--brand-gold)' : '1px solid var(--border-default)',
-                backgroundColor: selectedLanguage === 'english' ? 'var(--brand-gold)' : 'var(--bg-surface)',
-                color: selectedLanguage === 'english' ? '#000' : 'var(--text-secondary)',
-                boxShadow: selectedLanguage === 'english' ? '0 2px 10px rgba(245, 158, 11, 0.3)' : 'none',
-                transition: 'all var(--transition-fast)',
-              }}
-              title="Select English Translation Audio"
-            >
-              <span>{selectedLanguage === 'english' ? '●' : '○'}</span>
-              <span>English</span>
-            </button>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.84rem',
+              fontWeight: 700,
+              backgroundColor: 'var(--brand-gold)',
+              color: '#000',
+              boxShadow: '0 2px 10px rgba(245, 158, 11, 0.3)',
+            }}
+          >
+            <span>●</span>
+            <span>Urdu (Kanz-ul-Iman)</span>
           </div>
         </div>
 
@@ -269,44 +223,31 @@ export const KanzulImanAudioStudio: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <Sparkles size={14} className="text-amber-400" />
             <span>
-              {selectedLanguage === 'urdu' ? (
-                <>
-                  Authentic <strong>Kanz-ul-Iman</strong> Tilawat & Urdu Translation •{' '}
-                  <span style={{ color: 'var(--brand-gold)', fontWeight: 600 }}>
-                    Ala Hazrat Imam Ahmad Raza Khan
-                  </span>{' '}
-                  (Paigham-e-Raza)
-                </>
-              ) : (
-                <>
-                  Authentic <strong>Quran & English Translation</strong> Recitation •{' '}
-                  <span style={{ color: 'var(--brand-gold)', fontWeight: 600 }}>
-                    Mishary Rashid Alafasy & Ibrahim Walk
-                  </span>
-                </>
-              )}
+              Authentic <strong>Kanz-ul-Iman</strong> Tilawat & Urdu Translation •{' '}
+              <span style={{ color: 'var(--brand-gold)', fontWeight: 600 }}>
+                Ala Hazrat Imam Ahmad Raza Khan
+              </span>{' '}
+              (Paigham-e-Raza)
             </span>
           </div>
 
-          {selectedLanguage === 'urdu' && (
-            <a
-              href="https://archive.org/details/kanzuliman_201907"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-                color: 'var(--brand-gold)',
-                textDecoration: 'none',
-                fontWeight: 600,
-              }}
-              title="View on Internet Archive"
-            >
-              <span>Archive.org</span>
-              <ExternalLink size={12} />
-            </a>
-          )}
+          <a
+            href="https://archive.org/details/kanzuliman_201907"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              color: 'var(--brand-gold)',
+              textDecoration: 'none',
+              fontWeight: 600,
+            }}
+            title="View on Internet Archive"
+          >
+            <span>Archive.org</span>
+            <ExternalLink size={12} />
+          </a>
         </div>
 
         {/* Section 2: Surah & Para Selectors + Controls */}
@@ -459,7 +400,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
         </div>
 
         {/* Multi-Part Audio Tabs (for long Surahs like Al-Baqarah, Ali Imran, An-Nisa, etc.) */}
-        {selectedLanguage === 'urdu' && totalPartsInSurah > 1 && (
+        {totalPartsInSurah > 1 && (
           <div
             style={{
               display: 'flex',
@@ -560,18 +501,12 @@ export const KanzulImanAudioStudio: React.FC = () => {
               <>
                 <span className="animate-pulse text-amber-400">●</span>
                 <span>
-                  {selectedLanguage === 'urdu'
-                    ? `Playing Kanz-ul-Iman ${totalPartsInSurah > 1 ? `(Part ${currentPartIndex + 1} of ${totalPartsInSurah})` : ''}`
-                    : playbackPhase === 'arabic'
-                    ? `Playing Arabic — Ayah ${currentAyahNumber}`
-                    : `Playing English Translation — Ayah ${currentAyahNumber}`}
+                  Playing Kanz-ul-Iman {totalPartsInSurah > 1 ? `(Part ${currentPartIndex + 1} of ${totalPartsInSurah})` : ''}
                 </span>
               </>
             ) : (
               <span>
-                {selectedLanguage === 'urdu'
-                  ? `Kanz-ul-Iman Audio • ${totalPartsInSurah > 1 ? `Part ${currentPartIndex + 1} of ${totalPartsInSurah}` : 'Full Surah'}`
-                  : `Ayah ${currentAyahNumber} of ${currentAyahs.length || currentSurahMeta.versesCount}`}
+                Kanz-ul-Iman Audio • {totalPartsInSurah > 1 ? `Part ${currentPartIndex + 1} of ${totalPartsInSurah}` : 'Full Surah'}
               </span>
             )}
           </div>
@@ -598,11 +533,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  if (selectedLanguage === 'urdu') {
-                    playKanzulImanSurah(currentSurahNumber, currentPartIndex);
-                  } else {
-                    playAyah(currentSurahNumber, currentAyahNumber);
-                  }
+                  playKanzulImanSurah(currentSurahNumber, currentPartIndex);
                 }}
                 style={{
                   padding: '5px 14px',
@@ -670,13 +601,13 @@ export const KanzulImanAudioStudio: React.FC = () => {
             marginBottom: 'var(--space-5)',
           }}
         >
-          {/* Previous Track / Ayah */}
+          {/* Previous Track / Surah Part */}
           <button
             type="button"
             className="btn btn-ghost"
-            onClick={selectedLanguage === 'urdu' ? prevTrack : prevAyah}
-            disabled={selectedLanguage === 'urdu' ? (currentSurahNumber <= 1 && currentPartIndex <= 0) : currentAyahNumber <= 1}
-            title={selectedLanguage === 'urdu' ? 'Previous Part / Surah' : 'Previous Ayah'}
+            onClick={prevTrack}
+            disabled={currentSurahNumber <= 1 && currentPartIndex <= 0}
+            title="Previous Part / Surah"
             style={{
               width: 44,
               height: 44,
@@ -753,17 +684,13 @@ export const KanzulImanAudioStudio: React.FC = () => {
             <RotateCw size={18} />
           </button>
 
-          {/* Next Track / Ayah */}
+          {/* Next Track / Surah Part */}
           <button
             type="button"
             className="btn btn-ghost"
-            onClick={selectedLanguage === 'urdu' ? nextTrack : nextAyah}
-            disabled={
-              selectedLanguage === 'urdu'
-                ? (currentSurahNumber >= 114 && currentPartIndex >= totalPartsInSurah - 1)
-                : currentAyahNumber >= currentAyahs.length
-            }
-            title={selectedLanguage === 'urdu' ? 'Next Part / Surah' : 'Next Ayah'}
+            onClick={nextTrack}
+            disabled={currentSurahNumber >= 114 && currentPartIndex >= totalPartsInSurah - 1}
+            title="Next Part / Surah"
             style={{
               width: 44,
               height: 44,
@@ -795,9 +722,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span>Audio Source:</span>
             <span style={{ color: 'var(--brand-gold)', fontWeight: 600 }}>
-              {selectedLanguage === 'urdu'
-                ? `Internet Archive (kanzuliman_201907) • ${currentTrackTitle}`
-                : 'Quran.com Recitation + Ibrahim Walk English'}
+              {`Internet Archive (kanzuliman_201907) • ${currentTrackTitle}`}
             </span>
           </div>
 
@@ -974,26 +899,6 @@ export const KanzulImanAudioStudio: React.FC = () => {
                       کنز الایمان:
                     </span>
                     {ayah.kanzulImanUrdu}
-                  </div>
-                )}
-
-                {/* English Translation */}
-                {ayah.kanzulImanEnglish && selectedLanguage === 'english' && (
-                  <div
-                    style={{
-                      fontSize: '0.9rem',
-                      lineHeight: 1.6,
-                      color: 'var(--text-secondary)',
-                      backgroundColor: 'var(--bg-surface-elevated)',
-                      padding: '10px 14px',
-                      borderRadius: 'var(--radius-md)',
-                      borderLeft: '3px solid var(--brand-primary)',
-                    }}
-                  >
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', fontWeight: 600, marginBottom: 2 }}>
-                      English Translation:
-                    </span>
-                    {ayah.kanzulImanEnglish}
                   </div>
                 )}
               </div>

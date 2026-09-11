@@ -693,7 +693,7 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     arabicTitle: 'حدائق بخشش (رياض المغفرة في مدح خير البرية)',
     urduTitle: 'حدائقِ بخشش',
     transliteration: 'Hadaiq-e-Bakhshish (Gardens of Forgiveness)',
-    author: 'Imam Ahmad Raza Khan Barelvi (Alahazrat)',
+    author: 'Imam Ahmad Raza Khan (Ala Hazrat)',
     authorArabic: 'الإمام أحمد رضا خان القادري الحنفي البريلوي',
     authorTitle: 'Hassan al-Hind (Poet-Laureate of Prophetic Praise)',
     category: 'durood',

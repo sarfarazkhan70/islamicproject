@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useKanzulImanAudioStore } from '../../stores/useKanzulImanAudioStore';
-import { SURAHS_LIST, JUZ_LIST } from '../../data/quranData';
+import { SURAHS_LIST } from '../../data/quranData';
 import {
   Play,
   Pause,
@@ -13,19 +13,15 @@ import {
   Languages,
   RotateCw as AutoPlayIcon,
   Sparkles,
-  Check,
-  Copy,
   ExternalLink,
+  ChevronDown,
+  Search,
+  Check,
 } from 'lucide-react';
 
 export const KanzulImanAudioStudio: React.FC = () => {
   const {
-    playbackScope,
     currentSurahNumber,
-    currentJuzNumber,
-    currentAyahs,
-    isLoadingAyahs,
-    playingAyahKey,
     currentPartIndex,
     totalPartsInSurah,
     currentTrackTitle,
@@ -42,12 +38,9 @@ export const KanzulImanAudioStudio: React.FC = () => {
     toggleAutoPlay,
     setPartIndex,
     loadSurahData,
-    loadJuzData,
     playSurah,
     playKanzulImanSurah,
-    playJuz,
     togglePlay,
-    togglePlayAyahCard,
     nextTrack,
     prevTrack,
     seekAudio,
@@ -55,32 +48,56 @@ export const KanzulImanAudioStudio: React.FC = () => {
   } = useKanzulImanAudioStore();
 
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [copiedAyahKey, setCopiedAyahKey] = useState<string | null>(null);
-  const activeAyahRef = useRef<HTMLDivElement | null>(null);
+  const [isSurahDropdownOpen, setIsSurahDropdownOpen] = useState<boolean>(false);
+  const [surahSearchQuery, setSurahSearchQuery] = useState<string>('');
 
-  // Load initial Surah data if empty
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Initialize Surah data on mount
   useEffect(() => {
-    if (currentAyahs.length === 0) {
-      if (playbackScope === 'juz' && currentJuzNumber) {
-        loadJuzData(currentJuzNumber);
-      } else {
-        loadSurahData(currentSurahNumber || 1);
+    loadSurahData(currentSurahNumber || 1);
+  }, [currentSurahNumber]);
+
+  // Click outside listener to dismiss Surah dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsSurahDropdownOpen(false);
       }
-    }
-  }, [currentSurahNumber, currentJuzNumber, playbackScope]);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSurahDropdownOpen(false);
+      }
+    };
 
-  // Auto-scroll active Ayah into view smoothly
-  useEffect(() => {
-    if (isPlaying && activeAyahRef.current) {
-      activeAyahRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
+    if (isSurahDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+      // Auto-focus search input
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
     }
-  }, [playingAyahKey, isPlaying]);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSurahDropdownOpen]);
 
   const currentSurahMeta = SURAHS_LIST[currentSurahNumber - 1] || SURAHS_LIST[0];
-  const currentJuzMeta = currentJuzNumber ? JUZ_LIST[currentJuzNumber - 1] : null;
+
+  const filteredSurahs = SURAHS_LIST.filter((s) => {
+    const q = surahSearchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      s.number.toString().includes(q) ||
+      s.name.toLowerCase().includes(q) ||
+      s.arabicName.includes(q) ||
+      (s.meaning && s.meaning.toLowerCase().includes(q))
+    );
+  });
 
   const formatTime = (sec: number) => {
     if (isNaN(sec) || !isFinite(sec) || sec < 0) return '00:00';
@@ -105,18 +122,10 @@ export const KanzulImanAudioStudio: React.FC = () => {
     }
   };
 
-  const handleSurahChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const sNum = parseInt(e.target.value, 10);
-    if (!isNaN(sNum)) {
-      playSurah(sNum, 1);
-    }
-  };
-
-  const handleJuzChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const jNum = parseInt(e.target.value, 10);
-    if (!isNaN(jNum)) {
-      playJuz(jNum);
-    }
+  const handleSelectSurah = (surahNumber: number) => {
+    playSurah(surahNumber, 1);
+    setIsSurahDropdownOpen(false);
+    setSurahSearchQuery('');
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,31 +133,30 @@ export const KanzulImanAudioStudio: React.FC = () => {
     seekAudio(seconds);
   };
 
-  const handleCopyAyah = (arabicText: string, urduTranslation: string, verseKey: string) => {
-    const text = `${arabicText}\n\n${urduTranslation}\n[Kanz-ul-Iman — ${verseKey}]`;
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedAyahKey(verseKey);
-      setTimeout(() => setCopiedAyahKey(null), 2000);
-    });
-  };
-
   return (
-    <div className="kanzul-audio-container" style={{ width: '100%', maxWidth: 880, margin: '0 auto' }}>
-      {/* Clean Player Card */}
+    <div
+      className="kanzul-audio-container"
+      style={{
+        width: '100%',
+        maxWidth: 880,
+        margin: '0 auto',
+        paddingBottom: '100px',
+      }}
+    >
+      {/* Clean Audio Studio Player Card */}
       <div
         className="card"
         style={{
           padding: 'var(--space-6)',
-          marginBottom: 'var(--space-6)',
           backgroundColor: 'var(--bg-surface)',
           border: isPlaying ? '1px solid var(--brand-gold)' : '1px solid var(--border-default)',
           boxShadow: isPlaying ? '0 10px 32px rgba(245, 158, 11, 0.15)' : 'var(--shadow-md)',
           borderRadius: 'var(--radius-xl)',
           position: 'relative',
-          overflow: 'hidden',
+          overflow: 'visible',
         }}
       >
-        {/* Subtle Top Accent */}
+        {/* Subtle Top Accent Accent Bar */}
         <div
           style={{
             position: 'absolute',
@@ -156,6 +164,8 @@ export const KanzulImanAudioStudio: React.FC = () => {
             left: 0,
             right: 0,
             height: 3,
+            borderTopLeftRadius: 'var(--radius-xl)',
+            borderTopRightRadius: 'var(--radius-xl)',
             background: isPlaying
               ? 'linear-gradient(90deg, #f59e0b, #10b981, #f59e0b)'
               : 'linear-gradient(90deg, var(--border-default), var(--brand-gold), var(--border-default))',
@@ -250,19 +260,20 @@ export const KanzulImanAudioStudio: React.FC = () => {
           </a>
         </div>
 
-        {/* Section 2: Surah & Para Selectors + Controls */}
+        {/* Section 2: Surah Selector + Speed + AutoPlay Controls */}
         <div
           style={{
             display: 'flex',
             gap: 'var(--space-3)',
             flexWrap: 'wrap',
-            marginBottom: totalPartsInSurah > 1 ? 'var(--space-3)' : 'var(--space-5)',
+            marginBottom: totalPartsInSurah > 1 ? 'var(--space-4)' : 'var(--space-5)',
+            position: 'relative',
+            zIndex: 30,
           }}
         >
-          {/* Surah Selector */}
-          <div style={{ flex: 1, minWidth: 180 }}>
+          {/* Custom Downward-Opening Surah Selector with Live Search */}
+          <div ref={dropdownRef} style={{ flex: '1 1 260px', position: 'relative' }}>
             <label
-              htmlFor="audio-surah-select"
               style={{
                 display: 'block',
                 fontSize: '0.78rem',
@@ -271,72 +282,218 @@ export const KanzulImanAudioStudio: React.FC = () => {
                 marginBottom: 4,
               }}
             >
-              Surah
+              Select Surah (114 Surahs)
             </label>
-            <select
-              id="audio-surah-select"
-              value={currentSurahNumber}
-              onChange={handleSurahChange}
-              style={{
-                width: '100%',
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--bg-surface-elevated)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border-default)',
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              {SURAHS_LIST.map((s) => (
-                <option key={s.number} value={s.number}>
-                  {s.number}. {s.name} ({s.arabicName})
-                </option>
-              ))}
-            </select>
-          </div>
 
-          {/* Para Selector */}
-          <div style={{ flex: 1, minWidth: 180 }}>
-            <label
-              htmlFor="audio-para-select"
-              style={{
-                display: 'block',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                color: 'var(--text-secondary)',
-                marginBottom: 4,
-              }}
-            >
-              Para / Juz
-            </label>
-            <select
-              id="audio-para-select"
-              value={currentJuzNumber || 1}
-              onChange={handleJuzChange}
+            {/* Trigger Button */}
+            <button
+              type="button"
+              onClick={() => setIsSurahDropdownOpen((prev) => !prev)}
               style={{
                 width: '100%',
-                padding: '9px 12px',
+                height: 42,
+                padding: '0 14px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: 'var(--bg-surface-elevated)',
                 color: 'var(--text-primary)',
-                border: '1px solid var(--border-default)',
+                border: isSurahDropdownOpen ? '1px solid var(--brand-gold)' : '1px solid var(--border-default)',
                 fontSize: '0.9rem',
                 fontWeight: 600,
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 8,
+                boxShadow: isSurahDropdownOpen ? '0 0 0 2px rgba(245, 158, 11, 0.2)' : 'none',
+                transition: 'all var(--transition-fast)',
               }}
+              title="Click to choose a Surah"
             >
-              {JUZ_LIST.map((j) => (
-                <option key={j.number} value={j.number}>
-                  Para {j.number} — {j.name} ({j.arabicName})
-                </option>
-              ))}
-            </select>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
+                <span
+                  style={{
+                    backgroundColor: 'var(--brand-gold)',
+                    color: '#000',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    padding: '2px 7px',
+                    borderRadius: 'var(--radius-sm)',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                >
+                  {currentSurahMeta.number}
+                </span>
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {currentSurahMeta.name}
+                </span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--brand-gold)', fontFamily: 'var(--font-arabic)' }}>
+                  ({currentSurahMeta.arabicName})
+                </span>
+              </div>
+
+              <ChevronDown
+                size={18}
+                style={{
+                  color: 'var(--text-secondary)',
+                  transition: 'transform var(--transition-fast)',
+                  transform: isSurahDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  flexShrink: 0,
+                }}
+              />
+            </button>
+
+            {/* Downward Dropdown Menu Panel (Opens strictly BELOW the button) */}
+            {isSurahDropdownOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 6px)',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'var(--bg-surface)',
+                  border: '1px solid var(--border-default)',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.65)',
+                  zIndex: 100,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  animation: 'fadeIn 0.15s ease-out',
+                }}
+              >
+                {/* Search Box Header */}
+                <div
+                  style={{
+                    padding: '8px 10px',
+                    borderBottom: '1px solid var(--border-subtle)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
+                >
+                  <Search size={15} style={{ color: 'var(--text-muted)' }} />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search Surah by name or number..."
+                    value={surahSearchQuery}
+                    onChange={(e) => setSurahSearchQuery(e.target.value)}
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: 'none',
+                      outline: 'none',
+                      fontSize: '0.84rem',
+                      color: 'var(--text-primary)',
+                    }}
+                  />
+                  {surahSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSurahSearchQuery('')}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--text-muted)',
+                        cursor: 'pointer',
+                        fontSize: '0.75rem',
+                        padding: '2px 6px',
+                      }}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {/* Scrollable 114 Surahs List */}
+                <div
+                  style={{
+                    maxHeight: '280px',
+                    overflowY: 'auto',
+                    padding: '4px',
+                  }}
+                >
+                  {filteredSurahs.length === 0 ? (
+                    <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.84rem' }}>
+                      No Surah found matching &quot;{surahSearchQuery}&quot;
+                    </div>
+                  ) : (
+                    filteredSurahs.map((s) => {
+                      const isSelected = s.number === currentSurahNumber;
+                      return (
+                        <button
+                          key={s.number}
+                          type="button"
+                          onClick={() => handleSelectSurah(s.number)}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            borderRadius: 'var(--radius-md)',
+                            backgroundColor: isSelected ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+                            border: 'none',
+                            color: isSelected ? 'var(--brand-gold)' : 'var(--text-primary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: 10,
+                            cursor: 'pointer',
+                            fontSize: '0.86rem',
+                            fontWeight: isSelected ? 700 : 500,
+                            textAlign: 'left',
+                            transition: 'background var(--transition-fast)',
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isSelected) e.currentTarget.style.backgroundColor = 'var(--bg-surface-elevated)';
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <span
+                              style={{
+                                width: 26,
+                                height: 26,
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: isSelected ? 'var(--brand-gold)' : 'var(--bg-surface-elevated)',
+                                color: isSelected ? '#000' : 'var(--text-secondary)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                fontFamily: 'var(--font-mono)',
+                                flexShrink: 0,
+                              }}
+                            >
+                              {s.number}
+                            </span>
+                            <div>
+                              <div style={{ fontWeight: 600 }}>{s.name}</div>
+                              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                                {s.meaning} • {s.versesCount} Ayahs
+                              </div>
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: '1rem', fontFamily: 'var(--font-arabic)', color: 'var(--brand-gold)' }}>
+                              {s.arabicName}
+                            </span>
+                            {isSelected && <Check size={16} className="text-amber-400" />}
+                          </div>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Speed Selector */}
-          <div style={{ width: 100 }}>
+          <div style={{ width: 110, position: 'relative' }}>
             <label
               htmlFor="audio-speed-select"
               style={{
@@ -355,7 +512,8 @@ export const KanzulImanAudioStudio: React.FC = () => {
               onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
               style={{
                 width: '100%',
-                padding: '9px 10px',
+                height: 42,
+                padding: '0 10px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: 'var(--bg-surface-elevated)',
                 color: 'var(--text-primary)',
@@ -366,7 +524,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
               }}
             >
               <option value={0.75}>0.75x</option>
-              <option value={1.0}>1.0x</option>
+              <option value={1.0}>1.0x (Normal)</option>
               <option value={1.25}>1.25x</option>
               <option value={1.5}>1.5x</option>
             </select>
@@ -378,46 +536,59 @@ export const KanzulImanAudioStudio: React.FC = () => {
               type="button"
               onClick={toggleAutoPlay}
               style={{
-                height: 40,
-                padding: '0 14px',
+                height: 42,
+                padding: '0 16px',
                 borderRadius: 'var(--radius-md)',
                 border: isAutoPlay ? '1px solid var(--brand-primary)' : '1px solid var(--border-default)',
                 backgroundColor: isAutoPlay ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-surface-elevated)',
                 color: isAutoPlay ? 'var(--brand-primary)' : 'var(--text-secondary)',
-                fontSize: '0.82rem',
+                fontSize: '0.84rem',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 6,
                 cursor: 'pointer',
               }}
-              title={isAutoPlay ? 'Auto Play Next enabled' : 'Auto Play disabled'}
+              title={isAutoPlay ? 'Auto Play Next Surah enabled' : 'Auto Play disabled'}
             >
-              <AutoPlayIcon size={14} className={isAutoPlay && isPlaying ? 'animate-spin' : ''} />
+              <AutoPlayIcon size={15} className={isAutoPlay && isPlaying ? 'animate-spin' : ''} />
               <span>Auto Play: {isAutoPlay ? 'ON' : 'OFF'}</span>
             </button>
           </div>
         </div>
 
-        {/* Multi-Part Audio Tabs (for long Surahs like Al-Baqarah, Ali Imran, An-Nisa, etc.) */}
+        {/* Section 3: Clean, Balanced, and Equal-Height Part 1 / Part 2 / Part 3 UI */}
         {totalPartsInSurah > 1 && (
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '8px 12px',
+              flexDirection: 'column',
+              gap: 10,
+              padding: '14px 18px',
               backgroundColor: 'var(--bg-surface-elevated)',
-              borderRadius: 'var(--radius-lg)',
+              borderRadius: 'var(--radius-xl)',
               border: '1px solid var(--border-subtle)',
               marginBottom: 'var(--space-5)',
-              overflowX: 'auto',
             }}
           >
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
-              Surah Parts:
-            </span>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+              <span style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Surah Audio Parts ({totalPartsInSurah} Parts):
+              </span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--brand-gold)', fontWeight: 600 }}>
+                Continuous Auto-Sequence
+              </span>
+            </div>
+
+            {/* Balanced Grid of Part Buttons */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${Math.min(totalPartsInSurah, 4)}, minmax(0, 1fr))`,
+                gap: '10px',
+                alignItems: 'stretch',
+              }}
+            >
               {currentTracks.map((track, idx) => {
                 const isPartActive = currentPartIndex === idx;
                 return (
@@ -426,9 +597,10 @@ export const KanzulImanAudioStudio: React.FC = () => {
                     type="button"
                     onClick={() => setPartIndex(idx)}
                     style={{
-                      padding: '5px 12px',
-                      borderRadius: 'var(--radius-full)',
-                      fontSize: '0.8rem',
+                      height: 44,
+                      padding: '0 12px',
+                      borderRadius: 'var(--radius-lg)',
+                      fontSize: '0.86rem',
                       fontWeight: isPartActive ? 700 : 500,
                       backgroundColor: isPartActive ? 'var(--brand-gold)' : 'var(--bg-surface)',
                       color: isPartActive ? '#000' : 'var(--text-primary)',
@@ -436,13 +608,30 @@ export const KanzulImanAudioStudio: React.FC = () => {
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 6,
-                      boxShadow: isPartActive ? '0 2px 8px rgba(245, 158, 11, 0.25)' : 'none',
+                      justifyContent: 'center',
+                      gap: 8,
+                      boxShadow: isPartActive ? '0 4px 14px rgba(245, 158, 11, 0.35)' : 'var(--shadow-xs)',
+                      transition: 'all var(--transition-fast)',
+                      whiteSpace: 'nowrap',
                     }}
+                    title={`Part ${idx + 1}: ${formatTime(track.duration)} (Auto-continuous playback)`}
                   >
+                    {isPartActive && isPlaying && (
+                      <span style={{ fontSize: '0.7rem' }}>▶</span>
+                    )}
                     <span>Part {idx + 1}</span>
-                    <span style={{ fontSize: '0.72rem', opacity: isPartActive ? 0.9 : 0.6 }}>
-                      ({formatTime(track.duration)})
+                    <span
+                      style={{
+                        fontSize: '0.72rem',
+                        opacity: isPartActive ? 0.9 : 0.65,
+                        fontFamily: 'var(--font-mono)',
+                        backgroundColor: isPartActive ? 'rgba(0, 0, 0, 0.15)' : 'var(--bg-surface-elevated)',
+                        padding: '2px 6px',
+                        borderRadius: 'var(--radius-sm)',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {formatTime(track.duration)}
                     </span>
                   </button>
                 );
@@ -463,9 +652,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
               marginBottom: 4,
             }}
           >
-            {playbackScope === 'juz' && currentJuzMeta
-              ? currentJuzMeta.arabicName
-              : `سورۃ ${currentSurahMeta.arabicName.replace(/^(سورۃ|سورة|سُورَةُ)\s*/, '')}`}
+            {`سورۃ ${currentSurahMeta.arabicName.replace(/^(سورۃ|سورة|سُورَةُ)\s*/, '')}`}
           </div>
 
           <h3
@@ -476,9 +663,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
               marginBottom: 4,
             }}
           >
-            {playbackScope === 'juz' && currentJuzMeta
-              ? `Para ${currentJuzMeta.number}: ${currentJuzMeta.name}`
-              : `Surah ${currentSurahMeta.number}. ${currentSurahMeta.name}`}
+            {`Surah ${currentSurahMeta.number}. ${currentSurahMeta.name}`}
           </h3>
 
           <div
@@ -501,12 +686,12 @@ export const KanzulImanAudioStudio: React.FC = () => {
               <>
                 <span className="animate-pulse text-amber-400">●</span>
                 <span>
-                  Playing Kanz-ul-Iman {totalPartsInSurah > 1 ? `(Part ${currentPartIndex + 1} of ${totalPartsInSurah})` : ''}
+                  Playing Kanz-ul-Iman {totalPartsInSurah > 1 ? `(Part ${currentPartIndex + 1} of ${totalPartsInSurah} • Auto-Continuous)` : 'Full Surah'}
                 </span>
               </>
             ) : (
               <span>
-                Kanz-ul-Iman Audio • {totalPartsInSurah > 1 ? `Part ${currentPartIndex + 1} of ${totalPartsInSurah}` : 'Full Surah'}
+                Kanz-ul-Iman Audio • {totalPartsInSurah > 1 ? `${totalPartsInSurah} Parts Auto-Continuous (Current: Part ${currentPartIndex + 1})` : 'Full Surah'}
               </span>
             )}
           </div>
@@ -751,160 +936,6 @@ export const KanzulImanAudioStudio: React.FC = () => {
             />
           </div>
         </div>
-      </div>
-
-      {/* Synchronized Ayah Reading & Translation List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <div
-          style={{
-            fontSize: '0.92rem',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            padding: '0 4px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <span>Surah {currentSurahMeta.name} — Verses & Translation ({currentAyahs.length})</span>
-          <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)', fontWeight: 400 }}>
-            Authentic Kanz-ul-Iman Text
-          </span>
-        </div>
-
-        {isLoadingAyahs ? (
-          <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-secondary)' }}>
-            <div className="animate-spin inline-block mb-2">⏳</div>
-            <p>Loading verses...</p>
-          </div>
-        ) : (
-          currentAyahs.map((ayah) => {
-            const verseKey = ayah.verseKey || `${currentSurahNumber}:${ayah.ayahNumber}`;
-            const isActive = playingAyahKey === verseKey;
-            const isCopied = copiedAyahKey === verseKey;
-
-            return (
-              <div
-                key={verseKey}
-                ref={isActive ? activeAyahRef : null}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  padding: '16px 20px',
-                  backgroundColor: isActive ? 'var(--bg-surface-elevated)' : 'var(--bg-surface)',
-                  border: isActive ? '1px solid var(--brand-gold)' : '1px solid var(--border-default)',
-                  borderRadius: 'var(--radius-xl)',
-                  transition: 'all var(--transition-fast)',
-                  boxShadow: isActive ? '0 4px 20px rgba(245, 158, 11, 0.08)' : 'var(--shadow-sm)',
-                }}
-              >
-                {/* Ayah Header Row: Number Badge, Verse Key, Actions */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 'var(--radius-full)',
-                        backgroundColor: isActive ? 'var(--brand-gold)' : 'var(--bg-surface-elevated)',
-                        color: isActive ? '#000' : 'var(--brand-gold)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: '0.8rem',
-                        fontFamily: 'var(--font-mono)',
-                      }}
-                    >
-                      {ayah.ayahNumber}
-                    </div>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                      {verseKey}
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <button
-                      type="button"
-                      className="btn btn-xs btn-ghost"
-                      onClick={() => handleCopyAyah(ayah.arabicText, ayah.kanzulImanUrdu, verseKey)}
-                      title="Copy Ayah with Kanz-ul-Iman translation"
-                      style={{ padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
-                    >
-                      {isCopied ? (
-                        <>
-                          <Check size={13} className="text-emerald-500" />
-                          <span style={{ fontSize: '0.72rem', color: 'var(--brand-primary)' }}>Copied</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy size={13} />
-                          <span style={{ fontSize: '0.72rem' }}>Copy</span>
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-xs btn-outline-primary"
-                      onClick={() => togglePlayAyahCard(currentSurahNumber, ayah.ayahNumber)}
-                      title="Play from this Ayah"
-                      style={{ padding: '4px 10px', fontSize: '0.75rem', fontWeight: 600 }}
-                    >
-                      <Play size={12} style={{ marginRight: 4 }} />
-                      <span>Play</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Arabic Quranic Text */}
-                <div
-                  className="mushaf-text"
-                  dir="rtl"
-                  style={{
-                    fontSize: 'clamp(1.25rem, 2.5vw, 1.6rem)',
-                    color: isActive ? 'var(--brand-gold)' : 'var(--text-primary)',
-                    textAlign: 'right',
-                    lineHeight: 1.8,
-                    padding: '6px 0',
-                  }}
-                >
-                  {ayah.arabicText}
-                </div>
-
-                {/* Urdu Kanz-ul-Iman Translation in Nastaliq Typography */}
-                {ayah.kanzulImanUrdu && (
-                  <div
-                    dir="rtl"
-                    style={{
-                      fontFamily: 'var(--font-urdu, "Noto Nastaliq Urdu", serif)',
-                      fontSize: '1.15rem',
-                      lineHeight: 2.2,
-                      color: 'var(--brand-gold)',
-                      textAlign: 'right',
-                      backgroundColor: 'rgba(245, 158, 11, 0.05)',
-                      padding: '10px 16px',
-                      borderRadius: 'var(--radius-lg)',
-                      borderRight: '3px solid var(--brand-gold)',
-                    }}
-                  >
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', fontFamily: 'sans-serif' }}>
-                      کنز الایمان:
-                    </span>
-                    {ayah.kanzulImanUrdu}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
       </div>
     </div>
   );

@@ -26,13 +26,19 @@ export const BookVolumeList: React.FC<BookVolumeListProps> = ({ book }) => {
   const handleReadVolume = (volNum: number) => {
     if (book.id === 'kanzul-iman') {
       navigate('/library/kanzul-iman/read?mode=read');
+    } else if (book.id === 'hadaiq-e-bakhshish') {
+      navigate('/library/hadaiq-e-bakhshish/read');
     } else {
       navigate(`/library/${book.id}/read?vol=${volNum}`);
     }
   };
 
   const handleReadChapter = (volNum: number, chapterId: string) => {
-    navigate(`/library/${book.id}/read?vol=${volNum}&ch=${chapterId}`);
+    if (book.id === 'hadaiq-e-bakhshish') {
+      navigate('/library/hadaiq-e-bakhshish/read');
+    } else {
+      navigate(`/library/${book.id}/read?vol=${volNum}&ch=${chapterId}`);
+    }
   };
 
   const handleReadSurah = (surahNum: number) => {

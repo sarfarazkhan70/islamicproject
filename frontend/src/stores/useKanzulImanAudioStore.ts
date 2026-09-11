@@ -74,6 +74,55 @@ export function getArabicAyahAudioUrl(surahNumber: number, ayahNumberInSurah: nu
   return `https://verses.quran.com/${reciterSlug}/mp3/${paddedSurah}${paddedAyah}.mp3`;
 }
 
+/**
+ * Resolves the appropriate audio part index (0-based) for a given Surah and Ayah number
+ */
+export function getStartingPartForSurahAyah(surahNumber: number, ayahNumber: number): number {
+  const tracks = getKanzulImanAudioTracks(surahNumber);
+  if (tracks.length <= 1) return 0;
+
+  if (surahNumber === 2) { // Al-Baqarah (3 parts: Part 1: 1-141, Part 2: 142-252, Part 3: 253-286)
+    if (ayahNumber >= 253) return 2;
+    if (ayahNumber >= 142) return 1;
+    return 0;
+  }
+  if (surahNumber === 3) { // Ali 'Imran (3 parts: Part 1: 1-92, Part 2: 93-149, Part 3: 150-200)
+    if (ayahNumber >= 150) return 2;
+    if (ayahNumber >= 93) return 1;
+    return 0;
+  }
+  if (surahNumber === 4) { // An-Nisa (2 parts: Part 1: 1-147, Part 2: 148-176)
+    if (ayahNumber >= 148) return 1;
+    return 0;
+  }
+  if (surahNumber === 5) { // Al-Ma'idah (3 parts: Part 1: 1-81, Part 2: 82-120)
+    if (ayahNumber >= 82) return 1;
+    return 0;
+  }
+  if (surahNumber === 6) { // Al-An'am (2 parts: Part 1: 1-110, Part 2: 111-165)
+    if (ayahNumber >= 111) return 1;
+    return 0;
+  }
+  if (surahNumber === 7) { // Al-A'raf (2 parts: Part 1: 1-87, Part 2: 88-206)
+    if (ayahNumber >= 88) return 1;
+    return 0;
+  }
+  if (surahNumber === 8) { // Al-Anfal (2 parts: Part 1: 1-40, Part 2: 41-75)
+    if (ayahNumber >= 41) return 1;
+    return 0;
+  }
+  if (surahNumber === 9) { // At-Tawbah (2 parts: Part 1: 1-92, Part 2: 93-129)
+    if (ayahNumber >= 93) return 1;
+    return 0;
+  }
+  if (surahNumber === 11) { // Hud (2 parts: Part 1: 1-83, Part 2: 84-123)
+    if (ayahNumber >= 84) return 1;
+    return 0;
+  }
+
+  return 0;
+}
+
 export type TranslationLanguage = 'urdu';
 export type PlaybackPhase = 'idle' | 'translation';
 export type PlaybackScope = 'surah' | 'juz';
@@ -190,7 +239,7 @@ let activeHtmlAudio: HTMLAudioElement | null = null;
  * Completely stops any active HTML5 audio playback and cleans up event listeners
  */
 function stopAnyAudio() {
-  if (activeHtmlAudio) {
+  if (typeof Audio !== 'undefined' && activeHtmlAudio) {
     try {
       activeHtmlAudio.pause();
       activeHtmlAudio.currentTime = 0;
@@ -289,7 +338,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
 
     setPlaybackSpeed: (speed) => {
       set({ playbackSpeed: speed });
-      if (activeHtmlAudio) {
+      if (typeof Audio !== 'undefined' && activeHtmlAudio) {
         activeHtmlAudio.playbackRate = speed;
       }
     },
@@ -297,7 +346,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     setAudioVolume: (volume) => {
       const clamped = Math.max(0, Math.min(1, volume));
       set({ audioVolume: clamped });
-      if (activeHtmlAudio) {
+      if (typeof Audio !== 'undefined' && activeHtmlAudio) {
         activeHtmlAudio.volume = clamped;
       }
     },
@@ -364,6 +413,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     playSurah: async (surahNumber, startAyah = 1, _lang) => {
       const validSurah = Math.max(1, Math.min(114, surahNumber));
       const tracks = getKanzulImanAudioTracks(validSurah);
+      const startPart = getStartingPartForSurahAyah(validSurah, startAyah);
       set({
         playbackScope: 'surah',
         currentSurahNumber: validSurah,
@@ -372,14 +422,14 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playingLanguage: 'urdu',
         currentTracks: tracks,
         totalPartsInSurah: tracks.length,
-        currentPartIndex: 0,
+        currentPartIndex: startPart,
       });
 
       if (get().currentAyahs.length === 0 || get().currentSurahNumber !== validSurah) {
         await get().loadSurahData(validSurah);
       }
 
-      get().playKanzulImanSurah(validSurah, 0);
+      get().playKanzulImanSurah(validSurah, startPart);
     },
 
     playKanzulImanSurah: (surahNumber: number, partIndex: number = 0) => {
@@ -398,7 +448,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       const totalAyahs = surahMeta?.versesCount || SURAH_VERSE_COUNTS[validSurah - 1] || 7;
 
       set({
-        playbackScope: 'surah',
+        playbackScope: get().playbackScope || 'surah',
         currentSurahNumber: validSurah,
         currentPartIndex: validPart,
         totalPartsInSurah: tracks.length,
@@ -417,72 +467,77 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playbackProgress: 0,
       });
 
-      if (!activeHtmlAudio) {
-        activeHtmlAudio = new Audio();
-      }
-
-      activeHtmlAudio.src = track.url;
-      activeHtmlAudio.playbackRate = get().playbackSpeed || 1.0;
-      activeHtmlAudio.volume = get().audioVolume;
-
-      activeHtmlAudio.onplay = () => {
-        set({ isPlaying: true, isLoading: false, audioError: null });
-      };
-
-      activeHtmlAudio.onpause = () => {
-        if (activeHtmlAudio && !activeHtmlAudio.ended) {
-          set({ isPlaying: false });
+      if (typeof Audio !== 'undefined') {
+        if (!activeHtmlAudio) {
+          activeHtmlAudio = new Audio();
         }
-      };
 
-      activeHtmlAudio.ontimeupdate = () => {
-        if (activeHtmlAudio && activeHtmlAudio.duration) {
-          const cur = activeHtmlAudio.currentTime;
-          const dur = activeHtmlAudio.duration;
+        activeHtmlAudio.src = track.url;
+        activeHtmlAudio.playbackRate = get().playbackSpeed || 1.0;
+        activeHtmlAudio.volume = get().audioVolume;
+
+        activeHtmlAudio.onplay = () => {
+          set({ isPlaying: true, isLoading: false, audioError: null });
+        };
+
+        activeHtmlAudio.onpause = () => {
+          if (activeHtmlAudio && !activeHtmlAudio.ended) {
+            set({ isPlaying: false });
+          }
+        };
+
+        activeHtmlAudio.ontimeupdate = () => {
+          if (activeHtmlAudio && activeHtmlAudio.duration) {
+            const cur = activeHtmlAudio.currentTime;
+            const dur = activeHtmlAudio.duration;
+            set({
+              playbackTime: cur,
+              playbackDuration: dur,
+              playbackProgress: dur > 0 ? cur / dur : 0,
+            });
+          }
+        };
+
+        activeHtmlAudio.onloadedmetadata = () => {
+          if (activeHtmlAudio && activeHtmlAudio.duration) {
+            set({ playbackDuration: activeHtmlAudio.duration });
+          }
+        };
+
+        activeHtmlAudio.onended = () => {
+          const { currentPartIndex, totalPartsInSurah, currentSurahNumber, isAutoPlay } = get();
+          // If there's another part for this same Surah (e.g. Al-Baqarah Part 2, Part 3), play it automatically
+          if (currentPartIndex + 1 < totalPartsInSurah) {
+            get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
+          } else if (isAutoPlay && currentSurahNumber < 114) {
+            // Surah finished: Advance to next Surah from Part 1
+            get().playSurah(currentSurahNumber + 1, 1);
+          } else {
+            // Surah finished completely
+            set({ isPlaying: false, playbackProgress: 1, playbackTime: get().playbackDuration });
+          }
+        };
+
+        activeHtmlAudio.onerror = (e) => {
+          console.error('Kanzul Iman audio stream error:', e);
           set({
-            playbackTime: cur,
-            playbackDuration: dur,
-            playbackProgress: dur > 0 ? cur / dur : 0,
+            isPlaying: false,
+            isLoading: false,
+            audioError: 'Kanz-ul-Iman audio stream failed to load. Please click retry.',
+          });
+        };
+
+        const playPromise = activeHtmlAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            if (err.name !== 'AbortError') {
+              console.warn('Audio play request failed or interrupted:', err);
+              set({ isPlaying: false, isLoading: false });
+            }
           });
         }
-      };
-
-      activeHtmlAudio.onloadedmetadata = () => {
-        if (activeHtmlAudio && activeHtmlAudio.duration) {
-          set({ playbackDuration: activeHtmlAudio.duration });
-        }
-      };
-
-      activeHtmlAudio.onended = () => {
-        const { currentPartIndex, totalPartsInSurah, currentSurahNumber, isAutoPlay } = get();
-        // If there's another part for this Surah (e.g. Al-Baqarah Part 2), play it next
-        if (currentPartIndex + 1 < totalPartsInSurah) {
-          get().playKanzulImanSurah(currentSurahNumber, currentPartIndex + 1);
-        } else if (isAutoPlay && currentSurahNumber < 114) {
-          // Advance to next Surah
-          get().playSurah(currentSurahNumber + 1, 1);
-        } else {
-          set({ isPlaying: false, playbackProgress: 1, playbackTime: get().playbackDuration });
-        }
-      };
-
-      activeHtmlAudio.onerror = (e) => {
-        console.error('Kanzul Iman audio stream error:', e);
-        set({
-          isPlaying: false,
-          isLoading: false,
-          audioError: 'Kanz-ul-Iman audio stream failed to load. Please click retry.',
-        });
-      };
-
-      const playPromise = activeHtmlAudio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          if (err.name !== 'AbortError') {
-            console.warn('Audio play request failed or interrupted:', err);
-            set({ isPlaying: false, isLoading: false });
-          }
-        });
+      } else {
+        set({ isPlaying: true, isLoading: false });
       }
     },
 
@@ -492,6 +547,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       const sNum = startSurah || juzMeta.startSurah;
       const aNum = startAyah || juzMeta.startAyah;
       const tracks = getKanzulImanAudioTracks(sNum);
+      const startPart = getStartingPartForSurahAyah(sNum, aNum);
 
       set({
         playbackScope: 'juz',
@@ -502,17 +558,18 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playingLanguage: 'urdu',
         currentTracks: tracks,
         totalPartsInSurah: tracks.length,
-        currentPartIndex: 0,
+        currentPartIndex: startPart,
       });
 
       await get().loadJuzData(validJuz);
-      get().playKanzulImanSurah(sNum, 0);
+      get().playKanzulImanSurah(sNum, startPart);
     },
 
     playAyah: (surahNumber, ayahNumber, _startPhase) => {
       const validSurah = Math.max(1, Math.min(114, surahNumber));
       const surahMeta = SURAHS_LIST.find((s) => s.number === validSurah);
       const totalAyahs = surahMeta?.versesCount || SURAH_VERSE_COUNTS[validSurah - 1] || 7;
+      const startPart = getStartingPartForSurahAyah(validSurah, ayahNumber);
       const verseKey = `${validSurah}:${ayahNumber}`;
 
       set({
@@ -524,8 +581,8 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playbackPhase: 'translation',
       });
 
-      // Play authentic Kanz-ul-Iman Urdu Surah Audio
-      get().playKanzulImanSurah(validSurah, 0);
+      // Play authentic Kanz-ul-Iman Urdu Surah Audio starting from correct part
+      get().playKanzulImanSurah(validSurah, startPart);
     },
 
     togglePlay: () => {
@@ -533,7 +590,7 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       if (isPlaying) {
         get().pauseAudio();
       } else {
-        if (activeHtmlAudio && activeHtmlAudio.src && activeHtmlAudio.paused) {
+        if (typeof Audio !== 'undefined' && activeHtmlAudio && activeHtmlAudio.src && activeHtmlAudio.paused) {
           get().resumeAudio();
         } else {
           get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
@@ -541,12 +598,13 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
       }
     },
 
-    togglePlayAyahCard: (surahNumber, _ayahNumber) => {
-      get().playKanzulImanSurah(surahNumber, 0);
+    togglePlayAyahCard: (surahNumber, ayahNumber) => {
+      const startPart = getStartingPartForSurahAyah(surahNumber, ayahNumber || 1);
+      get().playKanzulImanSurah(surahNumber, startPart);
     },
 
     pauseAudio: () => {
-      if (activeHtmlAudio && !activeHtmlAudio.paused) {
+      if (typeof Audio !== 'undefined' && activeHtmlAudio && !activeHtmlAudio.paused) {
         try {
           activeHtmlAudio.pause();
         } catch {}
@@ -555,14 +613,17 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     },
 
     resumeAudio: () => {
-      if (activeHtmlAudio && activeHtmlAudio.paused && activeHtmlAudio.src) {
+      if (typeof Audio !== 'undefined' && activeHtmlAudio && activeHtmlAudio.paused && activeHtmlAudio.src) {
         activeHtmlAudio.play().then(() => {
           set({ isPlaying: true });
         }).catch(() => {});
         return;
       }
-      const { currentSurahNumber, currentPartIndex } = get();
-      get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
+      set({ isPlaying: true });
+      if (typeof Audio !== 'undefined') {
+        const { currentSurahNumber, currentPartIndex } = get();
+        get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
+      }
     },
 
     stopAudio: () => {
@@ -607,18 +668,22 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     },
 
     seekAudio: (seconds) => {
-      if (activeHtmlAudio && !isNaN(activeHtmlAudio.duration) && activeHtmlAudio.duration > 0) {
+      if (typeof Audio !== 'undefined' && activeHtmlAudio && !isNaN(activeHtmlAudio.duration) && activeHtmlAudio.duration > 0) {
         const target = Math.max(0, Math.min(activeHtmlAudio.duration, seconds));
         activeHtmlAudio.currentTime = target;
         set({ playbackTime: target, playbackProgress: target / activeHtmlAudio.duration });
+      } else {
+        set({ playbackTime: seconds });
       }
     },
 
     skipTime: (seconds) => {
-      if (activeHtmlAudio && !isNaN(activeHtmlAudio.duration) && activeHtmlAudio.duration > 0) {
+      if (typeof Audio !== 'undefined' && activeHtmlAudio && !isNaN(activeHtmlAudio.duration) && activeHtmlAudio.duration > 0) {
         const target = Math.max(0, Math.min(activeHtmlAudio.duration, activeHtmlAudio.currentTime + seconds));
         activeHtmlAudio.currentTime = target;
         set({ playbackTime: target, playbackProgress: target / activeHtmlAudio.duration });
+      } else {
+        set((state) => ({ playbackTime: Math.max(0, state.playbackTime + seconds) }));
       }
     },
   };

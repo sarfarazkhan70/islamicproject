@@ -50,6 +50,13 @@ describe('Islamic Book Cards & Volume Structure Verification', () => {
     );
   });
 
+  it('should have clean and verified metadata for Hadaiq-e-Bakhshish', () => {
+    const hadaiq = getBookById('hadaiq-e-bakhshish');
+    expect(hadaiq).toBeDefined();
+    expect(hadaiq?.title).toBe('Hadaiq-e-Bakhshish');
+    expect(hadaiq?.author).toBe('Imam Ahmad Raza Khan (Ala Hazrat)');
+  });
+
   it('should have clean and verified metadata for Hadith collections (Sihah Sittah)', () => {
     const bukhari = getBookById('sahih-al-bukhari');
     expect(bukhari).toBeDefined();

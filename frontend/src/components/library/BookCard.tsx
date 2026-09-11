@@ -22,6 +22,8 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
       navigate('/library/kanzul-iman/read?mode=read');
     } else if (book.id === 'sahih-al-bukhari') {
       navigate('/library/sahih-al-bukhari/read');
+    } else if (book.id === 'hadaiq-e-bakhshish') {
+      navigate('/library/hadaiq-e-bakhshish/read');
     } else {
       navigate(`/library/${book.id}`);
     }

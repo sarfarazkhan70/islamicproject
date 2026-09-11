@@ -410,6 +410,99 @@ describe('Kanz-ul-Iman Authentic Full Page Scan Service & Image Resolvers', () =
     const urduUrl = getKanzulImanUrduAudioUrl(1, 1);
     expect(urduUrl).toContain('urdu_shamshad_ali_khan');
   });
+
+  it('should play continuous authentic Kanz-ul-Iman Urdu Surah audio directly', async () => {
+    const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+    const store = useKanzulImanAudioStore.getState();
+
+    // Start playback for Surah 1 Al-Fatihah
+    store.playAyah(1, 1);
+    expect(useKanzulImanAudioStore.getState().playingAyahKey).toBe('1:1');
+    expect(useKanzulImanAudioStore.getState().playbackPhase).toBe('translation');
+    expect(useKanzulImanAudioStore.getState().selectedLanguage).toBe('urdu');
+    expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().currentAyahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-FATIHA');
+  });
+
+  it('should synchronize state and title immediately when selecting a short Surah (Al-Ikhlas 112)', async () => {
+    const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+    const store = useKanzulImanAudioStore.getState();
+
+    await store.playSurah(112, 1);
+
+    expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(112);
+    expect(useKanzulImanAudioStore.getState().playbackScope).toBe('surah');
+    expect(useKanzulImanAudioStore.getState().playingAyahKey).toBe('112:1');
+    expect(useKanzulImanAudioStore.getState().currentAyahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().playbackPhase).toBe('translation');
+    expect(useKanzulImanAudioStore.getState().maxAyahsInSurah).toBe(4);
+  });
+
+  it('should synchronize state and title immediately when selecting a long Surah (Ya-Sin 36 & Ar-Rahman 55)', async () => {
+    const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+    const store = useKanzulImanAudioStore.getState();
+
+    // Select Surah Ya-Sin (36)
+    await store.playSurah(36, 1);
+    expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(36);
+    expect(useKanzulImanAudioStore.getState().playbackScope).toBe('surah');
+    expect(useKanzulImanAudioStore.getState().playingAyahKey).toBe('36:1');
+    expect(useKanzulImanAudioStore.getState().currentAyahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().maxAyahsInSurah).toBe(83);
+
+    // Select Surah Ar-Rahman (55)
+    await store.playSurah(55, 1);
+    expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(55);
+    expect(useKanzulImanAudioStore.getState().playbackScope).toBe('surah');
+    expect(useKanzulImanAudioStore.getState().playingAyahKey).toBe('55:1');
+    expect(useKanzulImanAudioStore.getState().currentAyahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().maxAyahsInSurah).toBe(78);
+  });
+
+  it('should synchronize state and title immediately when selecting a Para / Juz (Para 1 & Para 30)', async () => {
+    const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+    const store = useKanzulImanAudioStore.getState();
+
+    // Select Para 1
+    await store.playJuz(1);
+    expect(useKanzulImanAudioStore.getState().playbackScope).toBe('juz');
+    expect(useKanzulImanAudioStore.getState().currentJuzNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().currentAyahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().playingAyahKey).toBe('1:1');
+
+    // Select Para 30
+    await store.playJuz(30);
+    expect(useKanzulImanAudioStore.getState().playbackScope).toBe('juz');
+    expect(useKanzulImanAudioStore.getState().currentJuzNumber).toBe(30);
+    expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(78);
+    expect(useKanzulImanAudioStore.getState().currentAyahNumber).toBe(1);
+    expect(useKanzulImanAudioStore.getState().playingAyahKey).toBe('78:1');
+  });
+
+  it('should preserve position on pause and resume smoothly', async () => {
+    const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+    const store = useKanzulImanAudioStore.getState();
+
+    useKanzulImanAudioStore.setState({
+      currentSurahNumber: 36,
+      currentAyahNumber: 5,
+      playingAyahKey: '36:5',
+      playbackPhase: 'translation',
+      isPlaying: true,
+      playbackTime: 12.5,
+      playbackDuration: 25.0,
+    });
+
+    store.pauseAudio();
+    expect(useKanzulImanAudioStore.getState().isPlaying).toBe(false);
+    expect(useKanzulImanAudioStore.getState().playbackTime).toBe(12.5);
+
+    store.resumeAudio();
+    expect(useKanzulImanAudioStore.getState().isPlaying).toBe(true);
+    expect(useKanzulImanAudioStore.getState().playbackTime).toBe(12.5);
+  });
 });
 
 describe('Single Source of Truth: Reading Translation Text vs Audio Speech Script', () => {
@@ -576,6 +669,109 @@ describe('Single Source of Truth: Reading Translation Text vs Audio Speech Scrip
       // Surah 114 An-Naas is single part
       expect(isKanzulImanMultiPart(114)).toBe(false);
       expect(getKanzulImanSurahAudioUrl(114, 0)).toBe('https://archive.org/download/kanzuliman_201907/114.%20AN-NAAS.mp3');
+    });
+
+    it('should strictly verify numerical part ordering across all multi-part Surahs (no alphabetical sorting bugs)', () => {
+      for (let s = 1; s <= 114; s++) {
+        const tracks = getKanzulImanAudioTracks(s);
+        if (tracks.length > 1) {
+          tracks.forEach((track, idx) => {
+            const expectedPartNum = idx + 1;
+            // Title should end with the exact numeric part (e.g. "AL-BAQRA 1", "AL-BAQRA 2")
+            expect(track.title).toMatch(new RegExp(`\\b${expectedPartNum}$`));
+            // Filename should contain _1.mp3, _2.mp3, etc.
+            expect(track.fileName).toContain(`_${expectedPartNum}.mp3`);
+          });
+        }
+      }
+    });
+
+    it('should maintain strict Surah boundary isolation with zero part mixing across Surahs', () => {
+      for (let s = 1; s <= 114; s++) {
+        const tracks = getKanzulImanAudioTracks(s);
+        const expectedPrefix = String(s).padStart(3, '0');
+        tracks.forEach((t) => {
+          // Filename MUST start with this Surah's 3-digit number
+          expect(t.fileName.startsWith(expectedPrefix)).toBe(true);
+        });
+      }
+    });
+
+    it('should automatically sequence multi-part Surah (Al-Baqarah 2: Part 1 -> Part 2 -> Part 3) and advance correctly', async () => {
+      const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+      const store = useKanzulImanAudioStore.getState();
+
+      // Start Al-Baqarah (Surah 2)
+      await store.playSurah(2, 1);
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(0);
+      expect(useKanzulImanAudioStore.getState().totalPartsInSurah).toBe(3);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-BAQRA 1');
+
+      // Next part in sequence
+      store.nextTrack();
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(1);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-BAQRA 2');
+
+      // Next part in sequence
+      store.nextTrack();
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-BAQRA 3');
+
+      // Previous part in sequence
+      store.prevTrack();
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(1);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-BAQRA 2');
+    });
+
+    it('should correctly sequence 2-part Surahs (e.g. Surah 4 An-Nisa)', async () => {
+      const { useKanzulImanAudioStore } = await import('../stores/useKanzulImanAudioStore');
+      const store = useKanzulImanAudioStore.getState();
+
+      await store.playSurah(4, 1);
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(4);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(0);
+      expect(useKanzulImanAudioStore.getState().totalPartsInSurah).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AN-NISA 1');
+
+      store.nextTrack();
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(4);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(1);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AN-NISA 2');
+    });
+
+    it('should map Para / Juz selection to correct starting part in multi-part Surahs', async () => {
+      const { useKanzulImanAudioStore, getStartingPartForSurahAyah } = await import(
+        '../stores/useKanzulImanAudioStore'
+      );
+      const store = useKanzulImanAudioStore.getState();
+
+      // Para 1: Al-Fatiha (1:1) -> Part 1
+      expect(getStartingPartForSurahAyah(1, 1)).toBe(0);
+
+      // Para 2: Al-Baqarah (2:142) -> Part 2 (index 1)
+      expect(getStartingPartForSurahAyah(2, 142)).toBe(1);
+      await store.playJuz(2);
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(1);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-BAQRA 2');
+
+      // Para 3: Al-Baqarah (2:253) -> Part 3 (index 2)
+      expect(getStartingPartForSurahAyah(2, 253)).toBe(2);
+      await store.playJuz(3);
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(2);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-BAQRA 3');
+
+      // Para 4: Ali 'Imran (3:93) -> Part 2 (index 1)
+      expect(getStartingPartForSurahAyah(3, 93)).toBe(1);
+      await store.playJuz(4);
+      expect(useKanzulImanAudioStore.getState().currentSurahNumber).toBe(3);
+      expect(useKanzulImanAudioStore.getState().currentPartIndex).toBe(1);
+      expect(useKanzulImanAudioStore.getState().currentTrackTitle).toBe('AL-IMRAN 2');
     });
   });
 });

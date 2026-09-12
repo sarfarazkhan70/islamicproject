@@ -37,6 +37,10 @@ const ZOOM_OPTIONS: ZoomOption[] = [
   { id: 'reset-default', label: 'Reset to Default', isSpecial: 'reset-default' },
 ];
 
+// Module-level session state to preserve explicitly chosen zoom across page changes in current session
+let sessionBukhariZoomLevel: number | null = null;
+let sessionBukhariFitWidth: boolean | null = null;
+
 export const BukhariReader: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,8 +55,8 @@ export const BukhariReader: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
   const [directPageInput, setDirectPageInput] = useState<string>(initialPage.toString());
-  const [zoomLevel, setZoomLevel] = useState<number>(1.0); // Default: 100%
-  const [isFitWidth, setIsFitWidth] = useState<boolean>(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(() => sessionBukhariZoomLevel ?? 1.0);
+  const [isFitWidth, setIsFitWidth] = useState<boolean>(() => sessionBukhariFitWidth ?? true); // Default: Fit to Width
   const [isZoomMenuOpen, setIsZoomMenuOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
@@ -185,7 +189,7 @@ export const BukhariReader: React.FC = () => {
         if (activeEntry) {
           const pageAttr = activeEntry.target.getAttribute('data-page');
           const p = parseInt(pageAttr || '', 10);
-          if (!isNaN(p) && p >= 1 && p <= totalPages && p !== activePageRef.current) {
+          if (!isNaN(p) && p !== activePageRef.current) {
             activePageRef.current = p;
             setCurrentPage(p);
           }
@@ -218,12 +222,18 @@ export const BukhariReader: React.FC = () => {
     if (opt.isSpecial === 'fit-width') {
       setIsFitWidth(true);
       setZoomLevel(1.0);
+      sessionBukhariFitWidth = true;
+      sessionBukhariZoomLevel = 1.0;
     } else if (opt.isSpecial === 'reset-default') {
-      setIsFitWidth(false);
+      setIsFitWidth(true);
       setZoomLevel(1.0);
+      sessionBukhariFitWidth = true;
+      sessionBukhariZoomLevel = 1.0;
     } else if (opt.scale !== undefined) {
       setIsFitWidth(false);
       setZoomLevel(opt.scale);
+      sessionBukhariFitWidth = false;
+      sessionBukhariZoomLevel = opt.scale;
     }
     setIsZoomMenuOpen(false);
     maintainCurrentPagePosition(currentP);
@@ -234,7 +244,10 @@ export const BukhariReader: React.FC = () => {
     setIsFitWidth(false);
     setZoomLevel((prev) => {
       const next = ZOOM_PERCENTAGES.find((p) => p > prev + 0.02);
-      return next ? next : Math.min(2.5, +(prev + 0.15).toFixed(2));
+      const newScale = next ? next : Math.min(2.5, +(prev + 0.15).toFixed(2));
+      sessionBukhariFitWidth = false;
+      sessionBukhariZoomLevel = newScale;
+      return newScale;
     });
     maintainCurrentPagePosition(currentP);
   };
@@ -245,15 +258,20 @@ export const BukhariReader: React.FC = () => {
     setZoomLevel((prev) => {
       const prevArr = [...ZOOM_PERCENTAGES].reverse();
       const prevMatch = prevArr.find((p) => p < prev - 0.02);
-      return prevMatch ? prevMatch : Math.max(0.5, +(prev - 0.15).toFixed(2));
+      const newScale = prevMatch ? prevMatch : Math.max(0.5, +(prev - 0.15).toFixed(2));
+      sessionBukhariFitWidth = false;
+      sessionBukhariZoomLevel = newScale;
+      return newScale;
     });
     maintainCurrentPagePosition(currentP);
   };
 
   const handleResetZoom = () => {
     const currentP = activePageRef.current;
-    setIsFitWidth(false);
+    setIsFitWidth(true);
     setZoomLevel(1.0);
+    sessionBukhariFitWidth = true;
+    sessionBukhariZoomLevel = 1.0;
     setIsZoomMenuOpen(false);
     maintainCurrentPagePosition(currentP);
   };
@@ -263,16 +281,16 @@ export const BukhariReader: React.FC = () => {
     Array.from({ length: totalPages }, (_, i) => i + 1)
   ).current;
 
+  const pageContainerMaxWidth = isFitWidth
+    ? '880px'
+    : `${Math.min(1600, Math.max(340, Math.round(820 * zoomLevel) + 60))}px`;
+
   return (
     <div
       className={`bukhari-reader-page-root ${isFullscreen ? 'fullscreen-mode' : ''}`}
       style={{
         width: '100%',
-        maxWidth: isFullscreen
-          ? '100%'
-          : !isFitWidth && zoomLevel > 1.0
-          ? `${Math.max(1400, Math.round(820 * zoomLevel) + 60)}px`
-          : '1400px',
+        maxWidth: isFullscreen ? '100%' : pageContainerMaxWidth,
         margin: '0 auto',
         padding: isFullscreen
           ? 'var(--space-1) var(--space-2)'
@@ -736,7 +754,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
         className="bukhari-page-card card"
         style={{
           width: isFitWidth ? '100%' : `${Math.round(820 * zoomLevel)}px`,
-          maxWidth: isFitWidth ? '100%' : zoomLevel <= 1.0 ? `${Math.round(820 * zoomLevel)}px` : 'none',
+          maxWidth: isFitWidth ? '820px' : zoomLevel <= 1.0 ? `${Math.round(820 * zoomLevel)}px` : 'none',
           minWidth: isFitWidth ? 'auto' : zoomLevel > 1.0 ? `${Math.round(820 * zoomLevel)}px` : 'auto',
           flexShrink: 0,
           margin: '0 auto',

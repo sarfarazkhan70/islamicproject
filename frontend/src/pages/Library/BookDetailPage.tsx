@@ -22,15 +22,9 @@ import { HadaiqEnglishPdfService } from '../../services/hadaiqEnglishPdfService'
 // ============================================================================
 interface HadaiqSelectionCoverProps {
   edition: 'urdu' | 'hindi' | 'english';
-  width?: number;
-  height?: number;
 }
 
-const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({
-  edition,
-  width = 115,
-  height = 160,
-}) => {
+const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({ edition }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isRendered, setIsRendered] = useState(false);
 
@@ -61,9 +55,8 @@ const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({
 
   return (
     <div
+      className="hadaiq-selection-cover-box"
       style={{
-        width,
-        height,
         borderRadius: 'var(--radius-md)',
         overflow: 'hidden',
         position: 'relative',
@@ -80,7 +73,6 @@ const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         boxSizing: 'border-box',
-        marginBottom: '14px',
         flexShrink: 0,
       }}
     >
@@ -110,7 +102,7 @@ const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({
           }}
         >
           <BookOpen
-            size={32}
+            size={28}
             style={{
               color:
                 edition === 'urdu'
@@ -182,11 +174,113 @@ export const BookDetailPage: React.FC = () => {
         style={{
           width: '100%',
           maxWidth: 1200,
-          margin: '0',
-          padding: '0 var(--space-4) var(--space-10)',
+          margin: '0 auto',
           boxSizing: 'border-box',
         }}
       >
+        <style>{`
+          .hadaiq-selection-page {
+            padding: 0 var(--space-4) var(--space-10);
+          }
+          .hadaiq-cards-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 210px));
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          .hadaiq-book-card {
+            width: 100%;
+            max-width: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justifyContent: flex-start;
+            text-align: center;
+            padding: 16px 14px;
+            border-radius: var(--radius-xl);
+            background-color: var(--bg-surface);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            transition: all var(--transition-fast);
+          }
+          .hadaiq-selection-cover-box {
+            width: 115px;
+            height: 160px;
+            max-width: 100%;
+            margin-bottom: 12px;
+          }
+          .hadaiq-card-writer {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.35;
+            word-break: break-word;
+          }
+          .hadaiq-card-lang {
+            font-size: 0.76rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 3px;
+            line-height: 1.2;
+          }
+          @media (max-width: 640px) {
+            .hadaiq-selection-page {
+              padding: 0 8px var(--space-8) !important;
+            }
+            .hadaiq-cards-row {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 6px !important;
+              justify-content: stretch !important;
+            }
+            .hadaiq-book-card {
+              max-width: 100% !important;
+              padding: 10px 4px !important;
+              border-radius: var(--radius-lg) !important;
+            }
+            .hadaiq-selection-cover-box {
+              width: 100% !important;
+              max-width: 86px !important;
+              height: auto !important;
+              aspect-ratio: 115 / 160 !important;
+              margin-bottom: 6px !important;
+            }
+            .hadaiq-card-writer {
+              font-size: 0.62rem !important;
+              line-height: 1.25 !important;
+            }
+            .hadaiq-card-lang {
+              font-size: 0.65rem !important;
+              margin-top: 2px !important;
+            }
+          }
+          @media (max-width: 370px) {
+            .hadaiq-cards-row {
+              gap: 4px !important;
+            }
+            .hadaiq-book-card {
+              padding: 8px 2px !important;
+            }
+            .hadaiq-selection-cover-box {
+              max-width: 72px !important;
+              margin-bottom: 4px !important;
+            }
+            .hadaiq-card-writer {
+              font-size: 0.56rem !important;
+              line-height: 1.2 !important;
+            }
+            .hadaiq-card-lang {
+              font-size: 0.58rem !important;
+            }
+          }
+        `}</style>
+
         {/* Top Back & Breadcrumb Bar */}
         <div
           style={{
@@ -221,18 +315,8 @@ export const BookDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Side-by-Side Horizontal Cards Container (Starting Left) */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignItems: 'stretch',
-            gap: 'var(--space-5)',
-            width: '100%',
-          }}
-        >
+        {/* Side-by-Side Horizontal Cards Container (Always 3 in 1 Row on Mobile, Tablet & Desktop) */}
+        <div className="hadaiq-cards-row">
           {/* Card 1: Hadaiq-e-Bakhshish (Urdu Edition) */}
           <div
             className="card card-hover hadaiq-book-card"
@@ -247,52 +331,19 @@ export const BookDetailPage: React.FC = () => {
               }
             }}
             style={{
-              width: 210,
-              maxWidth: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '16px 14px',
-              borderRadius: 'var(--radius-xl)',
               border: '2px solid rgba(16, 185, 129, 0.4)',
-              backgroundColor: 'var(--bg-surface)',
-              cursor: 'pointer',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
-              boxSizing: 'border-box',
-              transition: 'all var(--transition-fast)',
             }}
           >
             {/* Authentic Urdu Edition First Page / Cover */}
-            <HadaiqSelectionCoverCanvas edition="urdu" width={115} height={160} />
+            <HadaiqSelectionCoverCanvas edition="urdu" />
 
             {/* Writer Name */}
-            <div
-              style={{
-                fontSize: '0.78rem',
-                fontWeight: 'var(--weight-medium, 500)',
-                color: 'var(--text-secondary)',
-                textAlign: 'center',
-                margin: 0,
-                lineHeight: 1.4,
-                wordBreak: 'break-word',
-              }}
-            >
+            <div className="hadaiq-card-writer">
               Writer: Imam Ahmad Raza Khan Barelvi (Ala Hazrat)
             </div>
 
             {/* Language Label */}
-            <div
-              style={{
-                fontSize: '0.76rem',
-                fontWeight: 'var(--weight-medium, 500)',
-                color: 'var(--text-muted)',
-                textAlign: 'center',
-                marginTop: '3px',
-                lineHeight: 1.3,
-              }}
-            >
+            <div className="hadaiq-card-lang">
               (Urdu)
             </div>
           </div>
@@ -311,52 +362,19 @@ export const BookDetailPage: React.FC = () => {
               }
             }}
             style={{
-              width: 210,
-              maxWidth: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '16px 14px',
-              borderRadius: 'var(--radius-xl)',
               border: '2px solid rgba(245, 158, 11, 0.45)',
-              backgroundColor: 'var(--bg-surface)',
-              cursor: 'pointer',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
-              boxSizing: 'border-box',
-              transition: 'all var(--transition-fast)',
             }}
           >
             {/* Authentic Hindi Edition First Page / Cover */}
-            <HadaiqSelectionCoverCanvas edition="hindi" width={115} height={160} />
+            <HadaiqSelectionCoverCanvas edition="hindi" />
 
             {/* Writer Name */}
-            <div
-              style={{
-                fontSize: '0.78rem',
-                fontWeight: 'var(--weight-medium, 500)',
-                color: 'var(--text-secondary)',
-                textAlign: 'center',
-                margin: 0,
-                lineHeight: 1.4,
-                wordBreak: 'break-word',
-              }}
-            >
+            <div className="hadaiq-card-writer">
               Writer: Imam Ahmad Raza Khan Barelvi (Ala Hazrat)
             </div>
 
             {/* Language Label */}
-            <div
-              style={{
-                fontSize: '0.76rem',
-                fontWeight: 'var(--weight-medium, 500)',
-                color: 'var(--text-muted)',
-                textAlign: 'center',
-                marginTop: '3px',
-                lineHeight: 1.3,
-              }}
-            >
+            <div className="hadaiq-card-lang">
               (Hindi)
             </div>
           </div>
@@ -375,52 +393,19 @@ export const BookDetailPage: React.FC = () => {
               }
             }}
             style={{
-              width: 210,
-              maxWidth: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '16px 14px',
-              borderRadius: 'var(--radius-xl)',
               border: '2px solid rgba(59, 130, 246, 0.45)',
-              backgroundColor: 'var(--bg-surface)',
-              cursor: 'pointer',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
-              boxSizing: 'border-box',
-              transition: 'all var(--transition-fast)',
             }}
           >
             {/* Authentic English Edition First Page / Cover */}
-            <HadaiqSelectionCoverCanvas edition="english" width={115} height={160} />
+            <HadaiqSelectionCoverCanvas edition="english" />
 
             {/* Writer Name */}
-            <div
-              style={{
-                fontSize: '0.78rem',
-                fontWeight: 'var(--weight-medium, 500)',
-                color: 'var(--text-secondary)',
-                textAlign: 'center',
-                margin: 0,
-                lineHeight: 1.4,
-                wordBreak: 'break-word',
-              }}
-            >
+            <div className="hadaiq-card-writer">
               Writer: Imam Ahmad Raza Khan Barelvi (Ala Hazrat)
             </div>
 
             {/* Language Label */}
-            <div
-              style={{
-                fontSize: '0.76rem',
-                fontWeight: 'var(--weight-medium, 500)',
-                color: 'var(--text-muted)',
-                textAlign: 'center',
-                marginTop: '3px',
-                lineHeight: 1.3,
-              }}
-            >
+            <div className="hadaiq-card-lang">
               (Roman Urdu)
             </div>
           </div>

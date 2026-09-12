@@ -214,5 +214,52 @@ describe('Original Quran Arabic Audio Engine', () => {
       expect(state.playbackTime).toBe(0); // Reset to 0
       expect(state.isPlaying).toBe(true);
     });
+
+    it('Stop button stops audio while keeping player active and visible on screen', () => {
+      const store = useQuranStore.getState();
+
+      useQuranStore.setState({
+        activeAudioSurah: 1,
+        isPlaying: true,
+        playbackTime: 25,
+        hasUserStartedAudio: true,
+        isMiniPlayerDismissed: false,
+      });
+
+      // User triggers stopAudio
+      store.stopAudio();
+      const state = useQuranStore.getState();
+
+      expect(state.isPlaying).toBe(false);
+      expect(state.hasUserStartedAudio).toBe(true);
+      expect(state.isMiniPlayerDismissed).toBe(false);
+
+      // User can resume playback with Play button
+      store.resumeAudio();
+      expect(useQuranStore.getState().isPlaying).toBe(true);
+      expect(useQuranStore.getState().isMiniPlayerDismissed).toBe(false);
+    });
+
+    it('X (Close) button completely closes mini player and clears audio state', () => {
+      const store = useQuranStore.getState();
+
+      useQuranStore.setState({
+        activeAudioSurah: 1,
+        isPlaying: true,
+        playbackTime: 25,
+        hasUserStartedAudio: true,
+        isMiniPlayerDismissed: false,
+      });
+
+      // User clicks X button
+      store.closeMiniPlayer();
+      const state = useQuranStore.getState();
+
+      expect(state.isPlaying).toBe(false);
+      expect(state.playbackTime).toBe(0);
+      expect(state.audioPlaybackPhase).toBe('idle');
+      expect(state.hasUserStartedAudio).toBe(false);
+      expect(state.isMiniPlayerDismissed).toBe(true);
+    });
   });
 });

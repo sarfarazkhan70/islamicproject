@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -13,6 +13,119 @@ import {
 import { getBookById } from '../../data/libraryData';
 import { BookVolumeList } from '../../components/library/BookVolumeList';
 import { useLibraryStore } from '../../stores/useLibraryStore';
+import { HadaiqPdfService } from '../../services/hadaiqPdfService';
+import { HadaiqHindiPdfService } from '../../services/hadaiqHindiPdfService';
+import { HadaiqEnglishPdfService } from '../../services/hadaiqEnglishPdfService';
+
+// ============================================================================
+// HADAIQ AUTHENTIC COVER THUMBNAIL (RENDERS ORIGINAL FIRST PAGE OF THE PDF)
+// ============================================================================
+interface HadaiqSelectionCoverProps {
+  edition: 'urdu' | 'hindi' | 'english';
+  width?: number;
+  height?: number;
+}
+
+const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({
+  edition,
+  width = 115,
+  height = 160,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isRendered, setIsRendered] = useState(false);
+
+  useEffect(() => {
+    let isCancelled = false;
+    const renderCover = async () => {
+      try {
+        if (!canvasRef.current) return;
+        if (edition === 'urdu') {
+          await HadaiqPdfService.renderPageToCanvas(1, canvasRef.current, 0.45);
+        } else if (edition === 'hindi') {
+          await HadaiqHindiPdfService.renderPageToCanvas(1, canvasRef.current, 0.45);
+        } else {
+          await HadaiqEnglishPdfService.renderPageToCanvas(1, canvasRef.current, 0.45);
+        }
+        if (!isCancelled) {
+          setIsRendered(true);
+        }
+      } catch (err) {
+        console.error(`Error rendering ${edition} cover page:`, err);
+      }
+    };
+    renderCover();
+    return () => {
+      isCancelled = true;
+    };
+  }, [edition]);
+
+  return (
+    <div
+      style={{
+        width,
+        height,
+        borderRadius: 'var(--radius-md)',
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor: '#ffffff',
+        border: `1.5px solid ${
+          edition === 'urdu'
+            ? 'rgba(16, 185, 129, 0.5)'
+            : edition === 'hindi'
+            ? 'rgba(245, 158, 11, 0.55)'
+            : 'rgba(59, 130, 246, 0.55)'
+        }`,
+        boxShadow: '0 6px 16px rgba(0, 0, 0, 0.35)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxSizing: 'border-box',
+        marginBottom: '14px',
+        flexShrink: 0,
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: isRendered ? 'block' : 'none',
+        }}
+      />
+      {!isRendered && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor:
+              edition === 'urdu'
+                ? 'rgba(6, 78, 59, 0.9)'
+                : edition === 'hindi'
+                ? 'rgba(120, 53, 15, 0.9)'
+                : 'rgba(30, 58, 138, 0.9)',
+          }}
+        >
+          <BookOpen
+            size={32}
+            style={{
+              color:
+                edition === 'urdu'
+                  ? '#10b981'
+                  : edition === 'hindi'
+                  ? 'var(--brand-gold)'
+                  : '#60a5fa',
+              opacity: 0.8,
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const BookDetailPage: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
@@ -56,6 +169,265 @@ export const BookDetailPage: React.FC = () => {
       navigate(`/library/${book.id}/read`);
     }
   };
+
+  // Dedicated Hadaiq-e-Bakhshish Selection Screen (Urdu, Hindi & English Editions)
+  if (
+    book.id === 'hadaiq-e-bakhshish' ||
+    book.id === 'hadaiq-e-bakhshish-hindi' ||
+    book.id === 'hadaiq-e-bakhshish-english'
+  ) {
+    return (
+      <div
+        className="book-detail-page hadaiq-selection-page"
+        style={{
+          width: '100%',
+          maxWidth: 1200,
+          margin: '0',
+          padding: '0 var(--space-4) var(--space-10)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Top Back & Breadcrumb Bar */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 'var(--space-3)',
+            marginBottom: 'var(--space-6)',
+          }}
+        >
+          <button
+            type="button"
+            className="btn btn-sm btn-ghost"
+            onClick={() => navigate('/library')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Library</span>
+          </button>
+
+          <div
+            className="text-xs text-muted"
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Link to="/library" style={{ color: 'var(--text-muted)' }}>
+              Library
+            </Link>
+            <span>/</span>
+            <span style={{ color: 'var(--brand-gold)', fontWeight: 'var(--weight-semibold)' }}>
+              Hadaiq-e-Bakhshish
+            </span>
+          </div>
+        </div>
+
+        {/* Side-by-Side Horizontal Cards Container (Starting Left) */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            alignItems: 'stretch',
+            gap: 'var(--space-5)',
+            width: '100%',
+          }}
+        >
+          {/* Card 1: Hadaiq-e-Bakhshish (Urdu Edition) */}
+          <div
+            className="card card-hover hadaiq-book-card"
+            onClick={() => navigate('/library/hadaiq-e-bakhshish/read')}
+            role="button"
+            tabIndex={0}
+            aria-label="Hadaiq-e-Bakhshish Urdu Edition"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate('/library/hadaiq-e-bakhshish/read');
+              }
+            }}
+            style={{
+              width: 210,
+              maxWidth: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '16px 14px',
+              borderRadius: 'var(--radius-xl)',
+              border: '2px solid rgba(16, 185, 129, 0.4)',
+              backgroundColor: 'var(--bg-surface)',
+              cursor: 'pointer',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
+              boxSizing: 'border-box',
+              transition: 'all var(--transition-fast)',
+            }}
+          >
+            {/* Authentic Urdu Edition First Page / Cover */}
+            <HadaiqSelectionCoverCanvas edition="urdu" width={115} height={160} />
+
+            {/* Writer Name */}
+            <div
+              style={{
+                fontSize: '0.78rem',
+                fontWeight: 'var(--weight-medium, 500)',
+                color: 'var(--text-secondary)',
+                textAlign: 'center',
+                margin: 0,
+                lineHeight: 1.4,
+                wordBreak: 'break-word',
+              }}
+            >
+              Writer: Imam Ahmad Raza Khan Barelvi (Ala Hazrat)
+            </div>
+
+            {/* Language Label */}
+            <div
+              style={{
+                fontSize: '0.76rem',
+                fontWeight: 'var(--weight-medium, 500)',
+                color: 'var(--text-muted)',
+                textAlign: 'center',
+                marginTop: '3px',
+                lineHeight: 1.3,
+              }}
+            >
+              (Urdu)
+            </div>
+          </div>
+
+          {/* Card 2: Hadaiq-e-Bakhshish (Hindi Edition) */}
+          <div
+            className="card card-hover hadaiq-book-card"
+            onClick={() => navigate('/library/hadaiq-e-bakhshish-hindi/read')}
+            role="button"
+            tabIndex={0}
+            aria-label="Hadaiq-e-Bakhshish Hindi Edition"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate('/library/hadaiq-e-bakhshish-hindi/read');
+              }
+            }}
+            style={{
+              width: 210,
+              maxWidth: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '16px 14px',
+              borderRadius: 'var(--radius-xl)',
+              border: '2px solid rgba(245, 158, 11, 0.45)',
+              backgroundColor: 'var(--bg-surface)',
+              cursor: 'pointer',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
+              boxSizing: 'border-box',
+              transition: 'all var(--transition-fast)',
+            }}
+          >
+            {/* Authentic Hindi Edition First Page / Cover */}
+            <HadaiqSelectionCoverCanvas edition="hindi" width={115} height={160} />
+
+            {/* Writer Name */}
+            <div
+              style={{
+                fontSize: '0.78rem',
+                fontWeight: 'var(--weight-medium, 500)',
+                color: 'var(--text-secondary)',
+                textAlign: 'center',
+                margin: 0,
+                lineHeight: 1.4,
+                wordBreak: 'break-word',
+              }}
+            >
+              Writer: Imam Ahmad Raza Khan Barelvi (Ala Hazrat)
+            </div>
+
+            {/* Language Label */}
+            <div
+              style={{
+                fontSize: '0.76rem',
+                fontWeight: 'var(--weight-medium, 500)',
+                color: 'var(--text-muted)',
+                textAlign: 'center',
+                marginTop: '3px',
+                lineHeight: 1.3,
+              }}
+            >
+              (Hindi)
+            </div>
+          </div>
+
+          {/* Card 3: Hadaiq-e-Bakhshish (English Edition) */}
+          <div
+            className="card card-hover hadaiq-book-card"
+            onClick={() => navigate('/library/hadaiq-e-bakhshish-english/read')}
+            role="button"
+            tabIndex={0}
+            aria-label="English — Hadaiq-e-Bakhshish"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate('/library/hadaiq-e-bakhshish-english/read');
+              }
+            }}
+            style={{
+              width: 210,
+              maxWidth: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '16px 14px',
+              borderRadius: 'var(--radius-xl)',
+              border: '2px solid rgba(59, 130, 246, 0.45)',
+              backgroundColor: 'var(--bg-surface)',
+              cursor: 'pointer',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.28)',
+              boxSizing: 'border-box',
+              transition: 'all var(--transition-fast)',
+            }}
+          >
+            {/* Authentic English Edition First Page / Cover */}
+            <HadaiqSelectionCoverCanvas edition="english" width={115} height={160} />
+
+            {/* Writer Name */}
+            <div
+              style={{
+                fontSize: '0.78rem',
+                fontWeight: 'var(--weight-medium, 500)',
+                color: 'var(--text-secondary)',
+                textAlign: 'center',
+                margin: 0,
+                lineHeight: 1.4,
+                wordBreak: 'break-word',
+              }}
+            >
+              Writer: Imam Ahmad Raza Khan Barelvi (Ala Hazrat)
+            </div>
+
+            {/* Language Label */}
+            <div
+              style={{
+                fontSize: '0.76rem',
+                fontWeight: 'var(--weight-medium, 500)',
+                color: 'var(--text-muted)',
+                textAlign: 'center',
+                marginTop: '3px',
+                lineHeight: 1.3,
+              }}
+            >
+              (Roman Urdu)
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="book-detail-page">

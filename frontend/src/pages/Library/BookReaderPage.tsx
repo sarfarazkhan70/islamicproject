@@ -19,6 +19,8 @@ import { BookChapter, BookSection } from '../../types/library.types';
 import { KanzulImanReader } from '../../components/library/KanzulImanReader';
 import { BukhariReader } from '../../components/library/BukhariReader';
 import { HadaiqReader } from '../../components/library/HadaiqReader';
+import { HadaiqHindiReader } from '../../components/library/HadaiqHindiReader';
+import { HadaiqEnglishReader } from '../../components/library/HadaiqEnglishReader';
 
 export const BookReaderPage: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
@@ -35,7 +37,23 @@ export const BookReaderPage: React.FC = () => {
     return <BukhariReader />;
   }
 
-  // If Hadaiq-e-Bakhshish, render the authentic Hadaiq PDF Reader with Naat Index
+  // If Hadaiq-e-Bakhshish Hindi edition
+  if (
+    bookId === 'hadaiq-e-bakhshish-hindi' ||
+    (bookId === 'hadaiq-e-bakhshish' && (searchParams.get('lang') === 'hindi' || searchParams.get('lang') === 'hi'))
+  ) {
+    return <HadaiqHindiReader />;
+  }
+
+  // If Hadaiq-e-Bakhshish English edition
+  if (
+    bookId === 'hadaiq-e-bakhshish-english' ||
+    (bookId === 'hadaiq-e-bakhshish' && (searchParams.get('lang') === 'english' || searchParams.get('lang') === 'en'))
+  ) {
+    return <HadaiqEnglishReader />;
+  }
+
+  // If Hadaiq-e-Bakhshish (Urdu edition), render the authentic Hadaiq Urdu PDF Reader with Naat Index
   if (bookId === 'hadaiq-e-bakhshish') {
     return <HadaiqReader />;
   }

@@ -15,8 +15,6 @@ import {
   quranTextPageToApiPage,
 } from '../../data/quranData';
 import { QuranApiPageViewer } from '../../components/quran/QuranApiPageViewer';
-import { KanzulImanPageViewer } from '../../components/quran/KanzulImanPageViewer';
-import { KanzulImanAudioStudio } from '../../components/quran/KanzulImanAudioStudio';
 import {
   Search,
   Bookmark,
@@ -33,7 +31,6 @@ import {
   Volume2,
   VolumeX,
   Compass,
-  Sparkles,
 } from 'lucide-react';
 
 export const QuranPage: React.FC = () => {
@@ -278,7 +275,7 @@ export const QuranPage: React.FC = () => {
               </div>
             </button>
 
-            {/* Mode Switcher: Read Mushaf | Read Kanzul Iman | Listen Kanzul Iman | Audio Studio | Bookmarks */}
+            {/* Mode Switcher: Quran Reading | Quran Audio */}
             <div
               style={{
                 display: 'flex',
@@ -298,52 +295,19 @@ export const QuranPage: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '6px 12px',
+                  padding: '6px 14px',
                   borderRadius: 'var(--radius-lg)',
+                  fontWeight: mode === 'read' ? 'var(--weight-bold)' : 'var(--weight-medium)',
                 }}
-                title="Read Standard 15-Line Mushaf"
+                title="Quran Reading"
               >
                 <BookOpen size={14} />
-                <span>Read Mushaf</span>
+                <span>Quran Reading</span>
               </button>
 
               <button
                 type="button"
-                className={`tab-btn ${mode === 'kanzul-iman-read' ? 'active' : ''}`}
-                onClick={() => setMode('kanzul-iman-read')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: 'var(--radius-lg)',
-                }}
-                title="Read Authentic Kanz-ul-Iman Full Page Mushaf"
-              >
-                <BookOpen size={14} className="text-amber-400" />
-                <span>📖 Read Kanz-ul-Iman</span>
-              </button>
-
-              <button
-                type="button"
-                className={`tab-btn ${mode === 'kanzul-iman-audio' ? 'active' : ''}`}
-                onClick={() => setMode('kanzul-iman-audio')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: 'var(--radius-lg)',
-                }}
-                title="Listen Ayah-by-Ayah Arabic + Kanz-ul-Iman Translation"
-              >
-                <Sparkles size={14} className="text-emerald-400" />
-                <span>🎧 Listen Kanz-ul-Iman</span>
-              </button>
-
-              <button
-                type="button"
-                className={`tab-btn ${mode === 'listen' && activeTab !== 'bookmarks' ? 'active' : ''}`}
+                className={`tab-btn ${mode === 'listen' ? 'active' : ''}`}
                 onClick={() => {
                   setMode('listen');
                   if (activeTab === 'bookmarks') setActiveTab('surahs');
@@ -352,33 +316,14 @@ export const QuranPage: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '6px 12px',
+                  padding: '6px 14px',
                   borderRadius: 'var(--radius-lg)',
+                  fontWeight: mode === 'listen' ? 'var(--weight-bold)' : 'var(--weight-medium)',
                 }}
-                title="Open Quran Audio Studio"
+                title="Quran Audio"
               >
                 <Headphones size={14} />
-                <span>Audio Studio</span>
-              </button>
-
-              <button
-                type="button"
-                className={`tab-btn ${mode === 'listen' && activeTab === 'bookmarks' ? 'active' : ''}`}
-                onClick={() => {
-                  setMode('listen');
-                  setActiveTab('bookmarks');
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: 'var(--radius-lg)',
-                }}
-                title="View Saved Bookmarks"
-              >
-                <Bookmark size={14} className={bookmarks.length > 0 ? 'text-amber-400' : ''} />
-                <span>Bookmarks ({bookmarks.length})</span>
+                <span>Quran Audio</span>
               </button>
             </div>
           </div>
@@ -737,23 +682,7 @@ export const QuranPage: React.FC = () => {
         </div>
       )}
 
-      {/* ========================================================
-          MODE 1B: KANZ-UL-IMAN FULL PAGE READING MODE
-          ======================================================== */}
-      {mode === 'kanzul-iman-read' && (
-        <div className="w-full">
-          <KanzulImanPageViewer />
-        </div>
-      )}
 
-      {/* ========================================================
-          MODE 1C: KANZ-UL-IMAN AYAH-BY-AYAH AUDIO STUDIO
-          ======================================================== */}
-      {mode === 'kanzul-iman-audio' && (
-        <div className="w-full">
-          <KanzulImanAudioStudio />
-        </div>
-      )}
 
       {/* ========================================================
           MODE 2: QURAN AUDIO STUDIO & CATALOG

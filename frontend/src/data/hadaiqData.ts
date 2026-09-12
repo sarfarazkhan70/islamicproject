@@ -1,55 +1,63 @@
 // ============================================================================
 // HADAIQ-E-BAKHSHISH: AUTHENTIC ARCHIVE.ORG EDITION METADATA & NAAT INDEX
 // للإمام المجدد أحمد رضا خان القادري رحمه الله (۱۲۷۲ - ۱۳۴۰ هـ / ۱۸۵۶ - ۱۹۲۱ م)
-// Complete Diwan Collection with Accurate Index & Page-by-Page Navigation
+// Complete Diwan Collection with Accurate Printed Book Page Mapping
 // ============================================================================
 
 export const LOCAL_HADAIQ_PDF_PATH = '/pdf/hadaiq_e_bakhshish.pdf';
-export const HADAIQ_TOTAL_PAGES = 454;
-export const HADAIQ_VISIBLE_TOTAL_PAGES = 444; // 454 pages minus 10 skipped pages (2..11)
-export const HADAIQ_SKIPPED_PDF_PAGES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const;
+export const HADAIQ_TOTAL_PDF_PAGES = 454;
+export const HADAIQ_TOTAL_PAGES = 454; // Total pages in PDF file
+export const HADAIQ_PRINTED_TOTAL_PAGES = 446; // Physical printed page count (1..446)
+export const HADAIQ_VISIBLE_TOTAL_PAGES = 446; // Compatibility alias
 
 /**
- * Maps a visible reader page number (1..444) to the original authentic PDF page number (1, 12..454).
- * - Visible Page 1 -> Original PDF Page 1
- * - Visible Page 2 -> Original PDF Page 12
- * - Visible Page 3 -> Original PDF Page 13
- * - Visible Page 444 -> Original PDF Page 454
+ * Maps a physical printed book page number (1..446) to the authentic scanned PDF page number (7..453).
+ * - Printed Pages 1..239 -> PDF Pages 7..245 (Offset: +6)
+ * - PDF Page 246 is the divider / unnumbered title page for Hissa Doem (Part 2)
+ * - Printed Pages 240..446 -> PDF Pages 247..453 (Offset: +7)
  */
-export function getPdfPageFromVisiblePage(visiblePage: number): number {
-  const clamped = Math.max(1, Math.min(HADAIQ_VISIBLE_TOTAL_PAGES, visiblePage));
-  if (clamped === 1) return 1;
-  return clamped + 10;
-}
-
-/**
- * Maps an original authentic PDF page number (1..454) to the visible reader page number (1..444).
- * If the PDF page falls within the skipped range (2..11), it safely resolves to page 1.
- */
-export function getVisiblePageFromPdfPage(pdfPage: number): number {
-  if (pdfPage <= 1) return 1;
-  if (pdfPage >= 2 && pdfPage <= 11) {
-    return 1;
+export function getPdfPageFromPrintedPage(printedPage: number): number {
+  const clamped = Math.max(1, Math.min(HADAIQ_PRINTED_TOTAL_PAGES, printedPage));
+  if (clamped <= 239) {
+    return clamped + 6;
   }
-  const visible = pdfPage - 10;
-  return Math.max(1, Math.min(HADAIQ_VISIBLE_TOTAL_PAGES, visible));
+  return clamped + 7;
 }
+
+/**
+ * Maps an authentic scanned PDF page number (1..454) to the physical printed book page number (1..446).
+ */
+export function getPrintedPageFromPdfPage(pdfPage: number): number {
+  if (pdfPage <= 6) return 1;
+  if (pdfPage <= 245) return Math.max(1, pdfPage - 6);
+  if (pdfPage === 246) return 239;
+  if (pdfPage <= 453) return Math.min(HADAIQ_PRINTED_TOTAL_PAGES, pdfPage - 7);
+  return HADAIQ_PRINTED_TOTAL_PAGES;
+}
+
+// Aliases for compatibility with existing imports
+export const getPdfPageFromVisiblePage = getPdfPageFromPrintedPage;
+export const getVisiblePageFromPdfPage = getPrintedPageFromPdfPage;
 
 export interface HadaiqPageMapping {
-  visiblePage: number;
+  printedPage: number;
   pdfPage: number;
+  visiblePage?: number;
 }
 
-export const HADAIQ_VISIBLE_PAGES: HadaiqPageMapping[] = Array.from(
-  { length: HADAIQ_VISIBLE_TOTAL_PAGES },
+export const HADAIQ_PRINTED_PAGES: HadaiqPageMapping[] = Array.from(
+  { length: HADAIQ_PRINTED_TOTAL_PAGES },
   (_, i) => {
-    const visiblePage = i + 1;
+    const printedPage = i + 1;
     return {
-      visiblePage,
-      pdfPage: getPdfPageFromVisiblePage(visiblePage),
+      printedPage,
+      pdfPage: getPdfPageFromPrintedPage(printedPage),
+      visiblePage: printedPage,
     };
   }
 );
+
+export const HADAIQ_VISIBLE_PAGES = HADAIQ_PRINTED_PAGES;
 
 export interface HadaiqKalamItem {
   id: number;
@@ -61,13 +69,13 @@ export interface HadaiqKalamItem {
 }
 
 export const HADAIQ_KALAMS_INDEX: HadaiqKalamItem[] = [
-  // Front Matter
+  // Front Matter / Intro
   {
     id: 1,
     title: 'مقدمہ و فضائلِ نعت شریف (تعارفِ کلام)',
     category: 'munajat',
     categoryUrdu: 'مقدمہ',
-    pdfPage: 3,
+    pdfPage: 7,
     printedPage: 1,
   },
   {
@@ -76,7 +84,7 @@ export const HADAIQ_KALAMS_INDEX: HadaiqKalamItem[] = [
     category: 'munajat',
     categoryUrdu: 'فہرست',
     pdfPage: 11,
-    printedPage: 9,
+    printedPage: 5,
   },
   // Part 1: Hamd & Naat Sharif
   {
@@ -461,7 +469,7 @@ export const HADAIQ_KALAMS_INDEX: HadaiqKalamItem[] = [
     category: 'naat',
     categoryUrdu: 'درود شریف',
     pdfPage: 270,
-    printedPage: 264,
+    printedPage: 263,
   },
   {
     id: 51,
@@ -469,7 +477,7 @@ export const HADAIQ_KALAMS_INDEX: HadaiqKalamItem[] = [
     category: 'naat',
     categoryUrdu: 'قصیدہ معراجیہ',
     pdfPage: 279,
-    printedPage: 273,
+    printedPage: 272,
   },
   {
     id: 52,

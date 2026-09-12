@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Sparkles } from 'lucide-react';
 import { IslamicBook } from '../../types/library.types';
 
 interface BookCardProps {
@@ -15,6 +15,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
     book.id === 'kanzul-iman' ||
     book.id === 'fatawa-razawiyya' ||
     book.id === 'hadaiq-e-bakhshish' ||
+    book.id === 'hadaiq-e-bakhshish-hindi' ||
     book.author.toLowerCase().includes('ahmad raza');
 
   const handleOpenBook = () => {
@@ -23,7 +24,9 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
     } else if (book.id === 'sahih-al-bukhari') {
       navigate('/library/sahih-al-bukhari/read');
     } else if (book.id === 'hadaiq-e-bakhshish') {
-      navigate('/library/hadaiq-e-bakhshish/read');
+      navigate('/library/hadaiq-e-bakhshish');
+    } else if (book.id === 'hadaiq-e-bakhshish-hindi') {
+      navigate('/library/hadaiq-e-bakhshish-hindi/read');
     } else {
       navigate(`/library/${book.id}`);
     }
@@ -93,11 +96,21 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
           fontWeight: 'var(--weight-bold)',
           color: 'var(--text-primary)',
           lineHeight: 1.35,
-          margin: '0 0 var(--space-2) 0',
+          margin: '0 0 var(--space-1) 0',
         }}
       >
         {book.title}
       </h3>
+
+      {/* Arabic/Urdu Subtitle for special books */}
+      {book.id === 'hadaiq-e-bakhshish' && (
+        <div
+          className="font-urdu text-xs"
+          style={{ color: 'var(--brand-gold)', marginBottom: 4, fontWeight: 'bold' }}
+        >
+          حدائقِ بخشش (اردو و ہندی)
+        </div>
+      )}
 
       {/* Writer Name */}
       <p
@@ -114,6 +127,29 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
         </span>{' '}
         {book.author}
       </p>
+
+      {/* Edition Tag for Hadaiq */}
+      {book.id === 'hadaiq-e-bakhshish' && (
+        <div
+          style={{
+            marginTop: 'var(--space-3)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            padding: '2px 8px',
+            borderRadius: 'var(--radius-full)',
+            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+            color: 'var(--brand-gold)',
+            fontSize: '0.72rem',
+            fontWeight: 600,
+          }}
+        >
+          <Sparkles size={11} />
+          <span>Urdu & Hindi Editions</span>
+        </div>
+      )}
     </div>
   );
 };
+
+

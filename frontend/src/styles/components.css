@@ -521,17 +521,34 @@ input:checked + .slider:before {
   border: 1px solid rgba(16, 185, 129, 0.35);
   border-radius: var(--radius-xl);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.15);
-  z-index: var(--z-fixed);
+  z-index: 9999;
   overflow: hidden;
-  cursor: pointer;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
   animation: miniPlayerSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .global-mini-player-container:hover {
-  transform: translateY(-2px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 28px rgba(16, 185, 129, 0.25);
   border-color: rgba(16, 185, 129, 0.6);
+}
+
+.global-mini-player-container.is-dragging {
+  cursor: grabbing !important;
+  transition: none !important;
+  animation: none !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 32px rgba(16, 185, 129, 0.4);
+  border-color: rgba(16, 185, 129, 0.8);
+  opacity: 0.96;
+}
+
+.global-mini-player-container button,
+.global-mini-player-container .mini-player-actions {
+  cursor: pointer;
+  touch-action: auto;
 }
 
 @keyframes miniPlayerSlideUp {
@@ -3480,6 +3497,250 @@ input:checked + .slider:before {
 .book-detail-page {
   animation: fadeIn 0.3s ease;
 }
+
+/* ==========================================================================
+   SAHIH AL-BUKHARI READER & STICKY TOOLBAR STYLES
+   ========================================================================== */
+.bukhari-reader-page-root {
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible !important;
+}
+
+.bukhari-top-toolbar {
+  position: sticky !important;
+  top: var(--header-height, 68px) !important;
+  z-index: 45 !important;
+  padding: 8px 14px;
+  margin-bottom: var(--space-4);
+  background-color: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  box-sizing: border-box;
+  border-radius: var(--radius-lg);
+  overflow: visible !important;
+}
+
+@media (max-width: 480px) {
+  .bukhari-top-toolbar {
+    top: 56px !important;
+    padding: 6px 10px;
+    gap: 6px 8px;
+  }
+}
+
+.fullscreen-mode .bukhari-top-toolbar {
+  top: 0px !important;
+}
+
+.zoom-dropdown-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  z-index: 9999 !important;
+  width: 250px !important;
+  max-width: calc(100vw - 32px) !important;
+  background-color: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  overflow: visible !important;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.hadaiq-top-toolbar .zoom-dropdown-menu,
+.hadaiq-hindi-top-toolbar .zoom-dropdown-menu {
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+@media (max-width: 640px) {
+  .zoom-dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+.bukhari-page-search-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   HADAIQ-E-BAKHSHISH FEHRIST (KALAM INDEX) MODAL & ENTRY BOXES
+   ========================================================================== */
+
+.hadaiq-fehrist-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  box-sizing: border-box;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.hadaiq-fehrist-modal {
+  width: 100%;
+  max-width: 880px;
+  height: 85vh;
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-surface-elevated, #131d2e);
+  border: 2px solid rgba(245, 158, 11, 0.45);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 30px rgba(245, 158, 11, 0.12);
+  box-sizing: border-box;
+}
+
+.hadaiq-fehrist-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.hadaiq-fehrist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 18px;
+  min-height: 66px;
+  background-color: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg, 12px);
+  cursor: pointer;
+  direction: rtl;
+  gap: 16px;
+  transition: all var(--transition-fast, 0.15s ease);
+  box-sizing: border-box;
+  overflow: visible;
+  text-decoration: none;
+  color: inherit;
+}
+
+.hadaiq-fehrist-item:hover,
+.hadaiq-fehrist-item:focus-visible {
+  background-color: rgba(245, 158, 11, 0.09);
+  border-color: rgba(245, 158, 11, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), 0 0 12px rgba(245, 158, 11, 0.15);
+  outline: none;
+}
+
+.hadaiq-fehrist-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  direction: rtl;
+  text-align: right;
+  overflow: visible;
+}
+
+.hadaiq-fehrist-title {
+  font-size: 1.15rem;
+  font-weight: var(--weight-semibold, 600);
+  color: var(--text-primary, #ffffff);
+  line-height: 2.1;
+  font-family: var(--font-urdu), var(--font-arabic), 'Noto Naskh Arabic', 'Amiri', 'Traditional Arabic', serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  overflow: visible;
+  padding: 2px 0;
+  direction: rtl;
+  text-align: right;
+  flex: 1;
+}
+
+.hadaiq-fehrist-tag {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-md, 6px);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: var(--font-urdu), var(--font-arabic), 'Amiri', serif;
+  line-height: 1.6;
+}
+
+.hadaiq-fehrist-page-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-sans, inherit);
+  background-color: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--brand-gold, #f59e0b);
+  white-space: nowrap;
+  flex-shrink: 0;
+  direction: ltr;
+}
+
+@media (max-width: 640px) {
+  .hadaiq-fehrist-overlay {
+    padding: 8px;
+  }
+
+  .hadaiq-fehrist-modal {
+    height: 92vh;
+    max-height: calc(100vh - 16px);
+    border-radius: var(--radius-lg);
+  }
+
+  .hadaiq-fehrist-list {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .hadaiq-fehrist-item {
+    padding: 12px 14px;
+    min-height: 60px;
+    gap: 10px;
+  }
+
+  .hadaiq-fehrist-title {
+    font-size: 1.05rem;
+    line-height: 1.95;
+  }
+
+  .hadaiq-fehrist-page-badge {
+    padding: 4px 10px;
+    font-size: 0.78rem;
+  }
+}
+
+
+
 
 
 

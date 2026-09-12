@@ -93,11 +93,100 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     expect(code).toContain('aspectRatio');
 
     // Verify size presets and page search
+    expect(code).toContain('50%');
+    expect(code).toContain('75%');
+    expect(code).toContain('90%');
+    expect(code).toContain('100%');
+    expect(code).toContain('110%');
     expect(code).toContain('125%');
     expect(code).toContain('150%');
     expect(code).toContain('175%');
     expect(code).toContain('200%');
-    expect(code).toContain('Fit Width');
+    expect(code).toContain('250%');
+    expect(code).toContain('Fit to Width');
+    expect(code).toContain('Reset to Default');
     expect(code).toContain('totalPages');
   });
+
+  it('should verify single Zoom button, dropdown menu, click-outside listener, and responsive page zoom scaling', () => {
+    const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
+    const code = fs.readFileSync(readerFilePath, 'utf8');
+
+    // 1. Single Zoom button with dropdown menu
+    expect(code).toContain('isZoomMenuOpen');
+    expect(code).toContain('zoomMenuRef');
+    expect(code).toContain('zoom-dropdown-menu');
+
+    // 2. Zoom controls inside dropdown
+    expect(code).toContain('handleZoomOut');
+    expect(code).toContain('handleZoomIn');
+    expect(code).toContain('handleResetZoom');
+    expect(code).toContain('handleSelectZoomOption');
+    expect(code).toContain('maintainCurrentPagePosition');
+
+    // 3. Click-outside handling
+    expect(code).toContain('handleClickOutside');
+    expect(code).toContain('mousedown');
+    expect(code).toContain('touchstart');
+
+    // 4. Actual page zoom container scaling & aspect ratio
+    expect(code).toContain('zoomLevel');
+    expect(code).toContain('820 * zoomLevel');
+    expect(code).toContain('margin: \'0 auto\'');
+    expect(code).toContain('aspectRatio: \'693 / 1002\'');
+  });
+
+  it('should verify page-number search control box and toolbar remain sticky during vertical scrolling', () => {
+    const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
+    const code = fs.readFileSync(readerFilePath, 'utf8');
+
+    // 1. Sticky toolbar with proper z-index and header offset
+    expect(code).toContain('bukhari-top-toolbar');
+    expect(code).toContain('position: \'sticky\'');
+    expect(code).toContain('top: isFullscreen ? \'0px\' : \'var(--header-height, 68px)\'');
+    expect(code).toContain('zIndex: 35');
+
+    // 2. Complete page search box preserved
+    expect(code).toContain('bukhari-page-search-container');
+    expect(code).toContain('handleDirectPageSubmit');
+    expect(code).toContain('directPageInput');
+    expect(code).toContain('totalPages');
+    expect(code).toContain('انتقال');
+
+    // 3. Root container does not block sticky positioning with overflow
+    expect(code).toContain('overflow: \'visible\'');
+  });
+
+  it('should verify exact 1-to-1 direct page-number search mapping without -1 offset', () => {
+    const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
+    const code = fs.readFileSync(readerFilePath, 'utf8');
+
+    // 1. Direct page submit triggers instant scroll directly to target page
+    expect(code).toContain('scrollToPage(pNum, \'auto\')');
+
+    // 2. scrollToPage aligns target element and sets state synchronously
+    expect(code).toContain('const clamped = Math.max(1, Math.min(totalPages, pageNum))');
+    expect(code).toContain('setCurrentPage(clamped)');
+    expect(code).toContain('activePageRef.current = clamped');
+    expect(code).toContain('setSearchParams({ page: clamped.toString() })');
+    expect(code).toContain('document.getElementById(`bukhari-page-${clamped}`)');
+
+    // 3. Observer uses reading focus line to prevent previous-page offset
+    expect(code).toContain('const focusY = headerOffset + 30');
+    expect(code).toContain('rect.top <= focusY && rect.bottom > focusY');
+    expect(code).toContain('rootMargin: isFullscreen ? \'-55px 0px -40% 0px\' : \'-130px 0px -40% 0px\'');
+
+    // 4. Test page number bounds: first page (1), middle pages (100, 160, 161), last page (699)
+    const testCases = [1, 100, 160, 161, 699];
+    const totalPages = 699;
+    for (const testPage of testCases) {
+      const clamped = Math.max(1, Math.min(totalPages, testPage));
+      expect(clamped).toBe(testPage);
+      // Image URL and element ID are strictly 1-to-1
+      expect(BukhariPdfService.getPageImageUrl(clamped)).toBe(`/bukhari/pages/page_${testPage}.webp`);
+    }
+  });
 });
+
+
+

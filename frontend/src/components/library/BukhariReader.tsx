@@ -4,18 +4,37 @@ import {
   ArrowLeft,
   ZoomIn,
   ZoomOut,
+  RotateCcw,
   Maximize2,
   Minimize2,
   Search,
+  Check,
 } from 'lucide-react';
 import { BUKHARI_VOLUMES } from '../../data/bukhariData';
 import { BukhariPdfService } from '../../services/bukhariPdfService';
 
-const ZOOM_PRESETS = [
-  { label: '125%', scale: 1.25 },
-  { label: '150%', scale: 1.5 },
-  { label: '175%', scale: 1.75 },
-  { label: '200%', scale: 2.0 },
+interface ZoomOption {
+  id: string;
+  label: string;
+  scale?: number;
+  isSpecial?: 'fit-width' | 'reset-default';
+}
+
+const ZOOM_PERCENTAGES: number[] = [0.5, 0.75, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5];
+
+const ZOOM_OPTIONS: ZoomOption[] = [
+  { id: '50', label: '50%', scale: 0.5 },
+  { id: '75', label: '75%', scale: 0.75 },
+  { id: '90', label: '90%', scale: 0.9 },
+  { id: '100', label: '100%', scale: 1.0 },
+  { id: '110', label: '110%', scale: 1.1 },
+  { id: '125', label: '125%', scale: 1.25 },
+  { id: '150', label: '150%', scale: 1.5 },
+  { id: '175', label: '175%', scale: 1.75 },
+  { id: '200', label: '200%', scale: 2.0 },
+  { id: '250', label: '250%', scale: 2.5 },
+  { id: 'fit-width', label: 'Fit to Width', isSpecial: 'fit-width' },
+  { id: 'reset-default', label: 'Reset to Default', isSpecial: 'reset-default' },
 ];
 
 export const BukhariReader: React.FC = () => {
@@ -32,22 +51,55 @@ export const BukhariReader: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
   const [directPageInput, setDirectPageInput] = useState<string>(initialPage.toString());
-  const [scale, setScale] = useState<number>(1.5); // Default: 150% clear reading
-  const [fitWidth, setFitWidth] = useState<boolean>(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(1.0); // Default: 100%
+  const [isFitWidth, setIsFitWidth] = useState<boolean>(false);
+  const [isZoomMenuOpen, setIsZoomMenuOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   const activePageRef = useRef<number>(currentPage);
   const isProgrammaticScrollRef = useRef<boolean>(false);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const zoomMenuRef = useRef<HTMLDivElement | null>(null);
 
   // Sync direct input box with current page
   useEffect(() => {
     setDirectPageInput(currentPage.toString());
   }, [currentPage]);
 
+  // Maintain currently visible page position after zoom adjustment
+  const maintainCurrentPagePosition = useCallback((targetPage: number) => {
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`bukhari-page-${targetPage}`);
+      if (el) {
+        const headerOffset = isFullscreen ? 55 : 130;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'instant' as ScrollBehavior });
+      }
+    });
+  }, [isFullscreen]);
+
+  // Close zoom dropdown when clicking outside
+  useEffect(() => {
+    if (!isZoomMenuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (zoomMenuRef.current && !zoomMenuRef.current.contains(event.target as Node)) {
+        setIsZoomMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isZoomMenuOpen]);
+
   // Scroll to a specific Bukhari page
   const scrollToPage = useCallback(
-    (pageNum: number, behavior: ScrollBehavior = 'smooth') => {
+    (pageNum: number, behavior: ScrollBehavior = 'auto') => {
       const clamped = Math.max(1, Math.min(totalPages, pageNum));
       setCurrentPage(clamped);
       activePageRef.current = clamped;
@@ -61,7 +113,7 @@ export const BukhariReader: React.FC = () => {
       const performScroll = () => {
         const el = document.getElementById(`bukhari-page-${clamped}`);
         if (el) {
-          const headerOffset = isFullscreen ? 55 : 120;
+          const headerOffset = isFullscreen ? 55 : 130;
           const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
           window.scrollTo({ top: Math.max(0, y), behavior });
         }
@@ -70,9 +122,10 @@ export const BukhariReader: React.FC = () => {
       performScroll();
       requestAnimationFrame(performScroll);
 
+      const lockDuration = behavior === 'smooth' ? 1200 : 350;
       scrollTimeoutRef.current = setTimeout(() => {
         isProgrammaticScrollRef.current = false;
-      }, 600);
+      }, lockDuration);
     },
     [totalPages, isFullscreen, setSearchParams]
   );
@@ -92,31 +145,47 @@ export const BukhariReader: React.FC = () => {
     if (pageParam) {
       const p = parseInt(pageParam, 10);
       if (!isNaN(p) && p >= 1 && p <= totalPages && p !== activePageRef.current) {
-        scrollToPage(p, 'smooth');
+        scrollToPage(p, 'auto');
       }
     }
   }, [pageParam, totalPages, scrollToPage]);
 
   // Track currently visible page during vertical scrolling
   useEffect(() => {
+    const headerOffset = isFullscreen ? 55 : 130;
+    const focusY = headerOffset + 30;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (isProgrammaticScrollRef.current) return;
 
-        let bestEntry: IntersectionObserverEntry | null = null;
-        let maxRatio = 0;
+        let activeEntry: IntersectionObserverEntry | null = null;
+        let maxVisibleHeight = 0;
 
         for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
-            bestEntry = entry;
+          if (!entry.isIntersecting) continue;
+          const rect = entry.boundingClientRect;
+
+          // Check if this page card covers the active reading focus line right below sticky header
+          if (rect.top <= focusY && rect.bottom > focusY) {
+            activeEntry = entry;
+            break;
+          }
+
+          // Fallback: calculate visible height in reading viewport
+          const visibleTop = Math.max(rect.top, headerOffset);
+          const visibleBottom = Math.min(rect.bottom, window.innerHeight);
+          const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+          if (visibleHeight > maxVisibleHeight) {
+            maxVisibleHeight = visibleHeight;
+            activeEntry = entry;
           }
         }
 
-        if (bestEntry && maxRatio >= 0.15) {
-          const pageAttr = (bestEntry as IntersectionObserverEntry).target.getAttribute('data-page');
+        if (activeEntry) {
+          const pageAttr = activeEntry.target.getAttribute('data-page');
           const p = parseInt(pageAttr || '', 10);
-          if (!isNaN(p) && p !== activePageRef.current) {
+          if (!isNaN(p) && p >= 1 && p <= totalPages && p !== activePageRef.current) {
             activePageRef.current = p;
             setCurrentPage(p);
           }
@@ -124,8 +193,8 @@ export const BukhariReader: React.FC = () => {
       },
       {
         root: null,
-        rootMargin: '-10% 0px -25% 0px',
-        threshold: [0.1, 0.25, 0.5, 0.75],
+        rootMargin: isFullscreen ? '-55px 0px -40% 0px' : '-130px 0px -40% 0px',
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
       }
     );
 
@@ -133,34 +202,60 @@ export const BukhariReader: React.FC = () => {
     pageElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, []);
+  }, [isFullscreen, totalPages]);
 
   // Handle direct page jump form submission
   const handleDirectPageSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const pNum = parseInt(directPageInput, 10);
     if (!isNaN(pNum) && pNum >= 1 && pNum <= totalPages) {
-      scrollToPage(pNum, 'smooth');
+      scrollToPage(pNum, 'auto');
     }
   };
 
+  const handleSelectZoomOption = (opt: ZoomOption) => {
+    const currentP = activePageRef.current;
+    if (opt.isSpecial === 'fit-width') {
+      setIsFitWidth(true);
+      setZoomLevel(1.0);
+    } else if (opt.isSpecial === 'reset-default') {
+      setIsFitWidth(false);
+      setZoomLevel(1.0);
+    } else if (opt.scale !== undefined) {
+      setIsFitWidth(false);
+      setZoomLevel(opt.scale);
+    }
+    setIsZoomMenuOpen(false);
+    maintainCurrentPagePosition(currentP);
+  };
+
   const handleZoomIn = () => {
-    setScale((prev) => Math.min(2.5, +(prev + 0.15).toFixed(2)));
-    setFitWidth(false);
+    const currentP = activePageRef.current;
+    setIsFitWidth(false);
+    setZoomLevel((prev) => {
+      const next = ZOOM_PERCENTAGES.find((p) => p > prev + 0.02);
+      return next ? next : Math.min(2.5, +(prev + 0.15).toFixed(2));
+    });
+    maintainCurrentPagePosition(currentP);
   };
 
   const handleZoomOut = () => {
-    setScale((prev) => Math.max(1.0, +(prev - 0.15).toFixed(2)));
-    setFitWidth(false);
+    const currentP = activePageRef.current;
+    setIsFitWidth(false);
+    setZoomLevel((prev) => {
+      const prevArr = [...ZOOM_PERCENTAGES].reverse();
+      const prevMatch = prevArr.find((p) => p < prev - 0.02);
+      return prevMatch ? prevMatch : Math.max(0.5, +(prev - 0.15).toFixed(2));
+    });
+    maintainCurrentPagePosition(currentP);
   };
 
-  const handlePresetZoom = (presetScale: number) => {
-    setScale(presetScale);
-    setFitWidth(false);
-  };
-
-  const toggleFitWidth = () => {
-    setFitWidth((prev) => !prev);
+  const handleResetZoom = () => {
+    const currentP = activePageRef.current;
+    setIsFitWidth(false);
+    setZoomLevel(1.0);
+    setIsZoomMenuOpen(false);
+    maintainCurrentPagePosition(currentP);
   };
 
   // Generate all 699 pages array
@@ -168,44 +263,46 @@ export const BukhariReader: React.FC = () => {
     Array.from({ length: totalPages }, (_, i) => i + 1)
   ).current;
 
-  // Responsive page container max-width based on desktop zoom scale
-  const pageContainerMaxWidth = fitWidth
-    ? '100%'
-    : `${Math.min(1280, Math.max(340, Math.round(860 * (scale / 1.5))))}px`;
-
   return (
     <div
       className={`bukhari-reader-page-root ${isFullscreen ? 'fullscreen-mode' : ''}`}
       style={{
         width: '100%',
-        maxWidth: isFullscreen ? '100%' : '1400px',
+        maxWidth: isFullscreen
+          ? '100%'
+          : !isFitWidth && zoomLevel > 1.0
+          ? `${Math.max(1400, Math.round(820 * zoomLevel) + 60)}px`
+          : '1400px',
         margin: '0 auto',
         padding: isFullscreen
           ? 'var(--space-1) var(--space-2)'
           : 'var(--space-1) var(--space-2) var(--space-12)',
         boxSizing: 'border-box',
+        overflow: 'visible',
       }}
     >
       {/* ========================================================================= */}
-      {/* CLEAN RESPONSIVE STICKY TOOLBAR                                          */}
+      {/* CLEAN RESPONSIVE PERMANENTLY STICKY TOOLBAR & PAGE SEARCH BOX            */}
       {/* ========================================================================= */}
       <header
         className="card bukhari-top-toolbar"
         style={{
           position: 'sticky',
-          top: isFullscreen ? '0px' : '64px',
-          zIndex: 40,
+          top: isFullscreen ? '0px' : 'var(--header-height, 68px)',
+          zIndex: 35,
           padding: '8px 14px',
           marginBottom: 'var(--space-4)',
-          backgroundColor: 'rgba(15, 23, 42, 0.96)',
-          border: '1px solid rgba(16, 185, 129, 0.3)',
-          backdropFilter: 'blur(14px)',
+          backgroundColor: 'rgba(15, 23, 42, 0.98)',
+          border: '1px solid rgba(16, 185, 129, 0.35)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '8px 12px',
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.35)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.55)',
+          boxSizing: 'border-box',
         }}
       >
         {/* Section 1: Back to Library & Clean Book Title */}
@@ -258,99 +355,207 @@ export const BukhariReader: React.FC = () => {
           </div>
         </div>
 
-        {/* Section 2: Compact Responsive Size / Zoom Controls */}
+        {/* Section 2: Single Clean Zoom Button with Dropdown Menu */}
         <div
+          ref={zoomMenuRef}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            backgroundColor: 'var(--bg-surface)',
-            padding: '3px 6px',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border-default)',
-            flexWrap: 'wrap',
+            position: 'relative',
+            overflow: 'visible',
+            zIndex: isZoomMenuOpen ? 60 : 1,
           }}
         >
-          <span
-            className="text-xs text-muted"
-            style={{ fontWeight: 600, paddingRight: 2 }}
-          >
-            Size:
-          </span>
-
           <button
             type="button"
-            className="btn-icon btn-icon-sm"
-            onClick={handleZoomOut}
-            title="Zoom Out (-)"
-            aria-label="Zoom Out"
-            style={{ width: 26, height: 26 }}
-          >
-            <ZoomOut size={13} />
-          </button>
-
-          <span
-            style={{
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              minWidth: 40,
-              textAlign: 'center',
-              color: 'var(--brand-primary)',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
-            {fitWidth ? 'Fit' : `${Math.round(scale * 100)}%`}
-          </span>
-
-          <button
-            type="button"
-            className="btn-icon btn-icon-sm"
-            onClick={handleZoomIn}
-            title="Zoom In (+)"
-            aria-label="Zoom In"
-            style={{ width: 26, height: 26 }}
-          >
-            <ZoomIn size={13} />
-          </button>
-
-          {/* Zoom Presets */}
-          <div
+            className={`btn btn-sm ${isZoomMenuOpen ? 'btn-primary' : 'btn-ghost'}`}
+            onClick={() => setIsZoomMenuOpen((prev) => !prev)}
+            title="Zoom Options"
+            aria-label="Zoom Options"
+            aria-expanded={isZoomMenuOpen}
+            aria-haspopup="true"
             style={{
               display: 'flex',
-              gap: 2,
-              marginLeft: 2,
-              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              fontSize: '0.82rem',
+              borderRadius: 'var(--radius-md)',
+              border: isZoomMenuOpen
+                ? '1px solid var(--brand-primary)'
+                : '1px solid var(--border-default)',
+              backgroundColor: isZoomMenuOpen
+                ? 'rgba(16, 185, 129, 0.15)'
+                : 'var(--bg-surface)',
             }}
           >
-            {ZOOM_PRESETS.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                className={`btn btn-xs ${
-                  scale === preset.scale && !fitWidth ? 'btn-primary' : 'btn-ghost'
-                }`}
-                onClick={() => handlePresetZoom(preset.scale)}
-                style={{ padding: '2px 6px', fontSize: '0.72rem' }}
-                title={`Set size to ${preset.label}`}
-              >
-                {preset.label}
-              </button>
-            ))}
-
-            <button
-              type="button"
-              className={`btn btn-xs ${fitWidth ? 'btn-primary' : 'btn-ghost'}`}
-              onClick={toggleFitWidth}
-              style={{ padding: '2px 6px', fontSize: '0.72rem' }}
-              title="Fit page to full screen width"
+            <ZoomIn size={15} />
+            <span style={{ fontWeight: 600 }}>Zoom</span>
+            <span
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+                fontFamily: 'var(--font-mono)',
+                color: isFitWidth || zoomLevel !== 1.0 ? 'var(--brand-primary)' : 'var(--text-secondary)',
+                backgroundColor: 'var(--bg-surface-elevated)',
+                padding: '1px 6px',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border-subtle)',
+              }}
             >
-              Fit Width
-            </button>
-          </div>
+              {isFitWidth ? 'Fit Width' : `${Math.round(zoomLevel * 100)}%`}
+            </span>
+          </button>
+
+          {/* Clean Responsive PDF-Reader Zoom Dropdown Menu */}
+          {isZoomMenuOpen && (
+            <div
+              className="zoom-dropdown-menu"
+              style={{
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                boxSizing: 'border-box',
+              }}
+            >
+              {/* Top Row: Manual Zoom Out / In Controls & Status */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  backgroundColor: 'var(--bg-surface)',
+                  padding: '4px 8px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <button
+                  type="button"
+                  className="btn-icon btn-icon-sm"
+                  onClick={handleZoomOut}
+                  disabled={zoomLevel <= 0.5 && !isFitWidth}
+                  title="Zoom Out (-)"
+                  aria-label="Zoom Out"
+                  style={{ width: 28, height: 28 }}
+                >
+                  <ZoomOut size={14} />
+                </button>
+
+                <span
+                  style={{
+                    fontSize: '0.86rem',
+                    fontWeight: 'bold',
+                    color: 'var(--brand-primary)',
+                    fontFamily: 'var(--font-mono)',
+                    minWidth: 60,
+                    textAlign: 'center',
+                  }}
+                >
+                  {isFitWidth ? 'Fit Width' : `${Math.round(zoomLevel * 100)}%`}
+                </span>
+
+                <button
+                  type="button"
+                  className="btn-icon btn-icon-sm"
+                  onClick={handleZoomIn}
+                  disabled={zoomLevel >= 2.5 && !isFitWidth}
+                  title="Zoom In (+)"
+                  aria-label="Zoom In"
+                  style={{ width: 28, height: 28 }}
+                >
+                  <ZoomIn size={14} />
+                </button>
+              </div>
+
+              {/* Grid of Common PDF Zoom Percentages */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '4px',
+                  maxHeight: '180px',
+                  overflowY: 'auto',
+                  paddingRight: '2px',
+                }}
+              >
+                {ZOOM_OPTIONS.filter((opt) => opt.scale !== undefined).map((opt) => {
+                  const isSelected = !isFitWidth && Math.abs(zoomLevel - (opt.scale ?? 1)) < 0.01;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      className={`btn btn-xs ${isSelected ? 'btn-primary' : 'btn-ghost'}`}
+                      onClick={() => handleSelectZoomOption(opt)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '5px 8px',
+                        fontSize: '0.78rem',
+                        fontFamily: 'var(--font-mono)',
+                        textAlign: 'left',
+                        borderRadius: 'var(--radius-sm)',
+                      }}
+                      title={`Zoom ${opt.label}`}
+                    >
+                      <span>{opt.label}</span>
+                      {isSelected && <Check size={12} />}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '2px 0' }} />
+
+              {/* Special Actions: Fit to Width & Reset to Default */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <button
+                  type="button"
+                  className={`btn btn-xs ${isFitWidth ? 'btn-primary' : 'btn-ghost'}`}
+                  onClick={() => handleSelectZoomOption(ZOOM_OPTIONS.find((o) => o.id === 'fit-width')!)}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '5px 8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    border: '1px solid var(--border-default)',
+                  }}
+                  title="Fit page to full width"
+                >
+                  <span>Fit to Width</span>
+                  {isFitWidth && <Check size={12} />}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-xs btn-ghost"
+                  onClick={handleResetZoom}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '5px 8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    border: '1px solid var(--border-default)',
+                  }}
+                  title="Reset to Default (100%)"
+                >
+                  <RotateCcw size={13} />
+                  <span>Reset to Default</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Section 3: Page Search & Jump (No Prev/Next buttons) */}
         <div
+          className="bukhari-page-search-container"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -451,8 +656,10 @@ export const BukhariReader: React.FC = () => {
           alignItems: 'center',
           gap: 'var(--space-5)',
           width: '100%',
+          minWidth: !isFitWidth && zoomLevel > 1.0 ? `${Math.round(820 * zoomLevel)}px` : '100%',
           scrollSnapType: 'y proximity',
           paddingBottom: 'var(--space-16)',
+          boxSizing: 'border-box',
         }}
       >
         {allPageNumbers.map((pageNum) => (
@@ -460,7 +667,8 @@ export const BukhariReader: React.FC = () => {
             key={pageNum}
             pageNumber={pageNum}
             totalPages={totalPages}
-            maxWidth={pageContainerMaxWidth}
+            zoomLevel={zoomLevel}
+            isFitWidth={isFitWidth}
             isCurrent={pageNum === currentPage}
             initialPage={initialPage}
           />
@@ -476,13 +684,14 @@ export const BukhariReader: React.FC = () => {
 interface BukhariPageCardProps {
   pageNumber: number;
   totalPages: number;
-  maxWidth: string;
+  zoomLevel: number;
+  isFitWidth: boolean;
   isCurrent: boolean;
   initialPage: number;
 }
 
 const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
-  ({ pageNumber, totalPages, maxWidth, isCurrent, initialPage }) => {
+  ({ pageNumber, totalPages, zoomLevel, isFitWidth, isCurrent, initialPage }) => {
     const isNearby = Math.abs(pageNumber - initialPage) <= 3 || isCurrent;
     const [imgLoaded, setImgLoaded] = useState<boolean>(false);
     const [useFallbackCanvas, setUseFallbackCanvas] = useState<boolean>(false);
@@ -500,7 +709,11 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
       const render = async () => {
         try {
           if (canvasRef.current) {
-            await BukhariPdfService.renderPageToCanvas(pageNumber, canvasRef.current, 1.5);
+            await BukhariPdfService.renderPageToCanvas(
+              pageNumber,
+              canvasRef.current,
+              Math.max(1.5, zoomLevel * 1.5)
+            );
             if (!isCancelled) {
               setCanvasRendered(true);
             }
@@ -514,7 +727,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
       return () => {
         isCancelled = true;
       };
-    }, [useFallbackCanvas, canvasRendered, pageNumber]);
+    }, [useFallbackCanvas, canvasRendered, pageNumber, zoomLevel]);
 
     return (
       <article
@@ -522,8 +735,10 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
         data-page={pageNumber}
         className="bukhari-page-card card"
         style={{
-          width: '100%',
-          maxWidth: maxWidth,
+          width: isFitWidth ? '100%' : `${Math.round(820 * zoomLevel)}px`,
+          maxWidth: isFitWidth ? '100%' : zoomLevel <= 1.0 ? `${Math.round(820 * zoomLevel)}px` : 'none',
+          minWidth: isFitWidth ? 'auto' : zoomLevel > 1.0 ? `${Math.round(820 * zoomLevel)}px` : 'auto',
+          flexShrink: 0,
           margin: '0 auto',
           padding: 0,
           backgroundColor: '#ffffff',
@@ -591,7 +806,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
             alignItems: 'center',
             backgroundColor: '#ffffff',
             position: 'relative',
-            minHeight: '360px',
+            minHeight: '260px',
             aspectRatio: '693 / 1002',
             boxSizing: 'border-box',
           }}
@@ -614,7 +829,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
               }}
               style={{
                 width: '100%',
-                height: 'auto',
+                height: '100%',
                 display: 'block',
                 maxWidth: '100%',
                 objectFit: 'contain',
@@ -680,3 +895,5 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
   }
 );
 BukhariPageCard.displayName = 'BukhariPageCard';
+
+

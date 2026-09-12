@@ -699,8 +699,8 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     category: 'durood',
     subcategory: 'Naat & Salawat',
     tradition: 'Hanafi / Ahl-e-Sunnat (Alahazrat Tradition)',
-    primaryLanguage: 'Urdu & Persian',
-    languagesAvailable: ['Urdu', 'Arabic', 'Persian', 'English'],
+    primaryLanguage: 'Urdu & Hindi',
+    languagesAvailable: ['Urdu', 'Hindi', 'Arabic', 'Persian', 'English'],
     volumeCount: 3,
     era: '1272-1340 AH / 1856-1921 CE',
     isFeatured: true,
@@ -708,10 +708,10 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     coverColor: '#831843',
     accentColor: '#f59e0b',
     description:
-      'The supreme collection of devotional poetry, Naat Sharif, Manqabat, and Salawat in the Urdu and Persian languages, containing the world-renowned Salam "Mustafa Jaan-e-Rahmat Pe Lakhon Salam" recited in sacred gatherings across the globe.',
+      'The supreme collection of devotional poetry, Naat Sharif, Manqabat, and Salawat in Urdu and Hindi editions, containing the world-renowned Salam "Mustafa Jaan-e-Rahmat Pe Lakhon Salam" recited in sacred gatherings across the globe.',
     significance: 'The preeminent standard of authentic, Shariah-compliant devotional literature expressing sincere love for the Prophet ﷺ.',
-    tags: ['Hadaiq-e-Bakhshish', 'Naat', 'Salam', 'Mustafa Jane Rahmat', 'Alahazrat'],
-    source: 'Verified 3-Part Standard Diwan Edition',
+    tags: ['Hadaiq-e-Bakhshish', 'Hadaiq Hindi', 'Hadaiq Urdu', 'Naat', 'Salam', 'Mustafa Jane Rahmat', 'Alahazrat', 'Hindi Naat'],
+    source: 'Verified Urdu & Hindi Editions (Archive.org & Maktaba-tul-Madina)',
     volumes: [
       { id: 'hadaiq-vol-1', volumeNumber: 1, title: 'Volume 1: Praise of Allah (Hamd) & Naats of the Prophet ﷺ', urduTitle: 'جلد ۱ (حمد باری تعالیٰ و نعت سرور کائنات ﷺ)', isAvailable: true, chaptersCount: 30 },
       { id: 'hadaiq-vol-2', volumeNumber: 2, title: 'Volume 2: Naat Sharif, Manqabat Ghaus-e-Azam & Awliya', urduTitle: 'جلد ۲ (نعت رسول ﷺ و مناقب غوث اعظم و اولیاء کرام)', isAvailable: true, chaptersCount: 35 },
@@ -1038,6 +1038,32 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
 ];
 
 export function getBookById(id: string): IslamicBook | undefined {
+  if (id === 'hadaiq-e-bakhshish-hindi') {
+    const base = ISLAMIC_BOOKS.find((b) => b.id === 'hadaiq-e-bakhshish');
+    if (base) {
+      return {
+        ...base,
+        id: 'hadaiq-e-bakhshish-hindi',
+        title: 'Hadaiq-e-Bakhshish — Hindi',
+        urduTitle: 'حدائقِ بخشش (ہندی)',
+        primaryLanguage: 'Hindi',
+        volumeCount: 1,
+      };
+    }
+  }
+  if (id === 'hadaiq-e-bakhshish-english') {
+    const base = ISLAMIC_BOOKS.find((b) => b.id === 'hadaiq-e-bakhshish');
+    if (base) {
+      return {
+        ...base,
+        id: 'hadaiq-e-bakhshish-english',
+        title: 'Hadaiq-e-Bakhshish — English',
+        urduTitle: 'حدائقِ بخشش (انگریزی)',
+        primaryLanguage: 'English',
+        volumeCount: 1,
+      };
+    }
+  }
   return ISLAMIC_BOOKS.find((book) => book.id === id);
 }
 

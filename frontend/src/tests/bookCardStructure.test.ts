@@ -107,4 +107,15 @@ describe('Islamic Book Cards & Volume Structure Verification', () => {
       expect(actualNumbers).toEqual(expectedNumbers);
     }
   });
+
+  it('should verify Quran store navigation modes are strictly read and listen', async () => {
+    const { useQuranStore } = await import('../stores/useQuranStore');
+    const store = useQuranStore.getState();
+    expect(store.mode).toBe('read');
+    store.setMode('listen');
+    expect(useQuranStore.getState().mode).toBe('listen');
+    store.setMode('read');
+    expect(useQuranStore.getState().mode).toBe('read');
+  });
 });
+

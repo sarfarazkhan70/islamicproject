@@ -62,7 +62,18 @@ export const GlobalQuranAudioController: React.FC = () => {
   // Sync audio source when phase, Surah, Ayah, or reciter changes
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !audioUrl) return;
+    if (!audio) return;
+
+    if (audioPlaybackPhase === 'idle') {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.removeAttribute('src');
+      audio.removeAttribute('data-src');
+      audio.load();
+      return;
+    }
+
+    if (!audioUrl) return;
 
     const currentSrc = audio.getAttribute('data-src');
     if (currentSrc !== audioUrl) {
@@ -81,14 +92,18 @@ export const GlobalQuranAudioController: React.FC = () => {
         }
       }
     }
-  }, [audioUrl, isPlaying, playbackSpeed]);
+  }, [audioUrl, audioPlaybackPhase, isPlaying, playbackSpeed]);
 
   // Sync play / pause state
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !audioUrl) return;
+    if (!audio) return;
 
-    if (isPlaying) {
+    if (!isPlaying || audioPlaybackPhase === 'idle') {
+      if (!audio.paused) {
+        audio.pause();
+      }
+    } else if (isPlaying && audioUrl) {
       if (audio.paused) {
         const playPromise = audio.play();
         if (playPromise !== undefined) {
@@ -99,12 +114,8 @@ export const GlobalQuranAudioController: React.FC = () => {
           });
         }
       }
-    } else {
-      if (!audio.paused) {
-        audio.pause();
-      }
     }
-  }, [isPlaying, audioUrl]);
+  }, [isPlaying, audioUrl, audioPlaybackPhase]);
 
   // Sync volume
   useEffect(() => {

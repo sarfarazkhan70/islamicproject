@@ -14,12 +14,12 @@ import {
   Check,
 } from 'lucide-react';
 import {
-  HADAIQ_PRINTED_TOTAL_PAGES,
-  HADAIQ_PRINTED_PAGES,
-  HADAIQ_KALAMS_INDEX,
-  HadaiqKalamItem,
-} from '../../data/hadaiqData';
-import { HadaiqPdfService } from '../../services/hadaiqPdfService';
+  HADAIQ_ENGLISH_PRINTED_TOTAL_PAGES,
+  HADAIQ_ENGLISH_PRINTED_PAGES,
+  HADAIQ_ENGLISH_KALAMS_INDEX,
+  HadaiqEnglishKalamItem,
+} from '../../data/hadaiqEnglishData';
+import { HadaiqEnglishPdfService } from '../../services/hadaiqEnglishPdfService';
 
 interface ZoomOption {
   id: string;
@@ -45,11 +45,11 @@ const ZOOM_OPTIONS: ZoomOption[] = [
   { id: 'reset-default', label: 'Reset to Default', isSpecial: 'reset-default' },
 ];
 
-export const HadaiqReader: React.FC = () => {
+export const HadaiqEnglishReader: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const totalPrintedPages = HADAIQ_PRINTED_TOTAL_PAGES; // 446 physical printed pages
+  const totalPrintedPages = HADAIQ_ENGLISH_PRINTED_TOTAL_PAGES; // 319 physical printed pages
 
   const pageParam = searchParams.get('page');
   const initialPage = pageParam
@@ -78,7 +78,7 @@ export const HadaiqReader: React.FC = () => {
   // Maintain currently visible page position after zoom adjustment
   const maintainCurrentPagePosition = useCallback((targetPage: number) => {
     requestAnimationFrame(() => {
-      const el = document.getElementById(`hadaiq-page-${targetPage}`);
+      const el = document.getElementById(`hadaiq-english-page-${targetPage}`);
       if (el) {
         const headerOffset = isFullscreen ? 55 : 130;
         const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
@@ -106,7 +106,7 @@ export const HadaiqReader: React.FC = () => {
     };
   }, [isZoomMenuOpen]);
 
-  // Scroll to a specific Hadaiq physical printed page
+  // Scroll to a specific Hadaiq English physical printed page
   const scrollToPage = useCallback(
     (printedPageNum: number, behavior: ScrollBehavior = 'auto') => {
       const clamped = Math.max(1, Math.min(totalPrintedPages, printedPageNum));
@@ -120,7 +120,7 @@ export const HadaiqReader: React.FC = () => {
       }
 
       const performScroll = () => {
-        const el = document.getElementById(`hadaiq-page-${clamped}`);
+        const el = document.getElementById(`hadaiq-english-page-${clamped}`);
         if (el) {
           const headerOffset = isFullscreen ? 55 : 130;
           const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
@@ -207,7 +207,7 @@ export const HadaiqReader: React.FC = () => {
       }
     );
 
-    const pageElements = document.querySelectorAll('.hadaiq-page-card');
+    const pageElements = document.querySelectorAll('.hadaiq-english-page-card');
     pageElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
@@ -284,10 +284,12 @@ export const HadaiqReader: React.FC = () => {
   };
 
   // Filtered Kalams for Index Drawer
-  const filteredKalams = HADAIQ_KALAMS_INDEX.filter(
+  const filteredKalams = HADAIQ_ENGLISH_KALAMS_INDEX.filter(
     (k) =>
+      k.titleEnglish.toLowerCase().includes(indexSearch.toLowerCase()) ||
       k.title.toLowerCase().includes(indexSearch.toLowerCase()) ||
-      k.categoryUrdu.toLowerCase().includes(indexSearch.toLowerCase())
+      k.categoryEnglish.toLowerCase().includes(indexSearch.toLowerCase()) ||
+      k.printedPage.toString().includes(indexSearch.trim())
   );
 
   // Responsive page container max-width based on desktop zoom scale
@@ -299,21 +301,9 @@ export const HadaiqReader: React.FC = () => {
     <div
       className={`hadaiq-reader-page-root ${isFullscreen ? 'fullscreen-mode' : ''}`}
       style={{
-        width: '100%',
-        maxWidth: isFullscreen
-          ? '100%'
-          : !isFitWidth && zoomLevel > 1.0
-          ? `${Math.max(1400, Math.round(820 * zoomLevel) + 60)}px`
-          : '1400px',
-        margin: '0 auto',
-        padding: isFullscreen
-          ? 'var(--space-1) var(--space-2)'
-          : 'var(--space-1) var(--space-2) var(--space-12)',
-        boxSizing: 'border-box',
-        overflow: 'visible',
+        maxWidth: isFullscreen ? '100%' : pageContainerMaxWidth,
       }}
     >
-      {/* Scoped Styling for Clean, Responsive & Width-Matched Controls */}
       <style>{`
         .hadaiq-reader-page-root {
           width: 100%;
@@ -373,33 +363,6 @@ export const HadaiqReader: React.FC = () => {
           font-size: 0.82rem;
           border-radius: var(--radius-md);
           box-sizing: border-box;
-        }
-
-        .hadaiq-title-group {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          min-width: 0;
-        }
-
-        .hadaiq-title-text {
-          font-size: 1.05rem;
-          font-weight: 700;
-          color: var(--brand-gold);
-          margin: 0;
-          line-height: 1.25;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .hadaiq-subtitle-text {
-          font-size: 0.74rem;
-          color: var(--text-secondary);
-          line-height: 1.2;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
 
         .hadaiq-toolbar-right {
@@ -543,12 +506,6 @@ export const HadaiqReader: React.FC = () => {
             width: 100%;
             gap: 6px;
           }
-          .hadaiq-title-text {
-            font-size: 0.95rem;
-          }
-          .hadaiq-subtitle-text {
-            font-size: 0.7rem;
-          }
         }
 
         @media (max-width: 540px) {
@@ -569,7 +526,7 @@ export const HadaiqReader: React.FC = () => {
       `}</style>
 
       {/* ========================================================================= */}
-      {/* CLEAN RESPONSIVE STICKY TOOLBAR (MATCHED WITH CONTAINER WIDTH)            */}
+      {/* CLEAN RESPONSIVE STICKY TOOLBAR                                          */}
       {/* ========================================================================= */}
       <header className="card hadaiq-top-toolbar">
         {/* Section 1: Back to Library & Fehrist */}
@@ -589,7 +546,7 @@ export const HadaiqReader: React.FC = () => {
             type="button"
             className="hadaiq-action-btn"
             onClick={() => setIsIndexOpen(!isIndexOpen)}
-            title="Fehrist (Naat & Kalam Index)"
+            title="Fehrist (Kalam Index)"
             aria-label="Fehrist"
           >
             <List size={15} />
@@ -599,8 +556,7 @@ export const HadaiqReader: React.FC = () => {
 
         {/* Section 2: Zoom Controls & Printed Page Selector */}
         <div className="hadaiq-toolbar-right">
-
-          {/* Section 2: Single Clean Zoom Button with Dropdown Menu */}
+          {/* Single Clean Zoom Button with Dropdown Menu */}
           <div
             ref={zoomMenuRef}
             style={{
@@ -815,7 +771,7 @@ export const HadaiqReader: React.FC = () => {
               onChange={(e) => setDirectPageInput(e.target.value)}
               onBlur={handleDirectPageBlur}
               className="hadaiq-page-input"
-              aria-label={`Enter Hadaiq printed page number (1 to ${totalPrintedPages})`}
+              aria-label={`Enter Hadaiq English printed page number (1 to ${totalPrintedPages})`}
             />
 
             <span className="hadaiq-page-total">
@@ -885,13 +841,13 @@ export const HadaiqReader: React.FC = () => {
                   <span>Fehrist</span>
                   <span
                     style={{
-                      fontFamily: "var(--font-urdu), var(--font-arabic), 'Amiri', serif",
-                      fontSize: '1.1rem',
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '0.95rem',
                       fontWeight: 'normal',
                       opacity: 0.9,
                     }}
                   >
-                    (فہرستِ کلام)
+                    (Table of Contents)
                   </span>
                 </h3>
               </div>
@@ -964,15 +920,14 @@ export const HadaiqReader: React.FC = () => {
                     padding: '40px 20px',
                     textAlign: 'center',
                     color: 'var(--text-muted)',
-                    fontFamily: "var(--font-urdu), var(--font-arabic), 'Amiri', serif",
                     fontSize: '1.05rem',
                     lineHeight: 1.8,
                   }}
                 >
-                  کوئی کلام نہیں ملا — براہِ کرم دوسرا لفظ تلاش کریں۔
+                  No Kalam found — please try another search term.
                 </div>
               ) : (
-                filteredKalams.map((kalam: HadaiqKalamItem) => {
+                filteredKalams.map((kalam: HadaiqEnglishKalamItem) => {
                   return (
                     <button
                       key={kalam.id}
@@ -983,7 +938,7 @@ export const HadaiqReader: React.FC = () => {
                       }}
                       className="hadaiq-fehrist-item card-hover"
                     >
-                      {/* Arabic/Urdu Content (RTL side - right side) */}
+                      {/* English Content */}
                       <div className="hadaiq-fehrist-content">
                         <span
                           className="hadaiq-fehrist-tag"
@@ -1002,15 +957,22 @@ export const HadaiqReader: React.FC = () => {
                                 : '1px solid rgba(16, 185, 129, 0.35)',
                           }}
                         >
-                          {kalam.categoryUrdu}
+                          {kalam.categoryEnglish}
                         </span>
 
-                        <span className="hadaiq-fehrist-title">
-                          {kalam.title}
+                        <span
+                          className="hadaiq-fehrist-title"
+                          style={{
+                            direction: 'ltr',
+                            textAlign: 'left',
+                            fontFamily: 'var(--font-sans)',
+                          }}
+                        >
+                          {kalam.titleEnglish}
                         </span>
                       </div>
 
-                      {/* Printed Page Number (LTR side - opposite/left side) */}
+                      {/* Printed Page Number badge on opposite side */}
                       <div className="hadaiq-fehrist-page-badge">
                         Page {kalam.printedPage}
                       </div>
@@ -1024,7 +986,7 @@ export const HadaiqReader: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* VERTICAL CONTINUOUS SCROLL STREAM (ALL 446 PRINTED PAGES VIA HIGH-DPI)   */}
+      {/* VERTICAL CONTINUOUS SCROLL STREAM (ALL 319 PRINTED PAGES VIA HIGH-DPI)     */}
       {/* ========================================================================= */}
       <main
         className="hadaiq-vertical-reading-stream"
@@ -1038,8 +1000,8 @@ export const HadaiqReader: React.FC = () => {
           paddingBottom: 'var(--space-16)',
         }}
       >
-        {HADAIQ_PRINTED_PAGES.map(({ printedPage, pdfPage }) => (
-          <HadaiqPageCard
+        {HADAIQ_ENGLISH_PRINTED_PAGES.map(({ printedPage, pdfPage }) => (
+          <HadaiqEnglishPageCard
             key={printedPage}
             printedPageNumber={printedPage}
             pdfPageNumber={pdfPage}
@@ -1056,9 +1018,9 @@ export const HadaiqReader: React.FC = () => {
 };
 
 // ============================================================================
-// SINGLE HADAIQ PAGE CARD COMPONENT (HIGH-DPI AUTHENTIC BOOK RENDERING)
+// SINGLE HADAIQ ENGLISH PAGE CARD COMPONENT (HIGH-DPI AUTHENTIC BOOK RENDERING)
 // ============================================================================
-interface HadaiqPageCardProps {
+interface HadaiqEnglishPageCardProps {
   printedPageNumber: number;
   pdfPageNumber: number;
   totalPrintedPages: number;
@@ -1068,7 +1030,7 @@ interface HadaiqPageCardProps {
   scale: number;
 }
 
-const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
+const HadaiqEnglishPageCard: React.FC<HadaiqEnglishPageCardProps> = memo(
   ({
     printedPageNumber,
     pdfPageNumber,
@@ -1101,7 +1063,7 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
         },
         {
           root: null,
-          rootMargin: '600px 0px', // Proactively load 600px ahead of scroll
+          rootMargin: '600px 0px', // Proactively render 600px ahead
           threshold: 0.01,
         }
       );
@@ -1121,7 +1083,11 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
       const render = async () => {
         try {
           if (canvasRef.current) {
-            await HadaiqPdfService.renderPageToCanvas(pdfPageNumber, canvasRef.current, scale);
+            await HadaiqEnglishPdfService.renderPageToCanvas(
+              pdfPageNumber,
+              canvasRef.current,
+              scale
+            );
             if (!isCancelled) {
               setCanvasRendered(true);
               setRenderError(false);
@@ -1130,7 +1096,7 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
         } catch (err) {
           if (!isCancelled) {
             console.error(
-              `Canvas render failed for Hadaiq printed page ${printedPageNumber} (PDF ${pdfPageNumber}):`,
+              `Canvas render failed for Hadaiq English printed page ${printedPageNumber} (PDF ${pdfPageNumber}):`,
               err
             );
             setRenderError(true);
@@ -1147,12 +1113,12 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
     return (
       <article
         ref={containerRef}
-        id={`hadaiq-page-${printedPageNumber}`}
+        id={`hadaiq-english-page-${printedPageNumber}`}
         data-printed-page={printedPageNumber}
-        className="hadaiq-page-card card"
+        className="hadaiq-english-page-card card"
         style={{
           width: '100%',
-          maxWidth: maxWidth,
+          maxWidth,
           margin: '0 auto',
           padding: 0,
           backgroundColor: '#ffffff',
@@ -1193,13 +1159,13 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
           }}
         >
           <span
-            className="font-arabic"
             style={{
               fontSize: '0.85rem',
               color: isCurrent ? 'var(--brand-gold)' : 'var(--text-primary)',
+              fontWeight: 'bold',
             }}
           >
-            حدائقِ بخشش — إمام أحمد رضا خان قدس سرہ
+            Hadaiq-e-Bakhshish (English) — Imam Ahmad Raza Khan
           </span>
           <span
             style={{
@@ -1207,11 +1173,11 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
               color: isCurrent ? 'var(--brand-gold)' : 'var(--text-muted)',
             }}
           >
-            صفحہ {printedPageNumber} / {totalPrintedPages}
+            Page {printedPageNumber} / {totalPrintedPages}
           </span>
         </div>
 
-        {/* Complete Book Page Container (Preserving Natural Aspect Ratio: 289 / 401) */}
+        {/* Complete Book Page Container */}
         <div
           style={{
             width: '100%',
@@ -1221,7 +1187,7 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
             backgroundColor: '#ffffff',
             position: 'relative',
             minHeight: '360px',
-            aspectRatio: '289 / 401',
+            aspectRatio: '288 / 396',
             boxSizing: 'border-box',
           }}
         >
@@ -1268,10 +1234,10 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
                 }}
               />
               <span
-                className="font-arabic text-xs"
+                className="text-xs"
                 style={{ color: 'var(--text-secondary)' }}
               >
-                جاري تحميل الصفحة {printedPageNumber}...
+                Loading page {printedPageNumber}...
               </span>
             </div>
           )}
@@ -1285,7 +1251,7 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
                 color: 'var(--text-muted)',
               }}
             >
-              <p>تعذر تحميل الصفحة {printedPageNumber}</p>
+              <p>Failed to load page {printedPageNumber}</p>
               <button
                 type="button"
                 className="btn btn-xs btn-primary"
@@ -1293,7 +1259,7 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
                   setRenderError(false);
                   setCanvasRendered(false);
                   if (canvasRef.current) {
-                    HadaiqPdfService.renderPageToCanvas(
+                    HadaiqEnglishPdfService.renderPageToCanvas(
                       pdfPageNumber,
                       canvasRef.current,
                       scale
@@ -1303,7 +1269,7 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
                   }
                 }}
               >
-                إعادة المحاولة (Retry)
+                Retry
               </button>
             </div>
           )}
@@ -1312,4 +1278,4 @@ const HadaiqPageCard: React.FC<HadaiqPageCardProps> = memo(
     );
   }
 );
-HadaiqPageCard.displayName = 'HadaiqPageCard';
+HadaiqEnglishPageCard.displayName = 'HadaiqEnglishPageCard';

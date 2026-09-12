@@ -43,7 +43,7 @@ export interface QuranReadingProgress {
   updatedAt: string;
 }
 
-export type QuranMode = 'read' | 'kanzul-iman-read' | 'kanzul-iman-audio' | 'listen';
+export type QuranMode = 'read' | 'listen';
 export type QuranReadViewType = 'surah' | 'mushaf';
 
 interface QuranState {
@@ -91,6 +91,7 @@ interface QuranState {
   autoPlayNext: boolean;
   seekTarget: number | null;
   hasUserStartedAudio: boolean;
+  isMiniPlayerDismissed: boolean;
 
   // Individual Ayah Audio
   playingAyahKey: string | null;
@@ -138,6 +139,7 @@ interface QuranState {
   pauseAudio: () => void;
   resumeAudio: () => void;
   stopAudio: () => void;
+  closeMiniPlayer: () => void;
   seekAudio: (seconds: number) => void;
   clearSeekTarget: () => void;
   setSelectedReciterId: (reciterId: number) => void;
@@ -275,6 +277,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   autoPlayNext: true,
   seekTarget: null,
   hasUserStartedAudio: false,
+  isMiniPlayerDismissed: false,
 
   playingAyahKey: null,
   isAyahAudioPlaying: false,
@@ -460,6 +463,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       selectedReciterId: targetReciter,
       audioPlaybackPhase: 'taawwuz',
       hasUserStartedAudio: true,
+      isMiniPlayerDismissed: false,
       isPlaying: true,
       playbackTime: 0,
     });
@@ -548,6 +552,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       audioRecitationUrl: initialAudioUrl,
       audioPlaybackPhase: 'taawwuz',
       hasUserStartedAudio: true,
+      isMiniPlayerDismissed: false,
       isPlaying: true,
       playbackTime: 0,
     });
@@ -663,8 +668,24 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   },
 
   pauseAudio: () => set({ isPlaying: false }),
-  resumeAudio: () => set({ isPlaying: true, hasUserStartedAudio: true }),
-  stopAudio: () => set({ isPlaying: false, playbackTime: 0, audioPlaybackPhase: 'idle' }),
+  resumeAudio: () => set({ isPlaying: true, hasUserStartedAudio: true, isMiniPlayerDismissed: false }),
+  stopAudio: () =>
+    set({
+      isPlaying: false,
+      hasUserStartedAudio: true,
+      isMiniPlayerDismissed: false,
+    }),
+  closeMiniPlayer: () =>
+    set({
+      isPlaying: false,
+      playbackTime: 0,
+      audioPlaybackPhase: 'idle',
+      hasUserStartedAudio: false,
+      isMiniPlayerDismissed: true,
+      seekTarget: null,
+      playingAyahKey: null,
+      isAyahAudioPlaying: false,
+    }),
   seekAudio: (seconds) => set({ seekTarget: seconds, playbackTime: seconds, audioPlaybackPhase: 'surah' }),
   clearSeekTarget: () => set({ seekTarget: null }),
 

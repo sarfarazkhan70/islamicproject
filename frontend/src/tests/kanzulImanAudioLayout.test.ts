@@ -19,8 +19,31 @@ import { getVerifiedKanzulImanTranslation } from '../data/kanzulImanData';
 import { HURUF_E_MUQATTAAT, getHurufMuqattaatForSurah } from '../data/hurufMuqattaatData';
 import { cleanAyahArabicText } from '../services/kanzulImanService';
 import { SURAHS_LIST } from '../data/quranData';
+import { getFullSurahName } from '../components/quran/KanzulImanAudioStudio';
 
 describe('Kanz-ul-Iman Audio & Verse Mapping', () => {
+  it('should verify all 114 Surahs have full complete names with "Surah " prefix', () => {
+    expect(SURAHS_LIST.length).toBe(114);
+    expect(getFullSurahName(SURAHS_LIST[0])).toBe('Surah Al-Fatihah');
+    expect(getFullSurahName(SURAHS_LIST[1])).toBe('Surah Al-Baqarah');
+    expect(getFullSurahName(SURAHS_LIST[2])).toBe('Surah Aal-E-Imran');
+    expect(getFullSurahName(SURAHS_LIST[3])).toBe('Surah An-Nisa');
+    expect(getFullSurahName(SURAHS_LIST[113])).toBe('Surah An-Nas');
+
+    for (const surah of SURAHS_LIST) {
+      const fullName = getFullSurahName(surah);
+      expect(fullName.startsWith('Surah ')).toBe(true);
+      expect(surah.arabicName).toBeTruthy();
+      expect(surah.arabicName.trim().length).toBeGreaterThan(0);
+    }
+  });
+
+  it('should verify Surah Al-Kawthar (108) has proper Arabic spelling الكوثر', () => {
+    const surah108 = SURAHS_LIST[107];
+    expect(surah108.number).toBe(108);
+    expect(surah108.arabicName).toBe('الكوثر');
+  });
+
   it('should verify total Ayahs count in Quran is 6236 across 114 Surahs', () => {
     expect(SURAH_VERSE_COUNTS.length).toBe(114);
     const totalAyahs = SURAH_VERSE_COUNTS.reduce((sum, count) => sum + count, 0);

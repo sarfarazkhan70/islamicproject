@@ -385,7 +385,7 @@ export const SURAHS_LIST: SurahMeta[] = [
   { number: 105, name: 'Al-Fil', arabicName: 'الفيل', meaning: 'The Elephant', versesCount: 5, revelationType: 'Meccan', juzStart: 30, pageStart: 608 },
   { number: 106, name: 'Quraysh', arabicName: 'قريش', meaning: 'Quraysh', versesCount: 4, revelationType: 'Meccan', juzStart: 30, pageStart: 609 },
   { number: 107, name: "Al-Ma'un", arabicName: 'الماعون', meaning: 'The Small Kindness', versesCount: 7, revelationType: 'Meccan', juzStart: 30, pageStart: 609 },
-  { number: 108, name: 'Al-Kawthar', arabicName: 'الکوثر', meaning: 'The Abundance', versesCount: 3, revelationType: 'Meccan', juzStart: 30, pageStart: 609 },
+  { number: 108, name: 'Al-Kawthar', arabicName: 'الكوثر', meaning: 'The Abundance', versesCount: 3, revelationType: 'Meccan', juzStart: 30, pageStart: 609 },
   { number: 109, name: 'Al-Kafirun', arabicName: 'الكافرون', meaning: 'The Disbelievers', versesCount: 6, revelationType: 'Meccan', juzStart: 30, pageStart: 609 },
   { number: 110, name: 'An-Nasr', arabicName: 'النصر', meaning: 'The Divine Support', versesCount: 3, revelationType: 'Medinan', juzStart: 30, pageStart: 610 },
   { number: 111, name: 'Al-Masad', arabicName: 'المسد', meaning: 'The Palm Fiber', versesCount: 5, revelationType: 'Meccan', juzStart: 30, pageStart: 610 },

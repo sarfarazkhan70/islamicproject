@@ -59,7 +59,7 @@ export const LibrarySearchBar: React.FC = () => {
             className="input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Islamic Books (e.g. Bukhari, Ahmad Raza, Fatawa, Bahar-e-Shariat)..."
+            placeholder="Search Islamic Books"
             style={{
               width: '100%',
               paddingLeft: 42,

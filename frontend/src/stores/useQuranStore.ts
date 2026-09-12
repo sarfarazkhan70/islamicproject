@@ -141,6 +141,7 @@ interface QuranState {
   stopAudio: () => void;
   closeMiniPlayer: () => void;
   seekAudio: (seconds: number) => void;
+  skipTime: (seconds: number) => void;
   clearSeekTarget: () => void;
   setSelectedReciterId: (reciterId: number) => void;
   setPlaybackTime: (time: number) => void;
@@ -672,8 +673,13 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   stopAudio: () =>
     set({
       isPlaying: false,
+      playbackTime: 0,
+      seekTarget: 0,
+      audioPlaybackPhase: 'idle',
       hasUserStartedAudio: true,
       isMiniPlayerDismissed: false,
+      playingAyahKey: null,
+      isAyahAudioPlaying: false,
     }),
   closeMiniPlayer: () =>
     set({
@@ -687,6 +693,11 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       isAyahAudioPlaying: false,
     }),
   seekAudio: (seconds) => set({ seekTarget: seconds, playbackTime: seconds, audioPlaybackPhase: 'surah' }),
+  skipTime: (seconds) => {
+    const { playbackTime, playbackDuration } = get();
+    const target = Math.max(0, Math.min(playbackDuration || Infinity, playbackTime + seconds));
+    set({ seekTarget: target, playbackTime: target, audioPlaybackPhase: 'surah' });
+  },
   clearSeekTarget: () => set({ seekTarget: null }),
 
   setSelectedReciterId: (reciterId) => {

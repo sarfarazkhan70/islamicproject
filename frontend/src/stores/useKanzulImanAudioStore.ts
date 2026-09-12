@@ -168,6 +168,8 @@ interface KanzulImanAudioState {
   playbackDuration: number;
   playbackProgress: number; // 0 to 1
   audioError: string | null;
+  hasUserStartedAudio: boolean;
+  isMiniPlayerDismissed: boolean;
 
   // Actions
   setPlaybackScope: (scope: PlaybackScope) => void;
@@ -178,6 +180,7 @@ interface KanzulImanAudioState {
   setAutoPlay: (enabled: boolean) => void;
   toggleAutoPlay: () => void;
   setPartIndex: (partIndex: number) => void;
+  closeMiniPlayer: () => void;
 
   // Flow Triggers
   loadSurahData: (surahNumber: number) => Promise<void>;
@@ -309,6 +312,8 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     playbackDuration: initialSurahTracks[0]?.duration || 83.72,
     playbackProgress: 0,
     audioError: null,
+    hasUserStartedAudio: false,
+    isMiniPlayerDismissed: false,
 
     playFullSurah: (surahNumber, _mode, _maxAyahs, _textAyahs) => {
       get().playSurah(surahNumber, 1);
@@ -465,6 +470,8 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playbackTime: 0,
         playbackDuration: track.duration || 0,
         playbackProgress: 0,
+        hasUserStartedAudio: true,
+        isMiniPlayerDismissed: false,
       });
 
       if (typeof Audio !== 'undefined') {
@@ -615,11 +622,11 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
     resumeAudio: () => {
       if (typeof Audio !== 'undefined' && activeHtmlAudio && activeHtmlAudio.paused && activeHtmlAudio.src) {
         activeHtmlAudio.play().then(() => {
-          set({ isPlaying: true });
+          set({ isPlaying: true, hasUserStartedAudio: true, isMiniPlayerDismissed: false });
         }).catch(() => {});
         return;
       }
-      set({ isPlaying: true });
+      set({ isPlaying: true, hasUserStartedAudio: true, isMiniPlayerDismissed: false });
       if (typeof Audio !== 'undefined') {
         const { currentSurahNumber, currentPartIndex } = get();
         get().playKanzulImanSurah(currentSurahNumber || 1, currentPartIndex || 0);
@@ -636,6 +643,21 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         playbackProgress: 0,
         playbackTime: 0,
         audioError: null,
+      });
+    },
+
+    closeMiniPlayer: () => {
+      stopAnyAudio();
+      set({
+        playingAyahKey: null,
+        playbackPhase: 'idle',
+        isPlaying: false,
+        isLoading: false,
+        playbackProgress: 0,
+        playbackTime: 0,
+        audioError: null,
+        hasUserStartedAudio: false,
+        isMiniPlayerDismissed: true,
       });
     },
 
@@ -673,7 +695,10 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         activeHtmlAudio.currentTime = target;
         set({ playbackTime: target, playbackProgress: target / activeHtmlAudio.duration });
       } else {
-        set({ playbackTime: seconds });
+        const duration = get().playbackDuration;
+        const target = duration > 0 ? Math.max(0, Math.min(duration, seconds)) : Math.max(0, seconds);
+        const progress = duration > 0 ? target / duration : 0;
+        set({ playbackTime: target, playbackProgress: progress });
       }
     },
 
@@ -683,7 +708,13 @@ export const useKanzulImanAudioStore = create<KanzulImanAudioState>((set, get) =
         activeHtmlAudio.currentTime = target;
         set({ playbackTime: target, playbackProgress: target / activeHtmlAudio.duration });
       } else {
-        set((state) => ({ playbackTime: Math.max(0, state.playbackTime + seconds) }));
+        const { playbackTime, playbackDuration } = get();
+        const duration = playbackDuration;
+        const target = duration > 0
+          ? Math.max(0, Math.min(duration, playbackTime + seconds))
+          : Math.max(0, playbackTime + seconds);
+        const progress = duration > 0 ? target / duration : 0;
+        set({ playbackTime: target, playbackProgress: progress });
       }
     },
   };

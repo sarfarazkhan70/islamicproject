@@ -5,6 +5,7 @@ import { Header } from './Header';
 import { MobileNavigation } from './MobileNavigation';
 import { GlobalQuranAudioController } from '../quran/GlobalQuranAudioController';
 import { GlobalMiniQuranPlayer } from '../quran/GlobalMiniQuranPlayer';
+import { GlobalMiniKanzulImanPlayer } from '../quran/GlobalMiniKanzulImanPlayer';
 
 export const AppShell: React.FC = () => {
   return (
@@ -25,6 +26,9 @@ export const AppShell: React.FC = () => {
 
       {/* Global Mini Quran Player (floating when navigated away from /quran) */}
       <GlobalMiniQuranPlayer />
+
+      {/* Global Mini Kanz-ul-Iman Player (floating persistent player) */}
+      <GlobalMiniKanzulImanPlayer />
 
       {/* Mobile Bottom Navigation Bar & Drawer */}
       <MobileNavigation />

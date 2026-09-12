@@ -12,12 +12,20 @@ import {
   VolumeX,
   Languages,
   RotateCw as AutoPlayIcon,
-  Sparkles,
-  ExternalLink,
   ChevronDown,
   Search,
   Check,
 } from 'lucide-react';
+
+export function getFullSurahName(surah: { number: number; name: string }): string {
+  if (surah.number === 3) {
+    return 'Surah Aal-E-Imran';
+  }
+  const cleanName = surah.name.startsWith('Surah ')
+    ? surah.name.replace(/^Surah\s+/, '')
+    : surah.name;
+  return `Surah ${cleanName}`;
+}
 
 export const KanzulImanAudioStudio: React.FC = () => {
   const {
@@ -91,9 +99,11 @@ export const KanzulImanAudioStudio: React.FC = () => {
   const filteredSurahs = SURAHS_LIST.filter((s) => {
     const q = surahSearchQuery.trim().toLowerCase();
     if (!q) return true;
+    const fullName = getFullSurahName(s).toLowerCase();
     return (
       s.number.toString().includes(q) ||
       s.name.toLowerCase().includes(q) ||
+      fullName.includes(q) ||
       s.arabicName.includes(q) ||
       (s.meaning && s.meaning.toLowerCase().includes(q))
     );
@@ -213,53 +223,6 @@ export const KanzulImanAudioStudio: React.FC = () => {
           </div>
         </div>
 
-        {/* Source Badge & Authenticity Credit */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: 8,
-            padding: '6px 12px',
-            backgroundColor: 'rgba(245, 158, 11, 0.08)',
-            border: '1px solid rgba(245, 158, 11, 0.2)',
-            borderRadius: 'var(--radius-md)',
-            marginBottom: 'var(--space-5)',
-            fontSize: '0.78rem',
-            color: 'var(--text-secondary)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Sparkles size={14} className="text-amber-400" />
-            <span>
-              Authentic <strong>Kanz-ul-Iman</strong> Tilawat & Urdu Translation •{' '}
-              <span style={{ color: 'var(--brand-gold)', fontWeight: 600 }}>
-                Ala Hazrat Imam Ahmad Raza Khan
-              </span>{' '}
-              (Paigham-e-Raza)
-            </span>
-          </div>
-
-          <a
-            href="https://archive.org/details/kanzuliman_201907"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              color: 'var(--brand-gold)',
-              textDecoration: 'none',
-              fontWeight: 600,
-            }}
-            title="View on Internet Archive"
-          >
-            <span>Archive.org</span>
-            <ExternalLink size={12} />
-          </a>
-        </div>
-
         {/* Section 2: Surah Selector + Speed + AutoPlay Controls */}
         <div
           style={{
@@ -309,7 +272,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
               }}
               title="Click to choose a Surah"
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1, overflow: 'hidden' }}>
                 <span
                   style={{
                     backgroundColor: 'var(--brand-gold)',
@@ -319,14 +282,25 @@ export const KanzulImanAudioStudio: React.FC = () => {
                     padding: '2px 7px',
                     borderRadius: 'var(--radius-sm)',
                     fontFamily: 'var(--font-mono)',
+                    flexShrink: 0,
                   }}
                 >
                   {currentSurahMeta.number}
                 </span>
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {currentSurahMeta.name}
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 600 }}>
+                  {getFullSurahName(currentSurahMeta)}
                 </span>
-                <span style={{ fontSize: '0.85rem', color: 'var(--brand-gold)', fontFamily: 'var(--font-arabic)' }}>
+                <span
+                  style={{
+                    fontSize: '1.05rem',
+                    color: 'var(--brand-gold)',
+                    fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', serif",
+                    direction: 'rtl',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    lineHeight: 1.4,
+                  }}
+                >
                   ({currentSurahMeta.arabicName})
                 </span>
               </div>
@@ -349,7 +323,9 @@ export const KanzulImanAudioStudio: React.FC = () => {
                   position: 'absolute',
                   top: 'calc(100% + 6px)',
                   left: 0,
-                  right: 0,
+                  width: '100%',
+                  minWidth: 'min(380px, calc(100vw - 32px))',
+                  maxWidth: 'calc(100vw - 32px)',
                   backgroundColor: 'var(--bg-surface)',
                   border: '1px solid var(--border-default)',
                   borderRadius: 'var(--radius-lg)',
@@ -376,7 +352,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Search Surah by name or number..."
+                    placeholder="Search Surah"
                     value={surahSearchQuery}
                     onChange={(e) => setSurahSearchQuery(e.target.value)}
                     style={{
@@ -387,6 +363,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
                       fontSize: '0.84rem',
                       color: 'var(--text-primary)',
                     }}
+                    aria-label="Search Surah"
                   />
                   {surahSearchQuery && (
                     <button
@@ -409,7 +386,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
                 {/* Scrollable 114 Surahs List */}
                 <div
                   style={{
-                    maxHeight: '280px',
+                    maxHeight: '300px',
                     overflowY: 'auto',
                     padding: '4px',
                   }}
@@ -428,7 +405,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
                           onClick={() => handleSelectSurah(s.number)}
                           style={{
                             width: '100%',
-                            padding: '8px 12px',
+                            padding: '9px 12px',
                             borderRadius: 'var(--radius-md)',
                             backgroundColor: isSelected ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
                             border: 'none',
@@ -436,7 +413,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            gap: 10,
+                            gap: 12,
                             cursor: 'pointer',
                             fontSize: '0.86rem',
                             fontWeight: isSelected ? 700 : 500,
@@ -450,7 +427,7 @@ export const KanzulImanAudioStudio: React.FC = () => {
                             if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
                           }}
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
                             <span
                               style={{
                                 width: 26,
@@ -469,19 +446,33 @@ export const KanzulImanAudioStudio: React.FC = () => {
                             >
                               {s.number}
                             </span>
-                            <div>
-                              <div style={{ fontWeight: 600 }}>{s.name}</div>
-                              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontWeight: 600, fontSize: '0.88rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {getFullSurahName(s)}
+                              </div>
+                              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {s.meaning} • {s.versesCount} Ayahs
                               </div>
                             </div>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span style={{ fontSize: '1rem', fontFamily: 'var(--font-arabic)', color: 'var(--brand-gold)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                            <span
+                              style={{
+                                fontSize: '1.12rem',
+                                fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', serif",
+                                color: 'var(--brand-gold)',
+                                direction: 'rtl',
+                                whiteSpace: 'nowrap',
+                                lineHeight: 1.5,
+                                display: 'inline-block',
+                                overflow: 'visible',
+                                padding: '0 2px',
+                              }}
+                            >
                               {s.arabicName}
                             </span>
-                            {isSelected && <Check size={16} className="text-amber-400" />}
+                            {isSelected && <Check size={16} className="text-amber-400" style={{ flexShrink: 0 }} />}
                           </div>
                         </button>
                       );

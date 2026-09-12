@@ -1,54 +1,47 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Play,
   Pause,
-  Square,
-  Volume2,
-  Volume1,
-  VolumeX,
   X,
-  BookOpen,
   RotateCcw,
   RotateCw,
+  Headphones,
 } from 'lucide-react';
-import { useQuranStore } from '../../stores/useQuranStore';
-import { SURAHS_LIST, QURAN_COM_RECITERS, getJuzByNumber } from '../../data/quranData';
+import { useKanzulImanAudioStore } from '../../stores/useKanzulImanAudioStore';
+import { SURAHS_LIST, getJuzByNumber } from '../../data/quranData';
+import { getFullSurahName } from './KanzulImanAudioStudio';
 
-const STORAGE_KEY = 'islamic_mini_player_pos';
+const STORAGE_KEY = 'kanzul_iman_mini_player_pos';
 
 interface Position {
   x: number;
   y: number;
 }
 
-export const GlobalMiniQuranPlayer: React.FC = () => {
+export const GlobalMiniKanzulImanPlayer: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-  const volumePopoverRef = useRef<HTMLDivElement>(null);
 
   const {
-    playbackType,
-    activeAudioJuz,
-    activeAudioSurah,
-    activeAudioAyah,
-    selectedReciterId,
-    audioPlaybackPhase,
+    playbackScope,
+    currentSurahNumber,
+    currentJuzNumber,
+    currentPartIndex,
+    totalPartsInSurah,
     isPlaying,
     playbackTime,
     playbackDuration,
-    audioVolume,
+    playbackProgress,
     hasUserStartedAudio,
     isMiniPlayerDismissed,
-    toggleAudioPlay,
-    stopAudio,
+    togglePlay,
     closeMiniPlayer,
     seekAudio,
     skipTime,
-    setAudioVolume,
-  } = useQuranStore();
+  } = useKanzulImanAudioStore();
 
   // Load saved position from sessionStorage
   const [position, setPosition] = useState<Position | null>(() => {
@@ -83,8 +76,8 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
 
   // Clamp position to visible viewport bounds
   const clampPosition = (x: number, y: number, width?: number, height?: number): Position => {
-    const elWidth = width ?? containerRef.current?.offsetWidth ?? 420;
-    const elHeight = height ?? containerRef.current?.offsetHeight ?? 68;
+    const elWidth = width ?? containerRef.current?.offsetWidth ?? 380;
+    const elHeight = height ?? containerRef.current?.offsetHeight ?? 66;
     const maxX = Math.max(0, window.innerWidth - elWidth - 8);
     const maxY = Math.max(0, window.innerHeight - elHeight - 8);
     return {
@@ -93,7 +86,7 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     };
   };
 
-  // Re-clamp position on window resize so the player is never lost off-screen
+  // Re-clamp position on window resize
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => {
@@ -120,24 +113,9 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     }
   }, []);
 
-  // Close volume popover when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (volumePopoverRef.current && !volumePopoverRef.current.contains(e.target as Node)) {
-        setShowVolumeSlider(false);
-      }
-    };
-    if (showVolumeSlider) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showVolumeSlider]);
-
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     const target = e.target as HTMLElement;
-    // Don't drag if clicking buttons or interactive controls
+    // Don't drag if clicking buttons, inputs, or interactive controls
     if (target.closest('button, input, select, a, [data-no-drag]')) {
       return;
     }
@@ -169,7 +147,7 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
       const deltaX = currentX - dragInfoRef.current.startX;
       const deltaY = currentY - dragInfoRef.current.startY;
 
-      // Threshold of 4px movement to distinguish click vs drag
+      // 4px threshold to distinguish click vs drag
       if (!dragInfoRef.current.hasMoved && (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4)) {
         dragInfoRef.current.hasMoved = true;
         setIsDragging(true);
@@ -195,7 +173,6 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
 
       if (dragInfoRef.current.hasMoved) {
         setIsDragging(false);
-        // Persist final position in sessionStorage for current session
         if (containerRef.current) {
           const r = containerRef.current.getBoundingClientRect();
           const finalClamped = clampPosition(r.left, r.top, r.width, r.height);
@@ -215,7 +192,6 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // If user dragged the player, do not trigger navigation
     if (dragInfoRef.current.hasMoved) {
       e.preventDefault();
       e.stopPropagation();
@@ -226,17 +202,12 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     if (target.closest('button, input, select, a, [data-no-drag]')) {
       return;
     }
-    navigate('/quran');
+    navigate('/library/kanzul-iman?mode=read');
   };
 
   const handlePlayToggle = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
-    toggleAudioPlay();
-  };
-
-  const handleStop = (e: React.MouseEvent | React.TouchEvent) => {
-    e.stopPropagation();
-    stopAudio();
+    togglePlay();
   };
 
   const handleSkipBackward = (e: React.MouseEvent | React.TouchEvent) => {
@@ -247,11 +218,6 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
   const handleSkipForward = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     skipTime(10);
-  };
-
-  const handleOpenQuran = (e: React.MouseEvent | React.TouchEvent) => {
-    e.stopPropagation();
-    navigate('/quran');
   };
 
   const handleClosePlayer = (e: React.MouseEvent | React.TouchEvent) => {
@@ -269,10 +235,12 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     seekAudio(ratio * playbackDuration);
   };
 
-  // Hide mini player if user is currently on the Quran page, or if player was closed via X, or never started
-  const isQuranPage = location.pathname === '/quran';
+  // Hide mini player if user is on the full Kanz-ul-Iman Audio Studio (?mode=listen)
+  // or if mini player was dismissed via X or audio was never started
+  const isAudioStudioMode =
+    location.pathname === '/library/kanzul-iman' && searchParams.get('mode') === 'listen';
   const shouldShow =
-    !isQuranPage &&
+    !isAudioStudioMode &&
     !isMiniPlayerDismissed &&
     (hasUserStartedAudio || isPlaying || playbackTime > 0);
 
@@ -280,10 +248,8 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     return null;
   }
 
-  const surahMeta = SURAHS_LIST.find((s) => s.number === activeAudioSurah) || SURAHS_LIST[0];
-  const juzMeta = activeAudioJuz ? getJuzByNumber(activeAudioJuz) : null;
-  const reciterObj =
-    QURAN_COM_RECITERS.find((r) => r.id === selectedReciterId) || QURAN_COM_RECITERS[0];
+  const surahMeta = SURAHS_LIST.find((s) => s.number === currentSurahNumber) || SURAHS_LIST[0];
+  const juzMeta = currentJuzNumber ? getJuzByNumber(currentJuzNumber) : null;
 
   const formatTime = (sec: number, forceHours: boolean = false) => {
     if (isNaN(sec) || !isFinite(sec) || sec < 0) {
@@ -299,18 +265,23 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   };
 
-  const progressPercent = playbackDuration > 0 ? (playbackTime / playbackDuration) * 100 : 0;
+  const progressPercent =
+    playbackDuration > 0
+      ? (playbackTime / playbackDuration) * 100
+      : playbackProgress * 100;
   const hasHours = playbackDuration >= 3600 || playbackTime >= 3600;
+
+  const partLabel = totalPartsInSurah > 1 ? ` • Part ${currentPartIndex + 1}/${totalPartsInSurah}` : '';
 
   return (
     <div
       ref={containerRef}
-      className={`global-mini-player-container ${isDragging ? 'is-dragging' : ''}`}
+      className={`global-mini-player-container kanzul-iman-mini-player ${isDragging ? 'is-dragging' : ''}`}
       onClick={handleCardClick}
       onMouseDown={handlePointerDown}
       onTouchStart={handlePointerDown}
       role="region"
-      aria-label="Persistent Draggable Quran Audio Player"
+      aria-label="Persistent Draggable Kanz-ul-Iman Audio Player"
       style={
         position
           ? {
@@ -323,7 +294,7 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
           : undefined
       }
     >
-      {/* Clickable Progress Line on top edge */}
+      {/* Clickable Progress Bar along top edge */}
       <div
         className="mini-player-progress-bar"
         onClick={handleProgressClick}
@@ -332,34 +303,36 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
         style={{ cursor: 'pointer', height: 4 }}
       >
         <div
-          className="mini-player-progress-fill"
+          className="mini-player-progress-fill kanzul-progress-fill"
           style={{ width: `${Math.min(100, Math.max(0, progressPercent))}%` }}
         />
       </div>
 
-      <div className="mini-player-content">
-        {/* Surah/Juz Icon & Badge */}
-        <div className="mini-player-badge">
-          <span className="mini-player-surah-num">
-            {playbackType === 'juz' && juzMeta ? `J${juzMeta.number}` : surahMeta.number}
-          </span>
-          {isPlaying && (
-            <div className="mini-sound-wave" aria-hidden="true">
-              <span className="wave-bar"></span>
-              <span className="wave-bar"></span>
-              <span className="wave-bar"></span>
+      <div className="mini-player-content kanzul-mini-content">
+        {/* Audio Icon / Live Sound Wave Badge (No visible number) */}
+        <div className="mini-player-badge kanzul-player-badge">
+          {isPlaying ? (
+            <div className="mini-sound-wave kanzul-sound-wave" aria-hidden="true" style={{ position: 'static', height: 16 }}>
+              <span className="wave-bar kanzul-wave-bar" style={{ height: 8 }}></span>
+              <span className="wave-bar kanzul-wave-bar" style={{ height: 14 }}></span>
+              <span className="wave-bar kanzul-wave-bar" style={{ height: 10 }}></span>
             </div>
+          ) : (
+            <Headphones size={17} style={{ color: 'var(--brand-gold)' }} />
           )}
         </div>
 
-        {/* Surah/Juz Info */}
+        {/* Title, Arabic & Time Details */}
         <div className="mini-player-info">
           <div className="mini-player-title-row">
-            <span className="mini-player-name">
-              {playbackType === 'juz' && juzMeta ? `${juzMeta.name} (${surahMeta.name})` : surahMeta.name}
+            <span className="mini-player-name kanzul-title-text" title={`${getFullSurahName(surahMeta)}${partLabel}`}>
+              {playbackScope === 'juz' && juzMeta ? `${juzMeta.name} (${getFullSurahName(surahMeta)})` : getFullSurahName(surahMeta)}
+              <span style={{ fontSize: '0.74rem', opacity: 0.85, fontWeight: 500 }}>
+                {partLabel}
+              </span>
             </span>
             <span
-              className="mini-player-arabic"
+              className="mini-player-arabic kanzul-arabic"
               dir="rtl"
               style={{
                 fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', serif",
@@ -371,156 +344,74 @@ export const GlobalMiniQuranPlayer: React.FC = () => {
                 overflow: 'visible',
               }}
             >
-              {playbackType === 'juz' && juzMeta ? juzMeta.arabicName : surahMeta.arabicName}
+              {playbackScope === 'juz' && juzMeta ? juzMeta.arabicName : surahMeta.arabicName}
             </span>
           </div>
+
           <div className="mini-player-subtitle">
-            <span className="mini-player-reciter">
-              {audioPlaybackPhase === 'taawwuz'
-                ? `Ta'awwuz • ${reciterObj.name}`
-                : audioPlaybackPhase === 'bismillah'
-                ? `Bismillah • ${reciterObj.name}`
-                : playbackType === 'juz' && juzMeta
-                ? `${reciterObj.name} (${activeAudioSurah}:${activeAudioAyah || juzMeta.startAyah})`
-                : reciterObj.name}
+            <span className="mini-player-reciter kanzul-reciter-tag">
+              Kanz-ul-Iman Urdu
             </span>
-            <span className="mini-player-time">
+            <span className="mini-player-time kanzul-player-time">
               {formatTime(playbackTime, hasHours)} / {formatTime(playbackDuration, hasHours)}
             </span>
           </div>
         </div>
 
-        {/* Controls */}
+        {/* Essential Action Controls Only: Rewind 10s, Play/Pause, Forward 10s, Close X */}
         <div className="mini-player-actions" data-no-drag>
-          {/* Rewind 10s */}
+          {/* 1. Rewind 10s */}
           <button
             type="button"
-            className="mini-player-btn skip-btn"
+            className="mini-player-btn skip-btn kanzul-ctrl-btn"
             onClick={handleSkipBackward}
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             title="Rewind 10 seconds"
             aria-label="Rewind 10 seconds"
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={15} />
           </button>
 
-          {/* Play / Pause Toggle Button */}
+          {/* 2. Play / Pause Toggle Button */}
           <button
             type="button"
-            className="mini-player-btn play-btn"
+            className="mini-player-btn play-btn kanzul-play-btn"
             onClick={handlePlayToggle}
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
-            title={isPlaying ? 'Pause Quran Recitation' : 'Resume Quran Recitation'}
+            title={isPlaying ? 'Pause Kanz-ul-Iman Recitation' : 'Resume Kanz-ul-Iman Recitation'}
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? (
-              <Pause size={17} strokeWidth={2.5} />
+              <Pause size={18} strokeWidth={2.5} />
             ) : (
-              <Play size={17} style={{ marginLeft: 2 }} />
+              <Play size={18} style={{ marginLeft: 2 }} />
             )}
           </button>
 
-          {/* Forward 10s */}
+          {/* 3. Forward 10s */}
           <button
             type="button"
-            className="mini-player-btn skip-btn"
+            className="mini-player-btn skip-btn kanzul-ctrl-btn"
             onClick={handleSkipForward}
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             title="Forward 10 seconds"
             aria-label="Forward 10 seconds"
           >
-            <RotateCw size={14} />
+            <RotateCw size={15} />
           </button>
 
-          {/* Stop Button */}
+          {/* 4. X / Close Button */}
           <button
             type="button"
-            className="mini-player-btn stop-btn"
-            onClick={handleStop}
-            onMouseDown={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-            title="Stop Audio and Reset"
-            aria-label="Stop Audio"
-          >
-            <Square size={13} fill="currentColor" />
-          </button>
-
-          {/* Volume Control Button & Popover */}
-          <div ref={volumePopoverRef} style={{ position: 'relative' }}>
-            <button
-              type="button"
-              className="mini-player-btn volume-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowVolumeSlider((prev) => !prev);
-              }}
-              onMouseDown={(e) => e.stopPropagation()}
-              onTouchStart={(e) => e.stopPropagation()}
-              title={`Volume: ${Math.round(audioVolume * 100)}%`}
-              aria-label="Volume Control"
-            >
-              {audioVolume === 0 ? (
-                <VolumeX size={15} />
-              ) : audioVolume < 0.5 ? (
-                <Volume1 size={15} />
-              ) : (
-                <Volume2 size={15} />
-              )}
-            </button>
-
-            {showVolumeSlider && (
-              <div
-                className="mini-player-volume-popover"
-                onClick={(e) => e.stopPropagation()}
-                onMouseDown={(e) => e.stopPropagation()}
-                data-no-drag
-              >
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                  {Math.round(audioVolume * 100)}%
-                </span>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={audioVolume}
-                  onChange={(e) => setAudioVolume(parseFloat(e.target.value))}
-                  style={{
-                    width: 76,
-                    accentColor: 'var(--brand-primary)',
-                    cursor: 'pointer',
-                  }}
-                  aria-label="Volume Slider"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Open Quran Reader */}
-          <button
-            type="button"
-            className="mini-player-btn nav-btn"
-            onClick={handleOpenQuran}
-            onMouseDown={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-            title="Open Quran Reader & Player"
-            aria-label="Open Quran"
-          >
-            <BookOpen size={15} />
-          </button>
-
-          {/* Close (X) */}
-          <button
-            type="button"
-            className="mini-player-btn close-btn"
+            className="mini-player-btn close-btn kanzul-close-btn"
             onClick={handleClosePlayer}
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
-            title="Stop and Close Audio"
-            aria-label="Stop Audio"
+            title="Close Audio Player"
+            aria-label="Close Audio Player"
           >
             <X size={16} strokeWidth={2.5} />
           </button>

@@ -14,7 +14,7 @@ import { Button } from '../../components/common/Button';
 export const TrackerPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { timetable } = usePrayerTimes(selectedDate);
-  const { getPrayerStatus, setPrayerStatus } = useTrackerStore();
+  const { getPrayerStatus, setPrayerStatus, isPrayerSafarQaza, setSafarQaza } = useTrackerStore();
   const { latitude, longitude, timezone, displayName } = useLocationStore();
   const { madhhab, calculationMethod, highLatitudeRule, timeFormat } = useSettingsStore();
 
@@ -83,11 +83,15 @@ export const TrackerPage: React.FC = () => {
 
   // Count completions
   const adaCount = obligatoryPrayers.filter((p) => getPrayerStatus(localDateStr, p.id) === 'ADA').length;
-  const excusedCount = obligatoryPrayers.filter((p) => getPrayerStatus(localDateStr, p.id) === 'EXCUSED').length;
+  const safarCount = obligatoryPrayers.filter((p) => {
+    const s = getPrayerStatus(localDateStr, p.id);
+    return s === 'SAFAR' || s === 'EXCUSED';
+  }).length;
   const missedCount = obligatoryPrayers.filter((p) => getPrayerStatus(localDateStr, p.id) === 'MISSED').length;
   const qazaCount = obligatoryPrayers.filter((p) => getPrayerStatus(localDateStr, p.id) === 'QAZA').length;
+  const safarQazaCount = obligatoryPrayers.filter((p) => isPrayerSafarQaza(localDateStr, p.id)).length;
 
-  const completedTotal = adaCount + excusedCount;
+  const completedTotal = adaCount + safarCount;
   const progressPercent = (completedTotal / obligatoryPrayers.length) * 100;
 
   const isToday = new Date().toISOString().split('T')[0] === localDateStr;
@@ -98,7 +102,7 @@ export const TrackerPage: React.FC = () => {
       <PageHeader
         title="Namaz Daily Tracker"
         arabicTitle="متابعة الصلوات اليومية"
-        subtitle="Log your daily prayers on time. Track Ada, Missed, Excused, Qaza, and voluntary prayers."
+        subtitle="Log your daily prayers on time. Track Ada, Missed, Safar, Qaza, and voluntary prayers."
       />
 
       {/* Date Navigation Strip */}
@@ -199,9 +203,10 @@ export const TrackerPage: React.FC = () => {
             <h3 className="heading-2" style={{ margin: 0 }}>
               {adaCount} of {obligatoryPrayers.length} Ada Completed
             </h3>
-            <p className="text-xs text-muted" style={{ marginTop: 2, marginBottom: 0 }}>
-              {missedCount > 0 && <span style={{ color: 'var(--status-missed)', marginRight: 8 }}>● {missedCount} Missed</span>}
-              {excusedCount > 0 && <span style={{ color: 'var(--status-excused, #8b5cf6)', marginRight: 8 }}>● {excusedCount} Excused</span>}
+            <p className="text-xs text-muted" style={{ marginTop: 2, marginBottom: 0, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              {missedCount > 0 && <span style={{ color: 'var(--status-missed)' }}>● {missedCount} Missed</span>}
+              {safarCount > 0 && <span style={{ color: 'var(--status-safar, #0ea5e9)' }}>● {safarCount} Safar</span>}
+              {safarQazaCount > 0 && <span style={{ color: '#f59e0b' }}>● {safarQazaCount} Safar Mein Qaza</span>}
               {qazaCount > 0 && <span style={{ color: 'var(--text-gold)' }}>● {qazaCount} Qaza</span>}
             </p>
           </div>
@@ -235,7 +240,9 @@ export const TrackerPage: React.FC = () => {
               arabicName={prayer.arabic}
               time={prayer.time}
               status={getPrayerStatus(localDateStr, prayer.id)}
+              isSafarQaza={isPrayerSafarQaza(localDateStr, prayer.id)}
               onStatusChange={(pk, status: TrackerStatus) => setPrayerStatus(localDateStr, pk, status)}
+              onSafarQazaChange={(pk, isSq) => setSafarQaza(localDateStr, pk, isSq)}
             />
           ))}
         </div>

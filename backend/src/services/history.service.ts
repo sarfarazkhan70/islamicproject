@@ -49,7 +49,7 @@ export class HistoryService {
     for (const r of records) {
       if (r.status === 'ADA') ada++;
       else if (r.status === 'MISSED') missed++;
-      else if (r.status === 'EXCUSED') excused++;
+      else if (r.status === 'SAFAR' || r.status === 'EXCUSED') excused++;
       else if (r.status === 'QAZA') qaza++;
 
       if (['fajr', 'zuhr', 'asr', 'maghrib', 'isha'].includes(r.prayer)) {
@@ -64,7 +64,7 @@ export class HistoryService {
         const d = daysMap.get(r.localDate)!;
         d.fardTotal++;
         if (r.status === 'ADA') d.fardAda++;
-        if (r.status === 'EXCUSED') d.fardExcused++;
+        if (r.status === 'SAFAR' || r.status === 'EXCUSED') d.fardExcused++;
       }
     }
 
@@ -197,7 +197,7 @@ export class HistoryService {
     const records = await PrayerRecord.find({
       userId: userObjId,
       localDate: { $regex: `^${prefix}` },
-      status: { $in: ['ADA', 'EXCUSED'] },
+      status: { $in: ['ADA', 'SAFAR', 'EXCUSED'] },
       prayer: { $in: ['fajr', 'zuhr', 'asr', 'maghrib', 'isha'] },
     });
 

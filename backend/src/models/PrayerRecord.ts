@@ -11,7 +11,7 @@ export type PrayerType =
   | 'witr'
   | 'jumuah';
 
-export type PrayerStatus = 'ADA' | 'MISSED' | 'EXCUSED' | 'QAZA' | 'NONE';
+export type PrayerStatus = 'ADA' | 'MISSED' | 'SAFAR' | 'EXCUSED' | 'QAZA' | 'NONE';
 
 export interface IPrayerRecord extends Document {
   _id: Types.ObjectId;
@@ -23,6 +23,7 @@ export interface IPrayerRecord extends Document {
   markedAt: Date;
   timezone?: string; // e.g. "Asia/Riyadh"
   isVoluntary: boolean;
+  isSafarQaza?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,7 +50,7 @@ const prayerRecordSchema = new Schema<IPrayerRecord>(
     status: {
       type: String,
       required: true,
-      enum: ['ADA', 'MISSED', 'EXCUSED', 'QAZA', 'NONE'],
+      enum: ['ADA', 'MISSED', 'SAFAR', 'EXCUSED', 'QAZA', 'NONE'],
       default: 'NONE',
     },
     scheduledTime: {
@@ -65,6 +66,10 @@ const prayerRecordSchema = new Schema<IPrayerRecord>(
       default: 'UTC',
     },
     isVoluntary: {
+      type: Boolean,
+      default: false,
+    },
+    isSafarQaza: {
       type: Boolean,
       default: false,
     },

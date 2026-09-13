@@ -8,12 +8,13 @@ export const updatePrayerStatusSchema = z.object({
     prayer: z.enum(['fajr', 'zuhr', 'asr', 'maghrib', 'isha', 'tahajjud', 'duha', 'witr', 'jumuah'], {
       required_error: 'prayer is required',
     }),
-    status: z.enum(['ADA', 'MISSED', 'EXCUSED', 'QAZA', 'NONE'], {
+    status: z.enum(['ADA', 'MISSED', 'SAFAR', 'EXCUSED', 'QAZA', 'NONE'], {
       required_error: 'status is required',
     }),
     scheduledTime: z.string().optional(),
     timezone: z.string().optional(),
     isVoluntary: z.boolean().optional(),
+    isSafarQaza: z.boolean().optional(),
   }),
 });
 
@@ -25,10 +26,11 @@ export const bulkSyncTrackerSchema = z.object({
           .string()
           .regex(/^\d{4}-\d{2}-\d{2}$/, 'localDate must be in YYYY-MM-DD format'),
         prayer: z.enum(['fajr', 'zuhr', 'asr', 'maghrib', 'isha', 'tahajjud', 'duha', 'witr', 'jumuah']),
-        status: z.enum(['ADA', 'MISSED', 'EXCUSED', 'QAZA', 'NONE']),
+        status: z.enum(['ADA', 'MISSED', 'SAFAR', 'EXCUSED', 'QAZA', 'NONE']),
         scheduledTime: z.string().optional(),
         timezone: z.string().optional(),
         isVoluntary: z.boolean().optional(),
+        isSafarQaza: z.boolean().optional(),
       })
     ),
   }),

@@ -7,6 +7,13 @@
  * No external APIs or third-party web scrapers are used.
  */
 
+import {
+  getCentralHijriDate,
+  getCurrentHijriDate,
+  gregorianToHijri,
+  HijriDate,
+} from '../utils/hijriCalendar';
+
 export interface DailyHadith {
   id: string;
   hadithNumber: number;
@@ -672,25 +679,90 @@ export const VERIFIED_ALA_HAZRAT_HADITHS: DailyHadith[] =
   SAHIH_BUKHARI_DAILY_HADITHS.filter(hasValidAlaHazratTranslation);
 
 /**
- * Deterministically get the Hadith of the Day based on the calendar date (YYYY-MM-DD).
+ * Resolves any date input (Gregorian Date, string, or Hijri date object)
+ * into standard Hijri { year, month, day } using the app's central Hijri calculation engine.
+ */
+export function resolveHijriDate(
+  input?: Date | string | HijriDate | { year?: number; month?: number; day?: number }
+): { year: number; month: number; day: number } {
+  if (!input) {
+    try {
+      const central = getCentralHijriDate();
+      return { year: central.year, month: central.month, day: central.day };
+    } catch {
+      const curr = getCurrentHijriDate();
+      return { year: curr.year, month: curr.month, day: curr.day };
+    }
+  }
+
+  // Direct Hijri Date Object
+  if (
+    typeof input === 'object' &&
+    'year' in input &&
+    'month' in input &&
+    'day' in input &&
+    typeof input.year === 'number' &&
+    typeof input.month === 'number' &&
+    typeof input.day === 'number'
+  ) {
+    return { year: input.year, month: input.month, day: input.day };
+  }
+
+  // Gregorian Date object or ISO date string
+  try {
+    const h = gregorianToHijri(input as Date | string);
+    return { year: h.year, month: h.month, day: h.day };
+  } catch {
+    const curr = getCurrentHijriDate();
+    return { year: curr.year, month: curr.month, day: curr.day };
+  }
+}
+
+/**
+ * Convert a Hijri Date (year, month, day) into a unique continuous day number.
+ * Monotonically increments by 1 for each consecutive Islamic day.
+ */
+export function getAbsoluteHijriDay(year: number, month: number, day: number): number {
+  const y = Math.max(1, Math.floor(year));
+  const m = Math.max(1, Math.min(12, Math.floor(month)));
+  const d = Math.max(1, Math.min(30, Math.floor(day)));
+
+  const yearDays = (y - 1) * 354 + Math.floor((11 * (y - 1) + 3) / 30);
+  const monthDays = (m - 1) * 29 + Math.floor(m / 2);
+  return yearDays + monthDays + d;
+}
+
+/**
+ * Deterministically get the Hadith of the Day based on the Islamic Hijri date.
  * Sourced exclusively from the verified local Sahih al-Bukhari collection with
  * Ala Hazrat Imam Ahmad Raza Khan's translation.
+ *
+ * Guarantees:
+ * 1. Remains identical throughout one complete Hijri date/day.
+ * 2. Advances to a new Hadith on every consecutive Hijri date.
+ * 3. Never repeats consecutive Hadiths until the full list of verified Hadiths is exhausted.
+ * 4. Completely deterministic (page refreshes, logins, etc. do not change the Hadith).
  */
-export function getDailyHadith(date: Date = new Date()): DailyHadith {
-  const verifiedList = VERIFIED_ALA_HAZRAT_HADITHS.length > 0
-    ? VERIFIED_ALA_HAZRAT_HADITHS
-    : SAHIH_BUKHARI_DAILY_HADITHS;
+export function getDailyHadith(
+  date?: Date | string | HijriDate | { year?: number; month?: number; day?: number }
+): DailyHadith {
+  const verifiedList =
+    VERIFIED_ALA_HAZRAT_HADITHS.length > 0
+      ? VERIFIED_ALA_HAZRAT_HADITHS
+      : SAHIH_BUKHARI_DAILY_HADITHS;
 
-  const localDateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  
-  // Deterministic 32-bit FNV-1a hash
-  let hash = 2166136261;
-  for (let i = 0; i < localDateStr.length; i++) {
-    hash ^= localDateStr.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  
-  const index = Math.abs(hash) % verifiedList.length;
+  const N = verifiedList.length;
+  if (N === 0) return SAHIH_BUKHARI_DAILY_HADITHS[0];
+
+  const hijri = resolveHijriDate(date);
+  const absoluteDay = getAbsoluteHijriDay(hijri.year, hijri.month, hijri.day);
+
+  // Coprime step (7) ensures a wide, advice-oriented variety across consecutive days
+  // while guaranteeing index(k+1) !== index(k)
+  let step = 7;
+  if (step % N === 0) step = 1;
+
+  const index = Math.abs((absoluteDay * step) % N);
   return verifiedList[index];
 }
 

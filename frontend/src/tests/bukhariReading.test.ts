@@ -168,7 +168,7 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     expect(code).toContain('const clamped = Math.max(1, Math.min(totalPages, pageNum))');
     expect(code).toContain('setCurrentPage(clamped)');
     expect(code).toContain('activePageRef.current = clamped');
-    expect(code).toContain('next.set(\'page\', pageNum.toString())');
+    expect(code).toContain("next.set('page', clamped.toString())");
     expect(code).toContain('document.getElementById(`bukhari-page-${clamped}`)');
 
     // 3. Observer uses reading focus line to prevent previous-page offset
@@ -187,51 +187,52 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     }
   });
 
-  it('should verify green marker-style highlight block covers complete Arabic, Urdu, and English Hadith text', () => {
+  it('should verify complete removal of Hadith marker highlighting feature and all related styles/classes', () => {
     const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
     const cssPath = path.resolve(__dirname, '../styles/components.css');
     const code = fs.readFileSync(readerFilePath, 'utf8');
     const css = fs.readFileSync(cssPath, 'utf8');
 
-    // 1. Structure of green marker highlight block
-    expect(code).toContain('bukhari-hadith-marker-highlight');
-    expect(code).toContain('bukhari-marker-header');
-    expect(code).toContain('bukhari-marker-pill');
-    expect(code).toContain('bukhari-marker-section');
-    expect(code).toContain('bukhari-marker-arabic-text');
-    expect(code).toContain('bukhari-marker-urdu-text');
-    expect(code).toContain('bukhari-marker-english-text');
-    expect(code).toContain('bukhari-marker-footer');
+    // 1. Verify complete removal of highlight containers, headers, pills, and highlighter spans in component
+    expect(code).not.toContain('bukhari-hadith-marker-highlight');
+    expect(code).not.toContain('bukhari-marker-header');
+    expect(code).not.toContain('bukhari-marker-pill');
+    expect(code).not.toContain('bukhari-marker-section');
+    expect(code).not.toContain('bukhari-marker-arabic-text');
+    expect(code).not.toContain('bukhari-marker-urdu-text');
+    expect(code).not.toContain('bukhari-marker-english-text');
+    expect(code).not.toContain('bukhari-marker-footer');
+    expect(code).not.toContain('bukhari-text-highlighter');
+    expect(code).not.toContain('bukhari-highlight-arabic');
+    expect(code).not.toContain('bukhari-highlight-urdu');
+    expect(code).not.toContain('bukhari-highlight-english');
+    expect(code).not.toContain('bukhari-card-target-hadith');
 
-    // 2. Element ID binding for exact scrolling
-    expect(code).toContain('id={`bukhari-hadith-${highlightedHadith.hadithNumber}`}');
-    expect(code).toContain('data-hadith-id={highlightedHadith.id}');
-    expect(code).toContain('data-hadith-number={highlightedHadith.hadithNumber}');
-
-    // 3. Highlight covers full text
-    expect(code).toContain('{highlightedHadith.arabicText}');
-    expect(code).toContain('{highlightedHadith.urduTranslation}');
-    expect(code).toContain('{highlightedHadith.englishTranslation}');
-
-    // 4. CSS contains green marker background & glow
-    expect(css).toContain('.bukhari-hadith-marker-highlight');
-    expect(css).toContain('rgba(16, 185, 129, 0.18)');
-    expect(css).toContain('border-left: 6px solid #10b981');
-    expect(css).toContain('.bukhari-marker-arabic-text');
-    expect(css).toContain('.bukhari-marker-urdu-text');
-    expect(css).toContain('.bukhari-marker-english-text');
+    // 2. Verify complete removal of marker highlight CSS classes
+    expect(css).not.toContain('.bukhari-hadith-marker-highlight');
+    expect(css).not.toContain('.bukhari-marker-header');
+    expect(css).not.toContain('.bukhari-marker-pill');
+    expect(css).not.toContain('.bukhari-marker-section');
+    expect(css).not.toContain('.bukhari-text-highlighter');
+    expect(css).not.toContain('.bukhari-highlight-arabic');
+    expect(css).not.toContain('.bukhari-highlight-urdu');
+    expect(css).not.toContain('.bukhari-highlight-english');
   });
 
-  it('should verify automatic scroll target calculation prioritizes exact Hadith element', () => {
+  it('should verify clean page navigation directly to exact Bukhari Sharif page when navigating with reference', () => {
     const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
     const code = fs.readFileSync(readerFilePath, 'utf8');
 
-    // Verifies scrollToPageOrHadith targets Hadith element before page element
-    expect(code).toContain('scrollToPageOrHadith');
-    expect(code).toContain('document.getElementById(`bukhari-hadith-${hadithNum}`)');
+    // 1. Verifies scrollToPage aligns directly with target page element
+    expect(code).toContain('scrollToPage');
     expect(code).toContain('document.getElementById(`bukhari-page-${clamped}`)');
     expect(code).toContain('headerOffset = isFullscreen ? 60 : 135');
     expect(code).toContain('window.scrollTo({ top: Math.max(0, y), behavior })');
+
+    // 2. Verifies clean page card structure rendering high-DPI book page
+    expect(code).toContain('BukhariPageCard');
+    expect(code).toContain('BukhariPdfService.getPageImageUrl(pageNumber)');
+    expect(code).toContain('bukhari-page-card');
   });
 });
 

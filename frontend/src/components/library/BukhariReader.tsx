@@ -9,13 +9,10 @@ import {
   Minimize2,
   Search,
   Check,
-  Sparkles,
-  Copy,
-  X,
 } from 'lucide-react';
 import { BUKHARI_VOLUMES } from '../../data/bukhariData';
 import { BukhariPdfService } from '../../services/bukhariPdfService';
-import { getHadithByRef, DailyHadith } from '../../data/dailyHadithData';
+import { getHadithByRef } from '../../data/dailyHadithData';
 
 interface ZoomOption {
   id: string;
@@ -55,7 +52,7 @@ export const BukhariReader: React.FC = () => {
   const pageParam = searchParams.get('page');
   const hadithParam = searchParams.get('hadith') || searchParams.get('hadithId') || searchParams.get('ref');
 
-  // Resolve target Hadith for exact green marker highlight
+  // Resolve target Hadith page if hadith/hadithId/ref is provided in URL
   const targetHadith = hadithParam ? getHadithByRef(hadithParam) : undefined;
 
   const initialPage = pageParam
@@ -68,7 +65,6 @@ export const BukhariReader: React.FC = () => {
   const [isFitWidth, setIsFitWidth] = useState<boolean>(() => sessionBukhariFitWidth ?? true); // Default: Fit to Width
   const [isZoomMenuOpen, setIsZoomMenuOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [dismissedHadithId, setDismissedHadithId] = useState<string | null>(null);
 
   const activePageRef = useRef<number>(currentPage);
   const isProgrammaticScrollRef = useRef<boolean>(false);
@@ -111,22 +107,22 @@ export const BukhariReader: React.FC = () => {
     };
   }, [isZoomMenuOpen]);
 
-  // Scroll to a specific Bukhari page or exact highlighted Hadith
-  const scrollToPageOrHadith = useCallback(
-    (pageNum: number, hadithNum?: number, behavior: ScrollBehavior = 'auto') => {
+  // Scroll to a specific Bukhari page
+  const scrollToPage = useCallback(
+    (pageNum: number, behavior: ScrollBehavior = 'auto') => {
       const clamped = Math.max(1, Math.min(totalPages, pageNum));
       setCurrentPage(clamped);
       activePageRef.current = clamped;
       isProgrammaticScrollRef.current = true;
 
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.set('page', clamped.toString());
+        return next;
+      });
+
       const performScroll = () => {
-        let el: HTMLElement | null = null;
-        if (hadithNum) {
-          el = document.getElementById(`bukhari-hadith-${hadithNum}`);
-        }
-        if (!el) {
-          el = document.getElementById(`bukhari-page-${clamped}`);
-        }
+        const el = document.getElementById(`bukhari-page-${clamped}`);
         if (el) {
           const headerOffset = isFullscreen ? 60 : 135;
           const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
@@ -147,56 +143,27 @@ export const BukhariReader: React.FC = () => {
         isProgrammaticScrollRef.current = false;
       }, lockDuration);
     },
-    [totalPages, isFullscreen]
+    [totalPages, isFullscreen, setSearchParams]
   );
 
-  const scrollToPage = useCallback(
-    (pageNum: number, behavior: ScrollBehavior = 'auto') => {
-      setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
-        next.set('page', pageNum.toString());
-        return next;
-      });
-      scrollToPageOrHadith(pageNum, undefined, behavior);
-    },
-    [scrollToPageOrHadith, setSearchParams]
-  );
-
-  // Initial scroll when mounting or when navigating from Dashboard with Hadith reference
+  // Initial scroll when mounting or when navigating from Dashboard
   useEffect(() => {
-    const targetPage = targetHadith?.pageNumber || initialPage;
-    const targetNum = targetHadith?.hadithNumber;
+    const targetPage = initialPage;
     const timer = setTimeout(() => {
-      scrollToPageOrHadith(targetPage, targetNum, 'auto');
+      scrollToPage(targetPage, 'auto');
     }, 120);
     return () => clearTimeout(timer);
-  }, [initialPage, targetHadith, scrollToPageOrHadith]);
+  }, [initialPage, scrollToPage]);
 
   // Handle URL param changes (e.g. browser back/forward)
   useEffect(() => {
     if (pageParam) {
       const p = parseInt(pageParam, 10);
       if (!isNaN(p) && p >= 1 && p <= totalPages && p !== activePageRef.current) {
-        scrollToPageOrHadith(p, targetHadith?.hadithNumber, 'auto');
+        scrollToPage(p, 'auto');
       }
     }
-  }, [pageParam, totalPages, targetHadith, scrollToPageOrHadith]);
-
-  const handleDismissHighlight = useCallback(() => {
-    if (targetHadith) {
-      setDismissedHadithId(targetHadith.id);
-    }
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.delete('hadith');
-      next.delete('hadithId');
-      next.delete('ref');
-      return next;
-    });
-  }, [targetHadith, setSearchParams]);
-
-  const activeHighlightedHadith =
-    targetHadith && dismissedHadithId !== targetHadith.id ? targetHadith : undefined;
+  }, [pageParam, totalPages, scrollToPage]);
 
   // Track currently visible page during vertical scrolling
   useEffect(() => {
@@ -733,8 +700,6 @@ export const BukhariReader: React.FC = () => {
             isFitWidth={isFitWidth}
             isCurrent={pageNum === currentPage}
             initialPage={initialPage}
-            highlightedHadith={activeHighlightedHadith}
-            onDismissHighlight={handleDismissHighlight}
           />
         ))}
       </main>
@@ -752,8 +717,6 @@ interface BukhariPageCardProps {
   isFitWidth: boolean;
   isCurrent: boolean;
   initialPage: number;
-  highlightedHadith?: DailyHadith;
-  onDismissHighlight?: () => void;
 }
 
 const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
@@ -764,30 +727,15 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
     isFitWidth,
     isCurrent,
     initialPage,
-    highlightedHadith,
-    onDismissHighlight,
   }) => {
     const isNearby = Math.abs(pageNumber - initialPage) <= 3 || isCurrent;
     const [imgLoaded, setImgLoaded] = useState<boolean>(false);
     const [useFallbackCanvas, setUseFallbackCanvas] = useState<boolean>(false);
     const [canvasRendered, setCanvasRendered] = useState<boolean>(false);
-    const [copied, setCopied] = useState<boolean>(false);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-    const isTargetHadithPage = Boolean(
-      highlightedHadith && highlightedHadith.pageNumber === pageNumber
-    );
 
     const imageUrl = BukhariPdfService.getPageImageUrl(pageNumber);
     const fallbackUrl = BukhariPdfService.getPageFallbackUrl(pageNumber);
-
-    const handleCopyHadith = () => {
-      if (!highlightedHadith) return;
-      const text = `📖 Sahih al-Bukhari — Hadith No. ${highlightedHadith.hadithNumber} (${highlightedHadith.reference})\n\n${highlightedHadith.arabicText}\n\nاردو ترجمہ:\n${highlightedHadith.urduTranslation}\n\nEnglish Translation:\n${highlightedHadith.englishTranslation}\n\n— Sahih al-Bukhari (صحیح البخاری - Page ${highlightedHadith.pageNumber})`;
-      navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    };
 
     // Live canvas fallback rendering if image fails to load
     useEffect(() => {
@@ -821,7 +769,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
       <article
         id={`bukhari-page-${pageNumber}`}
         data-page={pageNumber}
-        className={`bukhari-page-card card ${isTargetHadithPage ? 'bukhari-card-target-hadith' : ''}`}
+        className="bukhari-page-card card"
         style={{
           width: isFitWidth ? '100%' : `${Math.round(820 * zoomLevel)}px`,
           maxWidth: isFitWidth ? '820px' : zoomLevel <= 1.0 ? `${Math.round(820 * zoomLevel)}px` : 'none',
@@ -831,14 +779,10 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
           padding: 0,
           backgroundColor: '#ffffff',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: isTargetHadithPage
-            ? '0 12px 36px rgba(16, 185, 129, 0.35), 0 0 0 2px rgba(16, 185, 129, 0.6)'
-            : isCurrent
+          boxShadow: isCurrent
             ? '0 10px 30px rgba(16, 185, 129, 0.25), 0 0 1px rgba(0,0,0,0.5)'
             : '0 4px 18px rgba(0, 0, 0, 0.25)',
-          border: isTargetHadithPage
-            ? '2px solid var(--brand-primary)'
-            : isCurrent
+          border: isCurrent
             ? '2px solid var(--brand-primary)'
             : '1px solid var(--border-default)',
           overflow: 'hidden',
@@ -860,14 +804,12 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '6px 14px',
-            backgroundColor: isTargetHadithPage
-              ? 'rgba(16, 185, 129, 0.2)'
-              : isCurrent
+            backgroundColor: isCurrent
               ? 'rgba(16, 185, 129, 0.12)'
               : 'var(--bg-surface-elevated)',
             borderBottom: '1px solid var(--border-subtle)',
             fontSize: '0.78rem',
-            color: isTargetHadithPage || isCurrent ? 'var(--brand-primary)' : 'var(--text-secondary)',
+            color: isCurrent ? 'var(--brand-primary)' : 'var(--text-secondary)',
             fontWeight: 600,
             boxSizing: 'border-box',
           }}
@@ -876,7 +818,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
             className="font-arabic"
             style={{
               fontSize: '0.85rem',
-              color: isTargetHadithPage || isCurrent ? 'var(--brand-primary)' : 'var(--text-primary)',
+              color: isCurrent ? 'var(--brand-primary)' : 'var(--text-primary)',
             }}
           >
             صحيح البخاري
@@ -884,130 +826,12 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
           <span
             style={{
               fontFamily: 'var(--font-mono)',
-              color: isTargetHadithPage || isCurrent ? 'var(--brand-primary)' : 'var(--text-muted)',
+              color: isCurrent ? 'var(--brand-primary)' : 'var(--text-muted)',
             }}
           >
             الصفحة {pageNumber} من {totalPages}
           </span>
         </div>
-
-        {/* Exact Green Marker-Style Highlight Hadith Block */}
-        {isTargetHadithPage && highlightedHadith && (
-          <div
-            id={`bukhari-hadith-${highlightedHadith.hadithNumber}`}
-            data-hadith-id={highlightedHadith.id}
-            data-hadith-number={highlightedHadith.hadithNumber}
-            className="bukhari-hadith-marker-highlight"
-          >
-            {/* 1. Header Bar with Marker Tag and Actions */}
-            <div className="bukhari-marker-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span className="bukhari-marker-pill">
-                  <Sparkles size={14} />
-                  <span>Sahih al-Bukhari — Hadith No. {highlightedHadith.hadithNumber}</span>
-                </span>
-                <span
-                  className="font-arabic"
-                  style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold',
-                    color: 'var(--brand-primary)',
-                  }}
-                >
-                  حدیث مبارکہ منتخب شدہ (Green Marker Highlight)
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <button
-                  type="button"
-                  onClick={handleCopyHadith}
-                  className="btn btn-xs btn-outline"
-                  style={{ fontSize: '0.74rem', padding: '3px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
-                  title="Copy Highlighted Hadith Text"
-                >
-                  {copied ? (
-                    <>
-                      <Check size={13} style={{ color: 'var(--brand-primary)' }} />
-                      <span>Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={13} />
-                      <span>Copy</span>
-                    </>
-                  )}
-                </button>
-                {onDismissHighlight && (
-                  <button
-                    type="button"
-                    onClick={onDismissHighlight}
-                    className="btn-icon btn-icon-xs"
-                    style={{ width: 24, height: 24, color: 'var(--text-muted)' }}
-                    title="Dismiss Highlight"
-                    aria-label="Dismiss Highlight"
-                  >
-                    <X size={14} />
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* 2. ARABIC HADITH TEXT (WITH GREEN MARKER HIGHLIGHT) */}
-            <div className="bukhari-marker-section">
-              <div className="bukhari-marker-meta">
-                <span className="font-arabic" style={{ color: 'var(--brand-gold)' }}>
-                  الحديث الشريف (عربي)
-                </span>
-                {highlightedHadith.narrator && (
-                  <span className="font-arabic" style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    راوي: {highlightedHadith.narrator}
-                  </span>
-                )}
-              </div>
-              <p className="bukhari-marker-arabic-text" dir="rtl" lang="ar">
-                {highlightedHadith.arabicText}
-              </p>
-            </div>
-
-            {/* 3. URDU TRANSLATION BY ALA HAZRAT (WITH GREEN MARKER HIGHLIGHT) */}
-            <div className="bukhari-marker-section">
-              <div className="bukhari-marker-meta">
-                <span className="font-urdu" style={{ color: 'var(--brand-primary)' }}>
-                  اردو ترجمہ (مفہومِ حدیث)
-                </span>
-                <span className="hadith-translator-pill">
-                  ترجمہ: {highlightedHadith.urduTranslator || 'اعلیٰ حضرت امام احمد رضا خان علیہ الرحمہ'}
-                </span>
-              </div>
-              <p className="bukhari-marker-urdu-text" dir="rtl" lang="ur">
-                {highlightedHadith.urduTranslation}
-              </p>
-            </div>
-
-            {/* 4. ENGLISH TRANSLATION (WITH GREEN MARKER HIGHLIGHT) */}
-            {highlightedHadith.englishTranslation && (
-              <div className="bukhari-marker-section">
-                <div className="bukhari-marker-meta">
-                  <span style={{ color: 'var(--text-muted)' }}>English Translation</span>
-                </div>
-                <p className="bukhari-marker-english-text" dir="ltr" lang="en">
-                  {highlightedHadith.englishTranslation}
-                </p>
-              </div>
-            )}
-
-            {/* 5. FOOTER REFERENCE */}
-            <div className="bukhari-marker-footer">
-              <span style={{ fontWeight: 600 }}>
-                {highlightedHadith.bookNameEnglish} ({highlightedHadith.bookNameArabic}) • {highlightedHadith.theme}
-              </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                {highlightedHadith.reference}
-              </span>
-            </div>
-          </div>
-        )}
 
 
         {/* Complete Book Page Container (Preserving Natural Aspect Ratio: 693 / 1002) */}

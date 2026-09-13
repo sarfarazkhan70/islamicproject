@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from '../common/Card';
-import { getDailyHadith, DailyHadith } from '../../data/dailyHadithData';
+import { getDailyHadith, getHadithByNumber, DailyHadith } from '../../data/dailyHadithData';
+import { HijriDate } from '../../utils/hijriCalendar';
 import {
   BookOpen,
   Sparkles,
@@ -10,20 +11,35 @@ import {
 import { Link } from 'react-router-dom';
 
 interface DailyHadithCardProps {
-  date?: Date;
+  date?: Date | string | HijriDate | { year?: number; month?: number; day?: number };
+  hadithNumber?: number;
   className?: string;
 }
 
 export const DailyHadithCard: React.FC<DailyHadithCardProps> = ({
-  date = new Date(),
+  date,
+  hadithNumber,
   className = '',
 }) => {
-  const [hadith, setHadith] = useState<DailyHadith>(() => getDailyHadith(date));
+  const [hadith, setHadith] = useState<DailyHadith>(() => {
+    if (hadithNumber) {
+      const target = getHadithByNumber(hadithNumber);
+      if (target) return target;
+    }
+    return getDailyHadith(date);
+  });
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    if (hadithNumber) {
+      const target = getHadithByNumber(hadithNumber);
+      if (target) {
+        setHadith(target);
+        return;
+      }
+    }
     setHadith(getDailyHadith(date));
-  }, [date]);
+  }, [date, hadithNumber]);
 
   const handleCopyText = () => {
     const text = `📖 Sahih al-Bukhari — Hadith No. ${hadith.hadithNumber} (${hadith.reference})\n\n${hadith.arabicText}\n\nاردو ترجمہ:\n${hadith.urduTranslation}\n\nEnglish Translation:\n${hadith.englishTranslation}\n\n— Sahih al-Bukhari (صحیح البخاری)`;
@@ -34,24 +50,18 @@ export const DailyHadithCard: React.FC<DailyHadithCardProps> = ({
 
   return (
     <Card className={`daily-hadith-card ${className}`}>
-      {/* Header Row: Badges & Center-Aligned Heading */}
+      {/* Header Row: Badge & Center-Aligned Styled Combined Heading Box */}
       <div className="hadith-card-header">
-        <div className="hadith-header-left">
-          <div className="hadith-badge-group">
-            <span className="hadith-pill-gold">
-              <Sparkles size={13} className="text-gold" />
-              <span>Hadith of the Day • آج کی حدیث</span>
-            </span>
-            <Link
-              to={hadith.libraryReadUrl}
-              className="hadith-pill-source"
-              title={`Open Sahih al-Bukhari Hadith No. ${hadith.hadithNumber} in Bukhari Sharif Library`}
-            >
-              <BookOpen size={13} />
-              <span>Sahih al-Bukhari — Hadith No. {hadith.hadithNumber}</span>
-            </Link>
-          </div>
-          <h2 className="heading-3 hadith-theme-title">{hadith.theme}</h2>
+        <div className="hadith-badge-group">
+          <span className="hadith-pill-gold">
+            <Sparkles size={13} className="text-gold" />
+            <span>Hadith of the Day • آج کی حدیث</span>
+          </span>
+        </div>
+        <div className="hadith-heading-box">
+          <h2 className="hadith-theme-title">
+            {hadith.theme || 'Purity of the Heart (طہارتِ قلب اور باطن)'}
+          </h2>
         </div>
       </div>
 

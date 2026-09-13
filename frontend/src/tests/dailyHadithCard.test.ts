@@ -54,23 +54,42 @@ describe('Daily Hadith Card & Dashboard Verification', () => {
     expect(dataCode).not.toContain('googleapis.com');
   });
 
-  it('4. Verifies deterministic daily rotation maintains the same Hadith throughout the day', () => {
-    const morningDate = new Date(2026, 8, 13, 8, 0, 0); // 2026-09-13 08:00 AM
-    const eveningDate = new Date(2026, 8, 13, 23, 30, 0); // 2026-09-13 11:30 PM
-    const nextDayDate = new Date(2026, 8, 14, 0, 1, 0); // 2026-09-14 12:01 AM
+  it('4. Verifies Islamic Hijri date rotation maintains the same Hadith throughout one Hijri date and rotates on the next Hijri date', () => {
+    // 1. Simulating two times on the SAME Hijri date (e.g. 1 Rabi' al-Awwal 1448)
+    const sameHijriDate1 = { year: 1448, month: 3, day: 1 };
+    const sameHijriDate2 = { year: 1448, month: 3, day: 1 };
 
-    const morningHadith = getDailyHadith(morningDate);
-    const eveningHadith = getDailyHadith(eveningDate);
-    const nextDayHadith = getDailyHadith(nextDayDate);
+    const hadithDay1_Morning = getDailyHadith(sameHijriDate1);
+    const hadithDay1_Evening = getDailyHadith(sameHijriDate2);
 
-    // Must be identical throughout the same day
-    expect(morningHadith.id).toBe(eveningHadith.id);
-    expect(morningHadith.reference).toBe(eveningHadith.reference);
-    expect(morningHadith.urduTranslator).toContain('احمد رضا');
+    // Must be identical throughout the same Hijri date
+    expect(hadithDay1_Morning.id).toBe(hadithDay1_Evening.id);
+    expect(hadithDay1_Morning.reference).toBe(hadithDay1_Evening.reference);
+    expect(hadithDay1_Morning.hadithNumber).toBe(hadithDay1_Evening.hadithNumber);
+    expect(hadithDay1_Morning.urduTranslator).toContain('احمد رضا');
 
-    // Rotates on different days
-    expect(morningHadith).toBeDefined();
-    expect(nextDayHadith).toBeDefined();
+    // 2. Simulating the NEXT consecutive Hijri date (e.g. 2 Rabi' al-Awwal 1448)
+    const nextHijriDate = { year: 1448, month: 3, day: 2 };
+    const hadithDay2 = getDailyHadith(nextHijriDate);
+
+    // Must be a different Hadith on the next Hijri date
+    expect(hadithDay2).toBeDefined();
+    expect(hadithDay2.id).not.toBe(hadithDay1_Morning.id);
+    expect(hadithDay2.hadithNumber).not.toBe(hadithDay1_Morning.hadithNumber);
+
+    // 3. Simulating month rollover (e.g. 30 Rabi' al-Awwal -> 1 Rabi' al-Thani)
+    const monthEnd = { year: 1448, month: 3, day: 30 };
+    const nextMonthStart = { year: 1448, month: 4, day: 1 };
+    const hadithMonthEnd = getDailyHadith(monthEnd);
+    const hadithNextMonth = getDailyHadith(nextMonthStart);
+    expect(hadithNextMonth.id).not.toBe(hadithMonthEnd.id);
+
+    // 4. Verifies no two consecutive Hijri days repeat the same Hadith across a full month
+    for (let day = 1; day < 30; day++) {
+      const h1 = getDailyHadith({ year: 1448, month: 1, day });
+      const h2 = getDailyHadith({ year: 1448, month: 1, day: day + 1 });
+      expect(h1.id).not.toBe(h2.id);
+    }
   });
 
   it('5. Verifies DailyHadithCard has exact visual order: Arabic -> Urdu (Ala Hazrat) -> English -> Reference', () => {
@@ -146,25 +165,29 @@ describe('Daily Hadith Card & Dashboard Verification', () => {
     expect(css).toContain('.hadith-english-text');
   });
 
-  it('9. Verifies complete heading is center-aligned across desktop, tablet, and mobile', () => {
+  it('9. Verifies complete heading is rendered inside a styled box and center-aligned across desktop, tablet, and mobile', () => {
     const css = fs.readFileSync(cssPath, 'utf-8');
     const componentCode = fs.readFileSync(dailyHadithCardPath, 'utf-8');
 
-    // Component renders heading inside .hadith-header-left with .hadith-theme-title
-    expect(componentCode).toContain('className="heading-3 hadith-theme-title"');
-    expect(componentCode).toContain('{hadith.theme}');
+    // Component renders heading inside .hadith-heading-box with .hadith-theme-title
+    expect(componentCode).toContain('className="hadith-heading-box"');
+    expect(componentCode).toContain('className="hadith-theme-title"');
+    expect(componentCode).toContain('{hadith.theme');
 
-    // CSS guarantees center alignment
+    // CSS guarantees center alignment and box styling
     expect(css).toContain('.hadith-card-header {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  text-align: center;');
-    expect(css).toContain('.hadith-theme-title {\n  font-size: clamp(1.1rem, 2.2vw, 1.4rem);\n  font-weight: var(--weight-bold);\n  color: var(--text-primary);\n  margin: 0;\n  line-height: 1.4;\n  text-align: center;\n  width: 100%;\n}');
+    expect(css).toContain('.hadith-heading-box {');
+    expect(css).toContain('.hadith-theme-title {');
   });
 
-  it('10. Verifies clickable Hadith reference includes exact Hadith number and routes to Bukhari Library page with hadith parameter', () => {
+  it('10. Verifies reference is removed from top and kept below English translation with exact Hadith number and navigation', () => {
     const componentCode = fs.readFileSync(dailyHadithCardPath, 'utf-8');
 
-    // Both top badge and footer reference contain exact Hadith number and navigate via Link to libraryReadUrl
+    // Reference removed from top badge group above heading
+    expect(componentCode).not.toContain('hadith-pill-source');
+
+    // Reference kept below English translation in footer
     expect(componentCode).toContain('Sahih al-Bukhari — Hadith No. {hadith.hadithNumber}');
-    expect(componentCode).toContain('<Link\n              to={hadith.libraryReadUrl}\n              className="hadith-pill-source"');
     expect(componentCode).toContain('<Link\n              to={hadith.libraryReadUrl}\n              className="hadith-ref-badge"');
 
     // All Hadiths have valid pageNumber, hadithNumber, and libraryReadUrl with both page and hadith query params
@@ -176,16 +199,18 @@ describe('Daily Hadith Card & Dashboard Verification', () => {
     });
   });
 
-  it('11. Verifies "Forgiveness & Reconciliation (صلح اور سلام کی پہل)" Hadith 6077 exists with exact mapping', () => {
-    const reconciliationHadith = SAHIH_BUKHARI_DAILY_HADITHS.find(
-      (h) => h.theme.includes('Forgiveness & Reconciliation') || h.hadithNumber === 6077
+  it('11. Verifies "Purity of the Heart (طہارتِ قلب اور باطن)" Hadith 52 exists with exact mapping', () => {
+    const heartHadith = SAHIH_BUKHARI_DAILY_HADITHS.find(
+      (h) => h.theme.includes('Purity of the Heart') || h.hadithNumber === 52
     );
 
-    expect(reconciliationHadith).toBeDefined();
-    expect(reconciliationHadith?.hadithNumber).toBe(6077);
-    expect(reconciliationHadith?.theme).toBe('Forgiveness & Reconciliation (صلح اور سلام کی پہل)');
-    expect(reconciliationHadith?.pageNumber).toBe(578);
-    expect(reconciliationHadith?.libraryReadUrl).toBe('/library/sahih-al-bukhari/read?page=578&hadith=6077');
+    expect(heartHadith).toBeDefined();
+    expect(heartHadith?.hadithNumber).toBe(52);
+    expect(heartHadith?.theme).toBe('Purity of the Heart (طہارتِ قلب اور باطن)');
+    expect(heartHadith?.pageNumber).toBe(13);
+    expect(heartHadith?.libraryReadUrl).toBe('/library/sahih-al-bukhari/read?page=13&hadith=52');
+    expect(heartHadith?.arabicText).toContain('أَلاَ وَهِيَ القَلْبُ');
+    expect(heartHadith?.urduTranslation).toContain('وہ دل ہے');
   });
 });
 

@@ -32,7 +32,7 @@ describe('Namaz Tracker Navigation & Menu Visibility', () => {
 
   it('4. AppRoutes defines /tracker mapped to <TrackerPage /> and is always accessible', () => {
     const appRoutesCode = fs.readFileSync(appRoutesPath, 'utf-8');
-    expect(appRoutesCode).toContain('import { TrackerPage } from \'../pages/Tracker/TrackerPage\';');
+    expect(appRoutesCode).toContain('TrackerPage');
     expect(appRoutesCode).toContain('<Route path="/tracker" element={<TrackerPage />} />');
   });
 

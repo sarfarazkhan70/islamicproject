@@ -212,6 +212,38 @@ describe('Daily Hadith Card & Dashboard Verification', () => {
     expect(heartHadith?.arabicText).toContain('أَلاَ وَهِيَ القَلْبُ');
     expect(heartHadith?.urduTranslation).toContain('وہ دل ہے');
   });
+
+  it('12. Verifies responsive heading layout separates English and Urdu into distinct lines on mobile with white text and zero clipping', () => {
+    const css = fs.readFileSync(cssPath, 'utf-8');
+    const componentCode = fs.readFileSync(dailyHadithCardPath, 'utf-8');
+
+    // Component renders separate spans for English and Urdu title inside heading box
+    expect(componentCode).toContain('className="hadith-theme-en"');
+    expect(componentCode).toContain('className="hadith-theme-ur font-urdu"');
+    expect(componentCode).toContain('parseHadithTheme');
+
+    // Desktop base styles: inline/flex-wrap and white text (no green on Urdu)
+    expect(css).toContain('.hadith-theme-en {\n  display: inline;');
+    expect(css).toContain('.hadith-theme-ur {\n  display: inline;');
+    expect(css).toContain('.hadith-theme-ur {\n  display: inline;\n  font-family: var(--font-urdu), \'Noto Nastaliq Urdu\', \'Noorehuda\', \'Jameel Noori Nastaleeq\', \'Urdu Typesetting\', serif;\n  color: var(--text-primary);');
+
+    // Mobile media query: flex-direction column with English top, Urdu bottom
+    expect(css).toContain('@media (max-width: 640px)');
+    expect(css).toContain('.hadith-theme-title {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;');
+    expect(css).toContain('.hadith-theme-en {\n    display: block;');
+    expect(css).toContain('.hadith-theme-ur {\n    display: block;');
+    expect(css).toContain('direction: rtl;');
+    expect(css).toContain('line-height: 1.9;');
+
+    // Small mobile (380px and 330px) breakpoints for 320px/375px devices
+    expect(css).toContain('@media (max-width: 380px)');
+    expect(css).toContain('@media (max-width: 330px)');
+
+    // Verifies Hadith 2989 has the intuitive theme "Good Words and Avoiding Harm (اچھی بات کرنا اور دوسروں کو تکلیف دینے سے بچنا)"
+    const hadith2989 = SAHIH_BUKHARI_DAILY_HADITHS.find((h) => h.hadithNumber === 2989);
+    expect(hadith2989).toBeDefined();
+    expect(hadith2989?.theme).toBe('Good Words and Avoiding Harm (اچھی بات کرنا اور دوسروں کو تکلیف دینے سے بچنا)');
+  });
 });
 
 

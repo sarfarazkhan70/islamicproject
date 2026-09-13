@@ -594,7 +594,7 @@ export const SAHIH_BUKHARI_DAILY_HADITHS: DailyHadith[] = [
     englishTranslation: 'Narrated Abu Huraira (RA): The Prophet (ﷺ) said, "A good, kind word is a charity; every step taken towards prayer is a charity; and removing harmful obstacles from the pathway is a charity."',
     reference: 'Sahih al-Bukhari 2989 (Book 56, Hadith 200)',
     narrator: 'Abu Hurairah (رضي الله عنه)',
-    theme: 'Kind Words & Removing Harm (پاکیزہ کلام اور ایذارسانی سے بچاؤ)',
+    theme: 'Good Words and Avoiding Harm (اچھی بات کرنا اور دوسروں کو تکلیف دینے سے بچنا)',
     libraryBookId: 'sahih-al-bukhari',
     pageNumber: 294,
     libraryReadUrl: '/library/sahih-al-bukhari/read?page=294&hadith=2989',

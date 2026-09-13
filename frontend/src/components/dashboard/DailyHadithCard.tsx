@@ -16,6 +16,23 @@ interface DailyHadithCardProps {
   className?: string;
 }
 
+const parseHadithTheme = (themeStr?: string) => {
+  const text = themeStr || 'Purity of the Heart (طہارتِ قلب اور باطن)';
+  const match = text.match(/^(.*?)\s*\((.*?)\)$/);
+  if (match) {
+    return {
+      english: match[1].trim(),
+      urdu: match[2].trim(),
+      full: text,
+    };
+  }
+  return {
+    english: text,
+    urdu: '',
+    full: text,
+  };
+};
+
 export const DailyHadithCard: React.FC<DailyHadithCardProps> = ({
   date,
   hadithNumber,
@@ -48,6 +65,8 @@ export const DailyHadithCard: React.FC<DailyHadithCardProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const parsedTheme = parseHadithTheme(hadith.theme);
+
   return (
     <Card className={`daily-hadith-card ${className}`}>
       {/* Header Row: Badge & Center-Aligned Styled Combined Heading Box */}
@@ -59,8 +78,16 @@ export const DailyHadithCard: React.FC<DailyHadithCardProps> = ({
           </span>
         </div>
         <div className="hadith-heading-box">
-          <h2 className="hadith-theme-title">
-            {hadith.theme || 'Purity of the Heart (طہارتِ قلب اور باطن)'}
+          <h2
+            className="hadith-theme-title"
+            aria-label={hadith.theme || 'Purity of the Heart (طہارتِ قلب اور باطن)'}
+          >
+            <span className="hadith-theme-en">{parsedTheme.english}</span>
+            {parsedTheme.urdu && (
+              <span className="hadith-theme-ur font-urdu" dir="rtl" lang="ur">
+                ({parsedTheme.urdu})
+              </span>
+            )}
           </h2>
         </div>
       </div>

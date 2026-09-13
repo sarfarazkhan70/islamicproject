@@ -326,7 +326,7 @@
   -webkit-backdrop-filter: var(--backdrop-blur);
   border-top: 1px solid var(--border-subtle);
   z-index: var(--z-mobile-nav);
-  padding: 0 var(--space-2);
+  padding: 0 var(--space-1);
 }
 
 .mobile-nav-items {
@@ -334,10 +334,15 @@
   align-items: center;
   justify-content: space-around;
   height: 100%;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .mobile-nav-btn {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -345,9 +350,23 @@
   color: var(--text-muted);
   font-size: 0.65rem;
   font-weight: var(--weight-medium);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1) 2px;
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-nav-btn span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-size: 0.64rem;
+  line-height: 1.2;
 }
 
 .mobile-nav-btn.active {
@@ -357,6 +376,7 @@
 .mobile-nav-btn svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
 }
 
 /* Mobile More Drawer */
@@ -503,6 +523,14 @@
   .top-header { height: 56px; padding: 0 var(--space-3); gap: var(--space-2); }
   .card { padding: var(--space-4); border-radius: var(--radius-lg); }
 
+  .mobile-nav-btn {
+    padding: var(--space-1) 1px;
+  }
+
+  .mobile-nav-btn span {
+    font-size: 0.61rem;
+  }
+
   .header-brand-logo {
     width: 28px;
     height: 28px;
@@ -542,6 +570,10 @@
 
 @media (max-width: 375px) {
   .top-header { padding: 0 8px; gap: 6px; }
+  .mobile-nav-btn span {
+    font-size: 0.58rem;
+    letter-spacing: -0.01em;
+  }
   .header-brand-logo {
     width: 26px;
     height: 26px;
@@ -579,6 +611,17 @@
   .content-container { padding: 8px 4px; }
   .top-header { padding: 0 4px; gap: 4px; }
   .card { padding: 10px 8px; border-radius: var(--radius-md); }
+  .mobile-nav-btn {
+    padding: 2px 0;
+  }
+  .mobile-nav-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .mobile-nav-btn span {
+    font-size: 0.54rem;
+    letter-spacing: -0.02em;
+  }
   .header-brand-logo {
     width: 24px;
     height: 24px;

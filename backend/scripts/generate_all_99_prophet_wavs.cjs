@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Extract all 99 items directly from asmaEMustafaData.ts to ensure 100% exact text matching
-const dataFile = path.resolve(__dirname, '../frontend/src/data/islamic/asmaEMustafaData.ts');
+const dataFile = path.resolve(__dirname, '../../frontend/src/data/islamic/asmaEMustafaData.ts');
 let code = fs.readFileSync(dataFile, 'utf8');
 code = code.replace(/import\s+[^;]+;/g, '');
 code = code.replace(/export\s+const\s+ASMA_E_MUSTAFA\s*:\s*IslamicNameItem\[\]\s*=\s*/, 'const ASMA_E_MUSTAFA = ');
@@ -179,7 +179,7 @@ async function processItem(item, decoder, outDir) {
 }
 
 async function run() {
-  const outDir = path.resolve(__dirname, '../frontend/public/audio/prophet');
+  const outDir = path.resolve(__dirname, '../../frontend/public/audio/prophet');
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }

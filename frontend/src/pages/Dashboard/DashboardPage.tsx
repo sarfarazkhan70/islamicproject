@@ -4,46 +4,24 @@ import { LocationPermissionBanner } from '../../components/common/LocationPermis
 import { LocationPickerModal } from '../../components/common/LocationPickerModal.js';
 import { usePrayerTimes } from '../../hooks/usePrayerTimes.js';
 import { useTrackerStore } from '../../stores/useTrackerStore';
+import { DailyHadithCard } from '../../components/dashboard/DailyHadithCard';
 
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
-import { ProgressBar } from '../../components/common/ProgressBar';
 import { Link } from 'react-router-dom';
 import {
   Compass,
   BookOpen,
   Moon,
   Heart,
-  Check,
   RotateCcw,
-  ArrowRight,
   BellRing,
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
   const { timetable, displayName } = usePrayerTimes();
-  const { getPrayerStatus, setPrayerStatus, qazaSummary } = useTrackerStore();
+  const { qazaSummary } = useTrackerStore();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-
-  const localDateStr = new Date().toISOString().split('T')[0];
-
-  const getPrayerTime = (key: string) => {
-    const p = timetable.prayers.find((x) => x.key === key);
-    return p ? p.timeFormatted : '--:--';
-  };
-
-  const obligatoryPrayers: { id: string; label: string; time: string }[] = [
-    { id: 'fajr', label: 'Fajr', time: getPrayerTime('fajr') },
-    { id: 'zuhr', label: 'Zuhr', time: getPrayerTime('zuhr') },
-    { id: 'asr', label: 'Asr', time: getPrayerTime('asr') },
-    { id: 'maghrib', label: 'Maghrib', time: getPrayerTime('maghrib') },
-    { id: 'isha', label: 'Isha', time: getPrayerTime('isha') },
-  ];
-
-  const prayedCount = obligatoryPrayers.filter(
-    (p) => getPrayerStatus(localDateStr, p.id) === 'ADA'
-  ).length;
-  const dailyProgress = (prayedCount / obligatoryPrayers.length) * 100;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
@@ -57,85 +35,8 @@ export const DashboardPage: React.FC = () => {
         onOpenLocationPicker={() => setIsLocationModalOpen(true)}
       />
 
-      {/* Today's Prayer Quick Tracker Strip */}
-      <Card>
-        <div className="flex-between" style={{ marginBottom: 'var(--space-4)' }}>
-          <div>
-            <h2 className="heading-3">Today's Namaz Progress</h2>
-            <p className="text-secondary text-sm">
-              {prayedCount} of {obligatoryPrayers.length} obligatory prayers performed today
-            </p>
-          </div>
-          <Link to="/tracker" className="btn btn-sm btn-outline">
-            Full Tracker <ArrowRight size={14} />
-          </Link>
-        </div>
-
-        <ProgressBar progress={dailyProgress} showLabel height={10} className="mb-6" />
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-            gap: 'var(--space-3)',
-            marginTop: 'var(--space-4)',
-          }}
-        >
-          {obligatoryPrayers.map((prayer) => {
-            const status = getPrayerStatus(localDateStr, prayer.id);
-            const isPrayed = status === 'ADA';
-
-            return (
-              <button
-                key={prayer.id}
-                onClick={() =>
-                  setPrayerStatus(localDateStr, prayer.id, isPrayed ? 'NONE' : 'ADA')
-                }
-                className={`card card-compact card-hover ${isPrayed ? 'card-highlight' : ''}`}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  padding: 'var(--space-3)',
-                  textAlign: 'center',
-                  borderColor: isPrayed ? 'var(--brand-primary)' : 'var(--border-subtle)',
-                  cursor: 'pointer',
-                }}
-              >
-                <div
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: '50%',
-                    backgroundColor: isPrayed ? 'var(--brand-primary)' : 'var(--bg-surface-elevated)',
-                    color: isPrayed ? '#fff' : 'var(--text-muted)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 6,
-                  }}
-                >
-                  {isPrayed ? <Check size={16} /> : <span style={{ fontSize: 10 }}>●</span>}
-                </div>
-                <span style={{ fontWeight: 'var(--weight-bold)', fontSize: 'var(--text-sm)' }}>
-                  {prayer.label}
-                </span>
-                <span className="text-xs text-secondary">{prayer.time}</span>
-                <span
-                  style={{
-                    marginTop: 4,
-                    fontSize: '0.7rem',
-                    color: isPrayed ? 'var(--brand-primary)' : 'var(--text-muted)',
-                    fontWeight: isPrayed ? 'var(--weight-semibold)' : 'normal',
-                  }}
-                >
-                  {isPrayed ? 'Ada (Prayed)' : 'Tap to Mark'}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </Card>
+      {/* Authentic Sahih al-Bukhari Daily Hadith Card */}
+      <DailyHadithCard />
 
       {/* Quick Action Dock */}
       <div>

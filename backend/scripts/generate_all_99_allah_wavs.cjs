@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Extract all 99 Allah items directly from asmaUlHusnaData.ts to ensure 100% exact text matching
-const dataFile = path.resolve(__dirname, '../frontend/src/data/islamic/asmaUlHusnaData.ts');
+const dataFile = path.resolve(__dirname, '../../frontend/src/data/islamic/asmaUlHusnaData.ts');
 let code = fs.readFileSync(dataFile, 'utf8');
 code = code.replace(/import\s+[^;]+;/g, '');
 code = code.replace(/export\s+const\s+ASMA_UL_HUSNA\s*:\s*IslamicNameItem\[\]\s*=\s*/, 'const ASMA_UL_HUSNA = ');
@@ -196,7 +196,7 @@ async function processItem(item, decoder, outDir) {
 }
 
 async function run() {
-  const outDir = path.resolve(__dirname, '../frontend/public/audio/allah');
+  const outDir = path.resolve(__dirname, '../../frontend/public/audio/allah');
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }

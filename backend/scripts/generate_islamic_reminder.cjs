@@ -76,8 +76,8 @@ function synthesizeReminder(outputPath) {
   });
 }
 
-const outPath = path.resolve(__dirname, '../frontend/public/audio/namaz_reminder.mp3');
-const wavCopy = path.resolve(__dirname, '../frontend/public/audio/namaz_reminder.wav');
+const outPath = path.resolve(__dirname, '../../frontend/public/audio/namaz_reminder.mp3');
+const wavCopy = path.resolve(__dirname, '../../frontend/public/audio/namaz_reminder.wav');
 
 console.log('Synthesizing authentic Islamic spoken male reminder in Urdu...');
 synthesizeReminder(outPath).then((buffer) => {

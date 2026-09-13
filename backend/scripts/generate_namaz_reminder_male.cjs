@@ -168,8 +168,8 @@ async function generateFullSpokenIslamicReminder() {
   wav.fromScratch(1, sampleRate, '16', int16Samples);
   const audioBuffer = wav.toBuffer();
 
-  const outMp3 = path.resolve(__dirname, '../frontend/public/audio/namaz_reminder.mp3');
-  const outWav = path.resolve(__dirname, '../frontend/public/audio/namaz_reminder.wav');
+  const outMp3 = path.resolve(__dirname, '../../frontend/public/audio/namaz_reminder.mp3');
+  const outWav = path.resolve(__dirname, '../../frontend/public/audio/namaz_reminder.wav');
 
   fs.writeFileSync(outMp3, audioBuffer);
   fs.writeFileSync(outWav, audioBuffer);

@@ -27,11 +27,12 @@ export const MobileNavigation: React.FC = () => {
   const mainTabs = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/prayer-times', label: 'Prayers', icon: Clock },
-    { path: '/tracker', label: 'Tracker', icon: CheckSquare },
+    { path: '/tracker', label: 'Namaz Tracker', icon: CheckSquare },
     { path: '/quran', label: 'Quran', icon: BookOpen },
   ];
 
   const secondaryTabs = [
+    { path: '/tracker', label: 'Namaz Tracker', icon: CheckSquare, desc: 'Daily prayers, Ada, Missed & Safar tracker' },
     { path: '/library', label: 'Islamic Library', icon: Library, desc: 'Hadith, Fiqh & Alahazrat Books' },
     { path: '/allah-names', label: 'Asma-ul-Husna', icon: Sparkles, desc: '99 Names of Allah Ta’ala' },
     { path: '/prophet-names', label: 'Asma-e-Mustafa ﷺ', icon: Heart, desc: 'Verified Prophetic Names' },

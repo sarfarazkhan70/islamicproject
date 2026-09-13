@@ -20,7 +20,7 @@ const prayerRecordSchema = new Schema({
     status: {
         type: String,
         required: true,
-        enum: ['ADA', 'MISSED', 'EXCUSED', 'QAZA', 'NONE'],
+        enum: ['ADA', 'MISSED', 'SAFAR', 'EXCUSED', 'QAZA', 'NONE'],
         default: 'NONE',
     },
     scheduledTime: {
@@ -36,6 +36,10 @@ const prayerRecordSchema = new Schema({
         default: 'UTC',
     },
     isVoluntary: {
+        type: Boolean,
+        default: false,
+    },
+    isSafarQaza: {
         type: Boolean,
         default: false,
     },

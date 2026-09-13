@@ -1,27 +1,27 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AppShell } from '../components/layout/AppShell';
-
-// Application Page components
-import { DashboardPage } from '../pages/Dashboard/DashboardPage';
-import { PrayerTimesPage } from '../pages/PrayerTimes/PrayerTimesPage';
-import { TrackerPage } from '../pages/Tracker/TrackerPage';
-import { QazaPage } from '../pages/Qaza/QazaPage';
-import { HistoryPage } from '../pages/History/HistoryPage';
-import { NotificationsPage } from '../pages/Notifications/NotificationsPage';
-import { SurahAlMulkPage } from '../pages/SurahAlMulk/SurahAlMulkPage';
-import { QuranPage } from '../pages/Quran/QuranPage';
-import { AzkarPage } from '../pages/Azkar/AzkarPage';
-import { QiblaPage } from '../pages/Qibla/QiblaPage';
-import { CalendarPage } from '../pages/Calendar/CalendarPage';
-import { RamadanPage } from '../pages/Ramadan/RamadanPage';
-import { JumuahPage } from '../pages/Jumuah/JumuahPage';
-import { AsmaUlHusnaPage } from '../pages/Names/AsmaUlHusnaPage';
-import { AsmaEMustafaPage } from '../pages/Names/AsmaEMustafaPage';
-import { SettingsPage } from '../pages/Settings/SettingsPage';
-import { LibraryPage } from '../pages/Library/LibraryPage';
-import { BookDetailPage } from '../pages/Library/BookDetailPage';
-import { BookReaderPage } from '../pages/Library/BookReaderPage';
+import { AppShell } from '../components/layout';
+import {
+  DashboardPage,
+  PrayerTimesPage,
+  TrackerPage,
+  QazaPage,
+  HistoryPage,
+  NotificationsPage,
+  SurahAlMulkPage,
+  QuranPage,
+  AzkarPage,
+  QiblaPage,
+  CalendarPage,
+  RamadanPage,
+  JumuahPage,
+  AsmaUlHusnaPage,
+  AsmaEMustafaPage,
+  SettingsPage,
+  LibraryPage,
+  BookDetailPage,
+  BookReaderPage,
+} from '../pages';
 
 export const AppRoutes: React.FC = () => {
   return (

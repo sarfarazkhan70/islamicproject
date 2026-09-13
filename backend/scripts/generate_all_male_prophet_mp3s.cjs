@@ -169,7 +169,7 @@ async function processItem(item, decoder, outDir) {
 }
 
 async function run() {
-  const outDir = path.resolve(__dirname, '../frontend/public/audio/prophet');
+  const outDir = path.resolve(__dirname, '../../frontend/public/audio/prophet');
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }

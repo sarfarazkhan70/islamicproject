@@ -3638,6 +3638,49 @@ input:checked + .slider:before {
   top: 0px !important;
 }
 
+/* ==========================================================================
+   SAHIH MUSLIM READER & STICKY TOOLBAR STYLES
+   ========================================================================== */
+.muslim-reader-page-root {
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible !important;
+}
+
+.muslim-top-toolbar {
+  position: sticky !important;
+  top: var(--header-height, 68px) !important;
+  z-index: 100 !important;
+  padding: 8px 14px;
+  margin-bottom: var(--space-4);
+  background-color: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  box-sizing: border-box;
+  border-radius: var(--radius-lg);
+  overflow: visible !important;
+}
+
+@media (max-width: 480px) {
+  .muslim-top-toolbar {
+    top: 56px !important;
+    padding: 6px 10px;
+    gap: 6px 8px;
+  }
+}
+
+.fullscreen-mode .muslim-top-toolbar {
+  top: 0px !important;
+}
+
 .zoom-dropdown-menu {
   position: absolute !important;
   top: calc(100% + 8px) !important;
@@ -3658,6 +3701,66 @@ input:checked + .slider:before {
 .hadaiq-top-toolbar .zoom-dropdown-menu,
 .hadaiq-hindi-top-toolbar .zoom-dropdown-menu {
   border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  z-index: 10000 !important;
+  width: 250px !important;
+  max-width: min(280px, calc(100vw - 24px)) !important;
+  background-color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(59, 130, 246, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu.align-right {
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu.align-left {
+  left: 0 !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu.align-center {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu.align-top {
+  top: auto !important;
+  bottom: calc(100% + 8px) !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu button.btn-ghost {
+  color: #e2e8f0 !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu button.btn-ghost:hover {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  color: #93c5fd !important;
+}
+
+.muslim-top-toolbar .zoom-dropdown-menu button.btn-primary {
+  background-color: #2563eb !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
 }
 
 @media (max-width: 640px) {

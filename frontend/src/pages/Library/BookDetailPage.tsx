@@ -16,6 +16,67 @@ import { useLibraryStore } from '../../stores/useLibraryStore';
 import { HadaiqPdfService } from '../../services/hadaiqPdfService';
 import { HadaiqHindiPdfService } from '../../services/hadaiqHindiPdfService';
 import { HadaiqEnglishPdfService } from '../../services/hadaiqEnglishPdfService';
+import { MuslimPdfService } from '../../services/muslimPdfService';
+
+// ============================================================================
+// SAHIH MUSLIM COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
+// ============================================================================
+interface MuslimSelectionCoverProps {
+  volNum: number;
+}
+
+const MuslimSelectionCoverCanvas: React.FC<MuslimSelectionCoverProps> = ({ volNum }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const isAvailable = volNum <= 6;
+  const coverUrl = MuslimPdfService.getPageImageUrl(1, volNum);
+
+  return (
+    <div className="muslim-selection-cover-box">
+      {isAvailable && !imgError && (
+        <img
+          src={coverUrl}
+          alt={`Sahih Muslim Jild ${volNum} Cover`}
+          className="muslim-cover-img"
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          style={{
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+          }}
+        />
+      )}
+      {(!isAvailable || !imgLoaded || imgError) && (
+        <div
+          className="muslim-cover-fallback"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            background: 'linear-gradient(145deg, #1e3a8a 0%, #0f172a 100%)',
+          }}
+        >
+          <BookOpen
+            size={28}
+            style={{
+              color: '#60a5fa',
+              opacity: 0.9,
+            }}
+          />
+          <span style={{ fontSize: '0.72rem', color: '#93c5fd', fontWeight: 600 }}>
+            جلد {volNum}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ============================================================================
 // HADAIQ AUTHENTIC COVER THUMBNAIL (RENDERS ORIGINAL FIRST PAGE OF THE PDF)
@@ -161,6 +222,231 @@ export const BookDetailPage: React.FC = () => {
       navigate(`/library/${book.id}/read`);
     }
   };
+
+  // Dedicated Sahih Muslim Selection Screen (6 Clean Volume Cards: Jild 1 to Jild 6)
+  if (book.id === 'sahih-muslim') {
+    const volumesList = [
+      { volNum: 1, label: 'Jild 1' },
+      { volNum: 2, label: 'Jild 2' },
+      { volNum: 3, label: 'Jild 3' },
+      { volNum: 4, label: 'Jild 4' },
+      { volNum: 5, label: 'Jild 5' },
+      { volNum: 6, label: 'Jild 6' },
+    ];
+
+    return (
+      <div
+        className="book-detail-page muslim-selection-page"
+        style={{
+          width: '100%',
+          maxWidth: 1200,
+          margin: '0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
+        <style>{`
+          .muslim-selection-page {
+            padding: 0 var(--space-4) var(--space-10);
+          }
+          .muslim-cards-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(0, 210px));
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          .muslim-book-card {
+            width: 100%;
+            max-width: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 16px 14px;
+            border-radius: var(--radius-xl);
+            background-color: var(--bg-surface);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            transition: all var(--transition-fast);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+          }
+          .muslim-book-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), 0 0 16px rgba(59, 130, 246, 0.2);
+          }
+          .muslim-selection-cover-box {
+            width: 120px;
+            height: 165px;
+            max-width: 100%;
+            margin-bottom: 12px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            background-color: #0f172a;
+            border: 1.5px solid rgba(59, 130, 246, 0.45);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+          }
+          .muslim-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+          }
+          .muslim-card-title {
+            font-size: 0.85rem;
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.35;
+            word-break: break-word;
+          }
+          .muslim-card-jild {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 3px;
+            line-height: 1.2;
+          }
+          @media (max-width: 640px) {
+            .muslim-selection-page {
+              padding: 0 8px var(--space-8) !important;
+            }
+            .muslim-cards-row {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 6px !important;
+              justify-content: stretch !important;
+            }
+            .muslim-book-card {
+              max-width: 100% !important;
+              padding: 10px 4px !important;
+              border-radius: var(--radius-lg) !important;
+            }
+            .muslim-selection-cover-box {
+              width: 100% !important;
+              max-width: 90px !important;
+              height: auto !important;
+              aspect-ratio: 120 / 165 !important;
+              margin-bottom: 6px !important;
+            }
+            .muslim-cover-img {
+              width: 100% !important;
+              height: 100% !important;
+              object-fit: contain !important;
+              object-position: center !important;
+              display: block !important;
+            }
+            .muslim-card-title {
+              font-size: 0.62rem !important;
+              line-height: 1.25 !important;
+            }
+            .muslim-card-jild {
+              font-size: 0.65rem !important;
+              margin-top: 2px !important;
+            }
+          }
+          @media (max-width: 370px) {
+            .muslim-cards-row {
+              gap: 4px !important;
+            }
+            .muslim-book-card {
+              padding: 8px 2px !important;
+            }
+            .muslim-selection-cover-box {
+              max-width: 76px !important;
+              margin-bottom: 4px !important;
+            }
+            .muslim-card-title {
+              font-size: 0.56rem !important;
+              line-height: 1.2 !important;
+            }
+            .muslim-card-jild {
+              font-size: 0.58rem !important;
+            }
+          }
+        `}</style>
+
+        {/* Top Back & Breadcrumb Bar */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 'var(--space-3)',
+            marginBottom: 'var(--space-6)',
+          }}
+        >
+          <button
+            type="button"
+            className="btn btn-sm btn-ghost"
+            onClick={() => navigate('/library')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Library</span>
+          </button>
+
+          <div
+            className="text-xs text-muted"
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Link to="/library" style={{ color: 'var(--text-muted)' }}>
+              Library
+            </Link>
+            <span>/</span>
+            <span style={{ color: 'var(--brand-gold)', fontWeight: 'var(--weight-semibold)' }}>
+              Sahih Muslim
+            </span>
+          </div>
+        </div>
+
+        {/* 6 Clean Cards Container */}
+        <div className="muslim-cards-row">
+          {volumesList.map(({ volNum, label }) => (
+            <div
+              key={volNum}
+              className="card card-hover muslim-book-card"
+              onClick={() => navigate(`/library/sahih-muslim/read?vol=${volNum}`)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Sahih Muslim ${label}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate(`/library/sahih-muslim/read?vol=${volNum}`);
+                }
+              }}
+            >
+              {/* Clean Book Cover Image */}
+              <MuslimSelectionCoverCanvas volNum={volNum} />
+
+              {/* Sahih Muslim */}
+              <div className="muslim-card-title">
+                Sahih Muslim
+              </div>
+
+              {/* Jild Number */}
+              <div className="muslim-card-jild">
+                {label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   // Dedicated Hadaiq-e-Bakhshish Selection Screen (Urdu, Hindi & English Editions)
   if (

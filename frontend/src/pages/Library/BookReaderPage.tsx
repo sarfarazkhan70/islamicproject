@@ -18,6 +18,7 @@ import { useLibraryStore, ReaderFontSize } from '../../stores/useLibraryStore';
 import { BookChapter, BookSection } from '../../types/library.types';
 import { KanzulImanReader } from '../../components/library/KanzulImanReader';
 import { BukhariReader } from '../../components/library/BukhariReader';
+import { MuslimReader } from '../../components/library/MuslimReader';
 import { HadaiqReader } from '../../components/library/HadaiqReader';
 import { HadaiqHindiReader } from '../../components/library/HadaiqHindiReader';
 import { HadaiqEnglishReader } from '../../components/library/HadaiqEnglishReader';
@@ -35,6 +36,11 @@ export const BookReaderPage: React.FC = () => {
   // If Sahih al-Bukhari, render the dedicated authentic 9-volume PDF-style reader
   if (bookId === 'sahih-al-bukhari') {
     return <BukhariReader />;
+  }
+
+  // If Sahih Muslim
+  if (bookId === 'sahih-muslim') {
+    return <MuslimReader />;
   }
 
   // If Hadaiq-e-Bakhshish Hindi edition

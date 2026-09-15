@@ -7,3 +7,4 @@ export * from './HadaiqHindiReader';
 export * from './HadaiqReader';
 export * from './KanzulImanReader';
 export * from './LibrarySearchBar';
+export * from './MuslimReader';

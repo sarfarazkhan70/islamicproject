@@ -37,3 +37,7 @@ lerna-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Large Book PDFs (>50MB, excluded to adhere to GitHub file size limits)
+frontend/public/pdf/sahih_muslim_vol*.pdf
+

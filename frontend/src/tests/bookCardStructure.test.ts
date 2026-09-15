@@ -69,8 +69,8 @@ describe('Islamic Book Cards & Volume Structure Verification', () => {
     expect(muslim).toBeDefined();
     expect(muslim?.author).toContain('Muslim');
     expect(muslim?.category).toBe('hadith');
-    expect(muslim?.volumeCount).toBe(7);
-    expect(getBookVolumes(muslim!).length).toBe(7);
+    expect(muslim?.volumeCount).toBe(6);
+    expect(getBookVolumes(muslim!).length).toBe(6);
 
     const tirmidhi = getBookById('jami-at-tirmidhi');
     expect(tirmidhi?.volumeCount).toBe(6);

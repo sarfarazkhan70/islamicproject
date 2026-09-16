@@ -11,7 +11,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Gracious / Entirely Merciful",
     explanation: "The One whose boundless mercy encompasses all creation in this world.",
     reference: "Qur'an — Surah Al-Fatihah 1:3; Surah Taha 20:5",
-    audioUrl: "/audio/allah/allah-01.wav",
+    audioUrl: "/audio/allah/allah-01.mp3",
     category: 'allah',
   },
   {
@@ -24,7 +24,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Merciful / Especially Merciful",
     explanation: "The One whose special, enduring mercy is reserved for the believers in the Hereafter.",
     reference: "Qur'an — Surah Al-Fatihah 1:3; Surah Al-Ahzab 33:43",
-    audioUrl: "/audio/allah/allah-02.wav",
+    audioUrl: "/audio/allah/allah-02.mp3",
     category: 'allah',
   },
   {
@@ -37,7 +37,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The King / The Supreme Sovereign",
     explanation: "The absolute Owner and Ruler of the entire universe, with undisputed authority.",
     reference: "Qur'an — Surah Al-Hashr 59:23; Surah Taha 20:114",
-    audioUrl: "/audio/allah/allah-03.wav",
+    audioUrl: "/audio/allah/allah-03.mp3",
     category: 'allah',
   },
   {
@@ -50,7 +50,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Holy / The Pure",
     explanation: "The One who is completely free from any imperfection, weakness, or deficiency.",
     reference: "Qur'an — Surah Al-Hashr 59:23; Surah Al-Jumu'ah 62:1",
-    audioUrl: "/audio/allah/allah-04.wav",
+    audioUrl: "/audio/allah/allah-04.mp3",
     category: 'allah',
   },
   {
@@ -63,7 +63,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Source of Peace / Flawless",
     explanation: "The Giver of peace and safety to His servants, free from all blemishes.",
     reference: "Qur'an — Surah Al-Hashr 59:23",
-    audioUrl: "/audio/allah/allah-05.wav",
+    audioUrl: "/audio/allah/allah-05.mp3",
     category: 'allah',
   },
   {
@@ -76,7 +76,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Bestower of Faith & Security",
     explanation: "The One who affirms truthfulness, protects believers, and gives refuge from fear.",
     reference: "Qur'an — Surah Al-Hashr 59:23",
-    audioUrl: "/audio/allah/allah-06.wav",
+    audioUrl: "/audio/allah/allah-06.mp3",
     category: 'allah',
   },
   {
@@ -89,7 +89,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Guardian / The Overseer",
     explanation: "The One who watches over, protects, and controls every aspect of creation.",
     reference: "Qur'an — Surah Al-Hashr 59:23",
-    audioUrl: "/audio/allah/allah-07.wav",
+    audioUrl: "/audio/allah/allah-07.mp3",
     category: 'allah',
   },
   {
@@ -102,7 +102,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Mighty / The Invincible",
     explanation: "The One of supreme might whom nothing can overcome or overpower.",
     reference: "Qur'an — Surah Al-Hashr 59:23; Surah Al-Baqarah 2:129",
-    audioUrl: "/audio/allah/allah-08.wav",
+    audioUrl: "/audio/allah/allah-08.mp3",
     category: 'allah',
   },
   {
@@ -115,7 +115,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Compeller / The Restorer",
     explanation: "The One whose will prevails over all, and who mends the broken hearts of His servants.",
     reference: "Qur'an — Surah Al-Hashr 59:23",
-    audioUrl: "/audio/allah/allah-09.wav",
+    audioUrl: "/audio/allah/allah-09.mp3",
     category: 'allah',
   },
   {
@@ -128,7 +128,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Supreme / The Majestic",
     explanation: "The One to whom alone true majesty, greatness, and pride rightfully belong.",
     reference: "Qur'an — Surah Al-Hashr 59:23",
-    audioUrl: "/audio/allah/allah-10.wav",
+    audioUrl: "/audio/allah/allah-10.mp3",
     category: 'allah',
   },
   {
@@ -141,7 +141,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Creator",
     explanation: "The One who brings everything from non-existence into existence by His divine design.",
     reference: "Qur'an — Surah Al-Hashr 59:24; Surah Ar-Ra'd 13:16",
-    audioUrl: "/audio/allah/allah-11.wav",
+    audioUrl: "/audio/allah/allah-11.mp3",
     category: 'allah',
   },
   {
@@ -154,7 +154,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Originator / The Maker",
     explanation: "The One who creates things distinctly with harmony, free from fault.",
     reference: "Qur'an — Surah Al-Hashr 59:24; Surah Al-Baqarah 2:54",
-    audioUrl: "/audio/allah/allah-12.wav",
+    audioUrl: "/audio/allah/allah-12.mp3",
     category: 'allah',
   },
   {
@@ -167,7 +167,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Fashioner / The Shaper",
     explanation: "The One who shapes each created being in its unique, distinct, and beautiful form.",
     reference: "Qur'an — Surah Al-Hashr 59:24; Surah Al-Imran 3:6",
-    audioUrl: "/audio/allah/allah-13.wav",
+    audioUrl: "/audio/allah/allah-13.mp3",
     category: 'allah',
   },
   {
@@ -180,7 +180,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Forgiving",
     explanation: "The One who repeatedly covers and forgives the sins and flaws of His servants.",
     reference: "Qur'an — Surah Nuh 71:10; Surah Taha 20:82",
-    audioUrl: "/audio/allah/allah-14.wav",
+    audioUrl: "/audio/allah/allah-14.mp3",
     category: 'allah',
   },
   {
@@ -193,7 +193,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Subduer / The Dominant",
     explanation: "The One before whose supreme dominance and power all of creation yields.",
     reference: "Qur'an — Surah Ar-Ra'd 13:16; Surah Yusuf 12:39",
-    audioUrl: "/audio/allah/allah-15.wav",
+    audioUrl: "/audio/allah/allah-15.mp3",
     category: 'allah',
   },
   {
@@ -206,7 +206,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Bestower / The Giver of Gifts",
     explanation: "The One who generously grants countless gifts without expecting any return.",
     reference: "Qur'an — Surah Al-Imran 3:8; Surah Sad 38:9",
-    audioUrl: "/audio/allah/allah-16.wav",
+    audioUrl: "/audio/allah/allah-16.mp3",
     category: 'allah',
   },
   {
@@ -219,7 +219,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Sustainer / The Provider",
     explanation: "The One who provides physical sustenance and spiritual nourishment to all living beings.",
     reference: "Qur'an — Surah Adh-Dhariyat 51:58",
-    audioUrl: "/audio/allah/allah-17.wav",
+    audioUrl: "/audio/allah/allah-17.mp3",
     category: 'allah',
   },
   {
@@ -232,7 +232,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Opener / The Judge",
     explanation: "The One who opens the doors of mercy, guidance, and victory, and resolves all matters.",
     reference: "Qur'an — Surah Saba 34:26",
-    audioUrl: "/audio/allah/allah-18.wav",
+    audioUrl: "/audio/allah/allah-18.mp3",
     category: 'allah',
   },
   {
@@ -245,7 +245,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Knowing / Omniscient",
     explanation: "The One whose perfect knowledge encompasses the past, present, future, hidden, and apparent.",
     reference: "Qur'an — Surah Al-Baqarah 2:29; Surah Al-Hijr 15:86",
-    audioUrl: "/audio/allah/allah-19.wav",
+    audioUrl: "/audio/allah/allah-19.mp3",
     category: 'allah',
   },
   {
@@ -258,7 +258,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Withholder / The Constrictor",
     explanation: "The One who restricts or withholds sustenance and souls according to His divine wisdom.",
     reference: "Qur'an — Surah Al-Baqarah 2:245; Sunan Abi Dawud 3451",
-    audioUrl: "/audio/allah/allah-20.wav",
+    audioUrl: "/audio/allah/allah-20.mp3",
     category: 'allah',
   },
   {
@@ -271,7 +271,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Extender / The Expander",
     explanation: "The One who expands sustenance, joy, and mercy generously for whom He wills.",
     reference: "Qur'an — Surah Al-Baqarah 2:245; Surah Ash-Shura 42:27",
-    audioUrl: "/audio/allah/allah-21.wav",
+    audioUrl: "/audio/allah/allah-21.mp3",
     category: 'allah',
   },
   {
@@ -284,7 +284,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Abaser / The Reducer",
     explanation: "The One who brings down the arrogant and lowers the enemies of truth.",
     reference: "Qur'an — Surah Al-Waqi'ah 56:3; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-22.wav",
+    audioUrl: "/audio/allah/allah-22.mp3",
     category: 'allah',
   },
   {
@@ -297,7 +297,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Exalter / The Elevator",
     explanation: "The One who raises the ranks of the believers and righteous in this life and the next.",
     reference: "Qur'an — Surah Al-An'am 6:165; Surah Al-Mujadila 58:11",
-    audioUrl: "/audio/allah/allah-23.wav",
+    audioUrl: "/audio/allah/allah-23.mp3",
     category: 'allah',
   },
   {
@@ -310,7 +310,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Giver of Honour / The Bestower of Might",
     explanation: "The One who grants true honour, dignity, and nobility to whom He wills.",
     reference: "Qur'an — Surah Al-Imran 3:26",
-    audioUrl: "/audio/allah/allah-24.wav",
+    audioUrl: "/audio/allah/allah-24.mp3",
     category: 'allah',
   },
   {
@@ -323,7 +323,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Humiliator / The Dishonourer",
     explanation: "The One who deprives tyrants and oppressors of honour and leaves them in disgrace.",
     reference: "Qur'an — Surah Al-Imran 3:26",
-    audioUrl: "/audio/allah/allah-25.wav",
+    audioUrl: "/audio/allah/allah-25.mp3",
     category: 'allah',
   },
   {
@@ -336,7 +336,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Hearing",
     explanation: "The One who hears every sound, whispered prayer, and thought across the universe.",
     reference: "Qur'an — Surah Al-Baqarah 2:127; Surah Ash-Shura 42:11",
-    audioUrl: "/audio/allah/allah-26.wav",
+    audioUrl: "/audio/allah/allah-26.mp3",
     category: 'allah',
   },
   {
@@ -349,7 +349,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Seeing",
     explanation: "The One who sees all that happens in the darkest depths and brightest skies.",
     reference: "Qur'an — Surah Al-Mulk 67:19; Surah Ash-Shura 42:11",
-    audioUrl: "/audio/allah/allah-27.wav",
+    audioUrl: "/audio/allah/allah-27.mp3",
     category: 'allah',
   },
   {
@@ -362,7 +362,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Supreme Judge / The Arbitrator",
     explanation: "The Ultimate Judge whose rulings are always completely just and binding.",
     reference: "Qur'an — Surah Al-An'am 6:114; Sunan Abi Dawud 4955",
-    audioUrl: "/audio/allah/allah-28.wav",
+    audioUrl: "/audio/allah/allah-28.mp3",
     category: 'allah',
   },
   {
@@ -375,7 +375,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Utterly Just",
     explanation: "The One who is absolutely just and fair in all His decrees, incapable of wrongdoing.",
     reference: "Qur'an — Surah Al-An'am 6:115; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-29.wav",
+    audioUrl: "/audio/allah/allah-29.mp3",
     category: 'allah',
   },
   {
@@ -388,7 +388,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Subtle / The Most Gentle",
     explanation: "The One who knows the finest details and delivers blessings in unseen, subtle ways.",
     reference: "Qur'an — Surah Al-Mulk 67:14; Surah Luqman 31:16",
-    audioUrl: "/audio/allah/allah-30.wav",
+    audioUrl: "/audio/allah/allah-30.mp3",
     category: 'allah',
   },
   {
@@ -401,7 +401,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Aware / The Fully Acquainted",
     explanation: "The One who possesses intimate knowledge of the hidden realities of all things.",
     reference: "Qur'an — Surah Al-Mulk 67:14; Surah Al-An'am 6:18",
-    audioUrl: "/audio/allah/allah-31.wav",
+    audioUrl: "/audio/allah/allah-31.mp3",
     category: 'allah',
   },
   {
@@ -414,7 +414,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Forbearing / Clement",
     explanation: "The One who does not rush to punish sinners, giving them ample opportunity to repent.",
     reference: "Qur'an — Surah Al-Baqarah 2:225; Surah Al-Isra 17:44",
-    audioUrl: "/audio/allah/allah-32.wav",
+    audioUrl: "/audio/allah/allah-32.mp3",
     category: 'allah',
   },
   {
@@ -427,7 +427,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Magnificent / The Supreme in Greatness",
     explanation: "The One of infinite glory, splendor, and grandeur above all comprehension.",
     reference: "Qur'an — Surah Al-Baqarah 2:255 (Ayat al-Kursi); Surah Al-Waqi'ah 56:96",
-    audioUrl: "/audio/allah/allah-33.wav",
+    audioUrl: "/audio/allah/allah-33.mp3",
     category: 'allah',
   },
   {
@@ -440,7 +440,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Great Forgiver / Forgiving",
     explanation: "The One who continuously pardons sins and protects the penitent from punishment.",
     reference: "Qur'an — Surah Fatir 35:28; Surah Al-Baqarah 2:173",
-    audioUrl: "/audio/allah/allah-34.wav",
+    audioUrl: "/audio/allah/allah-34.mp3",
     category: 'allah',
   },
   {
@@ -453,7 +453,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Appreciative / Grateful",
     explanation: "The One who abundantly rewards even the smallest sincere deeds of His servants.",
     reference: "Qur'an — Surah Fatir 35:30; Surah At-Taghabun 64:17",
-    audioUrl: "/audio/allah/allah-35.wav",
+    audioUrl: "/audio/allah/allah-35.mp3",
     category: 'allah',
   },
   {
@@ -466,7 +466,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most High / The Sublime",
     explanation: "The One who is exalted high above all creation in His essence, attributes, and power.",
     reference: "Qur'an — Surah Al-Baqarah 2:255; Surah Al-A'la 87:1",
-    audioUrl: "/audio/allah/allah-36.wav",
+    audioUrl: "/audio/allah/allah-36.mp3",
     category: 'allah',
   },
   {
@@ -479,7 +479,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Great / Incomparable",
     explanation: "The One who is infinitely great in essence and majesty, beyond all comparison.",
     reference: "Qur'an — Surah Ar-Ra'd 13:9; Surah Al-Hajj 22:62",
-    audioUrl: "/audio/allah/allah-37.wav",
+    audioUrl: "/audio/allah/allah-37.mp3",
     category: 'allah',
   },
   {
@@ -492,7 +492,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Preserver / The Protector",
     explanation: "The One who guards and preserves the heavens, earth, deeds, and creation.",
     reference: "Qur'an — Surah Hud 11:57; Surah Saba 34:21",
-    audioUrl: "/audio/allah/allah-38.wav",
+    audioUrl: "/audio/allah/allah-38.mp3",
     category: 'allah',
   },
   {
@@ -505,7 +505,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Nourisher / The Sustainer",
     explanation: "The One who provides nourishment and maintains the existence of all things.",
     reference: "Qur'an — Surah An-Nisa 4:85",
-    audioUrl: "/audio/allah/allah-39.wav",
+    audioUrl: "/audio/allah/allah-39.mp3",
     category: 'allah',
   },
   {
@@ -518,7 +518,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Reckoner / The Sufficient",
     explanation: "The One who suffices all His servants and takes accurate account of all deeds.",
     reference: "Qur'an — Surah An-Nisa 4:6; Surah Al-Ahzab 33:39",
-    audioUrl: "/audio/allah/allah-40.wav",
+    audioUrl: "/audio/allah/allah-40.mp3",
     category: 'allah',
   },
   {
@@ -531,7 +531,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Majestic / The Sublime",
     explanation: "The One characterized by utter glory, grandeur, and absolute dignity.",
     reference: "Qur'an — Surah Ar-Rahman 55:27 (Dhu al-Jalali wa al-Ikram)",
-    audioUrl: "/audio/allah/allah-41.wav",
+    audioUrl: "/audio/allah/allah-41.mp3",
     category: 'allah',
   },
   {
@@ -544,7 +544,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Generous / Bountiful",
     explanation: "The Generous One whose giving knows no bounds, even to those who do not ask.",
     reference: "Qur'an — Surah Al-Infitar 82:6; Surah An-Naml 27:40",
-    audioUrl: "/audio/allah/allah-42.wav",
+    audioUrl: "/audio/allah/allah-42.mp3",
     category: 'allah',
   },
   {
@@ -557,7 +557,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Watchful / The Observer",
     explanation: "The One who continuously observes and monitors every movement, breath, and thought.",
     reference: "Qur'an — Surah An-Nisa 4:1; Surah Al-Ahzab 33:52",
-    audioUrl: "/audio/allah/allah-43.wav",
+    audioUrl: "/audio/allah/allah-43.mp3",
     category: 'allah',
   },
   {
@@ -570,7 +570,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Responsive / The Answerer",
     explanation: "The One who responds to the sincere supplications and calls of His servants.",
     reference: "Qur'an — Surah Hud 11:61; Surah Al-Baqarah 2:186",
-    audioUrl: "/audio/allah/allah-44.wav",
+    audioUrl: "/audio/allah/allah-44.mp3",
     category: 'allah',
   },
   {
@@ -583,7 +583,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Encompassing / Boundless",
     explanation: "The One whose capacity, knowledge, mercy, and realm have no limits.",
     reference: "Qur'an — Surah Al-Baqarah 2:115; Surah Al-Baqarah 2:268",
-    audioUrl: "/audio/allah/allah-45.wav",
+    audioUrl: "/audio/allah/allah-45.mp3",
     category: 'allah',
   },
   {
@@ -596,7 +596,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Wise",
     explanation: "The One whose actions, decrees, and laws are guided by flawless wisdom.",
     reference: "Qur'an — Surah Al-Baqarah 2:129; Surah Luqman 31:27",
-    audioUrl: "/audio/allah/allah-46.wav",
+    audioUrl: "/audio/allah/allah-46.mp3",
     category: 'allah',
   },
   {
@@ -609,7 +609,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Loving / Affectionate",
     explanation: "The One who loves His righteous servants and is the source of pure, devoted love.",
     reference: "Qur'an — Surah Al-Buruj 85:14; Surah Hud 11:90",
-    audioUrl: "/audio/allah/allah-47.wav",
+    audioUrl: "/audio/allah/allah-47.mp3",
     category: 'allah',
   },
   {
@@ -622,7 +622,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Glorious / The Most Honorable",
     explanation: "The One of supreme majesty, generosity, nobility, and praiseworthiness.",
     reference: "Qur'an — Surah Hud 11:73; Surah Al-Buruj 85:15",
-    audioUrl: "/audio/allah/allah-48.wav",
+    audioUrl: "/audio/allah/allah-48.mp3",
     category: 'allah',
   },
   {
@@ -635,7 +635,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Resurrector / The Raiser",
     explanation: "The One who resurrects all creation on the Day of Judgment to face accountability.",
     reference: "Qur'an — Surah Al-Hajj 22:7; Surah Yasin 36:52",
-    audioUrl: "/audio/allah/allah-49.wav",
+    audioUrl: "/audio/allah/allah-49.mp3",
     category: 'allah',
   },
   {
@@ -648,7 +648,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Witnessing / The Witness",
     explanation: "The One from whom nothing is absent or hidden; He witnesses all occurrences.",
     reference: "Qur'an — Surah Al-Hajj 22:17; Surah Al-Ma'idah 5:117",
-    audioUrl: "/audio/allah/allah-50.wav",
+    audioUrl: "/audio/allah/allah-50.mp3",
     category: 'allah',
   },
   {
@@ -661,7 +661,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Absolute Truth / Reality",
     explanation: "The One whose existence, words, promises, and justice are the definitive truth.",
     reference: "Qur'an — Surah Ta-Ha 20:114; Surah Al-Hajj 22:6",
-    audioUrl: "/audio/allah/allah-51.wav",
+    audioUrl: "/audio/allah/allah-51.mp3",
     category: 'allah',
   },
   {
@@ -674,7 +674,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Trustee / The Disposer of Affairs",
     explanation: "The One who reliably manages the affairs of those who place their trust in Him.",
     reference: "Qur'an — Surah Al-Imran 3:173; Surah Al-An'am 6:102",
-    audioUrl: "/audio/allah/allah-52.wav",
+    audioUrl: "/audio/allah/allah-52.mp3",
     category: 'allah',
   },
   {
@@ -687,7 +687,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Strong / The Powerful",
     explanation: "The Possessor of inexhaustible, supreme strength that never wearies.",
     reference: "Qur'an — Surah Al-Hajj 22:40; Surah Al-Ahzab 33:25",
-    audioUrl: "/audio/allah/allah-53.wav",
+    audioUrl: "/audio/allah/allah-53.mp3",
     category: 'allah',
   },
   {
@@ -700,7 +700,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Firm / The Steadfast",
     explanation: "The One whose power is unshakeable and whose firm resolve never wavers.",
     reference: "Qur'an — Surah Adh-Dhariyat 51:58",
-    audioUrl: "/audio/allah/allah-54.wav",
+    audioUrl: "/audio/allah/allah-54.mp3",
     category: 'allah',
   },
   {
@@ -713,7 +713,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Protecting Friend / Guardian",
     explanation: "The One who lovingly aids, guides, and protects His faithful servants.",
     reference: "Qur'an — Surah Ash-Shura 42:28; Surah Al-Baqarah 2:257",
-    audioUrl: "/audio/allah/allah-55.wav",
+    audioUrl: "/audio/allah/allah-55.mp3",
     category: 'allah',
   },
   {
@@ -726,7 +726,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Praiseworthy / All-Praised",
     explanation: "The One who is inherently praised and thanked for His perfection and bounties.",
     reference: "Qur'an — Surah Ibrahim 14:8; Surah Luqman 31:26",
-    audioUrl: "/audio/allah/allah-56.wav",
+    audioUrl: "/audio/allah/allah-56.mp3",
     category: 'allah',
   },
   {
@@ -739,7 +739,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Appraiser / The Accounter",
     explanation: "The One who knows the precise number and measure of all things in existence.",
     reference: "Qur'an — Surah Maryam 19:94; Surah Al-Jinn 72:28",
-    audioUrl: "/audio/allah/allah-57.wav",
+    audioUrl: "/audio/allah/allah-57.mp3",
     category: 'allah',
   },
   {
@@ -752,7 +752,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Originator / The Initiator",
     explanation: "The One who creates everything for the first time without any prior model.",
     reference: "Qur'an — Surah Al-Buruj 85:13; Surah Al-Ankabut 29:19",
-    audioUrl: "/audio/allah/allah-58.wav",
+    audioUrl: "/audio/allah/allah-58.mp3",
     category: 'allah',
   },
   {
@@ -765,7 +765,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Restorer / The Recreator",
     explanation: "The One who restores life and repeats creation after it has perished.",
     reference: "Qur'an — Surah Al-Buruj 85:13; Surah Ar-Rum 30:27",
-    audioUrl: "/audio/allah/allah-59.wav",
+    audioUrl: "/audio/allah/allah-59.mp3",
     category: 'allah',
   },
   {
@@ -778,7 +778,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Giver of Life",
     explanation: "The One who bestows life upon lifeless matter and revives hearts with faith.",
     reference: "Qur'an — Surah Ar-Rum 30:50; Surah Fussilat 41:39",
-    audioUrl: "/audio/allah/allah-60.wav",
+    audioUrl: "/audio/allah/allah-60.mp3",
     category: 'allah',
   },
   {
@@ -791,7 +791,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Creator of Death / The Destroyer",
     explanation: "The One who decrees death for all living beings at their appointed time.",
     reference: "Qur'an — Surah Al-Baqarah 2:258; Surah Al-Mu'minun 23:80",
-    audioUrl: "/audio/allah/allah-61.wav",
+    audioUrl: "/audio/allah/allah-61.mp3",
     category: 'allah',
   },
   {
@@ -804,7 +804,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Ever-Living",
     explanation: "The One who has eternal, absolute life with neither beginning nor end.",
     reference: "Qur'an — Surah Al-Baqarah 2:255; Surah Ta-Ha 20:111",
-    audioUrl: "/audio/allah/allah-62.wav",
+    audioUrl: "/audio/allah/allah-62.mp3",
     category: 'allah',
   },
   {
@@ -817,7 +817,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Self-Sustaining / The Sustainer of All",
     explanation: "The One who exists independently and upholds and maintains the entire creation.",
     reference: "Qur'an — Surah Al-Baqarah 2:255; Surah Al-Imran 3:2",
-    audioUrl: "/audio/allah/allah-63.wav",
+    audioUrl: "/audio/allah/allah-63.mp3",
     category: 'allah',
   },
   {
@@ -830,7 +830,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Finder / The Unfailing",
     explanation: "The One who lacks nothing, finds everything He desires, and is free from need.",
     reference: "Qur'an — Surah Ad-Duha 93:6-8; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-64.wav",
+    audioUrl: "/audio/allah/allah-64.mp3",
     category: 'allah',
   },
   {
@@ -843,7 +843,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Noble / The Illustrious",
     explanation: "The One who possesses abundant generosity, grandeur, and excellence.",
     reference: "Qur'an — Surah Hud 11:73; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-65.wav",
+    audioUrl: "/audio/allah/allah-65.mp3",
     category: 'allah',
   },
   {
@@ -856,7 +856,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The One / The Unique",
     explanation: "The One who is unique in His essence and has no partner in His divinity.",
     reference: "Qur'an — Surah Al-Baqarah 2:163; Surah Al-Ikhlas 112:1",
-    audioUrl: "/audio/allah/allah-66.wav",
+    audioUrl: "/audio/allah/allah-66.mp3",
     category: 'allah',
   },
   {
@@ -869,7 +869,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Only One / The Indivisible",
     explanation: "The Indivisible One who has never had an equal, partner, offspring, or rival.",
     reference: "Qur'an — Surah Al-Ikhlas 112:1",
-    audioUrl: "/audio/allah/allah-67.wav",
+    audioUrl: "/audio/allah/allah-67.mp3",
     category: 'allah',
   },
   {
@@ -882,7 +882,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Eternal Refuge / The Self-Sufficient",
     explanation: "The One who needs nothing, while all of creation depends on Him for every need.",
     reference: "Qur'an — Surah Al-Ikhlas 112:2",
-    audioUrl: "/audio/allah/allah-68.wav",
+    audioUrl: "/audio/allah/allah-68.mp3",
     category: 'allah',
   },
   {
@@ -895,7 +895,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Capable / The Omnipotent",
     explanation: "The One who has absolute ability to do whatever He wills without impediment.",
     reference: "Qur'an — Surah Al-An'am 6:65; Surah Al-Baqarah 2:20",
-    audioUrl: "/audio/allah/allah-69.wav",
+    audioUrl: "/audio/allah/allah-69.mp3",
     category: 'allah',
   },
   {
@@ -908,7 +908,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The All-Determining / Dominant",
     explanation: "The One whose supreme power effortlessly executes all decrees across existence.",
     reference: "Qur'an — Surah Al-Qamar 54:42; Surah Al-Kahf 18:45",
-    audioUrl: "/audio/allah/allah-70.wav",
+    audioUrl: "/audio/allah/allah-70.mp3",
     category: 'allah',
   },
   {
@@ -921,7 +921,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Advancer / The Expediter",
     explanation: "The One who brings forward what He wills according to divine order and wisdom.",
     reference: "Sahih al-Bukhari 1120; Sahih Muslim 771",
-    audioUrl: "/audio/allah/allah-71.wav",
+    audioUrl: "/audio/allah/allah-71.mp3",
     category: 'allah',
   },
   {
@@ -934,7 +934,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Delayer / The Postponer",
     explanation: "The One who holds back or delays what He wills in His supreme decree.",
     reference: "Sahih al-Bukhari 1120; Sahih Muslim 771",
-    audioUrl: "/audio/allah/allah-72.wav",
+    audioUrl: "/audio/allah/allah-72.mp3",
     category: 'allah',
   },
   {
@@ -947,7 +947,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The First (Without Beginning)",
     explanation: "The One who existed before anything else was brought into creation.",
     reference: "Qur'an — Surah Al-Hadid 57:3; Sahih Muslim 2713",
-    audioUrl: "/audio/allah/allah-73.wav",
+    audioUrl: "/audio/allah/allah-73.mp3",
     category: 'allah',
   },
   {
@@ -960,7 +960,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Last (Without End)",
     explanation: "The One who remains forever after all created things have passed away.",
     reference: "Qur'an — Surah Al-Hadid 57:3; Sahih Muslim 2713",
-    audioUrl: "/audio/allah/allah-74.wav",
+    audioUrl: "/audio/allah/allah-74.mp3",
     category: 'allah',
   },
   {
@@ -973,7 +973,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Manifest / The Evident",
     explanation: "The One whose existence and power are clearly manifest through His creation.",
     reference: "Qur'an — Surah Al-Hadid 57:3; Sahih Muslim 2713",
-    audioUrl: "/audio/allah/allah-75.wav",
+    audioUrl: "/audio/allah/allah-75.mp3",
     category: 'allah',
   },
   {
@@ -986,7 +986,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Hidden / The Inward",
     explanation: "The One who is concealed from physical vision and encompasses the innermost secrets.",
     reference: "Qur'an — Surah Al-Hadid 57:3; Sahih Muslim 2713",
-    audioUrl: "/audio/allah/allah-76.wav",
+    audioUrl: "/audio/allah/allah-76.mp3",
     category: 'allah',
   },
   {
@@ -999,7 +999,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Sole Governor / Ruler",
     explanation: "The One who manages, plans, and administers the entire cosmos.",
     reference: "Qur'an — Surah Ar-Ra'd 13:11",
-    audioUrl: "/audio/allah/allah-77.wav",
+    audioUrl: "/audio/allah/allah-77.mp3",
     category: 'allah',
   },
   {
@@ -1012,7 +1012,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Self-Exalted / The Most High",
     explanation: "The One exalted far above all attributes of created beings and human comprehension.",
     reference: "Qur'an — Surah Ar-Ra'd 13:9",
-    audioUrl: "/audio/allah/allah-78.wav",
+    audioUrl: "/audio/allah/allah-78.mp3",
     category: 'allah',
   },
   {
@@ -1025,7 +1025,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Source of All Goodness / Beneficent",
     explanation: "The One of infinite kindness, beneficence, and gentleness to His creation.",
     reference: "Qur'an — Surah At-Tur 52:28",
-    audioUrl: "/audio/allah/allah-79.wav",
+    audioUrl: "/audio/allah/allah-79.mp3",
     category: 'allah',
   },
   {
@@ -1038,7 +1038,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Accepter of Repentance",
     explanation: "The One who continuously turns with forgiveness toward those who sincerely repent.",
     reference: "Qur'an — Surah Al-Baqarah 2:37; Surah An-Nur 24:10",
-    audioUrl: "/audio/allah/allah-80.wav",
+    audioUrl: "/audio/allah/allah-80.mp3",
     category: 'allah',
   },
   {
@@ -1051,7 +1051,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Avenger / The Just Retributor",
     explanation: "The One who justly punishes stubborn oppressors and wrongdoers.",
     reference: "Qur'an — Surah As-Sajdah 32:22; Surah Az-Zukhruf 43:41",
-    audioUrl: "/audio/allah/allah-81.wav",
+    audioUrl: "/audio/allah/allah-81.mp3",
     category: 'allah',
   },
   {
@@ -1064,7 +1064,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Supreme Pardoner / Effacer of Sins",
     explanation: "The One who completely erases transgressions and treats them as if they never occurred.",
     reference: "Qur'an — Surah An-Nisa 4:99; Surah Al-Hajj 22:60",
-    audioUrl: "/audio/allah/allah-82.wav",
+    audioUrl: "/audio/allah/allah-82.mp3",
     category: 'allah',
   },
   {
@@ -1077,7 +1077,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Kind / Clement",
     explanation: "The One filled with the tenderest compassion, pity, and tender mercy.",
     reference: "Qur'an — Surah Al-Baqarah 2:207; Surah An-Nahl 16:7",
-    audioUrl: "/audio/allah/allah-83.wav",
+    audioUrl: "/audio/allah/allah-83.mp3",
     category: 'allah',
   },
   {
@@ -1090,7 +1090,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Owner of All Sovereignty",
     explanation: "The One who owns all kingdom, dominion, and power throughout creation eternally.",
     reference: "Qur'an — Surah Al-Imran 3:26",
-    audioUrl: "/audio/allah/allah-84.wav",
+    audioUrl: "/audio/allah/allah-84.mp3",
     category: 'allah',
   },
   {
@@ -1103,7 +1103,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "Lord of Majesty and Generosity",
     explanation: "The Possessor of absolute grandeur, awe, reverence, and boundless honor.",
     reference: "Qur'an — Surah Ar-Rahman 55:27, 55:78",
-    audioUrl: "/audio/allah/allah-85.wav",
+    audioUrl: "/audio/allah/allah-85.mp3",
     category: 'allah',
   },
   {
@@ -1116,7 +1116,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Equitable / The Requiter",
     explanation: "The One who establishes complete fairness and protects the oppressed from injustice.",
     reference: "Qur'an — Surah Al-Imran 3:18; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-86.wav",
+    audioUrl: "/audio/allah/allah-86.mp3",
     category: 'allah',
   },
   {
@@ -1129,7 +1129,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Gatherer / The Unifier",
     explanation: "The One who will gather all human beings on the Day of Resurrection without doubt.",
     reference: "Qur'an — Surah Al-Imran 3:9; Surah An-Nisa 4:140",
-    audioUrl: "/audio/allah/allah-87.wav",
+    audioUrl: "/audio/allah/allah-87.mp3",
     category: 'allah',
   },
   {
@@ -1142,7 +1142,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Self-Sufficient / Rich",
     explanation: "The One who is completely rich in Himself, having no need of anything or anyone.",
     reference: "Qur'an — Surah Al-Baqarah 2:267; Surah Fatir 35:15",
-    audioUrl: "/audio/allah/allah-88.wav",
+    audioUrl: "/audio/allah/allah-88.mp3",
     category: 'allah',
   },
   {
@@ -1155,7 +1155,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Enricher / Bestower of Wealth",
     explanation: "The One who enriches His servants with wealth, contentment, and spiritual tranquility.",
     reference: "Qur'an — Surah An-Najm 53:48; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-89.wav",
+    audioUrl: "/audio/allah/allah-89.mp3",
     category: 'allah',
   },
   {
@@ -1168,7 +1168,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Withholder / The Preventer",
     explanation: "The One who protects by preventing harm, granting or withholding in accordance with wisdom.",
     reference: "Sahih al-Bukhari 6330; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-90.wav",
+    audioUrl: "/audio/allah/allah-90.mp3",
     category: 'allah',
   },
   {
@@ -1181,7 +1181,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Creator of the Harmful",
     explanation: "The One without whose divine permission no harm or affliction can touch anyone.",
     reference: "Qur'an — Surah Al-An'am 6:17; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-91.wav",
+    audioUrl: "/audio/allah/allah-91.mp3",
     category: 'allah',
   },
   {
@@ -1194,7 +1194,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Creator of Good / Benefiter",
     explanation: "The Source of all benefit, blessing, and good that reaches any part of creation.",
     reference: "Qur'an — Surah Al-An'am 6:17; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-92.wav",
+    audioUrl: "/audio/allah/allah-92.mp3",
     category: 'allah',
   },
   {
@@ -1207,7 +1207,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Light / The Illuminator",
     explanation: "The Light of the heavens and the earth who illuminates hearts with guidance and faith.",
     reference: "Qur'an — Surah An-Nur 24:35",
-    audioUrl: "/audio/allah/allah-93.wav",
+    audioUrl: "/audio/allah/allah-93.mp3",
     category: 'allah',
   },
   {
@@ -1220,7 +1220,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Guide / Waymaker",
     explanation: "The One who directs hearts to the straight path of truth, righteousness, and salvation.",
     reference: "Qur'an — Surah Al-Hajj 22:54; Surah Al-Furqan 25:31",
-    audioUrl: "/audio/allah/allah-94.wav",
+    audioUrl: "/audio/allah/allah-94.mp3",
     category: 'allah',
   },
   {
@@ -1233,7 +1233,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Incomparable Originator",
     explanation: "The One who originates creation with unmatched, wondrous beauty and originality.",
     reference: "Qur'an — Surah Al-Baqarah 2:117; Surah Al-An'am 6:101",
-    audioUrl: "/audio/allah/allah-95.wav",
+    audioUrl: "/audio/allah/allah-95.mp3",
     category: 'allah',
   },
   {
@@ -1246,7 +1246,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Everlasting / The Eternal",
     explanation: "The One whose existence has no end and who outlives all of mortal creation.",
     reference: "Qur'an — Surah Ar-Rahman 55:27; Surah Al-Qasas 28:88",
-    audioUrl: "/audio/allah/allah-96.wav",
+    audioUrl: "/audio/allah/allah-96.mp3",
     category: 'allah',
   },
   {
@@ -1259,7 +1259,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Supreme Inheritor",
     explanation: "The Ultimate Heir to whom all possession returns after all creation ceases.",
     reference: "Qur'an — Surah Al-Hijr 15:23; Surah Maryam 19:40",
-    audioUrl: "/audio/allah/allah-97.wav",
+    audioUrl: "/audio/allah/allah-97.mp3",
     category: 'allah',
   },
   {
@@ -1272,7 +1272,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Righteous Guide / Infallible Director",
     explanation: "The One who guides all affairs toward the most sound and beneficial conclusions.",
     reference: "Qur'an — Surah Al-Kahf 18:10; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-98.wav",
+    audioUrl: "/audio/allah/allah-98.mp3",
     category: 'allah',
   },
   {
@@ -1285,7 +1285,7 @@ export const ASMA_UL_HUSNA: IslamicNameItem[] = [
     english: "The Most Patient / Enduring",
     explanation: "The One who does not hurry to penalize sinners and patiently awaits their turning to Him.",
     reference: "Sahih al-Bukhari 7378; Jami' at-Tirmidhi 3507",
-    audioUrl: "/audio/allah/allah-99.wav",
+    audioUrl: "/audio/allah/allah-99.mp3",
     category: 'allah',
   },
 ];

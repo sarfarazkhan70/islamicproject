@@ -4,7 +4,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-01',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-01.wav',
+    audioUrl: '/audio/prophet/prophet-01.mp3',
     number: 1,
     arabic: 'مُحَمَّدٌ ﷺ',
     transliteration: 'Muhammad ﷺ',
@@ -17,7 +17,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-02',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-02.wav',
+    audioUrl: '/audio/prophet/prophet-02.mp3',
     number: 2,
     arabic: 'أَحْمَدُ ﷺ',
     transliteration: 'Ahmad ﷺ',
@@ -30,7 +30,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-03',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-03.wav',
+    audioUrl: '/audio/prophet/prophet-03.mp3',
     number: 3,
     arabic: 'الْمَاحِي ﷺ',
     transliteration: 'Al-Mahi ﷺ',
@@ -43,7 +43,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-04',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-04.wav',
+    audioUrl: '/audio/prophet/prophet-04.mp3',
     number: 4,
     arabic: 'الْحَاشِرُ ﷺ',
     transliteration: 'Al-Hashir ﷺ',
@@ -56,7 +56,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-05',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-05.wav',
+    audioUrl: '/audio/prophet/prophet-05.mp3',
     number: 5,
     arabic: 'الْعَاقِبُ ﷺ',
     transliteration: "Al-'Aqib ﷺ",
@@ -69,7 +69,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-06',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-06.wav',
+    audioUrl: '/audio/prophet/prophet-06.mp3',
     number: 6,
     arabic: 'خَاتَمُ النَّبِيِّينَ ﷺ',
     transliteration: 'Khatam an-Nabiyyin ﷺ',
@@ -82,7 +82,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-07',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-07.wav',
+    audioUrl: '/audio/prophet/prophet-07.mp3',
     number: 7,
     arabic: 'رَحْمَةٌ لِّلْعَالَمِينَ ﷺ',
     transliteration: "Rahmatun lil-'Alamin ﷺ",
@@ -95,7 +95,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-08',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-08.wav',
+    audioUrl: '/audio/prophet/prophet-08.mp3',
     number: 8,
     arabic: 'النَّبِيُّ الْأُمِّيُّ ﷺ',
     transliteration: 'An-Nabi al-Ummi ﷺ',
@@ -108,7 +108,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-09',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-09.wav',
+    audioUrl: '/audio/prophet/prophet-09.mp3',
     number: 9,
     arabic: 'الشَّاهِدُ ﷺ',
     transliteration: 'Ash-Shahid ﷺ',
@@ -121,7 +121,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-10',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-10.wav',
+    audioUrl: '/audio/prophet/prophet-10.mp3',
     number: 10,
     arabic: 'الْمُبَشِّرُ ﷺ',
     transliteration: 'Al-Mubashshir ﷺ',
@@ -134,7 +134,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-11',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-11.wav',
+    audioUrl: '/audio/prophet/prophet-11.mp3',
     number: 11,
     arabic: 'النَّذِيرُ ﷺ',
     transliteration: 'An-Nadhir ﷺ',
@@ -147,7 +147,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-12',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-12.wav',
+    audioUrl: '/audio/prophet/prophet-12.mp3',
     number: 12,
     arabic: 'الدَّاعِي إِلَى اللَّهِ ﷺ',
     transliteration: "Ad-Da'i ila Allah ﷺ",
@@ -160,7 +160,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-13',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-13.wav',
+    audioUrl: '/audio/prophet/prophet-13.mp3',
     number: 13,
     arabic: 'السِّرَاجُ الْمُنِيرُ ﷺ',
     transliteration: 'As-Siraj al-Munir ﷺ',
@@ -173,7 +173,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-14',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-14.wav',
+    audioUrl: '/audio/prophet/prophet-14.mp3',
     number: 14,
     arabic: 'الْمُزَّمِّلُ ﷺ',
     transliteration: 'Al-Muzzammil ﷺ',
@@ -186,7 +186,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-15',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-15.wav',
+    audioUrl: '/audio/prophet/prophet-15.mp3',
     number: 15,
     arabic: 'الْمُدَّثِّرُ ﷺ',
     transliteration: 'Al-Muddaththir ﷺ',
@@ -199,7 +199,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-16',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-16.wav',
+    audioUrl: '/audio/prophet/prophet-16.mp3',
     number: 16,
     arabic: 'نَبِيُّ الرَّحْمَةِ ﷺ',
     transliteration: 'Nabiyy-ur-Rahmah ﷺ',
@@ -212,7 +212,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-17',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-17.wav',
+    audioUrl: '/audio/prophet/prophet-17.mp3',
     number: 17,
     arabic: 'نَبِيُّ التَّوْبَةِ ﷺ',
     transliteration: 'Nabiyy-ut-Tawbah ﷺ',
@@ -225,7 +225,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-18',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-18.wav',
+    audioUrl: '/audio/prophet/prophet-18.mp3',
     number: 18,
     arabic: 'الْمُتَوَكِّلُ ﷺ',
     transliteration: 'Al-Mutawakkil ﷺ',
@@ -238,7 +238,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-19',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-19.wav',
+    audioUrl: '/audio/prophet/prophet-19.mp3',
     number: 19,
     arabic: 'الْأَمِينُ ﷺ',
     transliteration: 'Al-Amin ﷺ',
@@ -251,7 +251,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-20',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-20.wav',
+    audioUrl: '/audio/prophet/prophet-20.mp3',
     number: 20,
     arabic: 'الصَّادِقُ ﷺ',
     transliteration: 'As-Sadiq ﷺ',
@@ -264,7 +264,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-21',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-21.wav',
+    audioUrl: '/audio/prophet/prophet-21.mp3',
     number: 21,
     arabic: 'الْمُصْطَفَى ﷺ',
     transliteration: 'Al-Mustafa ﷺ',
@@ -277,7 +277,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-22',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-22.wav',
+    audioUrl: '/audio/prophet/prophet-22.mp3',
     number: 22,
     arabic: 'الْمُخْتَارُ ﷺ',
     transliteration: 'Al-Mukhtar ﷺ',
@@ -290,7 +290,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-23',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-23.wav',
+    audioUrl: '/audio/prophet/prophet-23.mp3',
     number: 23,
     arabic: 'سَيِّدُ وَلَدِ آدَمَ ﷺ',
     transliteration: 'Sayyid Walad Adam ﷺ',
@@ -303,7 +303,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-24',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-24.wav',
+    audioUrl: '/audio/prophet/prophet-24.mp3',
     number: 24,
     arabic: 'صَاحِبُ الْمَقَامِ الْمَحْمُودِ ﷺ',
     transliteration: 'Sahib al-Maqam al-Mahmud ﷺ',
@@ -316,7 +316,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-25',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-25.wav',
+    audioUrl: '/audio/prophet/prophet-25.mp3',
     number: 25,
     arabic: 'صَاحِبُ الْكَوْثَرِ ﷺ',
     transliteration: 'Sahib al-Kawthar ﷺ',
@@ -329,7 +329,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-26',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-26.wav',
+    audioUrl: '/audio/prophet/prophet-26.mp3',
     number: 26,
     arabic: 'شَفِيعُ الْمُذْنِبِينَ ﷺ',
     transliteration: "Shafi'-ul-Mudhnibin ﷺ",
@@ -342,7 +342,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-27',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-27.wav',
+    audioUrl: '/audio/prophet/prophet-27.mp3',
     number: 27,
     arabic: 'رَءُوفٌ رَّحِيمٌ ﷺ',
     transliteration: "Ra'ufun Rahim ﷺ",
@@ -355,7 +355,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-28',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-28.wav',
+    audioUrl: '/audio/prophet/prophet-28.mp3',
     number: 28,
     arabic: 'الْهَادِي ﷺ',
     transliteration: 'Al-Hadi ﷺ',
@@ -368,7 +368,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-29',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-29.wav',
+    audioUrl: '/audio/prophet/prophet-29.mp3',
     number: 29,
     arabic: 'الْمُذَكِّرُ ﷺ',
     transliteration: 'Al-Mudhakkir ﷺ',
@@ -381,7 +381,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-30',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-30.wav',
+    audioUrl: '/audio/prophet/prophet-30.mp3',
     number: 30,
     arabic: 'الْقَاسِمُ ﷺ',
     transliteration: 'Al-Qasim ﷺ',
@@ -394,7 +394,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-31',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-31.wav',
+    audioUrl: '/audio/prophet/prophet-31.mp3',
     number: 31,
     arabic: 'الْمُقَفَّى ﷺ',
     transliteration: 'Al-Muqaffa ﷺ',
@@ -407,7 +407,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-32',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-32.wav',
+    audioUrl: '/audio/prophet/prophet-32.mp3',
     number: 32,
     arabic: 'نَبِيُّ الْمَلَاحِمِ ﷺ',
     transliteration: 'Nabiyy-ul-Malahim ﷺ',
@@ -420,7 +420,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-33',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-33.wav',
+    audioUrl: '/audio/prophet/prophet-33.mp3',
     number: 33,
     arabic: 'عَبْدُ اللَّهِ ﷺ',
     transliteration: 'Abdullah ﷺ',
@@ -433,7 +433,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-34',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-34.wav',
+    audioUrl: '/audio/prophet/prophet-34.mp3',
     number: 34,
     arabic: 'حَبِيبُ اللَّهِ ﷺ',
     transliteration: 'Habibullah ﷺ',
@@ -446,7 +446,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-35',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-35.wav',
+    audioUrl: '/audio/prophet/prophet-35.mp3',
     number: 35,
     arabic: 'خَلِيلُ الرَّحْمَنِ ﷺ',
     transliteration: 'Khalil-ur-Rahman ﷺ',
@@ -459,7 +459,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-36',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-36.wav',
+    audioUrl: '/audio/prophet/prophet-36.mp3',
     number: 36,
     arabic: 'صَفِيُّ اللَّهِ ﷺ',
     transliteration: 'Safiyyullah ﷺ',
@@ -472,7 +472,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-37',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-37.wav',
+    audioUrl: '/audio/prophet/prophet-37.mp3',
     number: 37,
     arabic: 'نَجِيُّ اللَّهِ ﷺ',
     transliteration: 'Najiyyullah ﷺ',
@@ -485,7 +485,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-38',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-38.wav',
+    audioUrl: '/audio/prophet/prophet-38.mp3',
     number: 38,
     arabic: 'كَلِيمُ اللَّهِ ﷺ',
     transliteration: 'Kalimullah ﷺ',
@@ -498,7 +498,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-39',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-39.wav',
+    audioUrl: '/audio/prophet/prophet-39.mp3',
     number: 39,
     arabic: 'سَيِّدُ الْمُرْسَلِينَ ﷺ',
     transliteration: 'Sayyid-ul-Mursalin ﷺ',
@@ -511,7 +511,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-40',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-40.wav',
+    audioUrl: '/audio/prophet/prophet-40.mp3',
     number: 40,
     arabic: 'إِمَامُ الْمُتَّقِينَ ﷺ',
     transliteration: 'Imam-ul-Muttaqin ﷺ',
@@ -524,7 +524,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-41',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-41.wav',
+    audioUrl: '/audio/prophet/prophet-41.mp3',
     number: 41,
     arabic: 'قَائِدُ الْغُرِّ الْمُحَجَّلِينَ ﷺ',
     transliteration: "Qa'id-ul-Ghurr-il-Muhajjalin ﷺ",
@@ -537,7 +537,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-42',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-42.wav',
+    audioUrl: '/audio/prophet/prophet-42.mp3',
     number: 42,
     arabic: 'صَاحِبُ اللِّوَاءِ الْمَعْقُودِ ﷺ',
     transliteration: "Sahib-ul-Liwa'il-Ma'qud ﷺ",
@@ -550,7 +550,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-43',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-43.wav',
+    audioUrl: '/audio/prophet/prophet-43.mp3',
     number: 43,
     arabic: 'صَاحِبُ الْوَسِيلَةِ وَالْفَضِيلَةِ ﷺ',
     transliteration: 'Sahib-ul-Wasilah wal-Fadilah ﷺ',
@@ -563,7 +563,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-44',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-44.wav',
+    audioUrl: '/audio/prophet/prophet-44.mp3',
     number: 44,
     arabic: 'صَاحِبُ التَّاجِ وَالْمِعْرَاجِ ﷺ',
     transliteration: "Sahib-ut-Taj wal-Mi'raj ﷺ",
@@ -576,7 +576,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-45',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-45.wav',
+    audioUrl: '/audio/prophet/prophet-45.mp3',
     number: 45,
     arabic: 'صَاحِبُ الْحُجَّةِ وَالْبُرْهَانِ ﷺ',
     transliteration: 'Sahib-ul-Hujjah wal-Burhan ﷺ',
@@ -589,7 +589,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-46',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-46.wav',
+    audioUrl: '/audio/prophet/prophet-46.mp3',
     number: 46,
     arabic: 'الْفَاتِحُ ﷺ',
     transliteration: 'Al-Fatih ﷺ',
@@ -602,7 +602,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-47',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-47.wav',
+    audioUrl: '/audio/prophet/prophet-47.mp3',
     number: 47,
     arabic: 'النُّورُ ﷺ',
     transliteration: 'An-Nur ﷺ',
@@ -615,7 +615,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-48',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-48.wav',
+    audioUrl: '/audio/prophet/prophet-48.mp3',
     number: 48,
     arabic: 'الْبُرْهَانُ ﷺ',
     transliteration: 'Al-Burhan ﷺ',
@@ -628,7 +628,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-49',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-49.wav',
+    audioUrl: '/audio/prophet/prophet-49.mp3',
     number: 49,
     arabic: 'الْبَشِيرُ ﷺ',
     transliteration: 'Al-Bashir ﷺ',
@@ -641,7 +641,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-50',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-50.wav',
+    audioUrl: '/audio/prophet/prophet-50.mp3',
     number: 50,
     arabic: 'الْمُنْذِرُ ﷺ',
     transliteration: 'Al-Mundhir ﷺ',
@@ -654,7 +654,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-51',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-51.wav',
+    audioUrl: '/audio/prophet/prophet-51.mp3',
     number: 51,
     arabic: 'الْمُصْلِحُ ﷺ',
     transliteration: 'Al-Muslih ﷺ',
@@ -667,7 +667,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-52',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-52.wav',
+    audioUrl: '/audio/prophet/prophet-52.mp3',
     number: 52,
     arabic: 'الْكَرِيمُ ﷺ',
     transliteration: 'Al-Karim ﷺ',
@@ -680,7 +680,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-53',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-53.wav',
+    audioUrl: '/audio/prophet/prophet-53.mp3',
     number: 53,
     arabic: 'الْعَزِيزُ ﷺ',
     transliteration: 'Al-Aziz ﷺ',
@@ -693,7 +693,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-54',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-54.wav',
+    audioUrl: '/audio/prophet/prophet-54.mp3',
     number: 54,
     arabic: 'الْمَنْصُورُ ﷺ',
     transliteration: 'Al-Mansur ﷺ',
@@ -706,7 +706,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-55',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-55.wav',
+    audioUrl: '/audio/prophet/prophet-55.mp3',
     number: 55,
     arabic: 'الْمُؤَيَّدُ ﷺ',
     transliteration: "Al-Mu'ayyad ﷺ",
@@ -719,7 +719,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-56',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-56.wav',
+    audioUrl: '/audio/prophet/prophet-56.mp3',
     number: 56,
     arabic: 'الْمُجْتَبَى ﷺ',
     transliteration: 'Al-Mujtaba ﷺ',
@@ -732,7 +732,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-57',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-57.wav',
+    audioUrl: '/audio/prophet/prophet-57.mp3',
     number: 57,
     arabic: 'الْمُرْتَضَى ﷺ',
     transliteration: 'Al-Murtada ﷺ',
@@ -745,7 +745,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-58',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-58.wav',
+    audioUrl: '/audio/prophet/prophet-58.mp3',
     number: 58,
     arabic: 'طٰهٰ ﷺ',
     transliteration: 'Ta-Ha ﷺ',
@@ -758,7 +758,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-59',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-59.wav',
+    audioUrl: '/audio/prophet/prophet-59.mp3',
     number: 59,
     arabic: 'يٰسٓ ﷺ',
     transliteration: 'Ya-Sin ﷺ',
@@ -771,7 +771,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-60',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-60.wav',
+    audioUrl: '/audio/prophet/prophet-60.mp3',
     number: 60,
     arabic: 'الْحَقُّ الْمُبِينُ ﷺ',
     transliteration: 'Al-Haqq-ul-Mubin ﷺ',
@@ -784,7 +784,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-61',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-61.wav',
+    audioUrl: '/audio/prophet/prophet-61.mp3',
     number: 61,
     arabic: 'الْعُرْوَةُ الْوُثْقَى ﷺ',
     transliteration: "Al-'Urwat-ul-Wuthqa ﷺ",
@@ -797,7 +797,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-62',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-62.wav',
+    audioUrl: '/audio/prophet/prophet-62.mp3',
     number: 62,
     arabic: 'الصِّرَاطُ الْمُسْتَقِيمُ ﷺ',
     transliteration: 'As-Sirat-ul-Mustaqim ﷺ',
@@ -810,7 +810,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-63',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-63.wav',
+    audioUrl: '/audio/prophet/prophet-63.mp3',
     number: 63,
     arabic: 'النَّجْمُ الثَّاقِبُ ﷺ',
     transliteration: 'An-Najm-uth-Thaqib ﷺ',
@@ -823,7 +823,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-64',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-64.wav',
+    audioUrl: '/audio/prophet/prophet-64.mp3',
     number: 64,
     arabic: 'الْغَوْثُ ﷺ',
     transliteration: 'Al-Ghawth ﷺ',
@@ -836,7 +836,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-65',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-65.wav',
+    audioUrl: '/audio/prophet/prophet-65.mp3',
     number: 65,
     arabic: 'الْغِيَاثُ ﷺ',
     transliteration: 'Al-Ghiyath ﷺ',
@@ -849,7 +849,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-66',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-66.wav',
+    audioUrl: '/audio/prophet/prophet-66.mp3',
     number: 66,
     arabic: 'نِعْمَةُ اللَّهِ ﷺ',
     transliteration: "Ni'matullah ﷺ",
@@ -862,7 +862,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-67',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-67.wav',
+    audioUrl: '/audio/prophet/prophet-67.mp3',
     number: 67,
     arabic: 'هَدِيَّةُ اللَّهِ ﷺ',
     transliteration: 'Hadiyyatullah ﷺ',
@@ -875,7 +875,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-68',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-68.wav',
+    audioUrl: '/audio/prophet/prophet-68.mp3',
     number: 68,
     arabic: 'الْمُعَلِّمُ ﷺ',
     transliteration: "Al-Mu'allim ﷺ",
@@ -888,7 +888,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-69',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-69.wav',
+    audioUrl: '/audio/prophet/prophet-69.mp3',
     number: 69,
     arabic: 'الطَّاهِرُ ﷺ',
     transliteration: 'At-Tahir ﷺ',
@@ -901,7 +901,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-70',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-70.wav',
+    audioUrl: '/audio/prophet/prophet-70.mp3',
     number: 70,
     arabic: 'الْمُطَهَّرُ ﷺ',
     transliteration: 'Al-Mutahhar ﷺ',
@@ -914,7 +914,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-71',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-71.wav',
+    audioUrl: '/audio/prophet/prophet-71.mp3',
     number: 71,
     arabic: 'الطَّيِّبُ ﷺ',
     transliteration: 'At-Tayyib ﷺ',
@@ -927,7 +927,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-72',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-72.wav',
+    audioUrl: '/audio/prophet/prophet-72.mp3',
     number: 72,
     arabic: 'سَيِّدُ الْكَوْنَيْنِ ﷺ',
     transliteration: 'Sayyid-ul-Kawnayn ﷺ',
@@ -940,7 +940,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-73',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-73.wav',
+    audioUrl: '/audio/prophet/prophet-73.mp3',
     number: 73,
     arabic: 'صَاحِبُ الشَّفَاعَةِ الْعُظْمَى ﷺ',
     transliteration: "Sahib-ush-Shafa'at-il-'Uzma ﷺ",
@@ -953,7 +953,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-74',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-74.wav',
+    audioUrl: '/audio/prophet/prophet-74.mp3',
     number: 74,
     arabic: 'الْمُشَفَّعُ ﷺ',
     transliteration: "Al-Mushaffa' ﷺ",
@@ -966,7 +966,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-75',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-75.wav',
+    audioUrl: '/audio/prophet/prophet-75.mp3',
     number: 75,
     arabic: 'وَسِيلَةُ الْخَلْقِ ﷺ',
     transliteration: 'Wasilat-ul-Khalq ﷺ',
@@ -979,7 +979,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-76',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-76.wav',
+    audioUrl: '/audio/prophet/prophet-76.mp3',
     number: 76,
     arabic: 'فَاتِحُ الْخَيْرِ ﷺ',
     transliteration: 'Fatih-ul-Khayr ﷺ',
@@ -992,7 +992,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-77',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-77.wav',
+    audioUrl: '/audio/prophet/prophet-77.mp3',
     number: 77,
     arabic: 'خَاتِمُ الرُّسُلِ ﷺ',
     transliteration: 'Khatim-ur-Rusul ﷺ',
@@ -1005,7 +1005,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-78',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-78.wav',
+    audioUrl: '/audio/prophet/prophet-78.mp3',
     number: 78,
     arabic: 'الْمُقْتَفَى ﷺ',
     transliteration: 'Al-Muqtafa ﷺ',
@@ -1018,7 +1018,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-79',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-79.wav',
+    audioUrl: '/audio/prophet/prophet-79.mp3',
     number: 79,
     arabic: 'عَيْنُ الرَّحْمَةِ ﷺ',
     transliteration: 'Ayn-ur-Rahmah ﷺ',
@@ -1031,7 +1031,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-80',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-80.wav',
+    audioUrl: '/audio/prophet/prophet-80.mp3',
     number: 80,
     arabic: 'عَيْنُ الْغُرِّ ﷺ',
     transliteration: 'Ayn-ul-Ghurr ﷺ',
@@ -1044,7 +1044,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-81',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-81.wav',
+    audioUrl: '/audio/prophet/prophet-81.mp3',
     number: 81,
     arabic: 'حُجَّةُ اللَّهِ عَلَى خَلْقِهِ ﷺ',
     transliteration: "Hujjatullah 'ala Khalqihi ﷺ",
@@ -1057,7 +1057,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-82',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-82.wav',
+    audioUrl: '/audio/prophet/prophet-82.mp3',
     number: 82,
     arabic: 'نُورُ الْهُدَى ﷺ',
     transliteration: 'Nur-ul-Huda ﷺ',
@@ -1070,7 +1070,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-83',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-83.wav',
+    audioUrl: '/audio/prophet/prophet-83.mp3',
     number: 83,
     arabic: 'قَمَرُ التَّمَامِ ﷺ',
     transliteration: 'Qamar-ut-Tamam ﷺ',
@@ -1083,7 +1083,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-84',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-84.wav',
+    audioUrl: '/audio/prophet/prophet-84.mp3',
     number: 84,
     arabic: 'بَدْرُ الدُّجَى ﷺ',
     transliteration: 'Badr-ud-Duja ﷺ',
@@ -1096,7 +1096,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-85',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-85.wav',
+    audioUrl: '/audio/prophet/prophet-85.mp3',
     number: 85,
     arabic: 'شَمْسُ الضُّحَى ﷺ',
     transliteration: 'Shams-ud-Duha ﷺ',
@@ -1109,7 +1109,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-86',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-86.wav',
+    audioUrl: '/audio/prophet/prophet-86.mp3',
     number: 86,
     arabic: 'مِصْبَاحُ الظُّلَمِ ﷺ',
     transliteration: 'Misbah-uz-Zulam ﷺ',
@@ -1122,7 +1122,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-87',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-87.wav',
+    audioUrl: '/audio/prophet/prophet-87.mp3',
     number: 87,
     arabic: 'صَاحِبُ الْقَضِيبِ ﷺ',
     transliteration: 'Sahib-ul-Qadib ﷺ',
@@ -1135,7 +1135,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-88',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-88.wav',
+    audioUrl: '/audio/prophet/prophet-88.mp3',
     number: 88,
     arabic: 'صَاحِبُ النَّعْلَيْنِ ﷺ',
     transliteration: "Sahib-un-Na'layn ﷺ",
@@ -1148,7 +1148,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-89',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-89.wav',
+    audioUrl: '/audio/prophet/prophet-89.mp3',
     number: 89,
     arabic: 'صَاحِبُ الْخَاتَمِ ﷺ',
     transliteration: 'Sahib-ul-Khatam ﷺ',
@@ -1161,7 +1161,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-90',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-90.wav',
+    audioUrl: '/audio/prophet/prophet-90.mp3',
     number: 90,
     arabic: 'رَحِيمُ الْأُمَّةِ ﷺ',
     transliteration: 'Rahim-ul-Ummah ﷺ',
@@ -1174,7 +1174,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-91',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-91.wav',
+    audioUrl: '/audio/prophet/prophet-91.mp3',
     number: 91,
     arabic: 'كَاشِفُ الْغُمَّةِ ﷺ',
     transliteration: 'Kashif-ul-Ghummah ﷺ',
@@ -1187,7 +1187,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-92',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-92.wav',
+    audioUrl: '/audio/prophet/prophet-92.mp3',
     number: 92,
     arabic: 'مُجِيبُ الدَّعْوَةِ ﷺ',
     transliteration: "Mujib-ud-Da'wah ﷺ",
@@ -1200,7 +1200,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-93',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-93.wav',
+    audioUrl: '/audio/prophet/prophet-93.mp3',
     number: 93,
     arabic: 'عَفُوٌّ غَفُورٌ ﷺ',
     transliteration: 'Afuwwun Ghafur ﷺ',
@@ -1213,7 +1213,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-94',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-94.wav',
+    audioUrl: '/audio/prophet/prophet-94.mp3',
     number: 94,
     arabic: 'الْبَرُّ الرَّحِيمُ ﷺ',
     transliteration: 'Al-Barr-ur-Rahim ﷺ',
@@ -1226,7 +1226,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-95',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-95.wav',
+    audioUrl: '/audio/prophet/prophet-95.mp3',
     number: 95,
     arabic: 'الْمُوَفَّقُ ﷺ',
     transliteration: 'Al-Muwaffaq ﷺ',
@@ -1239,7 +1239,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-96',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-96.wav',
+    audioUrl: '/audio/prophet/prophet-96.mp3',
     number: 96,
     arabic: 'مَأْمُونٌ ﷺ',
     transliteration: "Ma'mun ﷺ",
@@ -1252,7 +1252,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-97',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-97.wav',
+    audioUrl: '/audio/prophet/prophet-97.mp3',
     number: 97,
     arabic: 'صَفْوَةُ اللَّهِ ﷺ',
     transliteration: 'Safwatullah ﷺ',
@@ -1265,7 +1265,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-98',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-98.wav',
+    audioUrl: '/audio/prophet/prophet-98.mp3',
     number: 98,
     arabic: 'كَنْزُ الْجُودِ ﷺ',
     transliteration: 'Kanz-ul-Jud ﷺ',
@@ -1278,7 +1278,7 @@ export const ASMA_E_MUSTAFA: IslamicNameItem[] = [
   {
     id: 'prophet-99',
     category: 'prophet',
-    audioUrl: '/audio/prophet/prophet-99.wav',
+    audioUrl: '/audio/prophet/prophet-99.mp3',
     number: 99,
     arabic: 'خَيْرُ خَلْقِ اللَّهِ ﷺ',
     transliteration: 'Khayru Khalqillah ﷺ',

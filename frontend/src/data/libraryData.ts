@@ -1063,6 +1063,9 @@ export function getBookById(id: string): IslamicBook | undefined {
       };
     }
   }
+  if (id === 'sharah-sahih-muslim' || id === 'sharh-sahih-muslim' || id === 'sharah-muslim') {
+    return ISLAMIC_BOOKS.find((b) => b.id === 'sahih-muslim');
+  }
   return ISLAMIC_BOOKS.find((book) => book.id === id);
 }
 

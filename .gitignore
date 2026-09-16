@@ -40,4 +40,6 @@ Thumbs.db
 
 # Large Book PDFs (>50MB, excluded to adhere to GitHub file size limits)
 frontend/public/pdf/sahih_muslim_vol*.pdf
+frontend/public/pdf/sharah_sahih_muslim_vol*.pdf
+
 

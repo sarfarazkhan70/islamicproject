@@ -19,6 +19,7 @@ import { BookChapter, BookSection } from '../../types/library.types';
 import { KanzulImanReader } from '../../components/library/KanzulImanReader';
 import { BukhariReader } from '../../components/library/BukhariReader';
 import { MuslimReader } from '../../components/library/MuslimReader';
+import { SharahMuslimReader } from '../../components/library/SharahMuslimReader';
 import { TirmiziReader } from '../../components/library/TirmiziReader';
 import { HadaiqReader } from '../../components/library/HadaiqReader';
 import { HadaiqHindiReader } from '../../components/library/HadaiqHindiReader';
@@ -37,6 +38,16 @@ export const BookReaderPage: React.FC = () => {
   // If Sahih al-Bukhari, render the dedicated authentic 9-volume PDF-style reader
   if (bookId === 'sahih-al-bukhari') {
     return <BukhariReader />;
+  }
+
+  // If Sharh Sahih Muslim
+  if (
+    bookId === 'sharah-sahih-muslim' ||
+    bookId === 'sharh-sahih-muslim' ||
+    bookId === 'sharah-muslim' ||
+    (bookId === 'sahih-muslim' && (searchParams.get('type') === 'sharh' || searchParams.get('sharh') === '1'))
+  ) {
+    return <SharahMuslimReader />;
   }
 
   // If Sahih Muslim

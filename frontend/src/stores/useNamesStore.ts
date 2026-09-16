@@ -37,51 +37,102 @@ const getInitialFavorites = (): string[] => {
   }
 };
 
-// Pre-initialize dedicated audio instances for instant browser playback
-let allahAudio: HTMLAudioElement | null =
-  typeof Audio !== 'undefined' ? new Audio('/audio/allah/allah-01.wav') : null;
-if (allahAudio) {
-  allahAudio.preload = 'auto';
-  allahAudio.volume = 1.0;
-}
-
-let prophetAudio: HTMLAudioElement | null =
-  typeof Audio !== 'undefined' ? new Audio('/audio/prophet/prophet-01.wav') : null;
-if (prophetAudio) {
-  prophetAudio.preload = 'auto';
-  prophetAudio.volume = 1.0;
-}
+// Dedicated Audio instances with lazy setup
+let allahAudio: HTMLAudioElement | null = null;
+let prophetAudio: HTMLAudioElement | null = null;
 
 let currentTargetEnd: number | null = null;
 let timeUpdateHandler: (() => void) | null = null;
 let endedHandler: (() => void) | null = null;
+let errorHandler: ((e: Event) => void) | null = null;
+
+const selectArabicMaleVoice = (): SpeechSynthesisVoice | null => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+
+  const isExplicitMale = (name: string): boolean => {
+    const lower = name.toLowerCase();
+    return (
+      lower.includes('male') ||
+      lower.includes('maged') ||
+      lower.includes('tarik') ||
+      lower.includes('naayf') ||
+      lower.includes('shakir') ||
+      lower.includes('hamed') ||
+      lower.includes('tariq') ||
+      lower.includes('asad') ||
+      lower.includes('salman') ||
+      lower.includes('david') ||
+      lower.includes('george')
+    );
+  };
+
+  const isFemaleName = (name: string): boolean => {
+    const lower = name.toLowerCase();
+    return (
+      lower.includes('female') ||
+      lower.includes('zira') ||
+      lower.includes('susan') ||
+      lower.includes('hazel') ||
+      lower.includes('leila') ||
+      lower.includes('fatima') ||
+      lower.includes('zeina') ||
+      lower.includes('laila') ||
+      lower.includes('salma') ||
+      lower.includes('amira')
+    );
+  };
+
+  const arVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('ar'));
+  if (arVoices.length > 0) {
+    const male = arVoices.find((v) => isExplicitMale(v.name));
+    if (male) return male;
+    const nonFemale = arVoices.find((v) => !isFemaleName(v.name));
+    if (nonFemale) return nonFemale;
+    return arVoices[0];
+  }
+  return null;
+};
 
 const getCategoryAudio = (category: 'allah' | 'prophet', url?: string): HTMLAudioElement => {
+  const defaultUrl = category === 'allah' ? '/audio/allah/allah-01.mp3' : '/audio/prophet/prophet-01.mp3';
+  const targetUrl = url || defaultUrl;
+
   if (category === 'allah') {
-    if (!allahAudio) {
-      allahAudio = new Audio(url || '/audio/allah/allah-01.wav');
+    if (!allahAudio && typeof Audio !== 'undefined') {
+      allahAudio = new Audio();
       allahAudio.preload = 'auto';
-    } else if (url && !allahAudio.src.endsWith(url)) {
-      allahAudio.src = url;
     }
-    allahAudio.volume = 1.0;
-    allahAudio.muted = false;
-    return allahAudio;
+    if (allahAudio) {
+      if (!allahAudio.src || !allahAudio.src.endsWith(targetUrl)) {
+        allahAudio.src = targetUrl;
+        allahAudio.load();
+      }
+      allahAudio.volume = 1.0;
+      allahAudio.muted = false;
+    }
+    return allahAudio!;
   } else {
-    if (!prophetAudio) {
-      prophetAudio = new Audio(url || '/audio/prophet/prophet-01.wav');
+    if (!prophetAudio && typeof Audio !== 'undefined') {
+      prophetAudio = new Audio();
       prophetAudio.preload = 'auto';
-    } else if (url && !prophetAudio.src.endsWith(url)) {
-      prophetAudio.src = url;
     }
-    prophetAudio.volume = 1.0;
-    prophetAudio.muted = false;
-    return prophetAudio;
+    if (prophetAudio) {
+      if (!prophetAudio.src || !prophetAudio.src.endsWith(targetUrl)) {
+        prophetAudio.src = targetUrl;
+        prophetAudio.load();
+      }
+      prophetAudio.volume = 1.0;
+      prophetAudio.muted = false;
+    }
+    return prophetAudio!;
   }
 };
 
 export const useNamesStore = create<NamesState>((set, get) => {
-  const cleanupAudioListeners = (audio: HTMLAudioElement) => {
+  const cleanupAudioListeners = (audio: HTMLAudioElement | null) => {
+    if (!audio) return;
     if (timeUpdateHandler) {
       audio.removeEventListener('timeupdate', timeUpdateHandler);
       timeUpdateHandler = null;
@@ -90,26 +141,92 @@ export const useNamesStore = create<NamesState>((set, get) => {
       audio.removeEventListener('ended', endedHandler);
       endedHandler = null;
     }
-  };
-
-  const stopOtherAudios = (activeCategory: 'allah' | 'prophet') => {
-    if (activeCategory === 'allah' && prophetAudio) {
-      cleanupAudioListeners(prophetAudio);
-      prophetAudio.pause();
-    } else if (activeCategory === 'prophet' && allahAudio) {
-      cleanupAudioListeners(allahAudio);
-      allahAudio.pause();
+    if (errorHandler) {
+      audio.removeEventListener('error', errorHandler);
+      errorHandler = null;
     }
   };
 
-  // Internal AutoPlay sequence runner: immediate gapless transitions
+  const stopSpeechSynthesis = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
+    }
+  };
+
+  const stopOtherAudios = (activeCategory: 'allah' | 'prophet') => {
+    stopSpeechSynthesis();
+    if (activeCategory === 'allah' && prophetAudio) {
+      cleanupAudioListeners(prophetAudio);
+      prophetAudio.pause();
+      prophetAudio.currentTime = 0;
+    } else if (activeCategory === 'prophet' && allahAudio) {
+      cleanupAudioListeners(allahAudio);
+      allahAudio.pause();
+      allahAudio.currentTime = 0;
+    }
+  };
+
+  /**
+   * Fallback using SpeechSynthesis to guarantee natural Arabic male voice pronunciation
+   */
+  const playSpeechFallback = (
+    item: IslamicNameItem,
+    onComplete: () => void,
+    onError: (err: string) => void
+  ) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      onError('Audio playback unsupported in this browser environment.');
+      return;
+    }
+
+    try {
+      window.speechSynthesis.cancel();
+    } catch {}
+
+    const cleanArabic = item.arabic.replace(/ﷺ/g, '').trim();
+    const utterance = new SpeechSynthesisUtterance(cleanArabic);
+    utterance.lang = 'ar-SA';
+    utterance.pitch = 1.0;
+    utterance.rate = 0.88;
+
+    const maleVoice = selectArabicMaleVoice();
+    if (maleVoice) {
+      utterance.voice = maleVoice;
+    }
+
+    utterance.onend = () => {
+      onComplete();
+    };
+
+    utterance.onerror = (e) => {
+      console.warn('[NamesAudio] Speech fallback note:', e);
+      onComplete(); // Advance in auto-play rather than hanging
+    };
+
+    try {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.error('[NamesAudio] Speech synthesis failed:', err);
+      onError('Speech synthesis failed.');
+    }
+  };
+
+  // Internal AutoPlay sequence runner
   const executeAutoPlayStep = (items: IslamicNameItem[], index: number) => {
     if (index >= items.length) {
       // Completed full sequence
       const category = items[0]?.category || 'allah';
       const audio = getCategoryAudio(category);
-      cleanupAudioListeners(audio);
-      audio.pause();
+      if (audio) {
+        cleanupAudioListeners(audio);
+        audio.pause();
+      }
+      stopSpeechSynthesis();
 
       set({
         isAutoPlaying: false,
@@ -165,10 +282,6 @@ export const useNamesStore = create<NamesState>((set, get) => {
     const audio = getCategoryAudio(category, item.audioUrl);
     cleanupAudioListeners(audio);
 
-    if (item.audioUrl && !audio.src.endsWith(item.audioUrl)) {
-      audio.src = item.audioUrl;
-    }
-
     const hasSegment = typeof item.startTime === 'number' && typeof item.endTime === 'number';
     currentTargetEnd = hasSegment ? item.endTime! : null;
 
@@ -185,78 +298,106 @@ export const useNamesStore = create<NamesState>((set, get) => {
       autoPlayStatus: 'Playing',
     });
 
-    audio.playbackRate = 1.0;
-    audio.volume = 1.0;
-    audio.muted = false;
+    if (audio) {
+      audio.playbackRate = 1.0;
+      audio.volume = 1.0;
+      audio.muted = false;
 
-    // Segment bounds listener (for segmented tracks)
-    timeUpdateHandler = () => {
-      if (currentTargetEnd !== null && audio.currentTime >= currentTargetEnd) {
-        cleanupAudioListeners(audio);
-        audio.pause();
+      // Segment bounds listener
+      timeUpdateHandler = () => {
+        if (currentTargetEnd !== null && audio.currentTime >= currentTargetEnd) {
+          cleanupAudioListeners(audio);
+          audio.pause();
 
-        const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
-        if (isAutoPlaying && autoPlayIndex !== null) {
-          executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
-        } else {
-          set({ isPlaying: false, currentPlayingId: null, currentCategory: null });
-        }
-      }
-    };
-    audio.addEventListener('timeupdate', timeUpdateHandler);
-
-    // Full file ended listener (for standalone files)
-    endedHandler = () => {
-      cleanupAudioListeners(audio);
-      const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
-      if (isAutoPlaying && autoPlayIndex !== null) {
-        executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
-      } else {
-        set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
-      }
-    };
-    audio.addEventListener('ended', endedHandler);
-
-    audio.onerror = (e) => {
-      console.error('[NamesAudio] AutoPlay error on item:', item.id, e);
-      cleanupAudioListeners(audio);
-      const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
-      if (isAutoPlaying && autoPlayIndex !== null) {
-        executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
-      } else {
-        set({
-          isPlaying: false,
-          isLoading: false,
-          audioError: 'Audio unavailable. Please try again.',
-        });
-      }
-    };
-
-    if (hasSegment) {
-      audio.currentTime = item.startTime!;
-    } else {
-      audio.currentTime = 0;
-    }
-
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          set({ isPlaying: true, isLoading: false, audioError: null });
-        })
-        .catch((err) => {
-          console.error('[NamesAudio] AutoPlay play promise error:', err);
           const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
           if (isAutoPlaying && autoPlayIndex !== null) {
             executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
           } else {
-            set({
-              isPlaying: false,
-              isLoading: false,
-              audioError: 'Audio playback failed.',
-            });
+            set({ isPlaying: false, currentPlayingId: null, currentCategory: null });
           }
-        });
+        }
+      };
+      audio.addEventListener('timeupdate', timeUpdateHandler);
+
+      // Full file ended listener
+      endedHandler = () => {
+        cleanupAudioListeners(audio);
+        const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
+        if (isAutoPlaying && autoPlayIndex !== null) {
+          executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
+        } else {
+          set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
+        }
+      };
+      audio.addEventListener('ended', endedHandler);
+
+      errorHandler = () => {
+        console.warn('[NamesAudio] Audio file failed, activating speech fallback for:', item.id);
+        cleanupAudioListeners(audio);
+        playSpeechFallback(
+          item,
+          () => {
+            const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
+            if (isAutoPlaying && autoPlayIndex !== null) {
+              executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
+            } else {
+              set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
+            }
+          },
+          (err) => {
+            set({ isPlaying: false, isLoading: false, audioError: err });
+          }
+        );
+      };
+      audio.addEventListener('error', errorHandler);
+
+      if (hasSegment) {
+        audio.currentTime = item.startTime!;
+      } else {
+        audio.currentTime = 0;
+      }
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            set({ isPlaying: true, isLoading: false, audioError: null });
+          })
+          .catch((err) => {
+            console.warn('[NamesAudio] HTMLAudio play error, falling back to speech synthesis:', err);
+            cleanupAudioListeners(audio);
+            playSpeechFallback(
+              item,
+              () => {
+                const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
+                if (isAutoPlaying && autoPlayIndex !== null) {
+                  executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
+                } else {
+                  set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
+                }
+              },
+              (errMsg) => {
+                set({ isPlaying: false, isLoading: false, audioError: errMsg });
+              }
+            );
+          });
+      }
+    } else {
+      // Audio element unavailable (e.g. node / headless) -> speech fallback
+      playSpeechFallback(
+        item,
+        () => {
+          const { isAutoPlaying, autoPlayList, autoPlayIndex } = get();
+          if (isAutoPlaying && autoPlayIndex !== null) {
+            executeAutoPlayStep(autoPlayList, autoPlayIndex + 1);
+          } else {
+            set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
+          }
+        },
+        (errMsg) => {
+          set({ isPlaying: false, isLoading: false, audioError: errMsg });
+        }
+      );
     }
   };
 
@@ -281,33 +422,35 @@ export const useNamesStore = create<NamesState>((set, get) => {
       // 1. If currently playing this exact item, toggle to PAUSE
       if (currentPlayingId === item.id && currentCategory === itemCategory && isPlaying) {
         const audio = getCategoryAudio(itemCategory);
-        audio.pause();
+        if (audio) audio.pause();
+        stopSpeechSynthesis();
         set({ isPlaying: false, autoPlayStatus: isAutoPlaying ? 'Paused' : null });
         return;
       }
 
       // 2. If resuming the same paused item
       if (currentPlayingId === item.id && currentCategory === itemCategory && !isPlaying) {
+        set({ isPlaying: true, audioError: null, autoPlayStatus: isAutoPlaying ? 'Playing' : null });
         const audio = getCategoryAudio(itemCategory);
-        const hasSegment = typeof item.startTime === 'number' && typeof item.endTime === 'number';
+        if (audio) {
+          const hasSegment = typeof item.startTime === 'number' && typeof item.endTime === 'number';
+          if (hasSegment && (audio.currentTime >= item.endTime! || audio.currentTime < item.startTime!)) {
+            audio.currentTime = item.startTime!;
+          }
+          audio.volume = 1.0;
+          audio.muted = false;
 
-        if (hasSegment && (audio.currentTime >= item.endTime! || audio.currentTime < item.startTime!)) {
-          audio.currentTime = item.startTime!;
-        }
-
-        audio.volume = 1.0;
-        audio.muted = false;
-
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              set({ isPlaying: true, audioError: null, autoPlayStatus: isAutoPlaying ? 'Playing' : null });
-            })
-            .catch((err) => {
-              console.error('[NamesAudio] Resume error:', err);
-              set({ isPlaying: false, audioError: 'Audio unavailable. Please try again.' });
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.catch((err) => {
+              console.warn('[NamesAudio] Resume error, fallback to speech:', err);
+              playSpeechFallback(
+                item,
+                () => set({ isPlaying: false, currentPlayingId: null, currentCategory: null }),
+                (errMsg) => set({ isPlaying: false, audioError: errMsg })
+              );
             });
+          }
         }
         return;
       }
@@ -317,13 +460,19 @@ export const useNamesStore = create<NamesState>((set, get) => {
         if (isAutoPlaying) {
           get().stopAudio();
         }
+        // Use speech fallback directly
         set({
           currentCategory: itemCategory,
           currentPlayingId: item.id,
-          isPlaying: false,
+          isPlaying: true,
           isLoading: false,
-          audioError: 'Audio recording currently unavailable for this title.',
+          audioError: null,
         });
+        playSpeechFallback(
+          item,
+          () => set({ isPlaying: false, currentPlayingId: null, currentCategory: null }),
+          (err) => set({ isPlaying: false, audioError: err })
+        );
         return;
       }
 
@@ -353,10 +502,6 @@ export const useNamesStore = create<NamesState>((set, get) => {
       stopOtherAudios(itemCategory);
       cleanupAudioListeners(audio);
 
-      if (item.audioUrl && !audio.src.endsWith(item.audioUrl)) {
-        audio.src = item.audioUrl;
-      }
-
       const hasSegment = typeof item.startTime === 'number' && typeof item.endTime === 'number';
       currentTargetEnd = hasSegment ? item.endTime! : null;
 
@@ -371,56 +516,65 @@ export const useNamesStore = create<NamesState>((set, get) => {
         audioError: null,
       });
 
-      audio.playbackRate = 1.0;
-      audio.volume = 1.0;
-      audio.muted = false;
+      if (audio) {
+        audio.playbackRate = 1.0;
+        audio.volume = 1.0;
+        audio.muted = false;
 
-      // Individual mode timeupdate: stops only this item when targetEnd reached
-      timeUpdateHandler = () => {
-        if (currentTargetEnd !== null && audio.currentTime >= currentTargetEnd) {
+        timeUpdateHandler = () => {
+          if (currentTargetEnd !== null && audio.currentTime >= currentTargetEnd) {
+            cleanupAudioListeners(audio);
+            audio.pause();
+            set({ isPlaying: false, currentPlayingId: null, currentCategory: null });
+          }
+        };
+        audio.addEventListener('timeupdate', timeUpdateHandler);
+
+        endedHandler = () => {
           cleanupAudioListeners(audio);
-          audio.pause();
-          set({ isPlaying: false, currentPlayingId: null, currentCategory: null });
+          set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
+        };
+        audio.addEventListener('ended', endedHandler);
+
+        errorHandler = () => {
+          console.warn('[NamesAudio] Single play error, activating speech fallback:', item.id);
+          cleanupAudioListeners(audio);
+          playSpeechFallback(
+            item,
+            () => set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false }),
+            (errMsg) => set({ isPlaying: false, isLoading: false, audioError: errMsg })
+          );
+        };
+        audio.addEventListener('error', errorHandler);
+
+        if (hasSegment) {
+          audio.currentTime = item.startTime!;
+        } else {
+          audio.currentTime = 0;
         }
-      };
-      audio.addEventListener('timeupdate', timeUpdateHandler);
 
-      endedHandler = () => {
-        cleanupAudioListeners(audio);
-        set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false });
-      };
-      audio.addEventListener('ended', endedHandler);
-
-      audio.onerror = (e) => {
-        console.error('[NamesAudio] Individual play error on item:', item.id, e);
-        cleanupAudioListeners(audio);
-        set({
-          isPlaying: false,
-          isLoading: false,
-          audioError: 'Audio unavailable. Please try again.',
-        });
-      };
-
-      if (hasSegment) {
-        audio.currentTime = item.startTime!;
-      } else {
-        audio.currentTime = 0;
-      }
-
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            set({ isPlaying: true, isLoading: false, audioError: null });
-          })
-          .catch((err) => {
-            console.error('[NamesAudio] Single play error:', err);
-            set({
-              isPlaying: false,
-              isLoading: false,
-              audioError: 'Audio unavailable. Please try again.',
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              set({ isPlaying: true, isLoading: false, audioError: null });
+            })
+            .catch((err) => {
+              console.warn('[NamesAudio] Single play promise error, fallback to speech:', err);
+              cleanupAudioListeners(audio);
+              playSpeechFallback(
+                item,
+                () => set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false }),
+                (errMsg) => set({ isPlaying: false, isLoading: false, audioError: errMsg })
+              );
             });
-          });
+        }
+      } else {
+        playSpeechFallback(
+          item,
+          () => set({ isPlaying: false, currentPlayingId: null, currentCategory: null, isLoading: false }),
+          (errMsg) => set({ isPlaying: false, isLoading: false, audioError: errMsg })
+        );
       }
     },
 
@@ -433,22 +587,25 @@ export const useNamesStore = create<NamesState>((set, get) => {
       // If already playing all in same category, toggle pause/play
       if (isAutoPlaying && isPlaying && currentCategory === category) {
         const audio = getCategoryAudio(category);
-        audio.pause();
+        if (audio) audio.pause();
+        stopSpeechSynthesis();
         set({ isPlaying: false, autoPlayStatus: 'Paused' });
         return;
       }
 
       if (isAutoPlaying && !isPlaying && currentCategory === category) {
         const audio = getCategoryAudio(category);
-        audio.volume = 1.0;
-        audio.muted = false;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => set({ isPlaying: true, autoPlayStatus: 'Playing' }))
-            .catch((err) => {
-              console.error('[NamesAudio] Resume auto-play error:', err);
-            });
+        if (audio) {
+          audio.volume = 1.0;
+          audio.muted = false;
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => set({ isPlaying: true, autoPlayStatus: 'Playing' }))
+              .catch((err) => {
+                console.warn('[NamesAudio] Resume auto-play error:', err);
+              });
+          }
         }
         return;
       }
@@ -460,8 +617,9 @@ export const useNamesStore = create<NamesState>((set, get) => {
       const { currentCategory, isAutoPlaying } = get();
       if (currentCategory) {
         const audio = getCategoryAudio(currentCategory);
-        audio.pause();
+        if (audio) audio.pause();
       }
+      stopSpeechSynthesis();
       set({ isPlaying: false, autoPlayStatus: isAutoPlaying ? 'Paused' : null });
     },
 
@@ -469,13 +627,15 @@ export const useNamesStore = create<NamesState>((set, get) => {
       const { currentCategory, isAutoPlaying } = get();
       if (currentCategory) {
         const audio = getCategoryAudio(currentCategory);
-        audio.volume = 1.0;
-        audio.muted = false;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => set({ isPlaying: true, audioError: null, autoPlayStatus: isAutoPlaying ? 'Playing' : null }))
-            .catch(() => set({ isPlaying: false, audioError: 'Audio unavailable. Please try again.' }));
+        if (audio) {
+          audio.volume = 1.0;
+          audio.muted = false;
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => set({ isPlaying: true, audioError: null, autoPlayStatus: isAutoPlaying ? 'Playing' : null }))
+              .catch(() => set({ isPlaying: false, audioError: 'Audio unavailable. Please try again.' }));
+          }
         }
       }
     },
@@ -491,6 +651,7 @@ export const useNamesStore = create<NamesState>((set, get) => {
         prophetAudio.pause();
         prophetAudio.currentTime = 0;
       }
+      stopSpeechSynthesis();
 
       currentTargetEnd = null;
 

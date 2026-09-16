@@ -3763,6 +3763,17 @@ input:checked + .slider:before {
   color: #ffffff !important;
 }
 
+.muslim-vertical-reading-stream {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto;
+  contain: layout;
+}
+
+.muslim-page-card {
+  scroll-snap-align: none !important;
+  contain: content;
+}
+
 @media (max-width: 640px) {
   .zoom-dropdown-menu {
     left: 50% !important;

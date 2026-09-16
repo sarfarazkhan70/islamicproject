@@ -177,6 +177,31 @@ export const MuslimReader: React.FC = () => {
     };
   }, [isZoomMenuOpen]);
 
+  // Cancel programmatic scroll lock immediately upon any manual user interaction
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      if (isProgrammaticScrollRef.current) {
+        isProgrammaticScrollRef.current = false;
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current);
+          scrollTimeoutRef.current = null;
+        }
+      }
+    };
+
+    window.addEventListener('wheel', handleUserInteraction, { passive: true });
+    window.addEventListener('touchmove', handleUserInteraction, { passive: true });
+    window.addEventListener('pointerdown', handleUserInteraction, { passive: true });
+    window.addEventListener('keydown', handleUserInteraction, { passive: true });
+
+    return () => {
+      window.removeEventListener('wheel', handleUserInteraction);
+      window.removeEventListener('touchmove', handleUserInteraction);
+      window.removeEventListener('pointerdown', handleUserInteraction);
+      window.removeEventListener('keydown', handleUserInteraction);
+    };
+  }, []);
+
   // Scroll to a specific Muslim PDF page (clamped [1, totalPages])
   const scrollToPdfPage = useCallback(
     (pdfPageNum: number, behavior: ScrollBehavior = 'auto', explicitPrintedNum?: number) => {
@@ -192,6 +217,7 @@ export const MuslimReader: React.FC = () => {
       isProgrammaticScrollRef.current = true;
 
       setSearchParams((prev) => {
+        if (prev.get('page') === printedNum.toString()) return prev;
         const next = new URLSearchParams(prev);
         next.set('page', printedNum.toString());
         return next;
@@ -208,10 +234,8 @@ export const MuslimReader: React.FC = () => {
 
       performScroll();
       requestAnimationFrame(performScroll);
-      setTimeout(performScroll, 80);
-      setTimeout(performScroll, 250);
 
-      const lockDuration = behavior === 'smooth' ? 1200 : 350;
+      const lockDuration = behavior === 'smooth' ? 1000 : 300;
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
@@ -234,7 +258,7 @@ export const MuslimReader: React.FC = () => {
 
   // Handle URL param changes (e.g. browser back/forward)
   useEffect(() => {
-    if (pageParam) {
+    if (pageParam && !isProgrammaticScrollRef.current) {
       const printedP = parseInt(pageParam, 10);
       if (!isNaN(printedP) && printedP >= 1 && printedP <= totalPrintedPages && printedP !== activePrintedPageRef.current) {
         const targetPdf = getMuslimPdfPage(volNum, printedP);
@@ -253,6 +277,7 @@ export const MuslimReader: React.FC = () => {
         if (isProgrammaticScrollRef.current) return;
 
         let activePdf: number | null = null;
+        let maxVisibleHeight = 0;
 
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
@@ -267,21 +292,17 @@ export const MuslimReader: React.FC = () => {
               break;
             }
           }
-        }
 
-        // If none of the changed entries directly covered the focus line, verify against all page cards
-        if (activePdf === null) {
-          const pageCards = document.querySelectorAll('.muslim-page-card');
-          for (let i = 0; i < pageCards.length; i++) {
-            const card = pageCards[i];
-            const rect = card.getBoundingClientRect();
-            if (rect.top <= focusY && rect.bottom > focusY) {
-              const pageAttr = card.getAttribute('data-page');
-              const p = parseInt(pageAttr || '', 10);
-              if (!isNaN(p)) {
-                activePdf = p;
-                break;
-              }
+          // Fallback: calculate visible height in reading viewport
+          const visibleTop = Math.max(rect.top, headerOffset);
+          const visibleBottom = Math.min(rect.bottom, window.innerHeight);
+          const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+          if (visibleHeight > maxVisibleHeight) {
+            maxVisibleHeight = visibleHeight;
+            const pageAttr = entry.target.getAttribute('data-page');
+            const p = parseInt(pageAttr || '', 10);
+            if (!isNaN(p)) {
+              activePdf = p;
             }
           }
         }
@@ -292,15 +313,17 @@ export const MuslimReader: React.FC = () => {
           activePrintedPageRef.current = printed;
           setCurrentPdfPage(activePdf);
           setCurrentPrintedPage(printed);
-          setSearchParams(
-            (prev) => {
-              if (prev.get('page') === printed.toString()) return prev;
-              const next = new URLSearchParams(prev);
-              next.set('page', printed.toString());
-              return next;
-            },
-            { replace: true }
-          );
+
+          // Silently sync URL query parameter without triggering React Router route re-renders
+          try {
+            const url = new URL(window.location.href);
+            if (url.searchParams.get('page') !== printed.toString()) {
+              url.searchParams.set('page', printed.toString());
+              window.history.replaceState(window.history.state, '', url.toString());
+            }
+          } catch {
+            // ignore
+          }
         }
       },
       {
@@ -314,7 +337,7 @@ export const MuslimReader: React.FC = () => {
     pageElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [isFullscreen, volNum, setSearchParams]);
+  }, [isFullscreen, volNum]);
 
   // Handle direct page jump form submission (searching by printed book page number)
   const handleDirectPageSubmit = (e: React.FormEvent) => {
@@ -789,7 +812,7 @@ export const MuslimReader: React.FC = () => {
       </header>
 
       {/* ========================================================================= */}
-      {/* VERTICAL CONTINUOUS SCROLL STREAM (ALL PAGES WITH SNAPPING)               */}
+      {/* VERTICAL CONTINUOUS SCROLL STREAM (ALL PAGES)                             */}
       {/* ========================================================================= */}
       <main
         className="muslim-vertical-reading-stream"
@@ -800,7 +823,7 @@ export const MuslimReader: React.FC = () => {
           gap: 'var(--space-5)',
           width: '100%',
           minWidth: !isFitWidth && zoomLevel > 1.0 ? `${Math.round(820 * zoomLevel)}px` : '100%',
-          scrollSnapType: 'y proximity',
+          scrollSnapType: 'none',
           paddingBottom: 'var(--space-16)',
           boxSizing: 'border-box',
         }}
@@ -911,13 +934,13 @@ const MuslimPageCard: React.FC<MuslimPageCardProps> = memo(
             : '0 4px 18px rgba(0, 0, 0, 0.25)',
           border: isCurrent
             ? '2px solid #3b82f6'
-            : '1px solid var(--border-default)',
+            : '2px solid var(--border-default)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           position: 'relative',
-          scrollSnapAlign: 'start',
+          scrollSnapAlign: 'none',
           scrollMarginTop: '80px',
           boxSizing: 'border-box',
           transition: 'border-color 0.2s ease, box-shadow 0.2s ease',

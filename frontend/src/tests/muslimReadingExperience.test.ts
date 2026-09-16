@@ -76,4 +76,31 @@ describe('Sahih Muslim Experience & Multi-Volume Reader Verification', () => {
     expect(content).not.toContain('archive.org/stream');
     expect(content).not.toContain('<iframe');
   });
+
+  it('should verify smooth scroll preservation and absence of scroll jumping in MuslimReader', () => {
+    const readerFile = path.resolve(__dirname, '../components/library/MuslimReader.tsx');
+    const content = fs.readFileSync(readerFile, 'utf-8');
+    const cssFile = path.resolve(__dirname, '../styles/components.css');
+    const cssContent = fs.readFileSync(cssFile, 'utf-8');
+
+    // 1. Scroll snap disabled to prevent upward snapping jump on wheel/touch
+    expect(content).toContain("scrollSnapType: 'none'");
+    expect(content).toContain("scrollSnapAlign: 'none'");
+    expect(cssContent).toContain('scroll-snap-type: none !important;');
+    expect(cssContent).toContain('scroll-snap-align: none !important;');
+
+    // 2. User interaction cancels programmatic scroll lock immediately
+    expect(content).toContain("window.addEventListener('wheel'");
+    expect(content).toContain("window.addEventListener('touchmove'");
+    expect(content).toContain("window.addEventListener('pointerdown'");
+    expect(content).toContain("window.addEventListener('keydown'");
+
+    // 3. Silent URL bar sync during vertical scrolling (no React Router navigation route re-render loop)
+    expect(content).toContain('window.history.replaceState');
+
+    // 4. Stable dimensions: fixed border sizing preventing layout shifts on active page focus
+    expect(content).toContain("border: isCurrent\n            ? '2px solid #3b82f6'\n            : '2px solid var(--border-default)'");
+    expect(content).toContain("aspectRatio: '700 / 1020'");
+  });
 });
+

@@ -3774,6 +3774,120 @@ input:checked + .slider:before {
   contain: content;
 }
 
+/* ==========================================================================
+   JAMI' AT-TIRMIZI READER & STICKY TOOLBAR STYLES
+   ========================================================================== */
+.tirmizi-reader-page-root {
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible !important;
+}
+
+.tirmizi-top-toolbar {
+  position: sticky !important;
+  top: var(--header-height, 68px) !important;
+  z-index: 100 !important;
+  padding: 8px 14px;
+  margin-bottom: var(--space-4);
+  background-color: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(192, 38, 211, 0.4) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  box-sizing: border-box;
+  border-radius: var(--radius-lg);
+  overflow: visible !important;
+}
+
+@media (max-width: 480px) {
+  .tirmizi-top-toolbar {
+    top: 56px !important;
+    padding: 6px 10px;
+    gap: 6px 8px;
+  }
+}
+
+.fullscreen-mode .tirmizi-top-toolbar {
+  top: 0px !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  z-index: 10000 !important;
+  width: 250px !important;
+  max-width: min(280px, calc(100vw - 24px)) !important;
+  background-color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(192, 38, 211, 0.5) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(192, 38, 211, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu.align-right {
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu.align-left {
+  left: 0 !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu.align-center {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu.align-top {
+  top: auto !important;
+  bottom: calc(100% + 8px) !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu button.btn-ghost {
+  color: #e2e8f0 !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu button.btn-ghost:hover {
+  background-color: rgba(192, 38, 211, 0.2) !important;
+  color: #f0abfc !important;
+}
+
+.tirmizi-top-toolbar .zoom-dropdown-menu button.btn-primary {
+  background-color: #a21caf !important;
+  border-color: #c026d3 !important;
+  color: #ffffff !important;
+}
+
+.tirmizi-vertical-reading-stream {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto;
+  contain: layout;
+}
+
+.tirmizi-page-card {
+  scroll-snap-align: none !important;
+  contain: content;
+}
+
 @media (max-width: 640px) {
   .zoom-dropdown-menu {
     left: 50% !important;

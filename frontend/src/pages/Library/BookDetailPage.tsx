@@ -17,6 +17,67 @@ import { HadaiqPdfService } from '../../services/hadaiqPdfService';
 import { HadaiqHindiPdfService } from '../../services/hadaiqHindiPdfService';
 import { HadaiqEnglishPdfService } from '../../services/hadaiqEnglishPdfService';
 import { MuslimPdfService } from '../../services/muslimPdfService';
+import { TirmiziPdfService } from '../../services/tirmiziPdfService';
+
+// ============================================================================
+// JAMI' AT-TIRMIZI COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
+// ============================================================================
+interface TirmiziSelectionCoverProps {
+  volNum: number;
+}
+
+const TirmiziSelectionCoverCanvas: React.FC<TirmiziSelectionCoverProps> = ({ volNum }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const isAvailable = volNum <= 6;
+  const coverUrl = TirmiziPdfService.getPageImageUrl(1, volNum);
+
+  return (
+    <div className="tirmizi-selection-cover-box">
+      {isAvailable && !imgError && (
+        <img
+          src={coverUrl}
+          alt={`Jami' at-Tirmidhi Part ${volNum} Cover`}
+          className="tirmizi-cover-img"
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          style={{
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+          }}
+        />
+      )}
+      {(!isAvailable || !imgLoaded || imgError) && (
+        <div
+          className="tirmizi-cover-fallback"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            background: 'linear-gradient(145deg, #701a75 0%, #0f172a 100%)',
+          }}
+        >
+          <BookOpen
+            size={28}
+            style={{
+              color: '#e879f9',
+              opacity: 0.9,
+            }}
+          />
+          <span style={{ fontSize: '0.72rem', color: '#f0abfc', fontWeight: 600 }}>
+            پارٹ {volNum}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ============================================================================
 // SAHIH MUSLIM COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
@@ -440,6 +501,243 @@ export const BookDetailPage: React.FC = () => {
               {/* Jild Number */}
               <div className="muslim-card-jild">
                 {label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Dedicated Jami' at-Tirmidhi Selection Screen (6 Clean Volume/Part Cards)
+  if (
+    book.id === 'jami-at-tirmidhi' ||
+    book.id === 'jami-tirmizi' ||
+    book.id === 'tirmizi'
+  ) {
+    const volumesList = [
+      { volNum: 1, label: 'Part 1', isAvailable: true },
+      { volNum: 2, label: 'Part 2', isAvailable: true },
+      { volNum: 3, label: 'Part 3', isAvailable: true },
+      { volNum: 4, label: 'Part 4', isAvailable: true },
+      { volNum: 5, label: 'Part 5', isAvailable: true },
+      { volNum: 6, label: 'Part 6', isAvailable: true },
+    ];
+
+    return (
+      <div
+        className="book-detail-page tirmizi-selection-page"
+        style={{
+          width: '100%',
+          maxWidth: 1200,
+          margin: '0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
+        <style>{`
+          .tirmizi-selection-page {
+            padding: 0 var(--space-4) var(--space-10);
+          }
+          .tirmizi-cards-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(0, 210px));
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          .tirmizi-book-card {
+            width: 100%;
+            max-width: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 16px 14px;
+            border-radius: var(--radius-xl);
+            background-color: var(--bg-surface);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            transition: all var(--transition-fast);
+            border: 2px solid rgba(192, 38, 211, 0.4);
+          }
+          .tirmizi-book-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(192, 38, 211, 0.8);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), 0 0 16px rgba(192, 38, 211, 0.2);
+          }
+          .tirmizi-selection-cover-box {
+            width: 120px;
+            height: 165px;
+            max-width: 100%;
+            margin-bottom: 12px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            background-color: #0f172a;
+            border: 1.5px solid rgba(192, 38, 211, 0.45);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+          }
+          .tirmizi-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+          }
+          .tirmizi-card-title {
+            font-size: 0.85rem;
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.35;
+            word-break: break-word;
+          }
+          .tirmizi-card-jild {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 3px;
+            line-height: 1.2;
+          }
+          @media (max-width: 640px) {
+            .tirmizi-selection-page {
+              padding: 0 8px var(--space-8) !important;
+            }
+            .tirmizi-cards-row {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 6px !important;
+              justify-content: stretch !important;
+            }
+            .tirmizi-book-card {
+              max-width: 100% !important;
+              padding: 10px 4px !important;
+              border-radius: var(--radius-lg) !important;
+            }
+            .tirmizi-selection-cover-box {
+              width: 100% !important;
+              max-width: 90px !important;
+              height: auto !important;
+              aspect-ratio: 120 / 165 !important;
+              margin-bottom: 6px !important;
+            }
+            .tirmizi-cover-img {
+              width: 100% !important;
+              height: 100% !important;
+              object-fit: contain !important;
+              object-position: center !important;
+              display: block !important;
+            }
+            .tirmizi-card-title {
+              font-size: 0.62rem !important;
+              line-height: 1.25 !important;
+            }
+            .tirmizi-card-jild {
+              font-size: 0.65rem !important;
+              margin-top: 2px !important;
+            }
+          }
+          @media (max-width: 370px) {
+            .tirmizi-cards-row {
+              gap: 4px !important;
+            }
+            .tirmizi-book-card {
+              padding: 8px 2px !important;
+            }
+            .tirmizi-selection-cover-box {
+              max-width: 76px !important;
+              margin-bottom: 4px !important;
+            }
+            .tirmizi-card-title {
+              font-size: 0.56rem !important;
+              line-height: 1.2 !important;
+            }
+            .tirmizi-card-jild {
+              font-size: 0.58rem !important;
+            }
+          }
+        `}</style>
+
+        {/* Top Back & Breadcrumb Bar */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 'var(--space-3)',
+            marginBottom: 'var(--space-6)',
+          }}
+        >
+          <button
+            type="button"
+            className="btn btn-sm btn-ghost"
+            onClick={() => navigate('/library')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Library</span>
+          </button>
+
+          <div
+            className="text-xs text-muted"
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Link to="/library" style={{ color: 'var(--text-muted)' }}>
+              Library
+            </Link>
+            <span>/</span>
+            <span style={{ color: 'var(--brand-gold)', fontWeight: 'var(--weight-semibold)' }}>
+              Jami’ at-Tirmidhi
+            </span>
+          </div>
+        </div>
+
+        {/* 6 Clean Cards Container */}
+        <div className="tirmizi-cards-row">
+          {volumesList.map(({ volNum, label, isAvailable }) => (
+            <div
+              key={volNum}
+              className="card card-hover tirmizi-book-card"
+              onClick={() => {
+                if (isAvailable) {
+                  navigate(`/library/jami-at-tirmidhi/read?vol=${volNum}`);
+                }
+              }}
+              style={{
+                opacity: isAvailable ? 1 : 0.7,
+                cursor: isAvailable ? 'pointer' : 'default',
+              }}
+              role="button"
+              tabIndex={isAvailable ? 0 : -1}
+              aria-label={`Jami’ at-Tirmidhi ${label}`}
+              onKeyDown={(e) => {
+                if (isAvailable && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  navigate(`/library/jami-at-tirmidhi/read?vol=${volNum}`);
+                }
+              }}
+            >
+              {/* Clean Book Cover Image */}
+              <TirmiziSelectionCoverCanvas volNum={volNum} />
+
+              {/* Jami' at-Tirmidhi */}
+              <div className="tirmizi-card-title">
+                Jami’ at-Tirmidhi
+              </div>
+
+              {/* Part Number */}
+              <div className="tirmizi-card-jild">
+                {label} {isAvailable ? '' : '(Coming Soon)'}
               </div>
             </div>
           ))}

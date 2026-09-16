@@ -19,6 +19,7 @@ import { BookChapter, BookSection } from '../../types/library.types';
 import { KanzulImanReader } from '../../components/library/KanzulImanReader';
 import { BukhariReader } from '../../components/library/BukhariReader';
 import { MuslimReader } from '../../components/library/MuslimReader';
+import { TirmiziReader } from '../../components/library/TirmiziReader';
 import { HadaiqReader } from '../../components/library/HadaiqReader';
 import { HadaiqHindiReader } from '../../components/library/HadaiqHindiReader';
 import { HadaiqEnglishReader } from '../../components/library/HadaiqEnglishReader';
@@ -41,6 +42,16 @@ export const BookReaderPage: React.FC = () => {
   // If Sahih Muslim
   if (bookId === 'sahih-muslim') {
     return <MuslimReader />;
+  }
+
+  // If Jami' at-Tirmidhi
+  if (
+    bookId === 'jami-at-tirmidhi' ||
+    bookId === 'jami-tirmizi' ||
+    bookId === 'tirmizi' ||
+    bookId === 'sunan-at-tirmidhi'
+  ) {
+    return <TirmiziReader />;
   }
 
   // If Hadaiq-e-Bakhshish Hindi edition

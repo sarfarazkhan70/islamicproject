@@ -8,3 +8,4 @@ export * from './HadaiqReader';
 export * from './KanzulImanReader';
 export * from './LibrarySearchBar';
 export * from './MuslimReader';
+export * from './TirmiziReader';

@@ -119,7 +119,7 @@ interface QuranState {
   loadSurahInfo: (surahNumber: number) => Promise<void>;
 
   // Mushaf navigation
-  goToQuranPage: (page: number) => void;
+  goToQuranPage: (page: number, targetSurahNumber?: number, targetJuzNumber?: number) => void;
   setMushafPage: (page: number) => void;
   jumpToSurahPage: (surahNumber: number, autoPlay?: boolean) => void;
   jumpToJuzPage: (juzNumber: number, autoPlay?: boolean) => void;
@@ -205,6 +205,18 @@ function loadInitialProgress(): QuranReadingProgress | null {
   }
 }
 
+const initialSavedProgress = loadInitialProgress();
+const initialMushafPage =
+  initialSavedProgress &&
+  initialSavedProgress.pageNumber >= MIN_MUSHAF_PAGE &&
+  initialSavedProgress.pageNumber <= TOTAL_MUSHAF_PAGES
+    ? initialSavedProgress.pageNumber
+    : MIN_MUSHAF_PAGE;
+const initialSurahMeta = initialSavedProgress?.surahNumber
+  ? getSurahByNumber(initialSavedProgress.surahNumber)
+  : getSurahByPage(initialMushafPage);
+const initialPara = getJuzByPage(initialMushafPage).number;
+
 function loadInitialScript(): 'indopak' | 'uthmani' | 'uthmani_tajweed' | 'uthmani_simple' | 'imlaei' {
   try {
     const raw = localStorage.getItem(SCRIPT_STORAGE_KEY);
@@ -242,8 +254,8 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   readViewType: 'mushaf',
   surahs: SURAHS_LIST,
   juzList: JUZ_LIST,
-  currentSurahNumber: 1,
-  currentSurahMeta: SURAHS_LIST[0],
+  currentSurahNumber: initialSurahMeta.number,
+  currentSurahMeta: initialSurahMeta,
   currentSurahVerses: [],
   currentSurahInfo: null,
   isVersesLoading: false,
@@ -258,8 +270,8 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   showTranslation: true,
   selectedTranslationIds: loadInitialTranslations(),
 
-  mushafPage: MIN_MUSHAF_PAGE,
-  selectedPara: 1,
+  mushafPage: initialMushafPage,
+  selectedPara: initialPara,
   zoomLevel: 1.0,
 
   playbackType: 'surah',
@@ -382,27 +394,28 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   },
 
   // Central Quran page navigation function (Pages 1 to 604)
-  goToQuranPage: (pageNumber: number) => {
+  goToQuranPage: (pageNumber: number, targetSurahNumber?: number, targetJuzNumber?: number) => {
     const clamped = Math.max(MIN_MUSHAF_PAGE, Math.min(TOTAL_MUSHAF_PAGES, Math.floor(pageNumber) || MIN_MUSHAF_PAGE));
-    const { currentSurahNumber } = get();
+    const activeSurahNum = targetSurahNumber || get().currentSurahNumber;
 
-    // Check if the currently selected Surah is active on this page
-    let meta = getSurahByNumber(currentSurahNumber);
-    const nextSurah = getSurahByNumber(Math.min(114, currentSurahNumber + 1));
-    const isCurrentSurahOnThisPage =
-      meta.pageStart <= clamped && (currentSurahNumber === 114 || nextSurah.pageStart > clamped || meta.pageStart === clamped);
+    // Check if the target/current selected Surah is active on this page
+    let meta = getSurahByNumber(activeSurahNum);
+    const nextSurah = getSurahByNumber(Math.min(114, activeSurahNum + 1));
+    const isSurahOnThisPage =
+      meta.pageStart <= clamped && (activeSurahNum === 114 || nextSurah.pageStart > clamped || meta.pageStart === clamped);
 
-    if (!isCurrentSurahOnThisPage) {
+    if (!isSurahOnThisPage) {
       meta = getSurahByPage(clamped);
     }
 
-    const juz = getJuzByPage(clamped);
+    const juz = targetJuzNumber ? getJuzByNumber(Math.max(1, Math.min(30, targetJuzNumber))) : getJuzByPage(clamped);
     set({
       mushafPage: clamped,
       currentSurahNumber: meta.number,
       currentSurahMeta: meta,
       selectedPara: juz.number,
     });
+    get().updateReadingProgress(meta.number, 1, `${meta.number}:1`, meta.name, clamped);
   },
 
   setMushafPage: (page) => {
@@ -421,6 +434,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       selectedPara: juz.number,
       activeAudioSurah: validNumber,
     });
+    get().updateReadingProgress(validNumber, 1, `${validNumber}:1`, meta.name, clampedPage);
     if (autoPlay || get().isPlaying) {
       get().playSurahAudio(validNumber, get().selectedReciterId);
     }
@@ -440,6 +454,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       activeAudioJuz: clampedJuz,
       activeAudioAyah: juz.startAyah,
     });
+    get().updateReadingProgress(juz.startSurah, 1, `${juz.startSurah}:1`, surahMeta.name, clampedPage);
     if (autoPlay || get().isPlaying) {
       get().playSurahAudio(juz.startSurah, get().selectedReciterId);
     }
@@ -810,6 +825,7 @@ export const useQuranStore = create<QuranState>((set, get) => ({
   },
 
   updateReadingProgress: (surahNumber, ayahNumber, verseKey, surahName, pageNumber) => {
+    const juz = getJuzByPage(pageNumber);
     const progress: QuranReadingProgress = {
       surahNumber,
       ayahNumber,
@@ -819,7 +835,13 @@ export const useQuranStore = create<QuranState>((set, get) => ({
       updatedAt: new Date().toISOString(),
     };
     try {
-      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+      localStorage.setItem(
+        PROGRESS_STORAGE_KEY,
+        JSON.stringify({
+          ...progress,
+          juzNumber: juz.number,
+        })
+      );
     } catch {}
     set({ readingProgress: progress });
   },

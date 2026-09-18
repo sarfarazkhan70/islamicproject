@@ -18,6 +18,8 @@ import {
 } from '../../data/bukhariData';
 import { BukhariPdfService } from '../../services/bukhariPdfService';
 import { getHadithByRef } from '../../data/dailyHadithData';
+import { ReadingProgressService } from '../../services/readingProgressService';
+import { useBookReadingProgress } from '../../hooks/useBookReadingProgress';
 
 interface ZoomOption {
   id: string;
@@ -60,12 +62,13 @@ export const BukhariReader: React.FC = () => {
   const pageParam = searchParams.get('page');
   const hadithParam = searchParams.get('hadith') || searchParams.get('hadithId') || searchParams.get('ref');
 
-  // Resolve target Hadith page if hadith/hadithId/ref is provided in URL
+  // Resolve target Hadith page if hadith/hadithId/ref is provided in URL, otherwise restore saved progress
   const targetHadith = hadithParam ? getHadithByRef(hadithParam) : undefined;
 
   const initialPrintedPage = pageParam
     ? Math.max(1, Math.min(totalPrintedPages, parseInt(pageParam, 10) || 1))
-    : targetHadith?.pageNumber || 1;
+    : targetHadith?.pageNumber ||
+      ReadingProgressService.getInitialPage('sahih-al-bukhari', activeVolNum, null, 1);
 
   const initialPdfPage = bukhariPrintedToPdfPage(initialPrintedPage, activeVolNum);
 
@@ -76,6 +79,14 @@ export const BukhariReader: React.FC = () => {
   const [isFitWidth, setIsFitWidth] = useState<boolean>(() => sessionBukhariFitWidth ?? true); // Default: Fit to Width
   const [isZoomMenuOpen, setIsZoomMenuOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+
+  // Auto-save reading progress for Bukhari Vol X
+  useBookReadingProgress({
+    bookId: 'sahih-al-bukhari',
+    volumeKey: activeVolNum,
+    currentPage: currentPrintedPage,
+    totalPages: totalPrintedPages,
+  });
 
   const activePdfPageRef = useRef<number>(currentPdfPage);
   const isProgrammaticScrollRef = useRef<boolean>(false);

@@ -11,6 +11,13 @@ import {
   LibraryBookmark,
 } from '../types/library.types';
 
+import {
+  ReadingProgressService,
+  BookReadingProgress,
+  loadAllReadingProgress,
+  getReadingProgressKey,
+} from '../services/readingProgressService';
+
 export type ReaderFontSize = 'sm' | 'base' | 'lg' | 'xl';
 
 interface ReadingProgressItem {
@@ -34,6 +41,7 @@ interface LibraryState {
   showEnglish: boolean;
   bookmarks: LibraryBookmark[];
   readingProgress: Record<string, ReadingProgressItem>;
+  volumeReadingProgress: Record<string, BookReadingProgress>;
 
   // Actions
   setSelectedCategory: (category: LibraryCategory) => void;
@@ -48,6 +56,8 @@ interface LibraryState {
   removeBookmark: (bookmarkId: string) => void;
   isBookmarked: (bookId: string, chapterId: string, sectionId?: string) => boolean;
   saveReadingProgress: (bookId: string, volumeNumber?: number, chapterId?: string) => void;
+  saveVolumeProgress: (bookId: string, volumeKey: string | number, pageNumber: number, totalPages?: number, extra?: { chapterId?: string; sectionId?: string }) => void;
+  getVolumeProgress: (bookId: string, volumeKey?: string | number) => BookReadingProgress | undefined;
   clearSearch: () => void;
   getFilteredBooks: () => IslamicBook[];
 }
@@ -101,6 +111,7 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   showEnglish: true,
   bookmarks: getStoredBookmarks(),
   readingProgress: getStoredProgress(),
+  volumeReadingProgress: loadAllReadingProgress(),
 
   setSelectedCategory: (category) => {
     set({ selectedCategory: category });
@@ -186,6 +197,30 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
       // ignore
     }
     set({ readingProgress: updated });
+  },
+
+  saveVolumeProgress: (bookId, volumeKey, pageNumber, totalPages, extra) => {
+    ReadingProgressService.saveProgressImmediate(bookId, volumeKey, pageNumber, totalPages, extra);
+    const key = getReadingProgressKey(bookId, volumeKey);
+    set((state) => ({
+      volumeReadingProgress: {
+        ...state.volumeReadingProgress,
+        [key]: {
+          bookId,
+          volumeKey: String(volumeKey ?? '1'),
+          pageNumber,
+          totalPages,
+          chapterId: extra?.chapterId,
+          sectionId: extra?.sectionId,
+          updatedAt: Date.now(),
+        },
+      },
+    }));
+  },
+
+  getVolumeProgress: (bookId, volumeKey) => {
+    const key = getReadingProgressKey(bookId, volumeKey);
+    return get().volumeReadingProgress[key] || ReadingProgressService.getProgress(bookId, volumeKey);
   },
 
   clearSearch: () => {

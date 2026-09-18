@@ -17,6 +17,8 @@ import {
   getSharahMuslimPdfPage,
 } from '../../data/sharahMuslimData';
 import { SharahMuslimPdfService } from '../../services/sharahMuslimPdfService';
+import { ReadingProgressService } from '../../services/readingProgressService';
+import { useBookReadingProgress } from '../../hooks/useBookReadingProgress';
 
 interface ZoomOption {
   id: string;
@@ -59,7 +61,7 @@ export const SharahMuslimReader: React.FC = () => {
   const pageParam = searchParams.get('page');
   const initialPrintedPage = pageParam
     ? Math.max(1, Math.min(totalPrintedPages, parseInt(pageParam, 10) || 1))
-    : 1;
+    : ReadingProgressService.getInitialPage('sharah-sahih-muslim', volNum, null, 1);
   const initialPdfPage = getSharahMuslimPdfPage(volNum, initialPrintedPage);
 
   const [currentPdfPage, setCurrentPdfPage] = useState<number>(initialPdfPage);
@@ -75,6 +77,14 @@ export const SharahMuslimReader: React.FC = () => {
     horizontalAlign: 'left' | 'right' | 'center';
     verticalAlign: 'bottom' | 'top';
   }>({ horizontalAlign: 'right', verticalAlign: 'bottom' });
+
+  // Auto-save reading progress for Sharh Muslim Jild X
+  useBookReadingProgress({
+    bookId: 'sharah-sahih-muslim',
+    volumeKey: volNum,
+    currentPage: currentPrintedPage,
+    totalPages: totalPrintedPages,
+  });
 
   const activePdfPageRef = useRef<number>(initialPdfPage);
   const activePrintedPageRef = useRef<number>(initialPrintedPage);

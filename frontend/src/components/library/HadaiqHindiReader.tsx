@@ -20,6 +20,8 @@ import {
   HadaiqHindiKalamItem,
 } from '../../data/hadaiqHindiData';
 import { HadaiqHindiPdfService } from '../../services/hadaiqHindiPdfService';
+import { ReadingProgressService } from '../../services/readingProgressService';
+import { useBookReadingProgress } from '../../hooks/useBookReadingProgress';
 
 interface ZoomOption {
   id: string;
@@ -54,7 +56,7 @@ export const HadaiqHindiReader: React.FC = () => {
   const pageParam = searchParams.get('page');
   const initialPage = pageParam
     ? Math.max(1, Math.min(totalPrintedPages, parseInt(pageParam, 10) || 1))
-    : 1;
+    : ReadingProgressService.getInitialPage('hadaiq-e-bakhshish', 'hindi', null, 1);
 
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
   const [directPageInput, setDirectPageInput] = useState<string>(initialPage.toString());
@@ -64,6 +66,14 @@ export const HadaiqHindiReader: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isIndexOpen, setIsIndexOpen] = useState<boolean>(false);
   const [indexSearch, setIndexSearch] = useState<string>('');
+
+  // Auto-save reading progress for Hadaiq Hindi
+  useBookReadingProgress({
+    bookId: 'hadaiq-e-bakhshish',
+    volumeKey: 'hindi',
+    currentPage: currentPage,
+    totalPages: totalPrintedPages,
+  });
 
   const activePageRef = useRef<number>(currentPage);
   const isProgrammaticScrollRef = useRef<boolean>(false);

@@ -25,6 +25,46 @@ import { FATAWA_RAZAWIYYA_VOLUMES } from '../../data/fatawaRazawiyyaData';
 import { FatawaRazawiyyaPdfService } from '../../services/fatawaRazawiyyaPdfService';
 import { BUKHARI_VOLUMES } from '../../data/bukhariData';
 import { BukhariPdfService } from '../../services/bukhariPdfService';
+import { ReadingProgressService } from '../../services/readingProgressService';
+
+// ============================================================================
+// REUSABLE VOLUME READING PROGRESS BADGE
+// ============================================================================
+interface VolumeProgressBadgeProps {
+  bookId: string;
+  volumeKey: string | number;
+  totalPages?: number;
+}
+
+const VolumeProgressBadge: React.FC<VolumeProgressBadgeProps> = ({ bookId, volumeKey, totalPages }) => {
+  const prog = ReadingProgressService.getProgress(bookId, volumeKey);
+  if (!prog || !prog.pageNumber || prog.pageNumber <= 0) return null;
+  return (
+    <div
+      style={{
+        marginTop: 6,
+        fontSize: '0.7rem',
+        fontWeight: 600,
+        color: '#34d399',
+        backgroundColor: 'rgba(16, 185, 129, 0.12)',
+        border: '1px solid rgba(16, 185, 129, 0.28)',
+        padding: '2px 8px',
+        borderRadius: '10px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        letterSpacing: '0.01em',
+        maxWidth: '100%',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      }}
+    >
+      <span>📖 Page {prog.pageNumber}</span>
+      {totalPages ? <span style={{ opacity: 0.7 }}>/ {totalPages}</span> : null}
+    </div>
+  );
+};
 
 // ============================================================================
 // SAHIH AL-BUKHARI COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
@@ -800,6 +840,12 @@ export const BookDetailPage: React.FC = () => {
               <div className="bukhari-card-jild">
                 {v.displayTitle}
               </div>
+
+              <VolumeProgressBadge
+                bookId="sahih-al-bukhari"
+                volumeKey={v.volumeNumber}
+                totalPages={v.totalPages}
+              />
             </div>
           ))}
         </div>
@@ -1051,6 +1097,12 @@ export const BookDetailPage: React.FC = () => {
               <div className="fatawa-card-author">
                 Imam Ahmad Raza Khan
               </div>
+
+              <VolumeProgressBadge
+                bookId="fatawa-razawiyya"
+                volumeKey={v.volumeKey}
+                totalPages={v.totalPages}
+              />
             </div>
           ))}
         </div>
@@ -1508,6 +1560,11 @@ export const BookDetailPage: React.FC = () => {
                 <div className="muslim-card-jild">
                   {label}
                 </div>
+
+                <VolumeProgressBadge
+                  bookId="sahih-muslim"
+                  volumeKey={volNum}
+                />
               </div>
             ))}
           </div>
@@ -1550,6 +1607,11 @@ export const BookDetailPage: React.FC = () => {
                 <div className="muslim-card-author">
                   Allama Ghulam Rasool Saeedi
                 </div>
+
+                <VolumeProgressBadge
+                  bookId="sharah-sahih-muslim"
+                  volumeKey={volNum}
+                />
 
                 {/* Status Indicator */}
                 {!isAvailable && (
@@ -2180,6 +2242,11 @@ export const BookDetailPage: React.FC = () => {
               <div className="tirmizi-card-jild">
                 {label} {isAvailable ? '' : '(Coming Soon)'}
               </div>
+
+              <VolumeProgressBadge
+                bookId="jami-at-tirmidhi"
+                volumeKey={volNum}
+              />
             </div>
           ))}
         </div>
@@ -2371,6 +2438,12 @@ export const BookDetailPage: React.FC = () => {
             <div className="hadaiq-card-lang">
               (Urdu)
             </div>
+
+            <VolumeProgressBadge
+              bookId="hadaiq-e-bakhshish"
+              volumeKey="urdu"
+              totalPages={446}
+            />
           </div>
 
           {/* Card 2: Hadaiq-e-Bakhshish (Hindi Edition) */}
@@ -2402,6 +2475,12 @@ export const BookDetailPage: React.FC = () => {
             <div className="hadaiq-card-lang">
               (Hindi)
             </div>
+
+            <VolumeProgressBadge
+              bookId="hadaiq-e-bakhshish"
+              volumeKey="hindi"
+              totalPages={490}
+            />
           </div>
 
           {/* Card 3: Hadaiq-e-Bakhshish (English Edition) */}
@@ -2433,6 +2512,12 @@ export const BookDetailPage: React.FC = () => {
             <div className="hadaiq-card-lang">
               (Roman Urdu)
             </div>
+
+            <VolumeProgressBadge
+              bookId="hadaiq-e-bakhshish"
+              volumeKey="english"
+              totalPages={319}
+            />
           </div>
         </div>
       </div>
@@ -2684,6 +2769,12 @@ export const BookDetailPage: React.FC = () => {
               <div className="universal-card-jild">
                 {v.displayTitle || v.title}
               </div>
+
+              <VolumeProgressBadge
+                bookId={book.id}
+                volumeKey={v.volumeKey || v.volumeNumber}
+                totalPages={v.totalPages}
+              />
             </div>
           ))}
         </div>

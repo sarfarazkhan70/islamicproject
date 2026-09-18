@@ -20,6 +20,8 @@ import {
   getTirmiziPdfPage,
 } from '../../data/tirmiziData';
 import { TirmiziPdfService } from '../../services/tirmiziPdfService';
+import { ReadingProgressService } from '../../services/readingProgressService';
+import { useBookReadingProgress } from '../../hooks/useBookReadingProgress';
 
 interface ZoomOption {
   id: string;
@@ -62,7 +64,7 @@ export const TirmiziReader: React.FC = () => {
   const pageParam = searchParams.get('page');
   const initialPrintedPage = pageParam
     ? Math.max(1, Math.min(totalPrintedPages, parseInt(pageParam, 10) || 1))
-    : 1;
+    : ReadingProgressService.getInitialPage('jami-at-tirmidhi', volNum, null, 1);
   const initialPdfPage = getTirmiziPdfPage(volNum, initialPrintedPage);
 
   const [currentPdfPage, setCurrentPdfPage] = useState<number>(initialPdfPage);
@@ -79,6 +81,14 @@ export const TirmiziReader: React.FC = () => {
     horizontalAlign: 'left' | 'right' | 'center';
     verticalAlign: 'bottom' | 'top';
   }>({ horizontalAlign: 'right', verticalAlign: 'bottom' });
+
+  // Auto-save reading progress for Tirmizi Part X
+  useBookReadingProgress({
+    bookId: 'jami-at-tirmidhi',
+    volumeKey: volNum,
+    currentPage: currentPrintedPage,
+    totalPages: totalPrintedPages,
+  });
 
   const activePdfPageRef = useRef<number>(initialPdfPage);
   const activePrintedPageRef = useRef<number>(initialPrintedPage);

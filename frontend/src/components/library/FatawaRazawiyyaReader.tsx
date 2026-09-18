@@ -24,6 +24,8 @@ import {
   FATAWA_RAZAWIYYA_VOLUMES,
 } from '../../data/fatawaRazawiyyaData';
 import { FatawaRazawiyyaPdfService } from '../../services/fatawaRazawiyyaPdfService';
+import { ReadingProgressService } from '../../services/readingProgressService';
+import { useBookReadingProgress } from '../../hooks/useBookReadingProgress';
 
 interface ZoomOption {
   id: string;
@@ -66,7 +68,7 @@ export const FatawaRazawiyyaReader: React.FC = () => {
   const pageParam = searchParams.get('page');
   const initialPrintedPage = pageParam
     ? Math.max(1, Math.min(totalPrintedPages, parseInt(pageParam, 10) || 1))
-    : 1;
+    : ReadingProgressService.getInitialPage('fatawa-razawiyya', volKey, null, 1);
   const initialPdfPage = getFatawaPdfPage(volKey, initialPrintedPage);
 
   const [currentPdfPage, setCurrentPdfPage] = useState<number>(initialPdfPage);
@@ -79,6 +81,14 @@ export const FatawaRazawiyyaReader: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [globalRotation, setGlobalRotation] = useState<number>(0);
   const [pageCustomRotations, setPageCustomRotations] = useState<Record<number, number>>({});
+
+  // Auto-save reading progress for Fatawa Jild X
+  useBookReadingProgress({
+    bookId: 'fatawa-razawiyya',
+    volumeKey: volKey,
+    currentPage: currentPrintedPage,
+    totalPages: totalPrintedPages,
+  });
 
   const activePdfPageRef = useRef<number>(initialPdfPage);
   const activePrintedPageRef = useRef<number>(initialPrintedPage);

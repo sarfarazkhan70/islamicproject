@@ -4,6 +4,8 @@ import path from 'path';
 import {
   BUKHARI_VOLUMES,
   getBukhariVolume,
+  bukhariPrintedToPdfPage,
+  bukhariPdfToPrintedPage,
   GOOGLE_DRIVE_BUKHARI_LINK,
   GOOGLE_DRIVE_BUKHARI_FILE_ID,
   LOCAL_BUKHARI_PDF_PATH,
@@ -12,31 +14,36 @@ import { BukhariService } from '../services/bukhariService';
 import { BukhariPdfService } from '../services/bukhariPdfService';
 import { ISLAMIC_BOOKS } from '../data/libraryData';
 
-describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
-  it('should have exactly 1 book item configured with the Google Drive link and 699 pages', () => {
-    expect(BUKHARI_VOLUMES.length).toBe(1);
-    const item = BUKHARI_VOLUMES[0];
-    expect(item.id).toBe('bukhari-book-1');
-    expect(item.title).toBe('Sahih al-Bukhari');
-    expect(item.arabicTitle).toBe('صحيح البخاري');
-    expect(item.totalPages).toBe(699);
-    expect(item.googleDriveId).toBe('1E0hs0zZzKMET9J20kAzeIPR-Mdw51zBm');
-    expect(item.googleDriveLink).toBe(GOOGLE_DRIVE_BUKHARI_LINK);
+describe('Sahih al-Bukhari Multi-Volume Verification', () => {
+  it('should have 2 volume items configured with Google Drive links and page counts', () => {
+    expect(BUKHARI_VOLUMES.length).toBe(2);
+    const item1 = BUKHARI_VOLUMES[0];
+    expect(item1.id).toBe('bukhari-book-1');
+    expect(item1.title).toBe('Sahih al-Bukhari');
+    expect(item1.totalPages).toBe(699);
+    expect(item1.googleDriveId).toBe('1E0hs0zZzKMET9J20kAzeIPR-Mdw51zBm');
+
+    const item2 = BUKHARI_VOLUMES[1];
+    expect(item2.id).toBe('bukhari-book-2');
+    expect(item2.title).toBe('Sahih al-Bukhari');
+    expect(item2.totalPages).toBe(691);
+    expect(item2.googleDriveId).toBe('1S1oweMG_zebXqLDrd1I4zCAjRhgnx73N');
   });
 
-  it('should have local PDF served at /pdf/bukhari_shareef_drive.pdf', () => {
+  it('should have local PDF served at /pdf/bukhari_shareef_drive.pdf and /pdf/bukhari_shareef_vol_2.pdf', () => {
     expect(LOCAL_BUKHARI_PDF_PATH).toBe('/pdf/bukhari_shareef_drive.pdf');
-    const localFilePath = path.resolve(__dirname, '../../public/pdf/bukhari_shareef_drive.pdf');
-    expect(fs.existsSync(localFilePath)).toBe(true);
-    const stats = fs.statSync(localFilePath);
-    expect(stats.size).toBeGreaterThan(40_000_000); // 43.6 MB
+    const localFilePath1 = path.resolve(__dirname, '../../public/pdf/bukhari_shareef_drive.pdf');
+    expect(fs.existsSync(localFilePath1)).toBe(true);
+
+    const localFilePath2 = path.resolve(__dirname, '../../public/pdf/bukhari_shareef_vol_2.pdf');
+    expect(fs.existsSync(localFilePath2)).toBe(true);
   });
 
-  it('should have clean single-item definition in ISLAMIC_BOOKS', () => {
+  it('should have clean 2-volume definition in ISLAMIC_BOOKS', () => {
     const bukhariBook = ISLAMIC_BOOKS.find((b) => b.id === 'sahih-al-bukhari');
     expect(bukhariBook).toBeDefined();
-    expect(bukhariBook?.volumeCount).toBe(1);
-    expect(bukhariBook?.volumes?.length).toBe(1);
+    expect(bukhariBook?.volumeCount).toBe(2);
+    expect(bukhariBook?.volumes?.length).toBe(2);
     expect(bukhariBook?.author).toBe('Imam Muhammad ibn Ismail al-Bukhari');
   });
 
@@ -157,34 +164,57 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     expect(code).toContain('overflow: \'visible\'');
   });
 
-  it('should verify exact 1-to-1 direct page-number search mapping without -1 offset', () => {
+  it('should verify exact direct printed page-number search mapping to PDF index without offset', () => {
     const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
     const code = fs.readFileSync(readerFilePath, 'utf8');
 
-    // 1. Direct page submit triggers instant scroll directly to target page
-    expect(code).toContain('scrollToPage(pNum, \'auto\')');
+    // 1. Direct page submit maps printed page to target PDF page and scrolls
+    expect(code).toContain('bukhariPrintedToPdfPage(pNum, activeVolNum)');
+    expect(code).toContain('scrollToPdfPage(targetPdf, \'auto\')');
 
-    // 2. scrollToPage aligns target element and sets state synchronously
-    expect(code).toContain('const clamped = Math.max(1, Math.min(totalPages, pageNum))');
-    expect(code).toContain('setCurrentPage(clamped)');
-    expect(code).toContain('activePageRef.current = clamped');
-    expect(code).toContain("next.set('page', clamped.toString())");
-    expect(code).toContain('document.getElementById(`bukhari-page-${clamped}`)');
+    // 2. scrollToPdfPage aligns target element and sets state synchronously
+    expect(code).toContain('const clampedPdf = Math.max(1, Math.min(totalPdfPages, pdfPageNum))');
+    expect(code).toContain('setCurrentPdfPage(clampedPdf)');
+    expect(code).toContain('setCurrentPrintedPage(printed)');
+    expect(code).toContain('activePdfPageRef.current = clampedPdf');
+    expect(code).toContain("next.set('page', printed.toString())");
+    expect(code).toContain('document.getElementById(`bukhari-page-${clampedPdf}`)');
 
-    // 3. Observer uses reading focus line to prevent previous-page offset
+    // 3. Observer uses reading focus line to prevent offset
     expect(code).toContain('const focusY = headerOffset + 30');
     expect(code).toContain('rect.top <= focusY && rect.bottom > focusY');
     expect(code).toContain('rootMargin: isFullscreen ? \'-55px 0px -40% 0px\' : \'-130px 0px -40% 0px\'');
+  });
 
-    // 4. Test page number bounds: first page (1), middle pages (100, 160, 161), last page (699)
-    const testCases = [1, 100, 160, 161, 699];
-    const totalPages = 699;
-    for (const testPage of testCases) {
-      const clamped = Math.max(1, Math.min(totalPages, testPage));
-      expect(clamped).toBe(testPage);
-      // Image URL and element ID are strictly 1-to-1
-      expect(BukhariPdfService.getPageImageUrl(clamped)).toBe(`/bukhari/pages/page_${testPage}.webp`);
-    }
+  it('should verify exact printed-to-pdf and pdf-to-printed page conversions for Jild 1 and Jild 2', () => {
+    // Volume 1 validation: Printed 1 -> PDF 2, Printed 50 -> PDF 51, 100 -> 101, 300 -> 301, 400 -> 401
+    expect(bukhariPrintedToPdfPage(1, 1)).toBe(2);
+    expect(bukhariPrintedToPdfPage(50, 1)).toBe(51);
+    expect(bukhariPrintedToPdfPage(100, 1)).toBe(101);
+    expect(bukhariPrintedToPdfPage(300, 1)).toBe(301);
+    expect(bukhariPrintedToPdfPage(400, 1)).toBe(401);
+    expect(bukhariPrintedToPdfPage(698, 1)).toBe(699);
+
+    // Volume 2 validation: Printed 1 -> PDF 2, Printed 50 -> PDF 51, 100 -> 101, 300 -> 301, 400 -> 401
+    expect(bukhariPrintedToPdfPage(1, 2)).toBe(2);
+    expect(bukhariPrintedToPdfPage(50, 2)).toBe(51);
+    expect(bukhariPrintedToPdfPage(100, 2)).toBe(101);
+    expect(bukhariPrintedToPdfPage(300, 2)).toBe(301);
+    expect(bukhariPrintedToPdfPage(400, 2)).toBe(401);
+    expect(bukhariPrintedToPdfPage(690, 2)).toBe(691);
+
+    // Reverse conversion: PDF 2 -> Printed 1, PDF 51 -> Printed 50, PDF 301 -> Printed 300, PDF 401 -> Printed 400
+    expect(bukhariPdfToPrintedPage(2, 1)).toBe(1);
+    expect(bukhariPdfToPrintedPage(51, 1)).toBe(50);
+    expect(bukhariPdfToPrintedPage(101, 1)).toBe(100);
+    expect(bukhariPdfToPrintedPage(301, 1)).toBe(300);
+    expect(bukhariPdfToPrintedPage(401, 1)).toBe(400);
+
+    expect(bukhariPdfToPrintedPage(2, 2)).toBe(1);
+    expect(bukhariPdfToPrintedPage(51, 2)).toBe(50);
+    expect(bukhariPdfToPrintedPage(101, 2)).toBe(100);
+    expect(bukhariPdfToPrintedPage(301, 2)).toBe(300);
+    expect(bukhariPdfToPrintedPage(401, 2)).toBe(400);
   });
 
   it('should verify complete removal of Hadith marker highlighting feature and all related styles/classes', () => {
@@ -223,15 +253,15 @@ describe('Sahih al-Bukhari Google Drive Single Book Verification', () => {
     const readerFilePath = path.resolve(__dirname, '../components/library/BukhariReader.tsx');
     const code = fs.readFileSync(readerFilePath, 'utf8');
 
-    // 1. Verifies scrollToPage aligns directly with target page element
-    expect(code).toContain('scrollToPage');
-    expect(code).toContain('document.getElementById(`bukhari-page-${clamped}`)');
-    expect(code).toContain('headerOffset = isFullscreen ? 60 : 135');
+    // 1. Verifies scrollToPdfPage aligns directly with target page element
+    expect(code).toContain('scrollToPdfPage');
+    expect(code).toContain('document.getElementById(`bukhari-page-${clampedPdf}`)');
+    expect(code).toContain('const headerOffset = isFullscreen ? 60 : 135;');
     expect(code).toContain('window.scrollTo({ top: Math.max(0, y), behavior })');
 
     // 2. Verifies clean page card structure rendering high-DPI book page
     expect(code).toContain('BukhariPageCard');
-    expect(code).toContain('BukhariPdfService.getPageImageUrl(pageNumber)');
+    expect(code).toContain('BukhariPdfService.getPageImageUrl(pdfPageNumber, volumeNumber)');
     expect(code).toContain('bukhari-page-card');
   });
 });

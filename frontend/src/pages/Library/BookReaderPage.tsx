@@ -24,11 +24,22 @@ import { TirmiziReader } from '../../components/library/TirmiziReader';
 import { HadaiqReader } from '../../components/library/HadaiqReader';
 import { HadaiqHindiReader } from '../../components/library/HadaiqHindiReader';
 import { HadaiqEnglishReader } from '../../components/library/HadaiqEnglishReader';
+import { FatawaRazawiyyaReader } from '../../components/library/FatawaRazawiyyaReader';
 
 export const BookReaderPage: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  // If Fatawa Razawiyya, render the dedicated 31-volume Reader
+  if (
+    bookId === 'fatawa-razawiyya' ||
+    bookId === 'fatawa-e-razviya' ||
+    bookId === 'fatawa-razvia' ||
+    bookId === 'fatawa-rizvia'
+  ) {
+    return <FatawaRazawiyyaReader />;
+  }
 
   // If Kanzul Iman, render the dedicated Quran + Kanzul Iman Reader
   if (bookId === 'kanzul-iman') {

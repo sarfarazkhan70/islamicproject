@@ -35,19 +35,19 @@ describe('Islamic Book Cards & Volume Structure Verification', () => {
     expect(volumes[2].chapters && volumes[2].chapters.length).toBeGreaterThan(0);
   });
 
-  it('should have clean and verified metadata for Fatawa Razawiyya with 30 Jilds', () => {
+  it('should have clean and verified metadata for Fatawa-e-Razviya with 31 Volumes', () => {
     const fatawa = getBookById('fatawa-razawiyya');
     expect(fatawa).toBeDefined();
-    expect(fatawa?.title).toBe('Fatawa Razawiyya');
+    expect(fatawa?.title).toBe('Fatawa-e-Razviya');
     expect(fatawa?.author).toContain('Imam Ahmad Raza Khan');
-    expect(fatawa?.volumeCount).toBe(30);
+    expect(fatawa?.volumeCount).toBe(31);
     expect(fatawa?.category).toBe('fatawa');
 
     const volumes = getBookVolumes(fatawa!);
-    expect(volumes.length).toBe(30);
-    expect(volumes.map((v) => v.volumeNumber)).toEqual(
-      Array.from({ length: 30 }, (_, i) => i + 1)
-    );
+    expect(volumes.length).toBe(31);
+    expect(volumes[0].title).toBe('Fatawa-e-Razviya – Jild 1.1');
+    expect(volumes[1].title).toBe('Fatawa-e-Razviya – Jild 1.2');
+    expect(volumes[0].isAvailable).toBe(true);
   });
 
   it('should have clean and verified metadata for Hadaiq-e-Bakhshish', () => {
@@ -62,8 +62,8 @@ describe('Islamic Book Cards & Volume Structure Verification', () => {
     expect(bukhari).toBeDefined();
     expect(bukhari?.author).toContain('Bukhari');
     expect(bukhari?.category).toBe('hadith');
-    expect(bukhari?.volumeCount).toBe(1);
-    expect(getBookVolumes(bukhari!).length).toBe(1);
+    expect(bukhari?.volumeCount).toBe(2);
+    expect(getBookVolumes(bukhari!).length).toBe(2);
 
     const muslim = getBookById('sahih-muslim');
     expect(muslim).toBeDefined();
@@ -116,6 +116,32 @@ describe('Islamic Book Cards & Volume Structure Verification', () => {
     expect(useQuranStore.getState().mode).toBe('listen');
     store.setMode('read');
     expect(useQuranStore.getState().mode).toBe('read');
+  });
+
+  it('should verify Islamic Library does not contain duplicate Allah Ta\'ala and Huzur ﷺ cards while dedicated pages are preserved', async () => {
+    const fs = await import('fs');
+    const path = await import('path');
+
+    const libraryPageContent = fs.readFileSync(
+      path.resolve(__dirname, '../pages/Library/LibraryPage.tsx'),
+      'utf-8'
+    );
+
+    // Verify duplicate section is removed from Islamic Library
+    expect(libraryPageContent).not.toContain('<SacredNamesAudioSection');
+    expect(libraryPageContent).not.toContain('SacredNamesAudioSection');
+
+    // Verify Library core structure and clean layout are preserved
+    expect(libraryPageContent).toContain('Kanzul Iman');
+    expect(libraryPageContent).toContain('<LibrarySearchBar');
+    expect(libraryPageContent).toContain('<CategoryFilterPills');
+    expect(libraryPageContent).toContain('<BookCard');
+
+    // Verify dedicated pages datasets are preserved
+    const { ASMA_UL_HUSNA } = await import('../data/islamic/asmaUlHusnaData');
+    const { ASMA_E_MUSTAFA } = await import('../data/islamic/asmaEMustafaData');
+    expect(ASMA_UL_HUSNA.length).toBe(99);
+    expect(ASMA_E_MUSTAFA.length).toBe(99);
   });
 });
 

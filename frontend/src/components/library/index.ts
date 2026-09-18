@@ -10,3 +10,4 @@ export * from './LibrarySearchBar';
 export * from './MuslimReader';
 export * from './SharahMuslimReader';
 export * from './TirmiziReader';
+export * from './FatawaRazawiyyaReader';

@@ -171,7 +171,7 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tradition: 'Classical Sunni Hadith',
     primaryLanguage: 'Arabic',
     languagesAvailable: ['Arabic', 'Urdu', 'English'],
-    volumeCount: 1,
+    volumeCount: 2,
     era: 'Classical (194-256 AH / 810-870 CE)',
     isFeatured: true,
     isAvailable: true,
@@ -184,7 +184,8 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tags: ['Hadith', 'Sahih', 'Sihah Sittah', 'Bukhari', 'Sunnah'],
     source: 'Verified Classical Musnad Standard Edition',
     volumes: [
-      { id: 'bukhari-vol-1', volumeNumber: 1, title: 'Sahih al-Bukhari', isAvailable: true, chaptersCount: 1 },
+      { id: 'bukhari-vol-1', volumeNumber: 1, title: 'Jild 1', isAvailable: true, chaptersCount: 1 },
+      { id: 'bukhari-vol-2', volumeNumber: 2, title: 'Jild 2', isAvailable: true, chaptersCount: 1 },
     ],
   },
   {
@@ -493,11 +494,11 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
   // =========================================================================
   {
     id: 'fatawa-razawiyya',
-    title: 'Fatawa Razawiyya',
+    title: 'Fatawa-e-Razviya',
     arabicTitle: 'العطايا النبوية في الفتاوى الرضوية',
     urduTitle: 'فتاویٰ رضویہ (العطایا النبویہ فی الفتاویٰ الرضویہ)',
     transliteration: 'Al-Ataya an-Nabawiyya fil-Fatawa ar-Razawiyya',
-    author: 'Imam Ahmad Raza Khan Barelvi (Alahazrat)',
+    author: 'Imam Ahmad Raza Khan',
     authorArabic: 'الإمام أحمد رضا خان القادري الحنفي البريلوي (۱۲۷۲ - ۱۳۴۰ هـ)',
     authorTitle: 'Mujaddid of the 14th Islamic Century, Imam of Ahl-e-Sunnat',
     category: 'fatawa',
@@ -505,49 +506,50 @@ export const ISLAMIC_BOOKS: IslamicBook[] = [
     tradition: 'Hanafi / Ahl-e-Sunnat (Alahazrat Tradition)',
     primaryLanguage: 'Urdu & Arabic',
     languagesAvailable: ['Urdu', 'Arabic'],
-    volumeCount: 30,
+    volumeCount: 31,
     era: '1272-1340 AH / 1856-1921 CE',
     isFeatured: true,
     isAvailable: true,
     coverColor: '#064e3b',
     accentColor: '#f59e0b',
     description:
-      'The crown jewel of Sunni Hanafi jurisprudence in the modern era. Comprising 30 monumental volumes, 21,656 pages, 6,847 detailed Fatawa, and 206 comprehensive individual research monographs (Rasa’il) resolving complex traditional and contemporary legal questions with profound mastery across Hadith, Usul al-Fiqh, astronomy, mathematics, and philosophy.',
+      'The crown jewel of Sunni Hanafi jurisprudence in the modern era. Comprising 31 monumental volumes, 21,656 pages, 6,847 detailed Fatawa, and 206 comprehensive individual research monographs (Rasa’il) by Alahazrat Imam Ahmad Raza Khan.',
     significance:
       'Universally acknowledged by Ulama of the subcontinent and the Arab world as the definitive reference of Hanafi jurisprudence and Ahl-e-Sunnat doctrine.',
-    tags: ['Alahazrat', 'Fatawa Razawiyya', 'Hanafi Fiqh', 'Ahl-e-Sunnat', 'Fatwa'],
-    source: 'Maktaba-tul-Madina / Raza Academy Verified 30-Volume Edition',
+    tags: ['Alahazrat', 'Fatawa Razawiyya', 'Fatawa-e-Razviya', 'Hanafi Fiqh', 'Ahl-e-Sunnat', 'Fatwa'],
+    source: 'Verified 31-Volume Standard Edition (Archive.org & Maktaba-tul-Madina)',
     volumes: [
-      { id: 'razawiyya-vol-1', volumeNumber: 1, title: 'Volume 1: Kitab at-Taharah (Water & Purification)', urduTitle: 'جلد ۱ (کتاب الطہارۃ — میاہ، حوض، وضوء)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-2', volumeNumber: 2, title: 'Volume 2: Wudu, Ghusl & Tayammum Masail', urduTitle: 'جلد ۲ (کتاب الطہارۃ — غسل، تیمم، نجاسات)', isAvailable: true, chaptersCount: 6 },
-      { id: 'razawiyya-vol-3', volumeNumber: 3, title: 'Volume 3: Impurities & Sanitation Rulings', urduTitle: 'جلد ۳ (کتاب الطہارۃ — ازالۃ النجاسۃ، استنجاء)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-4', volumeNumber: 4, title: 'Volume 4: Kitab as-Salah (Prayer Times & Azan)', urduTitle: 'جلد ۴ (کتاب الصلاۃ — اوقات نماز، فلکیاتی تحقیق)', isAvailable: true, chaptersCount: 10 },
-      { id: 'razawiyya-vol-5', volumeNumber: 5, title: 'Volume 5: Conditions of Salah & Qibla Verification', urduTitle: 'جلد ۵ (کتاب الصلاۃ — شروط صلاۃ، سمت قبلہ)', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-6', volumeNumber: 6, title: 'Volume 6: Congregational Prayer & Imamat Standards', urduTitle: 'جلد ۶ (کتاب الصلاۃ — ارکان صلاۃ، قراءت، اذان، امامت)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-7', volumeNumber: 7, title: 'Volume 7: Jumu’ah, Eidain & Sajdah Sahw', urduTitle: 'جلد ۷ (کتاب الصلاۃ — جماعت، جمعہ، عیدین)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-8', volumeNumber: 8, title: 'Volume 8: Traveler’s Prayer (Qasr) & Sunnah Prayers', urduTitle: 'جلد ۸ (کتاب الصلاۃ — صلاۃ مسافر، قضاء نمازیں، سجدہ سہو)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-9', volumeNumber: 9, title: 'Volume 9: Funerals (Janaiz) & Visitation of Graves', urduTitle: 'جلد ۹ (کتاب الجنائز — زیارت قبور، ایصال ثواب)', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-10', volumeNumber: 10, title: 'Volume 10: Kitab az-Zakat (Charity & Wealth Rulings)', urduTitle: 'جلد ۱۰ (کتاب الزکاۃ — مصارف زکاۃ، صدقہ فطر)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-11', volumeNumber: 11, title: 'Volume 11: Kitab as-Sawm (Fasting & Moon Sighting)', urduTitle: 'جلد ۱۱ (کتاب الصوم — رویت ہلال، اعتکاف)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-12', volumeNumber: 12, title: 'Volume 12: Kitab al-Hajj (Pilgrimage & Sacred Sites)', urduTitle: 'جلد ۱۲ (کتاب الحج — مناسک حج، زیارت مدینہ منورہ)', isAvailable: true, chaptersCount: 10 },
-      { id: 'razawiyya-vol-13', volumeNumber: 13, title: 'Volume 13: Kitab an-Nikah (Marriage & Dowry)', urduTitle: 'جلد ۱۳ (کتاب النکاح — ولایت، کفاءت، مہر)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-14', volumeNumber: 14, title: 'Volume 14: Fosterage & Spousal Rights', urduTitle: 'جلد ۱۴ (کتاب النکاح — محرمات، رضاعت، حقوق زوجین)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-15', volumeNumber: 15, title: 'Volume 15: Kitab at-Talaq (Divorce Rulings)', urduTitle: 'جلد ۱۵ (کتاب الطلاق — ایقاع طلاق، الفاظ کنایات)', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-16', volumeNumber: 16, title: 'Volume 16: Waiting Period (Iddah) & Maintenance', urduTitle: 'جلد ۱۶ (کتاب الطلاق — عدت، نفقہ، خلع، ظہار)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-17', volumeNumber: 17, title: 'Volume 17: Oaths & Vows (Ayman wa Nudhur)', urduTitle: 'جلد ۱۷ (کتاب العتاق والایمان والنذور)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-18', volumeNumber: 18, title: 'Volume 18: Legal Punishments & Jihad', urduTitle: 'جلد ۱۸ (کتاب الحدود والسرقۃ والجہاد)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-19', volumeNumber: 19, title: 'Volume 19: Lost Property & Public Assets', urduTitle: 'جلد ۱۹ (کتاب الجزیۃ واللقطۃ والاموال الضائعۃ)', isAvailable: true, chaptersCount: 6 },
-      { id: 'razawiyya-vol-20', volumeNumber: 20, title: 'Volume 20: Trusts & Usurpation (Ghasb)', urduTitle: 'جلد ۲۰ (کتاب الغصب والودیعۃ والعاریۃ)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-21', volumeNumber: 21, title: 'Volume 21: Kitab al-Buyu’ (Commerce & Contracts)', urduTitle: 'جلد ۲۱ (کتاب البیوع — شرائط بیع، خیارات)', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-22', volumeNumber: 22, title: 'Volume 22: Riba (Interest) & Invalid Sales', urduTitle: 'جلد ۲۲ (کتاب البیوع — بیع فاسد، اقالہ، ربا و سود)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-23', volumeNumber: 23, title: 'Volume 23: Leasing, Guarantee & Agency', urduTitle: 'جلد ۲۳ (کتاب الاجارۃ والکفالۃ والوکالۃ)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-24', volumeNumber: 24, title: 'Volume 24: Preemption & Partnerships', urduTitle: 'جلد ۲۴ (کتاب الشفعۃ والقسمۃ والمزارعۃ)', isAvailable: true, chaptersCount: 7 },
-      { id: 'razawiyya-vol-25', volumeNumber: 25, title: 'Volume 25: Slaughtering, Hunting & Sacrifices', urduTitle: 'جلد ۲۵ (کتاب الشرب والذبائح والصید والاضحیۃ)', isAvailable: true, chaptersCount: 8 },
-      { id: 'razawiyya-vol-26', volumeNumber: 26, title: 'Volume 26: Etiquettes & Disliked Matters', urduTitle: 'جلد ۲۶ (کتاب الکراہیۃ والاستحسان والادب)', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-27', volumeNumber: 27, title: 'Volume 27: Inheritance, Estates & Wills', urduTitle: 'جلد ۲۷ (کتاب احیاء الموات والفرائض والوصایا)', isAvailable: true, chaptersCount: 9 },
-      { id: 'razawiyya-vol-28', volumeNumber: 28, title: 'Volume 28: Islamic Beliefs & Refutations', urduTitle: 'جلد ۲۸ (رسائل و عقائد — رد بدعات و منکرات)', isAvailable: true, chaptersCount: 10 },
-      { id: 'razawiyya-vol-29', volumeNumber: 29, title: 'Volume 29: Research Monographs & Tasawwuf', urduTitle: 'جلد ۲۹ (رسائل علمیہ و فقہیہ — تصوف و احکام)', isAvailable: true, chaptersCount: 11 },
-      { id: 'razawiyya-vol-30', volumeNumber: 30, title: 'Volume 30: Comprehensive Indices & Addenda', urduTitle: 'جلد ۳۰ (فہارس جامعہ و رسائل متفرقہ)', isAvailable: true, chaptersCount: 8 },
+      { id: 'fatawa-vol-1-1', volumeNumber: 1, title: 'Fatawa-e-Razviya – Jild 1.1', urduTitle: 'جلد ۱.۱ (کتاب الطہارۃ — میاہ، حوض، وضوء)', isAvailable: true, chaptersCount: 588 },
+      { id: 'fatawa-vol-1-2', volumeNumber: 2, title: 'Fatawa-e-Razviya – Jild 1.2', urduTitle: 'جلد ۱.۲ (کتاب الطہارۃ — احکام وضوء و مسح)', isAvailable: true, chaptersCount: 560 },
+      { id: 'fatawa-vol-2', volumeNumber: 3, title: 'Fatawa-e-Razviya – Jild 2', urduTitle: 'جلد ۲ (کتاب الطہارۃ — غسل، تیمم، نجاسات)', isAvailable: true, chaptersCount: 560 },
+      { id: 'fatawa-vol-3', volumeNumber: 4, title: 'Fatawa-e-Razviya – Jild 3', urduTitle: 'جلد ۳ (کتاب الطہارۃ — ازالۃ النجاسۃ، استنجاء)', isAvailable: true, chaptersCount: 752 },
+      { id: 'fatawa-vol-4', volumeNumber: 5, title: 'Fatawa-e-Razviya – Jild 4', urduTitle: 'جلد ۴ (کتاب الصلاۃ — اوقات نماز، فلکیاتی تحقیق)', isAvailable: true, chaptersCount: 758 },
+      { id: 'fatawa-vol-5', volumeNumber: 6, title: 'Fatawa-e-Razviya – Jild 5', urduTitle: 'جلد ۵ (کتاب الصلاۃ — شروط صلاۃ، سمت قبلہ)', isAvailable: true, chaptersCount: 693 },
+      { id: 'fatawa-vol-6', volumeNumber: 7, title: 'Fatawa-e-Razviya – Jild 6', urduTitle: 'جلد ۶ (کتاب الصلاۃ — ارکان صلاۃ، اذان، امامت)', isAvailable: true, chaptersCount: 732 },
+      { id: 'fatawa-vol-7', volumeNumber: 8, title: 'Fatawa-e-Razviya – Jild 7', urduTitle: 'جلد ۷ (کتاب الصلاۃ — جماعت، جمعہ، عیدین)', isAvailable: true, chaptersCount: 718 },
+      { id: 'fatawa-vol-8', volumeNumber: 9, title: 'Fatawa-e-Razviya – Jild 8', urduTitle: 'جلد ۸ (کتاب الصلاۃ — مسافر، قضاء نمازیں، سہو)', isAvailable: true, chaptersCount: 670 },
+      { id: 'fatawa-vol-9', volumeNumber: 10, title: 'Fatawa-e-Razviya – Jild 9', urduTitle: 'جلد ۹ (کتاب الجنائز — زیارت قبور، ایصال ثواب)', isAvailable: true, chaptersCount: 946 },
+      { id: 'fatawa-vol-10', volumeNumber: 11, title: 'Fatawa-e-Razviya – Jild 10', urduTitle: 'جلد ۱۰ (کتاب الزکاۃ — مصارف زکاۃ، صدقہ فطر)', isAvailable: true, chaptersCount: 831 },
+      { id: 'fatawa-vol-11', volumeNumber: 12, title: 'Fatawa-e-Razviya – Jild 11', urduTitle: 'جلد ۱۱ (کتاب الصوم — رویت ہلال، اعتکاف)', isAvailable: true, chaptersCount: 736 },
+      { id: 'fatawa-vol-12', volumeNumber: 13, title: 'Fatawa-e-Razviya – Jild 12', urduTitle: 'جلد ۱۲ (کتاب الحج — مناسک حج، زیارت مدینہ)', isAvailable: true, chaptersCount: 685 },
+      { id: 'fatawa-vol-13', volumeNumber: 14, title: 'Fatawa-e-Razviya – Jild 13', urduTitle: 'جلد ۱۳ (کتاب النکاح — ولایت، کفاءت، مہر)', isAvailable: true, chaptersCount: 685 },
+      { id: 'fatawa-vol-14', volumeNumber: 15, title: 'Fatawa-e-Razviya – Jild 14', urduTitle: 'جلد ۱۴ (کتاب النکاح — محرمات، حقوق زوجین)', isAvailable: true, chaptersCount: 709 },
+      { id: 'fatawa-vol-15', volumeNumber: 16, title: 'Fatawa-e-Razviya – Jild 15', urduTitle: 'جلد ۱۵ (کتاب الطلاق — ایقاع طلاق، کنایات)', isAvailable: true, chaptersCount: 739 },
+      { id: 'fatawa-vol-16', volumeNumber: 17, title: 'Fatawa-e-Razviya – Jild 16', urduTitle: 'جلد ۱۶ (کتاب الطلاق — عدت، نفقہ، خلع)', isAvailable: true, chaptersCount: 628 },
+      { id: 'fatawa-vol-17', volumeNumber: 18, title: 'Fatawa-e-Razviya – Jild 17', urduTitle: 'جلد ۱۷ (کتاب العتاق والایمان والنذور)', isAvailable: true, chaptersCount: 712 },
+      { id: 'fatawa-vol-18', volumeNumber: 19, title: 'Fatawa-e-Razviya – Jild 18', urduTitle: 'جلد ۱۸ (کتاب الحدود والسرقۃ والجہاد)', isAvailable: true, chaptersCount: 734 },
+      { id: 'fatawa-vol-19', volumeNumber: 20, title: 'Fatawa-e-Razviya – Jild 19', urduTitle: 'جلد ۱۹ (کتاب الجزیۃ واللقطۃ والاموال)', isAvailable: true, chaptersCount: 689 },
+      { id: 'fatawa-vol-20', volumeNumber: 21, title: 'Fatawa-e-Razviya – Jild 20', urduTitle: 'جلد ۲۰ (کتاب الغصب والودیعۃ والعاریۃ)', isAvailable: true, chaptersCount: 627 },
+      { id: 'fatawa-vol-21', volumeNumber: 22, title: 'Fatawa-e-Razviya – Jild 21', urduTitle: 'جلد ۲۱ (کتاب البیوع — شرائط بیع، خیارات)', isAvailable: true, chaptersCount: 672 },
+      { id: 'fatawa-vol-22', volumeNumber: 23, title: 'Fatawa-e-Razviya – Jild 22', urduTitle: 'جلد ۲۲ (کتاب البیوع — بیع فاسد، ربا و سود)', isAvailable: true, chaptersCount: 689 },
+      { id: 'fatawa-vol-23', volumeNumber: 24, title: 'Fatawa-e-Razviya – Jild 23', urduTitle: 'جلد ۲۳ (کتاب الاجارۃ والکفالۃ والوکالۃ)', isAvailable: true, chaptersCount: 766 },
+      { id: 'fatawa-vol-24', volumeNumber: 25, title: 'Fatawa-e-Razviya – Jild 24', urduTitle: 'جلد ۲۴ (کتاب الشفعۃ والقسمۃ والمزارعۃ)', isAvailable: true, chaptersCount: 718 },
+      { id: 'fatawa-vol-25', volumeNumber: 26, title: 'Fatawa-e-Razviya – Jild 25', urduTitle: 'جلد ۲۵ (کتاب الذبائح والصید والاضحیۃ)', isAvailable: true, chaptersCount: 655 },
+      { id: 'fatawa-vol-26', volumeNumber: 27, title: 'Fatawa-e-Razviya – Jild 26', urduTitle: 'جلد ۲۶ (کتاب الکراہیۃ والاستحسان والادب)', isAvailable: true, chaptersCount: 610 },
+      { id: 'fatawa-vol-27', volumeNumber: 28, title: 'Fatawa-e-Razviya – Jild 27', urduTitle: 'جلد ۲۷ (کتاب الفرائض والوصایا والموات)', isAvailable: true, chaptersCount: 680 },
+      { id: 'fatawa-vol-28', volumeNumber: 29, title: 'Fatawa-e-Razviya – Jild 28', urduTitle: 'جلد ۲۸ (رسائل و عقائد — رد بدعات و منکرات)', isAvailable: true, chaptersCount: 681 },
+      { id: 'fatawa-vol-29', volumeNumber: 30, title: 'Fatawa-e-Razviya – Jild 29', urduTitle: 'جلد ۲۹ (رسائل علمیہ و فقہیہ و تصوف)', isAvailable: true, chaptersCount: 748 },
+      { id: 'fatawa-vol-30', volumeNumber: 31, title: 'Fatawa-e-Razviya – Jild 30', urduTitle: 'جلد ۳۰ (فہارس جامعہ و رسائل متفرقہ)', isAvailable: true, chaptersCount: 770 },
     ],
     sampleChapters: [
       {
@@ -1064,25 +1066,146 @@ export function getBookById(id: string): IslamicBook | undefined {
     }
   }
   if (id === 'sharah-sahih-muslim' || id === 'sharh-sahih-muslim' || id === 'sharah-muslim') {
-    return ISLAMIC_BOOKS.find((b) => b.id === 'sahih-muslim');
+    const base = ISLAMIC_BOOKS.find((b) => b.id === 'sahih-muslim');
+    if (base) {
+      return {
+        ...base,
+        id: 'sharah-sahih-muslim',
+        title: 'Sahih Muslim Sharif Sharh',
+        arabicTitle: 'شرح صحيح مسلم للإمام غلام رسول السعيدي',
+        urduTitle: 'شرح صحیح مسلم شریف',
+        author: 'Allama Ghulam Rasool Saeedi',
+        volumeCount: 7,
+      };
+    }
   }
   return ISLAMIC_BOOKS.find((book) => book.id === id);
 }
 
 export function getBookVolumes(book: IslamicBook): BookVolume[] {
-  let vols: BookVolume[] = [];
+  // 1. Sahih al-Bukhari (2 Volumes)
+  if (book.id === 'sahih-al-bukhari') {
+    return [
+      {
+        id: 'bukhari-vol-1',
+        volumeNumber: 1,
+        volumeKey: '1',
+        title: 'Sahih al-Bukhari',
+        displayTitle: 'Jild 1',
+        arabicTitle: 'صحيح البخاري - المجلد الأول',
+        urduTitle: 'صحیح البخاری - جلد 1',
+        author: 'Imam Muhammad Ismail Bukhari',
+        isAvailable: true,
+        coverImage: '/bukhari/covers/cover_1.webp',
+        totalPages: 699,
+        totalPrintedPages: 698,
+        localPdfUrl: '/pdf/bukhari_shareef_drive.pdf',
+      },
+      {
+        id: 'bukhari-vol-2',
+        volumeNumber: 2,
+        volumeKey: '2',
+        title: 'Sahih al-Bukhari',
+        displayTitle: 'Jild 2',
+        arabicTitle: 'صحيح البخاري - المجلد الثاني',
+        urduTitle: 'صحیح البخاری - جلد 2',
+        author: 'Imam Muhammad Ismail Bukhari',
+        isAvailable: true,
+        coverImage: '/bukhari/covers/cover_2.webp',
+        totalPages: 691,
+        totalPrintedPages: 690,
+        localPdfUrl: '/pdf/bukhari_shareef_vol_2.pdf',
+      },
+    ];
+  }
+
+  // 2. Fatawa-e-Razviya (31 Volumes)
+  if (book.id === 'fatawa-razawiyya' || book.id === 'fatawa-e-razviya') {
+    const keys = [
+      '1.1', '1.2', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+      '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+      '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'
+    ];
+    return keys.map((key, idx) => {
+      const normKey = key.replace('.', '_');
+      return {
+        id: `fatawa-vol-${normKey}`,
+        volumeNumber: idx + 1,
+        volumeKey: key,
+        title: `Fatawa-e-Razviya – Jild ${key}`,
+        displayTitle: `Jild ${key}`,
+        urduTitle: `جلد ${key}`,
+        arabicTitle: `الفتاوى الرضوية - المجلد ${key}`,
+        author: 'Imam Ahmad Raza Khan',
+        isAvailable: true,
+        coverImage: `/fatawa/covers/cover_${normKey}.webp`,
+        localPdfUrl: `/pdf/fatawa/fatawa_razawiyya_vol_${normKey}.pdf`,
+      };
+    });
+  }
+
+  // 3. Sahih Muslim (6 Volumes)
+  if (book.id === 'sahih-muslim') {
+    return [
+      { id: 'muslim-vol-1', volumeNumber: 1, volumeKey: '1', title: 'Sahih Muslim', displayTitle: 'Jild 1', author: 'Imam Muslim ibn al-Hajjaj', isAvailable: true, coverImage: '/muslim/pages/page_1.webp', totalPages: 453 },
+      { id: 'muslim-vol-2', volumeNumber: 2, volumeKey: '2', title: 'Sahih Muslim', displayTitle: 'Jild 2', author: 'Imam Muslim ibn al-Hajjaj', isAvailable: true, coverImage: '/muslim/vol2/pages/page_1.webp', totalPages: 432 },
+      { id: 'muslim-vol-3', volumeNumber: 3, volumeKey: '3', title: 'Sahih Muslim', displayTitle: 'Jild 3', author: 'Imam Muslim ibn al-Hajjaj', isAvailable: true, coverImage: '/muslim/vol3/pages/page_1.webp', totalPages: 405 },
+      { id: 'muslim-vol-4', volumeNumber: 4, volumeKey: '4', title: 'Sahih Muslim', displayTitle: 'Jild 4', author: 'Imam Muslim ibn al-Hajjaj', isAvailable: true, coverImage: '/muslim/vol4/pages/page_1.webp', totalPages: 366 },
+      { id: 'muslim-vol-5', volumeNumber: 5, volumeKey: '5', title: 'Sahih Muslim', displayTitle: 'Jild 5', author: 'Imam Muslim ibn al-Hajjaj', isAvailable: true, coverImage: '/muslim/vol5/pages/page_1.webp', totalPages: 459 },
+      { id: 'muslim-vol-6', volumeNumber: 6, volumeKey: '6', title: 'Sahih Muslim', displayTitle: 'Jild 6', author: 'Imam Muslim ibn al-Hajjaj', isAvailable: true, coverImage: '/muslim/vol6/pages/page_1.webp', totalPages: 510 },
+    ];
+  }
+
+  // 4. Sharh Sahih Muslim (7 Volumes)
+  if (book.id === 'sharah-sahih-muslim' || book.id === 'sharh-sahih-muslim') {
+    return [
+      { id: 'sharah-muslim-vol-1', volumeNumber: 1, volumeKey: '1', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 1', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 571 },
+      { id: 'sharah-muslim-vol-2', volumeNumber: 2, volumeKey: '2', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 2', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 431 },
+      { id: 'sharah-muslim-vol-3', volumeNumber: 3, volumeKey: '3', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 3', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 464 },
+      { id: 'sharah-muslim-vol-4', volumeNumber: 4, volumeKey: '4', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 4', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 335 },
+      { id: 'sharah-muslim-vol-5', volumeNumber: 5, volumeKey: '5', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 5', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 387 },
+      { id: 'sharah-muslim-vol-6', volumeNumber: 6, volumeKey: '6', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 6', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 593 },
+      { id: 'sharah-muslim-vol-7', volumeNumber: 7, volumeKey: '7', title: 'Sahih Muslim Sharif Sharh', displayTitle: 'Jild 7', author: 'Allama Ghulam Rasool Saeedi', isAvailable: true, coverImage: '/sharah-muslim/pages/page_1.webp', totalPages: 435 },
+    ];
+  }
+
+  // 5. Jami' at-Tirmidhi (6 Parts)
+  if (book.id === 'jami-at-tirmidhi' || book.id === 'jami-tirmizi' || book.id === 'tirmizi') {
+    return [
+      { id: 'tirmidhi-vol-1', volumeNumber: 1, volumeKey: '1', title: 'Jami’ at-Tirmidhi', displayTitle: 'Part 1', author: 'Imam Abu Isa Muhammad at-Tirmidhi', isAvailable: true, coverImage: '/tirmizi/vol1_part1/pages/page_1.webp', totalPages: 107 },
+      { id: 'tirmidhi-vol-2', volumeNumber: 2, volumeKey: '2', title: 'Jami’ at-Tirmidhi', displayTitle: 'Part 2', author: 'Imam Abu Isa Muhammad at-Tirmidhi', isAvailable: true, coverImage: '/tirmizi/vol1_part2/pages/page_1.webp', totalPages: 118 },
+      { id: 'tirmidhi-vol-3', volumeNumber: 3, volumeKey: '3', title: 'Jami’ at-Tirmidhi', displayTitle: 'Part 3', author: 'Imam Abu Isa Muhammad at-Tirmidhi', isAvailable: true, coverImage: '/tirmizi/vol1_part3/pages/page_1.webp', totalPages: 104 },
+      { id: 'tirmidhi-vol-4', volumeNumber: 4, volumeKey: '4', title: 'Jami’ at-Tirmidhi', displayTitle: 'Part 4', author: 'Imam Abu Isa Muhammad at-Tirmidhi', isAvailable: true, coverImage: '/tirmizi/vol2_part1/pages/page_1.webp', totalPages: 107 },
+      { id: 'tirmidhi-vol-5', volumeNumber: 5, volumeKey: '5', title: 'Jami’ at-Tirmidhi', displayTitle: 'Part 5', author: 'Imam Abu Isa Muhammad at-Tirmidhi', isAvailable: true, coverImage: '/tirmizi/vol2_part2/pages/page_1.webp', totalPages: 119 },
+      { id: 'tirmidhi-vol-6', volumeNumber: 6, volumeKey: '6', title: 'Jami’ at-Tirmidhi', displayTitle: 'Part 6', author: 'Imam Abu Isa Muhammad at-Tirmidhi', isAvailable: true, coverImage: '/tirmizi/vol2_part3/pages/page_1.webp', totalPages: 83 },
+    ];
+  }
+
+  // 6. Hadaiq-e-Bakhshish (3 Editions)
+  if (book.id === 'hadaiq-e-bakhshish') {
+    return [
+      { id: 'hadaiq-vol-1', volumeNumber: 1, volumeKey: 'urdu', title: 'Hadaiq-e-Bakhshish', displayTitle: 'Hadaiq-e-Bakhshish (Urdu)', author: 'Imam Ahmad Raza Khan Barelvi (Ala Hazrat)', isAvailable: true, coverImage: '/hadaiq/pages/page_1.webp' },
+      { id: 'hadaiq-vol-2', volumeNumber: 2, volumeKey: 'hindi', title: 'Hadaiq-e-Bakhshish', displayTitle: 'Hadaiq-e-Bakhshish (Hindi)', author: 'Imam Ahmad Raza Khan Barelvi (Ala Hazrat)', isAvailable: true, coverImage: '/hadaiq-hindi/pages/page_1.webp' },
+      { id: 'hadaiq-vol-3', volumeNumber: 3, volumeKey: 'english', title: 'Hadaiq-e-Bakhshish', displayTitle: 'Hadaiq-e-Bakhshish (Roman Urdu)', author: 'Imam Ahmad Raza Khan Barelvi (Ala Hazrat)', isAvailable: true, coverImage: '/hadaiq-english/pages/page_1.webp' },
+    ];
+  }
+
+  // 7. Generic / Future Multi-Volume Books
   if (book.volumes && book.volumes.length > 0) {
-    vols = book.volumes.map((v) => {
+    return book.volumes.map((v) => {
       const volChapters =
         v.chapters ||
         (book.sampleChapters ? book.sampleChapters.filter((c) => c.volumeNumber === v.volumeNumber) : []);
       return {
         ...v,
+        author: v.author || book.compiler || book.author,
+        displayTitle: v.displayTitle || v.title || `Jild ${v.volumeNumber}`,
+        coverImage: v.coverImage || `/library/${book.id}/covers/cover_${v.volumeNumber}.webp`,
         chapters: volChapters.length > 0 ? volChapters : v.chapters,
       };
     });
-    return vols;
   }
+
   const count = Math.max(1, book.volumeCount || 1);
   const urduDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
   const toUrdu = (n: number) => String(n).split('').map((d) => urduDigits[parseInt(d, 10)] || d).join('');
@@ -1093,10 +1216,14 @@ export function getBookVolumes(book: IslamicBook): BookVolume[] {
     list.push({
       id: `${book.id}-vol-${i}`,
       volumeNumber: i,
-      title: `Jild ${i}`,
+      volumeKey: String(i),
+      title: `${book.title} – Jild ${i}`,
+      displayTitle: `Jild ${i}`,
       urduTitle: `جلد ${toUrdu(i)}`,
       arabicTitle: `المجلد ${i}`,
+      author: book.compiler || book.author,
       isAvailable: true,
+      coverImage: `/library/${book.id}/covers/cover_${i}.webp`,
       chaptersCount: volChapters.length || 1,
       chapters: volChapters.length > 0 ? volChapters : undefined,
     });

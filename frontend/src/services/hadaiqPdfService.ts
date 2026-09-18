@@ -52,6 +52,13 @@ function enqueueRender(task: () => Promise<void>): Promise<void> {
 
 export class HadaiqPdfService {
   /**
+   * Resolve local PDF path
+   */
+  public static getPdfUrl(): string {
+    return LOCAL_HADAIQ_PDF_PATH;
+  }
+
+  /**
    * Load and cache the PDF document instance with automatic retry on failure
    */
   public static getDocument(): Promise<pdfjsLib.PDFDocumentProxy> {

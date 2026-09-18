@@ -64,12 +64,19 @@ export interface BookChapter {
 export interface BookVolume {
   id: string;
   volumeNumber: number;
+  volumeKey?: string; // e.g. "1.1", "1.2", "2"
   title: string;
+  displayTitle?: string;
   arabicTitle?: string;
   urduTitle?: string;
+  author?: string;
   chaptersCount?: number;
   description?: string;
   isAvailable: boolean;
+  coverImage?: string;
+  localPdfUrl?: string;
+  totalPages?: number;
+  totalPrintedPages?: number;
   chapters?: BookChapter[];
 }
 
@@ -96,6 +103,9 @@ export interface IslamicBook {
   isAvailable: boolean; // Digital edition ready to read vs in preparation
   coverColor?: string;
   accentColor?: string;
+  coverImage?: string;
+  localPdfUrl?: string;
+  readerType?: 'pdf' | 'pages' | 'quran' | 'custom';
   tags: string[];
   volumes?: BookVolume[];
   sampleChapters?: BookChapter[];

@@ -10,7 +10,12 @@ import {
   Search,
   Check,
 } from 'lucide-react';
-import { BUKHARI_VOLUMES } from '../../data/bukhariData';
+import {
+  BUKHARI_VOLUMES,
+  getBukhariVolume,
+  bukhariPrintedToPdfPage,
+  bukhariPdfToPrintedPage,
+} from '../../data/bukhariData';
 import { BukhariPdfService } from '../../services/bukhariPdfService';
 import { getHadithByRef } from '../../data/dailyHadithData';
 
@@ -46,8 +51,11 @@ export const BukhariReader: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const bukhariBook = BUKHARI_VOLUMES[0];
-  const totalPages = bukhariBook.totalPages; // 699 pages
+  const volParam = searchParams.get('vol');
+  const activeVolNum = volParam ? parseInt(volParam, 10) || 1 : 1;
+  const activeVol = getBukhariVolume(activeVolNum);
+  const totalPdfPages = activeVol.totalPages;
+  const totalPrintedPages = activeVol.totalPrintedPages;
 
   const pageParam = searchParams.get('page');
   const hadithParam = searchParams.get('hadith') || searchParams.get('hadithId') || searchParams.get('ref');
@@ -55,31 +63,44 @@ export const BukhariReader: React.FC = () => {
   // Resolve target Hadith page if hadith/hadithId/ref is provided in URL
   const targetHadith = hadithParam ? getHadithByRef(hadithParam) : undefined;
 
-  const initialPage = pageParam
-    ? Math.max(1, Math.min(totalPages, parseInt(pageParam, 10) || 1))
+  const initialPrintedPage = pageParam
+    ? Math.max(1, Math.min(totalPrintedPages, parseInt(pageParam, 10) || 1))
     : targetHadith?.pageNumber || 1;
 
-  const [currentPage, setCurrentPage] = useState<number>(initialPage);
-  const [directPageInput, setDirectPageInput] = useState<string>(initialPage.toString());
+  const initialPdfPage = bukhariPrintedToPdfPage(initialPrintedPage, activeVolNum);
+
+  const [currentPdfPage, setCurrentPdfPage] = useState<number>(initialPdfPage);
+  const [currentPrintedPage, setCurrentPrintedPage] = useState<number>(initialPrintedPage);
+  const [directPageInput, setDirectPageInput] = useState<string>(initialPrintedPage.toString());
   const [zoomLevel, setZoomLevel] = useState<number>(() => sessionBukhariZoomLevel ?? 1.0);
   const [isFitWidth, setIsFitWidth] = useState<boolean>(() => sessionBukhariFitWidth ?? true); // Default: Fit to Width
   const [isZoomMenuOpen, setIsZoomMenuOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
-  const activePageRef = useRef<number>(currentPage);
+  const activePdfPageRef = useRef<number>(currentPdfPage);
   const isProgrammaticScrollRef = useRef<boolean>(false);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomMenuRef = useRef<HTMLDivElement | null>(null);
 
-  // Sync direct input box with current page
+  // Sync direct input box with current printed page
   useEffect(() => {
-    setDirectPageInput(currentPage.toString());
-  }, [currentPage]);
+    setDirectPageInput(currentPrintedPage.toString());
+  }, [currentPrintedPage]);
+
+  // Reset current page when switching volume
+  useEffect(() => {
+    const initPdf = bukhariPrintedToPdfPage(initialPrintedPage, activeVolNum);
+    const initPrinted = bukhariPdfToPrintedPage(initPdf, activeVolNum);
+    setCurrentPdfPage(initPdf);
+    setCurrentPrintedPage(initPrinted);
+    setDirectPageInput(initPrinted.toString());
+    activePdfPageRef.current = initPdf;
+  }, [activeVolNum, initialPrintedPage]);
 
   // Maintain currently visible page position after zoom adjustment
-  const maintainCurrentPagePosition = useCallback((targetPage: number) => {
+  const maintainCurrentPagePosition = useCallback((targetPdfPage: number) => {
     requestAnimationFrame(() => {
-      const el = document.getElementById(`bukhari-page-${targetPage}`);
+      const el = document.getElementById(`bukhari-page-${targetPdfPage}`);
       if (el) {
         const headerOffset = isFullscreen ? 55 : 130;
         const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
@@ -107,22 +128,26 @@ export const BukhariReader: React.FC = () => {
     };
   }, [isZoomMenuOpen]);
 
-  // Scroll to a specific Bukhari page
-  const scrollToPage = useCallback(
-    (pageNum: number, behavior: ScrollBehavior = 'auto') => {
-      const clamped = Math.max(1, Math.min(totalPages, pageNum));
-      setCurrentPage(clamped);
-      activePageRef.current = clamped;
+  // Scroll to a specific Bukhari PDF page
+  const scrollToPdfPage = useCallback(
+    (pdfPageNum: number, behavior: ScrollBehavior = 'auto') => {
+      const clampedPdf = Math.max(1, Math.min(totalPdfPages, pdfPageNum));
+      const printed = bukhariPdfToPrintedPage(clampedPdf, activeVolNum);
+
+      setCurrentPdfPage(clampedPdf);
+      setCurrentPrintedPage(printed);
+      activePdfPageRef.current = clampedPdf;
       isProgrammaticScrollRef.current = true;
 
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev);
-        next.set('page', clamped.toString());
+        next.set('page', printed.toString());
+        next.set('vol', activeVolNum.toString());
         return next;
       });
 
       const performScroll = () => {
-        const el = document.getElementById(`bukhari-page-${clamped}`);
+        const el = document.getElementById(`bukhari-page-${clampedPdf}`);
         if (el) {
           const headerOffset = isFullscreen ? 60 : 135;
           const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
@@ -143,27 +168,30 @@ export const BukhariReader: React.FC = () => {
         isProgrammaticScrollRef.current = false;
       }, lockDuration);
     },
-    [totalPages, isFullscreen, setSearchParams]
+    [totalPdfPages, isFullscreen, setSearchParams, activeVolNum]
   );
 
-  // Initial scroll when mounting or when navigating from Dashboard
+  // Initial scroll when mounting or when navigating
   useEffect(() => {
-    const targetPage = initialPage;
+    const targetPdf = initialPdfPage;
     const timer = setTimeout(() => {
-      scrollToPage(targetPage, 'auto');
+      scrollToPdfPage(targetPdf, 'auto');
     }, 120);
     return () => clearTimeout(timer);
-  }, [initialPage, scrollToPage]);
+  }, [initialPdfPage, scrollToPdfPage]);
 
   // Handle URL param changes (e.g. browser back/forward)
   useEffect(() => {
     if (pageParam) {
       const p = parseInt(pageParam, 10);
-      if (!isNaN(p) && p >= 1 && p <= totalPages && p !== activePageRef.current) {
-        scrollToPage(p, 'auto');
+      if (!isNaN(p) && p >= 1 && p <= totalPrintedPages) {
+        const targetPdf = bukhariPrintedToPdfPage(p, activeVolNum);
+        if (targetPdf !== activePdfPageRef.current) {
+          scrollToPdfPage(targetPdf, 'auto');
+        }
       }
     }
-  }, [pageParam, totalPages, scrollToPage]);
+  }, [pageParam, totalPrintedPages, scrollToPdfPage, activeVolNum]);
 
   // Track currently visible page during vertical scrolling
   useEffect(() => {
@@ -198,11 +226,13 @@ export const BukhariReader: React.FC = () => {
         }
 
         if (activeEntry) {
-          const pageAttr = activeEntry.target.getAttribute('data-page');
-          const p = parseInt(pageAttr || '', 10);
-          if (!isNaN(p) && p !== activePageRef.current) {
-            activePageRef.current = p;
-            setCurrentPage(p);
+          const pageAttr = activeEntry.target.getAttribute('data-pdf-page');
+          const pdfP = parseInt(pageAttr || '', 10);
+          if (!isNaN(pdfP) && pdfP !== activePdfPageRef.current) {
+            activePdfPageRef.current = pdfP;
+            const printedP = bukhariPdfToPrintedPage(pdfP, activeVolNum);
+            setCurrentPdfPage(pdfP);
+            setCurrentPrintedPage(printedP);
           }
         }
       },
@@ -217,25 +247,29 @@ export const BukhariReader: React.FC = () => {
     pageElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [isFullscreen, totalPages]);
+  }, [isFullscreen, totalPdfPages, activeVolNum]);
 
   // Handle direct page jump form submission
   const handleDirectPageSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const pNum = parseInt(directPageInput, 10);
-    if (!isNaN(pNum) && pNum >= 1 && pNum <= totalPages) {
-      scrollToPage(pNum, 'auto');
+    if (!isNaN(pNum) && pNum >= 1 && pNum <= totalPrintedPages) {
+      const targetPdf = bukhariPrintedToPdfPage(pNum, activeVolNum);
+      scrollToPdfPage(targetPdf, 'auto');
     }
   };
 
+  const handleVolumeSwitch = (newVol: number) => {
+    setSearchParams({ vol: newVol.toString(), page: '1' });
+    setCurrentPdfPage(2);
+    setCurrentPrintedPage(1);
+    setDirectPageInput('1');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSelectZoomOption = (opt: ZoomOption) => {
-    const currentP = activePageRef.current;
-    if (opt.isSpecial === 'fit-width') {
-      setIsFitWidth(true);
-      setZoomLevel(1.0);
-      sessionBukhariFitWidth = true;
-      sessionBukhariZoomLevel = 1.0;
-    } else if (opt.isSpecial === 'reset-default') {
+    const currentP = activePdfPageRef.current;
+    if (opt.isSpecial === 'fit-width' || opt.isSpecial === 'reset-default') {
       setIsFitWidth(true);
       setZoomLevel(1.0);
       sessionBukhariFitWidth = true;
@@ -251,7 +285,7 @@ export const BukhariReader: React.FC = () => {
   };
 
   const handleZoomIn = () => {
-    const currentP = activePageRef.current;
+    const currentP = activePdfPageRef.current;
     setIsFitWidth(false);
     setZoomLevel((prev) => {
       const next = ZOOM_PERCENTAGES.find((p) => p > prev + 0.02);
@@ -264,7 +298,7 @@ export const BukhariReader: React.FC = () => {
   };
 
   const handleZoomOut = () => {
-    const currentP = activePageRef.current;
+    const currentP = activePdfPageRef.current;
     setIsFitWidth(false);
     setZoomLevel((prev) => {
       const prevArr = [...ZOOM_PERCENTAGES].reverse();
@@ -278,7 +312,7 @@ export const BukhariReader: React.FC = () => {
   };
 
   const handleResetZoom = () => {
-    const currentP = activePageRef.current;
+    const currentP = activePdfPageRef.current;
     setIsFitWidth(true);
     setZoomLevel(1.0);
     sessionBukhariFitWidth = true;
@@ -287,10 +321,8 @@ export const BukhariReader: React.FC = () => {
     maintainCurrentPagePosition(currentP);
   };
 
-  // Generate all 699 pages array
-  const allPageNumbers = useRef<number[]>(
-    Array.from({ length: totalPages }, (_, i) => i + 1)
-  ).current;
+  // Generate PDF page numbers array for active volume (1 to totalPdfPages)
+  const allPdfPageNumbers = Array.from({ length: totalPdfPages }, (_, i) => i + 1);
 
   const pageContainerMaxWidth = isFitWidth
     ? '880px'
@@ -311,7 +343,7 @@ export const BukhariReader: React.FC = () => {
       }}
     >
       {/* ========================================================================= */}
-      {/* CLEAN RESPONSIVE PERMANENTLY STICKY TOOLBAR & PAGE SEARCH BOX            */}
+      {/* CLEAN RESPONSIVE PERMANENTLY STICKY TOOLBAR & CONTROLS                    */}
       {/* ========================================================================= */}
       <header
         className="card bukhari-top-toolbar"
@@ -334,7 +366,7 @@ export const BukhariReader: React.FC = () => {
           boxSizing: 'border-box',
         }}
       >
-        {/* Section 1: Back to Library & Clean Book Title */}
+        {/* Section 1: Back to Volume Cards & Book/Volume Title */}
         <div
           style={{
             display: 'flex',
@@ -346,7 +378,7 @@ export const BukhariReader: React.FC = () => {
           <button
             type="button"
             className="btn btn-sm btn-ghost"
-            onClick={() => navigate('/library')}
+            onClick={() => navigate('/library/sahih-al-bukhari')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -354,37 +386,79 @@ export const BukhariReader: React.FC = () => {
               padding: '6px 10px',
               fontSize: '0.82rem',
             }}
-            title="Back to Islamic Library"
+            title="Back to Bukhari Sharif Volumes"
           >
             <ArrowLeft size={16} />
-            <span>Library</span>
+            <span>Volumes</span>
           </button>
 
           <div>
-            <h1
-              className="font-arabic"
-              style={{
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                color: 'var(--brand-primary)',
-                margin: 0,
-                lineHeight: 1.2,
-              }}
-            >
-              صحيح البخاري
-            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <h1
+                className="font-arabic"
+                style={{
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  color: 'var(--brand-primary)',
+                  margin: 0,
+                  lineHeight: 1.2,
+                }}
+              >
+                صحيح البخاري
+              </h1>
+              <span
+                style={{
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  padding: '1px 6px',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: 'rgba(16, 185, 129, 0.18)',
+                  color: '#10b981',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                }}
+              >
+                {activeVol.displayTitle}
+              </span>
+            </div>
             <div
               className="text-xs text-muted"
               style={{ display: 'flex', alignItems: 'center', gap: 4 }}
             >
-              <span>{totalPages} Pages</span>
+              <span>{totalPrintedPages} Pages</span>
               <span>•</span>
               <span className="font-arabic">النسخة الأصلية</span>
             </div>
           </div>
         </div>
 
-        {/* Section 2: Single Clean Zoom Button with Dropdown Menu */}
+        {/* Section 2: Volume Switcher Quick Dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <select
+            className="select"
+            value={activeVolNum}
+            onChange={(e) => handleVolumeSwitch(parseInt(e.target.value, 10))}
+            style={{
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              padding: '4px 8px',
+              height: 32,
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid rgba(16, 185, 129, 0.4)',
+              backgroundColor: 'var(--bg-surface)',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+            }}
+            aria-label="Select Volume"
+          >
+            {BUKHARI_VOLUMES.map((v) => (
+              <option key={v.volumeNumber} value={v.volumeNumber}>
+                {v.displayTitle} ({v.totalPrintedPages} Pages)
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Section 3: Single Clean Zoom Button with Dropdown Menu */}
         <div
           ref={zoomMenuRef}
           style={{
@@ -582,7 +656,7 @@ export const BukhariReader: React.FC = () => {
           )}
         </div>
 
-        {/* Section 3: Page Search & Jump (No Prev/Next buttons) */}
+        {/* Section 4: Page Search & Jump (Exact Printed Page Mapping) */}
         <div
           className="bukhari-page-search-container"
           style={{
@@ -614,7 +688,7 @@ export const BukhariReader: React.FC = () => {
             <input
               type="number"
               min={1}
-              max={totalPages}
+              max={totalPrintedPages}
               value={directPageInput}
               onChange={(e) => setDirectPageInput(e.target.value)}
               aria-label="رقم الصفحة"
@@ -639,7 +713,7 @@ export const BukhariReader: React.FC = () => {
                 fontFamily: 'var(--font-mono)',
               }}
             >
-              / {totalPages}
+              / {totalPrintedPages}
             </span>
 
             <button
@@ -675,7 +749,7 @@ export const BukhariReader: React.FC = () => {
       </header>
 
       {/* ========================================================================= */}
-      {/* VERTICAL CONTINUOUS SCROLL STREAM (ALL 699 PAGES WITH SNAPPING)          */}
+      {/* VERTICAL CONTINUOUS SCROLL STREAM (ALL PAGES WITH ACCURATE MAPPING)        */}
       {/* ========================================================================= */}
       <main
         className="bukhari-vertical-reading-stream"
@@ -691,15 +765,18 @@ export const BukhariReader: React.FC = () => {
           boxSizing: 'border-box',
         }}
       >
-        {allPageNumbers.map((pageNum) => (
+        {allPdfPageNumbers.map((pdfPageNum) => (
           <BukhariPageCard
-            key={pageNum}
-            pageNumber={pageNum}
-            totalPages={totalPages}
+            key={`${activeVolNum}_${pdfPageNum}`}
+            pdfPageNumber={pdfPageNum}
+            volumeNumber={activeVolNum}
+            volumeTitle={activeVol.displayTitle}
+            totalPdfPages={totalPdfPages}
+            totalPrintedPages={totalPrintedPages}
             zoomLevel={zoomLevel}
             isFitWidth={isFitWidth}
-            isCurrent={pageNum === currentPage}
-            initialPage={initialPage}
+            isCurrent={pdfPageNum === currentPdfPage}
+            initialPdfPage={initialPdfPage}
           />
         ))}
       </main>
@@ -711,31 +788,38 @@ export const BukhariReader: React.FC = () => {
 // SINGLE BUKHARI PAGE CARD COMPONENT (HIGH-DPI AUTHENTIC BOOK RENDERING)
 // ============================================================================
 interface BukhariPageCardProps {
-  pageNumber: number;
-  totalPages: number;
+  pdfPageNumber: number;
+  volumeNumber: number;
+  volumeTitle: string;
+  totalPdfPages: number;
+  totalPrintedPages: number;
   zoomLevel: number;
   isFitWidth: boolean;
   isCurrent: boolean;
-  initialPage: number;
+  initialPdfPage: number;
 }
 
 const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
   ({
-    pageNumber,
-    totalPages,
+    pdfPageNumber,
+    volumeNumber,
+    volumeTitle,
+    totalPdfPages: _totalPdfPages,
+    totalPrintedPages,
     zoomLevel,
     isFitWidth,
     isCurrent,
-    initialPage,
+    initialPdfPage,
   }) => {
-    const isNearby = Math.abs(pageNumber - initialPage) <= 3 || isCurrent;
+    const isNearby = Math.abs(pdfPageNumber - initialPdfPage) <= 3 || isCurrent;
     const [imgLoaded, setImgLoaded] = useState<boolean>(false);
     const [useFallbackCanvas, setUseFallbackCanvas] = useState<boolean>(false);
     const [canvasRendered, setCanvasRendered] = useState<boolean>(false);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-    const imageUrl = BukhariPdfService.getPageImageUrl(pageNumber);
-    const fallbackUrl = BukhariPdfService.getPageFallbackUrl(pageNumber);
+    const imageUrl = BukhariPdfService.getPageImageUrl(pdfPageNumber, volumeNumber);
+    const fallbackUrl = BukhariPdfService.getPageFallbackUrl(pdfPageNumber, volumeNumber);
+    const printedPageNumber = bukhariPdfToPrintedPage(pdfPageNumber, volumeNumber);
 
     // Live canvas fallback rendering if image fails to load
     useEffect(() => {
@@ -746,16 +830,18 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
         try {
           if (canvasRef.current) {
             await BukhariPdfService.renderPageToCanvas(
-              pageNumber,
+              pdfPageNumber,
               canvasRef.current,
-              Math.max(1.5, zoomLevel * 1.5)
+              Math.max(1.5, zoomLevel * 1.5),
+              undefined,
+              volumeNumber
             );
             if (!isCancelled) {
               setCanvasRendered(true);
             }
           }
         } catch (err) {
-          console.error(`Fallback canvas render failed for page ${pageNumber}:`, err);
+          console.error(`Fallback canvas render failed for Vol ${volumeNumber} page ${pdfPageNumber}:`, err);
         }
       };
 
@@ -763,12 +849,12 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
       return () => {
         isCancelled = true;
       };
-    }, [useFallbackCanvas, canvasRendered, pageNumber, zoomLevel]);
+    }, [useFallbackCanvas, canvasRendered, pdfPageNumber, zoomLevel, volumeNumber]);
 
     return (
       <article
-        id={`bukhari-page-${pageNumber}`}
-        data-page={pageNumber}
+        id={`bukhari-page-${pdfPageNumber}`}
+        data-pdf-page={pdfPageNumber}
         className="bukhari-page-card card"
         style={{
           width: isFitWidth ? '100%' : `${Math.round(820 * zoomLevel)}px`,
@@ -821,7 +907,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
               color: isCurrent ? 'var(--brand-primary)' : 'var(--text-primary)',
             }}
           >
-            صحيح البخاري
+            صحيح البخاري • {volumeTitle}
           </span>
           <span
             style={{
@@ -829,10 +915,11 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
               color: isCurrent ? 'var(--brand-primary)' : 'var(--text-muted)',
             }}
           >
-            الصفحة {pageNumber} من {totalPages}
+            {pdfPageNumber === 1
+              ? 'الغلاف الخارجي'
+              : `الصفحة ${printedPageNumber} من ${totalPrintedPages}`}
           </span>
         </div>
-
 
         {/* Complete Book Page Container (Preserving Natural Aspect Ratio: 693 / 1002) */}
         <div
@@ -851,7 +938,9 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
           {!useFallbackCanvas ? (
             <img
               src={imageUrl}
-              alt={`صحيح البخاري - الصفحة ${pageNumber}`}
+              alt={`صحيح البخاري - ${volumeTitle} - ${
+                pdfPageNumber === 1 ? 'الغلاف' : `الصفحة ${printedPageNumber}`
+              }`}
               loading={isNearby ? 'eager' : 'lazy'}
               decoding="async"
               fetchPriority={isCurrent ? 'high' : isNearby ? 'auto' : 'low'}
@@ -922,7 +1011,7 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
                 className="font-arabic text-xs"
                 style={{ color: 'var(--text-secondary)' }}
               >
-                جاري تحميل الصفحة {pageNumber}...
+                جاري تحميل الصفحة {printedPageNumber}...
               </span>
             </div>
           )}
@@ -932,5 +1021,3 @@ const BukhariPageCard: React.FC<BukhariPageCardProps> = memo(
   }
 );
 BukhariPageCard.displayName = 'BukhariPageCard';
-
-

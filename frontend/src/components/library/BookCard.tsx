@@ -21,8 +21,10 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const handleOpenBook = () => {
     if (book.id === 'kanzul-iman') {
       navigate('/library/kanzul-iman/read?mode=read');
+    } else if (book.id === 'fatawa-razawiyya' || book.id === 'fatawa-e-razviya') {
+      navigate('/library/fatawa-razawiyya');
     } else if (book.id === 'sahih-al-bukhari') {
-      navigate('/library/sahih-al-bukhari/read');
+      navigate('/library/sahih-al-bukhari');
     } else if (book.id === 'hadaiq-e-bakhshish') {
       navigate('/library/hadaiq-e-bakhshish');
     } else if (book.id === 'hadaiq-e-bakhshish-hindi') {
@@ -66,7 +68,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
         }}
       />
 
-      {/* Book Cover / Image Emblem */}
+      {/* Book Cover / Emblem Box (Clean icon emblem, no images on main library cards) */}
       <div
         style={{
           width: 86,

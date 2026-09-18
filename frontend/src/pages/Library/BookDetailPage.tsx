@@ -10,7 +10,8 @@ import {
   FileText,
   Headphones,
 } from 'lucide-react';
-import { getBookById } from '../../data/libraryData';
+import { getBookById, getBookVolumes } from '../../data/libraryData';
+import { BookVolume, IslamicBook } from '../../types/library.types';
 import { BookVolumeList } from '../../components/library/BookVolumeList';
 import { useLibraryStore } from '../../stores/useLibraryStore';
 import { HadaiqPdfService } from '../../services/hadaiqPdfService';
@@ -20,6 +21,128 @@ import { MuslimPdfService } from '../../services/muslimPdfService';
 import { SharahMuslimPdfService } from '../../services/sharahMuslimPdfService';
 import { SHARAH_MUSLIM_VOLUMES } from '../../data/sharahMuslimData';
 import { TirmiziPdfService } from '../../services/tirmiziPdfService';
+import { FATAWA_RAZAWIYYA_VOLUMES } from '../../data/fatawaRazawiyyaData';
+import { FatawaRazawiyyaPdfService } from '../../services/fatawaRazawiyyaPdfService';
+import { BUKHARI_VOLUMES } from '../../data/bukhariData';
+import { BukhariPdfService } from '../../services/bukhariPdfService';
+
+// ============================================================================
+// SAHIH AL-BUKHARI COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
+// ============================================================================
+interface BukhariSelectionCoverProps {
+  volumeNumber: number;
+}
+
+const BukhariSelectionCoverCanvas: React.FC<BukhariSelectionCoverProps> = ({ volumeNumber }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const coverUrl = BukhariPdfService.getCoverImageUrl(volumeNumber);
+
+  return (
+    <div className="bukhari-selection-cover-box">
+      {!imgError && (
+        <img
+          src={coverUrl}
+          alt={`Sahih al-Bukhari Jild ${volumeNumber} Cover`}
+          className="bukhari-cover-img"
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          style={{
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+          }}
+        />
+      )}
+      {(!imgLoaded || imgError) && (
+        <div
+          className="bukhari-cover-fallback"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            background: 'linear-gradient(145deg, #064e3b 0%, #0f172a 100%)',
+          }}
+        >
+          <BookOpen
+            size={28}
+            style={{
+              color: '#10b981',
+              opacity: 0.9,
+            }}
+          />
+          <span style={{ fontSize: '0.72rem', color: '#6ee7b7', fontWeight: 700 }}>
+            جلد {volumeNumber}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================================================
+// FATAWA-E-RAZVIYA COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
+// ============================================================================
+interface FatawaSelectionCoverProps {
+  volumeKey: string;
+}
+
+const FatawaRazawiyyaSelectionCoverCanvas: React.FC<FatawaSelectionCoverProps> = ({ volumeKey }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const coverUrl = FatawaRazawiyyaPdfService.getCoverImageUrl(volumeKey);
+
+  return (
+    <div className="fatawa-selection-cover-box">
+      {!imgError && (
+        <img
+          src={coverUrl}
+          alt={`Fatawa-e-Razviya Jild ${volumeKey} Cover`}
+          className="fatawa-cover-img"
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          style={{
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+          }}
+        />
+      )}
+      {(!imgLoaded || imgError) && (
+        <div
+          className="fatawa-cover-fallback"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            background: 'linear-gradient(145deg, #064e3b 0%, #0f172a 100%)',
+          }}
+        >
+          <BookOpen
+            size={28}
+            style={{
+              color: '#f59e0b',
+              opacity: 0.9,
+            }}
+          />
+          <span style={{ fontSize: '0.72rem', color: '#fcd34d', fontWeight: 700 }}>
+            جلد {volumeKey}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ============================================================================
 // JAMI' AT-TIRMIZI COVER THUMBNAIL (STANDARDIZED ULTRA-FAST HIGH-DPI COVERS)
@@ -304,6 +427,91 @@ const HadaiqSelectionCoverCanvas: React.FC<HadaiqSelectionCoverProps> = ({ editi
   );
 };
 
+// ============================================================================
+// UNIVERSAL MULTI-VOLUME COVER THUMBNAIL (DYNAMIC BOOK SYSTEM)
+// ============================================================================
+interface UniversalVolumeCoverProps {
+  book: IslamicBook;
+  volume: BookVolume;
+}
+
+const UniversalVolumeCoverThumbnail: React.FC<UniversalVolumeCoverProps> = ({ book, volume }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const coverUrl =
+    volume.coverImage || `/library/${book.id}/covers/cover_${volume.volumeNumber}.webp`;
+
+  return (
+    <div
+      className="universal-selection-cover-box"
+      style={{
+        width: 120,
+        height: 165,
+        maxWidth: '100%',
+        marginBottom: 12,
+        borderRadius: 'var(--radius-md)',
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor: '#0f172a',
+        border: '1.5px solid rgba(16, 185, 129, 0.45)',
+        boxShadow: '0 6px 16px rgba(0, 0, 0, 0.35)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxSizing: 'border-box',
+        flexShrink: 0,
+      }}
+    >
+      {!imgError && (
+        <img
+          src={coverUrl}
+          alt={`${book.title} ${volume.displayTitle || volume.title} Cover`}
+          className="universal-cover-img"
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            display: 'block',
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+          }}
+        />
+      )}
+      {(!imgLoaded || imgError) && (
+        <div
+          className="universal-cover-fallback"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            background: `linear-gradient(145deg, ${book.coverColor || '#064e3b'} 0%, #0f172a 100%)`,
+          }}
+        >
+          <BookOpen
+            size={28}
+            style={{
+              color: book.accentColor || '#10b981',
+              opacity: 0.9,
+            }}
+          />
+          <span style={{ fontSize: '0.72rem', color: '#6ee7b7', fontWeight: 700 }}>
+            {volume.displayTitle || `جلد ${volume.volumeNumber}`}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const BookDetailPage: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
@@ -348,6 +556,507 @@ export const BookDetailPage: React.FC = () => {
   };
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Dedicated Sahih al-Bukhari Selection Screen (Clean 2 Volume Cards: Jild 1 & Jild 2)
+  if (book.id === 'sahih-al-bukhari') {
+    return (
+      <div
+        className="book-detail-page bukhari-selection-page"
+        style={{
+          width: '100%',
+          maxWidth: 1200,
+          margin: '0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
+        <style>{`
+          .bukhari-selection-page {
+            padding: 0 var(--space-4) var(--space-10);
+          }
+          .bukhari-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            padding: 14px 18px;
+            margin-bottom: var(--space-6);
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(6, 78, 59, 0.9) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+          }
+          .bukhari-cards-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(0, 210px));
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          .bukhari-book-card {
+            width: 100%;
+            max-width: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 16px 14px;
+            border-radius: var(--radius-xl);
+            background-color: var(--bg-surface);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            transition: all var(--transition-fast);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+          }
+          .bukhari-book-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.9);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), 0 0 16px rgba(16, 185, 129, 0.25);
+          }
+          .bukhari-selection-cover-box {
+            width: 120px;
+            height: 165px;
+            max-width: 100%;
+            margin-bottom: 12px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            background-color: #0f172a;
+            border: 1.5px solid rgba(16, 185, 129, 0.5);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+          }
+          .bukhari-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+          }
+          .bukhari-card-author {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--brand-gold, #f59e0b);
+            text-align: center;
+            margin-bottom: 4px;
+            line-height: 1.2;
+          }
+          .bukhari-card-jild {
+            font-size: 0.92rem;
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.35;
+            word-break: break-word;
+          }
+          @media (max-width: 640px) {
+            .bukhari-selection-page {
+              padding: 0 8px var(--space-8) !important;
+            }
+            .bukhari-header-container {
+              padding: 10px 12px !important;
+              gap: 10px !important;
+            }
+            .bukhari-cards-row {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 8px !important;
+              justify-content: stretch !important;
+            }
+            .bukhari-book-card {
+              max-width: 100% !important;
+              padding: 12px 6px !important;
+              border-radius: var(--radius-lg) !important;
+            }
+            .bukhari-selection-cover-box {
+              width: 100% !important;
+              max-width: 100px !important;
+              height: auto !important;
+              aspect-ratio: 120 / 165 !important;
+              margin-bottom: 8px !important;
+            }
+            .bukhari-card-author {
+              font-size: 0.65rem !important;
+              margin-bottom: 2px !important;
+            }
+            .bukhari-card-jild {
+              font-size: 0.76rem !important;
+            }
+          }
+          @media (max-width: 370px) {
+            .bukhari-cards-row {
+              gap: 6px !important;
+            }
+            .bukhari-book-card {
+              padding: 8px 4px !important;
+            }
+            .bukhari-selection-cover-box {
+              max-width: 85px !important;
+              margin-bottom: 4px !important;
+            }
+            .bukhari-card-author {
+              font-size: 0.56rem !important;
+            }
+            .bukhari-card-jild {
+              font-size: 0.68rem !important;
+            }
+          }
+        `}</style>
+
+        {/* Header */}
+        <div className="bukhari-header-container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-sm btn-ghost"
+              onClick={() => navigate('/library')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                backgroundColor: 'rgba(30, 41, 59, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                fontWeight: 500,
+                fontSize: '0.82rem',
+              }}
+              title="Back to Library"
+            >
+              <ArrowLeft size={16} />
+              <span>Back to Library</span>
+            </button>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <div className="text-xs text-muted" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Link to="/library" style={{ color: 'var(--text-muted)' }}>
+                  Library
+                </Link>
+                <span>/</span>
+                <span style={{ color: 'var(--brand-primary)', fontWeight: 'var(--weight-semibold)' }}>
+                  Sahih al-Bukhari
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <h1 style={{ fontSize: '1.05rem', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 0 }}>
+                  Sahih al-Bukhari
+                </h1>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                    color: '#10b981',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                  }}
+                >
+                  2 Volumes • امام محمد بن إسماعيل البخاري
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 2 Clean Volume Cards: Jild 1 & Jild 2 */}
+        <div className="bukhari-cards-row">
+          {BUKHARI_VOLUMES.map((v) => (
+            <div
+              key={v.volumeNumber}
+              className="card card-hover bukhari-book-card"
+              onClick={() => navigate(`/library/sahih-al-bukhari/read?vol=${v.volumeNumber}`)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Sahih al-Bukhari ${v.displayTitle}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate(`/library/sahih-al-bukhari/read?vol=${v.volumeNumber}`);
+                }
+              }}
+            >
+              {/* Cover Image of specific Jild */}
+              <BukhariSelectionCoverCanvas volumeNumber={v.volumeNumber} />
+
+              {/* Author Name */}
+              <div className="bukhari-card-author">
+                Imam Muhammad Ismail Bukhari
+              </div>
+
+              {/* Volume Name */}
+              <div className="bukhari-card-jild">
+                {v.displayTitle}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Dedicated Fatawa-e-Razviya Selection Screen (Exactly 31 Clean Volume Cards: Jild 1.1, Jild 1.2, Jild 2 to Jild 30)
+  if (book.id === 'fatawa-razawiyya' || book.id === 'fatawa-e-razviya') {
+    return (
+      <div
+        className="book-detail-page fatawa-selection-page"
+        style={{
+          width: '100%',
+          maxWidth: 1200,
+          margin: '0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
+        <style>{`
+          .fatawa-selection-page {
+            padding: 0 var(--space-4) var(--space-10);
+          }
+          .fatawa-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            padding: 14px 18px;
+            margin-bottom: var(--space-6);
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(6, 78, 59, 0.9) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+          }
+          .fatawa-cards-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(0, 210px));
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          .fatawa-book-card {
+            width: 100%;
+            max-width: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 16px 14px;
+            border-radius: var(--radius-xl);
+            background-color: var(--bg-surface);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            transition: all var(--transition-fast);
+            border: 2px solid rgba(245, 158, 11, 0.4);
+          }
+          .fatawa-book-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(245, 158, 11, 0.9);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), 0 0 16px rgba(245, 158, 11, 0.25);
+          }
+          .fatawa-selection-cover-box {
+            width: 120px;
+            height: 165px;
+            max-width: 100%;
+            margin-bottom: 12px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            background-color: #0f172a;
+            border: 1.5px solid rgba(245, 158, 11, 0.5);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+          }
+          .fatawa-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+          }
+          .fatawa-card-jild {
+            font-size: 0.92rem;
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.35;
+            word-break: break-word;
+          }
+          .fatawa-card-author {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--brand-gold, #f59e0b);
+            text-align: center;
+            margin-top: 4px;
+            line-height: 1.2;
+          }
+          @media (max-width: 640px) {
+            .fatawa-selection-page {
+              padding: 0 8px var(--space-8) !important;
+            }
+            .fatawa-header-container {
+              padding: 10px 12px !important;
+              gap: 10px !important;
+            }
+            .fatawa-cards-row {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 6px !important;
+              justify-content: stretch !important;
+            }
+            .fatawa-book-card {
+              max-width: 100% !important;
+              padding: 10px 4px !important;
+              border-radius: var(--radius-lg) !important;
+            }
+            .fatawa-selection-cover-box {
+              width: 100% !important;
+              max-width: 90px !important;
+              height: auto !important;
+              aspect-ratio: 120 / 165 !important;
+              margin-bottom: 6px !important;
+            }
+            .fatawa-card-jild {
+              font-size: 0.68rem !important;
+              margin-top: 2px !important;
+            }
+            .fatawa-card-author {
+              font-size: 0.58rem !important;
+              margin-top: 2px !important;
+            }
+          }
+          @media (max-width: 370px) {
+            .fatawa-cards-row {
+              gap: 4px !important;
+            }
+            .fatawa-book-card {
+              padding: 8px 2px !important;
+            }
+            .fatawa-selection-cover-box {
+              max-width: 76px !important;
+              margin-bottom: 4px !important;
+            }
+            .fatawa-card-jild {
+              font-size: 0.60rem !important;
+            }
+            .fatawa-card-author {
+              font-size: 0.52rem !important;
+            }
+          }
+        `}</style>
+
+        {/* Header */}
+        <div className="fatawa-header-container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-sm btn-ghost"
+              onClick={() => navigate('/library')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                backgroundColor: 'rgba(30, 41, 59, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                fontWeight: 500,
+                fontSize: '0.82rem',
+              }}
+              title="Back to Library"
+            >
+              <ArrowLeft size={16} />
+              <span>Back to Library</span>
+            </button>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <div className="text-xs text-muted" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Link to="/library" style={{ color: 'var(--text-muted)' }}>
+                  Library
+                </Link>
+                <span>/</span>
+                <span style={{ color: 'var(--brand-gold)', fontWeight: 'var(--weight-semibold)' }}>
+                  Fatawa-e-Razviya
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <h1 style={{ fontSize: '1.05rem', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 0 }}>
+                  Fatawa-e-Razviya
+                </h1>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
+                    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                    color: '#fbbf24',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                  }}
+                >
+                  31 Volumes • امام احمد رضا خان
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Exactly 31 Volume Cards (Jild 1.1, Jild 1.2, Jild 2 to Jild 30) */}
+        <div className="fatawa-cards-row">
+          {FATAWA_RAZAWIYYA_VOLUMES.map((v) => (
+            <div
+              key={v.volumeKey}
+              className="card card-hover fatawa-book-card"
+              onClick={() => navigate(`/library/fatawa-razawiyya/read?vol=${v.volumeKey}`)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Fatawa-e-Razviya ${v.displayTitle}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate(`/library/fatawa-razawiyya/read?vol=${v.volumeKey}`);
+                }
+              }}
+            >
+              {/* Cover Image of specific Jild */}
+              <FatawaRazawiyyaSelectionCoverCanvas volumeKey={v.volumeKey} />
+
+              {/* Volume Name */}
+              <div className="fatawa-card-jild">
+                {v.displayTitle}
+              </div>
+
+              {/* Writer Name */}
+              <div className="fatawa-card-author">
+                Imam Ahmad Raza Khan
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   // Dedicated Sahih Muslim Selection Screen (6 Clean Volume Cards: Jild 1 to Jild 6 & Separate Sharh Section)
   if (book.id === 'sahih-muslim') {
@@ -1725,6 +2434,258 @@ export const BookDetailPage: React.FC = () => {
               (Roman Urdu)
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Dynamic Multi-Volume Book Selection Screen for all current and future multi-volume books
+  if (book.volumeCount > 1 && book.id !== 'kanzul-iman') {
+    const volumes = getBookVolumes(book);
+
+    return (
+      <div
+        className="book-detail-page universal-selection-page"
+        style={{
+          width: '100%',
+          maxWidth: 1200,
+          margin: '0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
+        <style>{`
+          .universal-selection-page {
+            padding: 0 var(--space-4) var(--space-10);
+          }
+          .universal-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            padding: 14px 18px;
+            margin-bottom: var(--space-6);
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(6, 78, 59, 0.9) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+          }
+          .universal-cards-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(0, 210px));
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          .universal-book-card {
+            width: 100%;
+            max-width: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 16px 14px;
+            border-radius: var(--radius-xl);
+            background-color: var(--bg-surface);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            transition: all var(--transition-fast);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+          }
+          .universal-book-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.9);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), 0 0 16px rgba(16, 185, 129, 0.25);
+          }
+          .universal-selection-cover-box {
+            width: 120px;
+            height: 165px;
+            max-width: 100%;
+            margin-bottom: 12px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            background-color: #0f172a;
+            border: 1.5px solid rgba(16, 185, 129, 0.5);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+          }
+          .universal-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+          }
+          .universal-card-author {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--brand-gold, #f59e0b);
+            text-align: center;
+            margin-bottom: 4px;
+            line-height: 1.2;
+          }
+          .universal-card-jild {
+            font-size: 0.92rem;
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.35;
+            word-break: break-word;
+          }
+          @media (max-width: 640px) {
+            .universal-selection-page {
+              padding: 0 8px var(--space-8) !important;
+            }
+            .universal-header-container {
+              padding: 10px 12px !important;
+              gap: 10px !important;
+            }
+            .universal-cards-row {
+              grid-template-columns: repeat(2, 1fr) !important;
+              gap: 8px !important;
+              justify-content: stretch !important;
+            }
+            .universal-book-card {
+              max-width: 100% !important;
+              padding: 12px 6px !important;
+              border-radius: var(--radius-lg) !important;
+            }
+            .universal-selection-cover-box {
+              width: 100% !important;
+              max-width: 100px !important;
+              height: auto !important;
+              aspect-ratio: 120 / 165 !important;
+              margin-bottom: 8px !important;
+            }
+            .universal-card-author {
+              font-size: 0.65rem !important;
+              margin-bottom: 2px !important;
+            }
+            .universal-card-jild {
+              font-size: 0.76rem !important;
+            }
+          }
+          @media (max-width: 370px) {
+            .universal-cards-row {
+              gap: 6px !important;
+            }
+            .universal-book-card {
+              padding: 8px 4px !important;
+            }
+            .universal-selection-cover-box {
+              max-width: 85px !important;
+              margin-bottom: 4px !important;
+            }
+            .universal-card-author {
+              font-size: 0.56rem !important;
+            }
+            .universal-card-jild {
+              font-size: 0.68rem !important;
+            }
+          }
+        `}</style>
+
+        {/* Header */}
+        <div className="universal-header-container">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-sm btn-ghost"
+              onClick={() => navigate('/library')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                backgroundColor: 'rgba(30, 41, 59, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                fontWeight: 500,
+                fontSize: '0.82rem',
+              }}
+              title="Back to Library"
+            >
+              <ArrowLeft size={16} />
+              <span>Back to Library</span>
+            </button>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <div className="text-xs text-muted" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Link to="/library" style={{ color: 'var(--text-muted)' }}>
+                  Library
+                </Link>
+                <span>/</span>
+                <span style={{ color: 'var(--brand-primary)', fontWeight: 'var(--weight-semibold)' }}>
+                  {book.title}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <h1 style={{ fontSize: '1.05rem', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 0 }}>
+                  {book.title}
+                </h1>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                    color: '#10b981',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                  }}
+                >
+                  {volumes.length} Volumes • {book.author}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 100% Dynamic Volume Cards */}
+        <div className="universal-cards-row">
+          {volumes.map((v) => (
+            <div
+              key={v.id || v.volumeNumber}
+              className="card card-hover universal-book-card"
+              onClick={() => navigate(`/library/${book.id}/read?vol=${v.volumeKey || v.volumeNumber}`)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${book.title} ${v.displayTitle || v.title}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate(`/library/${book.id}/read?vol=${v.volumeKey || v.volumeNumber}`);
+                }
+              }}
+            >
+              {/* Cover Image of specific Jild */}
+              <UniversalVolumeCoverThumbnail book={book} volume={v} />
+
+              {/* Author Name */}
+              <div className="universal-card-author">
+                {v.author || book.compiler || book.author}
+              </div>
+
+              {/* Volume Name */}
+              <div className="universal-card-jild">
+                {v.displayTitle || v.title}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );

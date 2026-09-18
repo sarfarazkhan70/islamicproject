@@ -22,6 +22,7 @@
     "lamejs": "^1.2.1",
     "mongoose": "^8.10.1",
     "mpg123-decoder": "^1.0.3",
+    "msedge-tts": "^2.0.7",
     "wavefile": "^11.0.0",
     "web-push": "^3.6.7",
     "ws": "^8.21.3",

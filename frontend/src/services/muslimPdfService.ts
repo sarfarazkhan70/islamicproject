@@ -53,6 +53,14 @@ function enqueueRender(task: () => Promise<void>): Promise<void> {
 
 export class MuslimPdfService {
   /**
+   * Resolve volume local PDF path
+   */
+  public static getPdfUrl(volumeNumber: number = 1): string {
+    const volMeta = getMuslimVolume(volumeNumber);
+    return volMeta.localPdfUrl;
+  }
+
+  /**
    * Load and cache the PDF document instance for a specific volume with automatic retry on failure
    */
   public static getDocument(volumeNumber: number = 1): Promise<pdfjsLib.PDFDocumentProxy> {
